@@ -3645,8 +3645,8 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     .av-promo-bar               { padding: 16px 0; }
     .av-promo-content           { flex-direction: column; align-items: stretch; gap: 12px; padding: 0; }
     .av-promo-text              { font-size: 16px; text-align: center; }
-    .av-promo-input             { width: 100%; box-sizing: border-box; flex: 1; }
-    .av-promo-form              { width: 100%; display: flex; gap: 8px; }
+    .av-promo-input             { width: 0; box-sizing: border-box; flex: 1; min-width: 0; }
+    .av-promo-form              { width: 100%; display: flex; gap: 0; }
     .av-promo-submit            { white-space: nowrap; flex-shrink: 0; }
 
     /* footer */

@@ -303,6 +303,9 @@
             <div class="av-promo-bar">
                 <div class="av-container">
                     <div class="av-promo-content">
+                        <p class="av-promo-text av-promo-text-desktop">
+                            Get <span class="av-promo-highlight">$20 OFF</span> your first order!
+                        </p>
                         <form class="av-promo-form" action="#" method="post">
                             <input type="email" name="email" class="av-promo-input"
                                    placeholder="Enter your email"/>
@@ -1072,6 +1075,7 @@
                 @media (max-width: 767px) {
                     .av-header-inner { height: 56px; padding: 0 14px !important; }
                     .av-logo-icon { height: 40px !important; width: auto !important; }
+                    .av-promo-text-desktop { display: none !important; }
                 }
             </style>
             <!-- Anti-FOUC: apply dark mode + color theme before first paint -->
