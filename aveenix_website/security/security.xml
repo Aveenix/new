@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="access_product_public_category_public" model="ir.model.access">
+        <field name="name">product.public.category.public</field>
+        <field name="model_id" ref="website_sale.model_product_public_category"/>
+        <field name="group_id" ref="base.group_public"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+</odoo>

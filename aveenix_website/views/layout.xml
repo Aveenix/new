@@ -1,0 +1,1190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         AVEENIX HEADER (reusable)
+         ========================================================= -->
+    <template id="aveenix_header" name="Aveenix Header">
+        <header class="av-header">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+            <!-- ── Top utility bar ─────────────────────────────── -->
+            <div class="av-topbar-utility">
+                <div class="av-topbar-utility-inner">
+                    <t t-set="tb_countries" t-value="request.env['res.country'].sudo().search([], order='name asc')"/>
+                    <t t-set="tb_user_country" t-value="request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
+                    <t t-set="tb_langs" t-value="request.website.language_ids.sorted('name')"/>
+                    <t t-set="tb_cur_lang" t-value="request.env['res.lang'].sudo().search([('code','=',request.env.lang)], limit=1)"/>
+                    <t t-set="tb_lang_redirect" t-value="'/' + '/'.join(p for p in request.httprequest.path.split('/') if p and p != tb_cur_lang.url_code) or '/'" />
+                    <t t-set="tb_currencies" t-value="request.env['res.currency'].sudo().search([('active','=',True)], order='name asc')"/>
+                    <t t-set="tb_cur_currency" t-value="request.website.sudo().currency_id"/>
+                    <div class="av-topbar-left">
+                        <!-- Country -->
+                        <div class="av-tb-dropdown" data-storage-key="av_country">
+                            <span class="av-topbar-flag av-tb-trigger">
+                                <t t-esc="tb_user_country.code or 'US'"/>
+                                <i class="fa fa-chevron-down" style="font-size:9px; margin-left:3px;"/>
+                            </span>
+                            <div class="av-tb-dropdown-menu">
+                                <div class="av-tb-dropdown-scroll">
+                                    <t t-foreach="tb_countries" t-as="c">
+                                        <div t-attf-class="av-tb-dropdown-item#{' av-tb-selected' if c.id == tb_user_country.id else ''}" t-att-data-val="c.code">
+                                            <span class="av-tb-dd-code"><t t-esc="c.code"/></span>
+                                            <span class="av-tb-dd-name"><t t-esc="c.name"/></span>
+                                            <i class="fa fa-check av-tb-dd-check"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="av-topbar-sep">|</span>
+                        <!-- Language -->
+                        <div class="av-tb-dropdown">
+                            <span class="av-topbar-lang av-tb-trigger">
+                                <t t-esc="tb_cur_lang.name or 'English'"/>
+                                <i class="fa fa-chevron-down" style="font-size:9px; margin-left:3px;"/>
+                            </span>
+                            <div class="av-tb-dropdown-menu">
+                                <div class="av-tb-dropdown-scroll">
+                                    <t t-foreach="tb_langs" t-as="lg">
+                                        <a t-attf-href="/website/lang/#{lg.url_code}?r=#{tb_lang_redirect}" t-attf-class="av-tb-dropdown-item#{' av-tb-selected' if lg.code == request.env.lang else ''}">
+                                            <span class="av-tb-dd-code"><t t-esc="lg.url_code.upper()"/></span>
+                                            <span class="av-tb-dd-name"><t t-esc="lg.name"/></span>
+                                            <i class="fa fa-check av-tb-dd-check"/>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="av-topbar-sep">|</span>
+                        <!-- Currency (via pricelists) -->
+                        <t t-set="tb_pricelists" t-value="request.website.sudo().get_pricelist_available(show_visible=True)"/>
+                        <t t-set="tb_cur_pricelist" t-value="request.pricelist"/>
+                        <div class="av-tb-dropdown">
+                            <span class="av-topbar-currency av-tb-trigger">
+                                <t t-esc="tb_cur_pricelist.currency_id.symbol or '$'"/> <t t-esc="tb_cur_pricelist.currency_id.name or 'USD'"/>
+                                <i class="fa fa-chevron-down" style="font-size:9px; margin-left:3px;"/>
+                            </span>
+                            <div class="av-tb-dropdown-menu">
+                                <div class="av-tb-dropdown-scroll">
+                                    <t t-foreach="tb_pricelists" t-as="pl">
+                                        <a t-attf-href="/shop/change_pricelist/#{pl.id}" t-attf-class="av-tb-dropdown-item#{' av-tb-selected' if pl.id == tb_cur_pricelist.id else ''}">
+                                            <span class="av-tb-dd-code"><t t-esc="pl.currency_id.symbol"/></span>
+                                            <span class="av-tb-dd-name"><t t-esc="pl.name"/></span>
+                                            <i class="fa fa-check av-tb-dd-check"/>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="av-topbar-center" id="av-topbar-date"></div>
+                    <div class="av-topbar-right">
+                        <a href="/my/account" class="av-topbar-link">
+                            <i class="fa fa-user-circle"/> My Account
+                        </a>
+                        <span class="av-topbar-sep">|</span>
+                        <a href="/contactus" class="av-topbar-link">
+                            <i class="fa fa-phone"/> Contact
+                        </a>
+                        <span class="av-topbar-sep">|</span>
+                        <a href="/notifications" id="av-notif-header-btn" class="av-topbar-link" style="position:relative;">
+                            <i class="fa fa-bell"/> Notifications
+                            <span id="av-notif-count" class="av-header-badge" style="display:none;"/>
+                        </a>
+                        <span class="av-topbar-sep">|</span>
+                        <!-- Color picker (moved to topbar) -->
+                        <div class="dropdown" style="display:inline-block;">
+                            <span class="av-topbar-link" data-bs-toggle="dropdown" style="cursor:pointer;">
+                                <i class="fa fa-tint"/> Color <i class="fa fa-chevron-down" style="font-size:10px;"/>
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0" style="width: 280px; border-radius: 12px; margin-top: 8px;">
+                                <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="av-color-popup-icon"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg>
+                                        <span class="fw-bold av-color-popup-title">Color Theme</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1 av-color-popup-status">
+                                        <span id="av-current-color-name">Default</span>
+                                        <i class="fa fa-chevron-up" style="font-size: 10px;"/>
+                                    </div>
+                                </div>
+                                <hr class="my-2" style="border-color: #eee;"/>
+                                <div class="text-muted fw-bold mb-2 px-1" style="font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase;">Popular</div>
+                                <div class="av-color-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#FFC107" data-name="Yellow"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #FFC107; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Yellow</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#2196F3" data-name="Blue"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #2196F3; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Blue</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#4CAF50" data-name="Green"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #4CAF50; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Green</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#9C27B0" data-name="Purple"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #9C27B0; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Purple</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#F44336" data-name="Red"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #F44336; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Red</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#FF9800" data-name="Orange"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #FF9800; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Orange</span></div>
+                                </div>
+                                <div class="text-muted fw-bold mb-2 px-1" style="font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase;">Extended Palette</div>
+                                <div class="av-color-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#009688" data-name="Teal"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #009688; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Teal</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#3F51B5" data-name="Indigo"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #3F51B5; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Indigo</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#E91E63" data-name="Pink"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #E91E63; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Pink</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#CDDC39" data-name="Lime"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #CDDC39; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Lime</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#00BCD4" data-name="Cyan"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #00BCD4; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Cyan</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#FFB300" data-name="Amber"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #FFB300; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Amber</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#2ECC71" data-name="Emerald"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #2ECC71; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Emerald</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#8E44AD" data-name="Violet"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #8E44AD; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Violet</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#E84393" data-name="Rose"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #E84393; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Rose</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#03A9F4" data-name="Sky"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #03A9F4; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Sky</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#D980FA" data-name="Fuchsia"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #D980FA; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Fuchsia</span></div>
+                                    <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#607D8B" data-name="Slate"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #607D8B; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Slate</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="av-topbar-sep">|</span>
+                        <button id="av-dark-toggle" class="av-dark-toggle av-topbar-link" aria-label="Toggle dark mode">
+                            <span class="av-toggle-icon">&#9790;</span>
+                            <span class="av-toggle-label">Dark</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Main header row ─────────────────────────────── -->
+            <div class="av-topbar">
+                <div class="av-topbar-inner">
+
+                    <a href="/" class="av-logo">
+                        <div class="av-logo-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 769.99 143.18" class="av-logo-svg">
+                              <defs>
+                                <linearGradient id="av-logo-gradient" x1="8.72" y1="6.5" x2="124.71" y2="125.36" gradientUnits="userSpaceOnUse">
+                                  <stop offset="0" stop-color="var(--av-red, #fc3636)"/>
+                                  <stop offset="1" stop-color="var(--av-red-dark, #be1015)"/>
+                                </linearGradient>
+                              </defs>
+                              <rect fill="url(#av-logo-gradient)" x="3.67" y="3.02" width="137.14" height="137.14" rx="16.77" ry="16.77"/>
+                              <g fill="var(--av-logo-text, #58595b)">
+                                <path d="M626.48,123.43h15.42v3.29h-19.21v-26.46h18.68v3.29h-14.9v19.89ZM626.14,111.67h13.61v3.21h-13.61v-3.21Z"/>
+                                <path d="M644.14,126.72l8.62-11.19-.04,1.85-8.2-10.7h4.04l6.28,8.24h-1.55l6.28-8.24h3.97l-8.32,10.77.04-1.93,8.7,11.19h-4.12l-6.62-8.77,1.47.23-6.5,8.54h-4.04Z"/>
+                                <path d="M667.92,134.05v-27.37h3.48v5.41l-.23,4.65.38,4.65v12.67h-3.63ZM678.54,126.95c-1.66,0-3.18-.38-4.56-1.15s-2.47-1.91-3.29-3.42-1.23-3.4-1.23-5.67.4-4.16,1.19-5.67,1.88-2.65,3.25-3.4c1.37-.76,2.92-1.13,4.63-1.13,1.97,0,3.71.43,5.22,1.29,1.51.86,2.71,2.05,3.59,3.57.88,1.53,1.32,3.31,1.32,5.35s-.44,3.83-1.32,5.37c-.88,1.54-2.08,2.74-3.59,3.59-1.51.86-3.25,1.29-5.22,1.29ZM678.24,123.77c1.29,0,2.44-.29,3.46-.87,1.02-.58,1.83-1.4,2.42-2.48.59-1.07.89-2.31.89-3.72s-.3-2.68-.89-3.72c-.59-1.05-1.4-1.86-2.42-2.44s-2.17-.87-3.46-.87-2.4.29-3.42.87-1.83,1.39-2.42,2.44c-.59,1.05-.89,2.29-.89,3.72s.3,2.65.89,3.72c.59,1.07,1.4,1.9,2.42,2.48,1.02.58,2.16.87,3.42.87Z"/>
+                                <path d="M693.7,126.72v-20.04h3.48v5.44l-.34-1.36c.55-1.39,1.49-2.44,2.8-3.18,1.31-.73,2.92-1.1,4.84-1.1v3.52c-.15-.03-.3-.04-.43-.04h-.4c-1.94,0-3.48.58-4.61,1.74-1.13,1.16-1.7,2.83-1.7,5.03v9.98h-3.63Z"/>
+                                <path d="M717.67,126.95c-2.14,0-4.03-.44-5.65-1.32-1.63-.88-2.89-2.09-3.78-3.63s-1.34-3.3-1.34-5.29.43-3.75,1.3-5.29c.87-1.54,2.07-2.74,3.59-3.61s3.25-1.3,5.16-1.3,3.65.43,5.14,1.29c1.49.86,2.65,2.06,3.5,3.61.84,1.55,1.27,3.36,1.27,5.42,0,.15,0,.33-.02.53-.01.2-.03.39-.06.57h-17.05v-2.61h15.16l-1.47.91c.02-1.29-.24-2.43-.79-3.44-.55-1.01-1.32-1.8-2.29-2.36-.97-.57-2.1-.85-3.38-.85s-2.38.28-3.37.85c-.98.57-1.75,1.36-2.31,2.38-.55,1.02-.83,2.19-.83,3.5v.61c0,1.34.31,2.53.93,3.57.62,1.05,1.48,1.86,2.59,2.44,1.11.58,2.38.87,3.82.87,1.18,0,2.26-.2,3.23-.6.97-.4,1.82-1.01,2.55-1.81l2,2.34c-.91,1.06-2.04,1.87-3.38,2.42-1.35.55-2.85.83-4.52.83Z"/>
+                                <path d="M737.63,126.95c-1.66,0-3.25-.23-4.74-.68-1.5-.45-2.68-1.01-3.54-1.66l1.51-2.87c.86.58,1.92,1.07,3.18,1.47,1.26.4,2.54.6,3.86.6,1.69,0,2.91-.24,3.65-.72s1.12-1.15,1.12-2c0-.63-.23-1.12-.68-1.47-.45-.35-1.05-.62-1.8-.79-.74-.18-1.57-.33-2.48-.47s-1.81-.31-2.72-.53c-.91-.21-1.74-.52-2.5-.91-.76-.39-1.36-.93-1.81-1.63-.45-.69-.68-1.62-.68-2.78s.34-2.27,1.02-3.18c.68-.91,1.64-1.61,2.89-2.1,1.25-.49,2.73-.74,4.44-.74,1.31,0,2.64.16,3.99.47,1.35.32,2.45.76,3.31,1.34l-1.55,2.87c-.91-.61-1.85-1.02-2.83-1.25-.98-.23-1.97-.34-2.95-.34-1.59,0-2.77.26-3.55.78s-1.17,1.18-1.17,1.98c0,.68.23,1.2.7,1.57.47.37,1.07.65,1.81.85.74.2,1.57.37,2.48.51.91.14,1.81.32,2.72.53.91.21,1.73.51,2.48.89s1.35.91,1.81,1.59c.47.68.7,1.59.7,2.72,0,1.21-.35,2.26-1.06,3.14-.71.88-1.7,1.57-2.99,2.06-1.29.49-2.82.74-4.61.74Z"/>
+                                <path d="M756.57,126.95c-1.66,0-3.25-.23-4.74-.68-1.5-.45-2.68-1.01-3.54-1.66l1.51-2.87c.86.58,1.92,1.07,3.18,1.47,1.26.4,2.54.6,3.86.6,1.69,0,2.91-.24,3.65-.72s1.12-1.15,1.12-2c0-.63-.23-1.12-.68-1.47-.45-.35-1.05-.62-1.8-.79-.74-.18-1.57-.33-2.48-.47s-1.81-.31-2.72-.53c-.91-.21-1.74-.52-2.5-.91-.76-.39-1.36-.93-1.81-1.63-.45-.69-.68-1.62-.68-2.78s.34-2.27,1.02-3.18c.68-.91,1.64-1.61,2.89-2.1,1.25-.49,2.73-.74,4.44-.74,1.31,0,2.64.16,3.99.47,1.35.32,2.45.76,3.31,1.34l-1.55,2.87c-.91-.61-1.85-1.02-2.83-1.25-.98-.23-1.97-.34-2.95-.34-1.59,0-2.77.26-3.55.78s-1.17,1.18-1.17,1.98c0,.68.23,1.2.7,1.57.47.37,1.07.65,1.81.85.74.2,1.57.37,2.48.51.91.14,1.81.32,2.72.53.91.21,1.73.51,2.48.89s1.35.91,1.81,1.59c.47.68.7,1.59.7,2.72,0,1.21-.35,2.26-1.06,3.14-.71.88-1.7,1.57-2.99,2.06-1.29.49-2.82.74-4.61.74Z"/>
+                              </g>
+                              <rect fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="442.71" height="6"/>
+                              <polygon fill="#fefefe" points="13.82 118.54 40.77 118.54 70.79 66.61 101.67 118.54 128.5 118.54 71.16 19.98 13.82 118.54"/>
+                              <polygon fill="#fefefe" points="55.89 118.54 86.79 118.54 70.97 91.81 55.89 118.54"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="466.97 69.18 466.97 56.28 519.98 56.28 524.9 41.6 466.97 41.6 466.97 29.2 524.1 29.2 529.47 13.15 447.32 13.15 447.32 84.72 524.27 84.72 529.47 69.18 466.97 69.18"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="375.91 69.18 375.91 56.28 428.92 56.28 433.83 41.6 375.91 41.6 375.91 29.2 433.03 29.2 438.4 13.15 356.26 13.15 356.26 84.72 433.2 84.72 438.4 69.18 375.91 69.18"/>
+                              <rect fill="var(--av-logo-text, #231f20)" x="633.46" y="13.15" width="19.65" height="71.58"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="209.53 13.15 166.71 84.72 188.98 84.72 194.81 74.68 236.19 74.68 228.29 61.37 202.75 61.37 202.79 61.3 220.16 31.89 237.58 61.3 245.46 74.61 251.34 84.72 273.9 84.72 231.35 13.15 209.53 13.15"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="325.6 13.15 297.69 65.99 266.63 13.15 243.84 13.15 286.5 84.72 308.37 84.72 348.13 13.15 325.6 13.15"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="658.55 85.24 686.03 85.24 686.51 84.72 659.05 84.72 658.55 85.24"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="603.74 13.72 603.74 53.59 623.62 75.16 623.62 13.72 603.74 13.72"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="537.39 13.15 537.39 84.72 557.21 84.72 557.21 38.22 599.61 84.72 623.14 84.72 557.21 13.15 537.39 13.15"/>
+                              <rect fill="var(--av-logo-text, #231f20)" x="537.39" y="13.15" width="19.82"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="726.47 47.31 712.79 60.15 739.11 84.72 766.32 84.72 726.47 47.31"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 686.03 85.24 658.55 85.24"/>
+                              <polygon fill="var(--av-logo-text, #231f20)" points="712.71 34.39 690.08 13.15 662.44 13.15 698.99 47.27 712.71 34.39 712.71 34.39"/>
+                              <polygon fill="var(--av-red, #d6292e)" points="726.48 47.31 735.22 39.12 735.22 39.12 762.91 13.15 735.32 13.15 721.64 26 721.64 26 715.49 31.77 712.71 34.39 712.71 34.39 698.99 47.27 658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 712.79 60.15 726.47 47.31 726.48 47.31"/>
+                            </svg>
+                        </div>
+                    </a>
+
+                    <form class="av-search-form" action="/shop" method="get">
+                        <input type="text" name="search" class="av-search-input"
+                               placeholder="Search items on Aveenix…"/>
+                        <button type="submit" class="av-search-btn">
+                            <i class="fa fa-search"/>
+                        </button>
+                    </form>
+
+                    <div id="top_menu" class="av-header-actions">
+                        <!-- <a href="/shop" class="av-header-action av-mobile-shop-btn">
+                            <i class="fa fa-shopping-bag"/>
+                            <span>Shop</span>
+                        </a> -->
+                        <a href="/compare" class="av-header-action av-compare-btn" id="av-compare-header-btn">
+                            <span style="position:relative; display:inline-block;">
+                                <i class="fa fa-balance-scale"/>
+                                <span class="av-compare-badge" id="av-compare-count" style="display:none;">0</span>
+                            </span>
+                            <span>Compare</span>
+                        </a>
+                        <a href="/favourites" class="av-header-action">
+                            <span style="position:relative; display:inline-block;">
+                                <i class="fa fa-heart"/>
+                                <span class="av-compare-badge" id="av-fav-count" style="display:none;">0</span>
+                            </span>
+                            <span>Favourites</span>
+                        </a>
+                        <a href="/wishlist" class="av-header-action" id="av-wish-header-btn">
+                            <span style="position:relative; display:inline-block;">
+                                <i class="fa fa-star"/>
+                                <span class="av-compare-badge" id="av-wish-count" style="display:none;">0</span>
+                            </span>
+                            <span>Wishlist</span>
+                        </a>
+                        <t t-if="request.env.user._is_public()">
+                            <a href="/web/login" class="av-header-action">
+                                <i class="fa fa-user"/>
+                                <span>Login</span>
+                            </a>
+                        </t>
+                        <t t-else="">
+                            <div class="av-header-action av-user-menu dropdown">
+                                <span class="av-user-menu-toggle" data-bs-toggle="dropdown" style="cursor:pointer;">
+                                    <i class="fa fa-user-circle"/>
+                                    <span class="av-user-name-row">
+                                        <span t-esc="request.env.user.name.split()[0]"/>
+                                        <i class="fa fa-chevron-down" style="font-size:10px;"/>
+                                    </span>
+                                </span>
+                                <ul class="dropdown-menu dropdown-menu-end av-user-dropdown">
+                                    <li><a class="dropdown-item" href="/my/account"><i class="fa fa-user me-2"/>My Account</a></li>
+                                    <li><hr class="dropdown-divider"/></li>
+                                    <li><a class="dropdown-item text-danger" href="/web/session/logout"><i class="fa fa-sign-out me-2"/>Log Out</a></li>
+                                </ul>
+                            </div>
+                        </t>
+                        <li class="o_wsale_header_cart_link o_wsale_my_cart list-unstyled">
+                            <a href="/shop/cart" class="av-header-cart nav-link">
+                                <i class="fa fa-shopping-cart"/>
+                                <t t-set="av_order_id" t-value="request.session.get('sale_order_id')"/>
+                                <t t-set="website_sale_order" t-value="request.env['sale.order'].sudo().browse(av_order_id) if av_order_id and request.env['sale.order'].sudo().browse(av_order_id).exists() and request.env['sale.order'].sudo().browse(av_order_id).state == 'draft' else None"/>
+                                <span class="av-cart-badge my_cart_quantity badge rounded-pill bg-primary" t-att-data-order-id="website_sale_order and website_sale_order.id or ''" t-esc="website_sale_order.cart_quantity if website_sale_order else 0"/>
+                            </a>
+                        </li>
+                    </div>
+
+                </div>
+            </div>
+
+            <nav class="av-cat-nav">
+                <div class="av-cat-nav-inner">
+                    <div class="av-all-categories" t-att-id="'av-all-categories-btn'">
+                        <i class="fa fa-bars"/>
+                        <span>All Categories</span>
+                        <i class="fa fa-chevron-down ms-2" style="font-size: 10px;"/>
+                    </div>
+                    <div class="av-cat-dropdown" id="av-cat-dropdown">
+                        <t t-set="av_all_cats" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False), ('has_published_products','=',True)] if request.env.user._is_public() else [('parent_id','=',False)], limit=12)"/>
+                        <ul class="av-cat-dropdown-list">
+                            <t t-foreach="av_all_cats" t-as="c">
+                                <li>
+                                    <a t-attf-href="/shop?category=#{c.id}">
+                                        <i class="fa fa-tag me-2"/>
+                                        <t t-esc="c.sudo().name"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
+                        <div class="av-cat-dropdown-footer">
+                            <a href="/categories">View All Categories →</a>
+                        </div>
+                    </div>
+                    <ul class="av-cat-menu">
+                        <li><a href="/shop">Shop</a></li>
+                    </ul>
+                    <!-- <div class="av-menu-btn">
+                        <i class="fa fa-bars"/>
+                        <span>Menu</span>
+                        <i class="fa fa-chevron-down"/>
+                    </div> -->
+                </div>
+            </nav>
+
+        </header>
+    </template>
+
+    <!-- =========================================================
+         AVEENIX FOOTER (reusable)
+         ========================================================= -->
+    <template id="aveenix_footer" name="Aveenix Footer">
+        <footer class="av-footer">
+
+            <div class="av-promo-bar">
+                <div class="av-container">
+                    <div class="av-promo-content">
+                        <form class="av-promo-form" action="#" method="post">
+                            <input type="email" name="email" class="av-promo-input"
+                                   placeholder="Enter your email"/>
+                            <button type="submit" class="av-promo-submit">Get $20 OFF</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="av-footer-main">
+                <div class="av-container">
+                    <div class="av-footer-grid">
+                        <div class="av-footer-col">
+                            <h4 class="av-footer-heading av-footer-toggle">Customer Service<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <ul class="av-footer-links av-footer-bullets av-footer-collapse">
+                                <li><a href="#">Site Us</a></li>
+                                <li><a href="/contactus">Contact Us</a></li>
+                                <li><a href="#">FAQs</a></li>
+                                <li><a href="#">Order Tracking</a></li>
+                            </ul>
+                        </div>
+                        <div class="av-footer-col">
+                            <h4 class="av-footer-heading av-footer-toggle">Information<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <ul class="av-footer-links av-footer-bullets av-footer-collapse">
+                                <li><a href="#">Features</a></li>
+                                <li><a href="#">Partners</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Shipping Policy</a></li>
+                            </ul>
+                        </div>
+                        <div class="av-footer-col">
+                            <h4 class="av-footer-heading av-footer-toggle">Account<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <ul class="av-footer-links av-footer-bullets av-footer-collapse">
+                                <li><a href="/my/account">My Account</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Connect Aveenix</a></li>
+                                <li><a href="#">Registration</a></li>
+                            </ul>
+                        </div>
+                        <div class="av-footer-col">
+                            <h4 class="av-footer-heading av-footer-toggle">Support<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <ul class="av-footer-links av-footer-bullets av-footer-collapse">
+                                <li><a href="#">Purple Parlay</a></li>
+                                <li><a href="#">Tarcount</a></li>
+                                <li><a href="#">Career Policy</a></li>
+                                <li><a href="#">Terms of Use</a></li>
+                            </ul>
+                        </div>
+                        <div class="av-footer-col av-footer-col-legal-mobile">
+                            <h4 class="av-footer-heading av-footer-toggle">Legal<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <ul class="av-footer-links av-footer-bullets av-footer-collapse">
+                                <li><a href="#"><i class="fa fa-lock av-footer-link-icon"/>Privacy Policy</a></li>
+                                <li><a href="#"><i class="fa fa-check-circle av-footer-link-icon"/>Cookie Policy</a></li>
+                                <li><a href="#"><i class="fa fa-headphones av-footer-link-icon"/>Contact Support</a></li>
+                            </ul>
+                        </div>
+                        <div class="av-footer-col av-footer-col-settings-mobile">
+                            <h4 class="av-footer-heading av-footer-toggle">Settings<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <div class="av-footer-collapse av-footer-settings-body">
+                                <!-- Country -->
+                                <t t-set="av_countries" t-value="request.env['res.country'].sudo().search([], order='name asc', limit=100)"/>
+                                <t t-set="av_user_country" t-value="request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
+                                <div class="av-settings-row av-settings-row-select" id="av-country-row" style="cursor:pointer;">
+                                    <i class="fa fa-globe av-settings-icon"/>
+                                    <span class="av-settings-label">Country</span>
+                                    <span class="av-settings-val" id="av-country-val"><t t-esc="av_user_country.code or 'US'"/> <t t-esc="av_user_country.name or 'United States'"/></span>
+                                    <i class="fa fa-chevron-down av-settings-arrow"/>
+                                </div>
+                                <div class="av-settings-dropdown" id="av-country-dropdown" style="display:none;">
+                                    <div class="av-settings-dropdown-scroll">
+                                        <t t-foreach="av_countries" t-as="c">
+                                            <div t-attf-class="av-settings-dropdown-item#{' selected' if c.id == av_user_country.id else ''}" t-att-data-code="c.code" t-att-data-name="c.name" t-att-data-val="c.code + ' ' + c.name">
+                                                <span class="av-dd-code"><t t-esc="c.code"/></span>
+                                                <span class="av-dd-name"><t t-esc="c.name"/></span>
+                                                <i class="fa fa-check av-dd-check"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                                <!-- Language -->
+                                <t t-set="av_langs" t-value="request.website.language_ids.sorted('name')"/>
+                                <t t-set="av_cur_lang" t-value="request.env['res.lang'].sudo().search([('code','=',request.env.lang)], limit=1)"/>
+                                <div class="av-settings-row av-settings-row-select" id="av-lang-row" style="cursor:pointer;">
+                                    <i class="fa fa-language av-settings-icon"/>
+                                    <span class="av-settings-label">Language</span>
+                                    <span class="av-settings-val" id="av-lang-val"><t t-esc="av_cur_lang.name or 'English'"/></span>
+                                    <i class="fa fa-chevron-down av-settings-arrow"/>
+                                </div>
+                                <div class="av-settings-dropdown" id="av-lang-dropdown" style="display:none;">
+                                    <div class="av-settings-dropdown-scroll">
+                                        <t t-foreach="av_langs" t-as="lg">
+                                            <a t-attf-href="/website/lang/#{lg.url_code}?r=#{tb_lang_redirect}" t-attf-class="av-settings-dropdown-item#{' selected' if lg.code == request.env.lang else ''}" t-att-data-val="lg.name">
+                                                <span class="av-dd-code"><t t-esc="lg.url_code.upper()"/></span>
+                                                <span class="av-dd-name"><t t-esc="lg.name"/></span>
+                                                <i class="fa fa-check av-dd-check"/>
+                                            </a>
+                                        </t>
+                                    </div>
+                                </div>
+                                <!-- Currency (via pricelists) -->
+                                <t t-set="av_pricelists" t-value="request.website.sudo().get_pricelist_available(show_visible=True)"/>
+                                <t t-set="av_cur_pricelist" t-value="request.pricelist"/>
+                                <div class="av-settings-row av-settings-row-select" id="av-currency-row" style="cursor:pointer;">
+                                    <i class="fa fa-dollar av-settings-icon"/>
+                                    <span class="av-settings-label">Currency</span>
+                                    <span class="av-settings-val" id="av-currency-val"><t t-esc="av_cur_pricelist.currency_id.symbol or '$'"/> <t t-esc="av_cur_pricelist.currency_id.name or 'USD'"/></span>
+                                    <i class="fa fa-chevron-down av-settings-arrow"/>
+                                </div>
+                                <div class="av-settings-dropdown" id="av-currency-dropdown" style="display:none;">
+                                    <div class="av-settings-dropdown-scroll">
+                                        <t t-foreach="av_pricelists" t-as="pl">
+                                            <a t-attf-href="/shop/change_pricelist/#{pl.id}" t-attf-class="av-settings-dropdown-item#{' selected' if pl.id == av_cur_pricelist.id else ''}">
+                                                <span class="av-dd-code"><t t-esc="pl.currency_id.symbol"/></span>
+                                                <span class="av-dd-name"><t t-esc="pl.name"/></span>
+                                                <i class="fa fa-check av-dd-check"/>
+                                            </a>
+                                        </t>
+                                    </div>
+                                </div>
+                                <!-- Location -->
+                                <div class="av-settings-row" id="av-mobile-location-row" style="cursor:pointer;" onclick="avMobileLocationTap()">
+                                    <i class="fa fa-map-marker av-settings-icon" style="color:var(--av-red);"/>
+                                    <span class="av-settings-label">Location</span>
+                                    <span class="av-settings-val" id="av-mobile-location-val">Detecting&#8230;</span>
+                                </div>
+                                <!-- Dark Mode -->
+                                <div class="av-settings-row">
+                                    <i class="fa fa-moon-o av-settings-icon"/>
+                                    <span class="av-settings-label">Dark Mode</span>
+                                    <button id="av-dark-toggle-mobile" class="av-settings-toggle-btn" aria-label="Toggle dark mode">
+                                        <span class="av-toggle-track"><span class="av-toggle-thumb"/></span>
+                                    </button>
+                                </div>
+                                <!-- Color Theme toggle row -->
+                                <div class="av-settings-row av-settings-row-color" id="av-mobile-color-row" style="cursor:pointer;">
+                                    <i class="fa fa-tint av-settings-icon"/>
+                                    <span class="av-settings-label">Color Theme</span>
+                                    <span class="av-settings-color-dot" id="av-mobile-color-dot"/>
+                                    <span class="av-settings-val" id="av-mobile-color-name">Default</span>
+                                    <i class="fa fa-chevron-down av-settings-arrow" id="av-mobile-color-chevron"/>
+                                </div>
+                                <!-- Color panel — toggled by click -->
+                                <div class="av-settings-color-panel" id="av-mobile-color-panel" style="display:none;">
+                                    <div class="av-settings-color-label">POPULAR</div>
+                                    <div class="av-settings-color-grid">
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#FFC107" data-name="Yellow"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#FFC107;width:44px;height:44px;border-radius:12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:18px;height:18px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Yellow</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#2196F3" data-name="Blue"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#2196F3;width:44px;height:44px;border-radius:12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:18px;height:18px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Blue</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#4CAF50" data-name="Green"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#4CAF50;width:44px;height:44px;border-radius:12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:18px;height:18px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Green</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#9C27B0" data-name="Purple"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#9C27B0;width:44px;height:44px;border-radius:12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:18px;height:18px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Purple</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#F44336" data-name="Red"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#F44336;width:44px;height:44px;border-radius:12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:18px;height:18px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Red</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#FF9800" data-name="Orange"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#FF9800;width:44px;height:44px;border-radius:12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:18px;height:18px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Orange</span></div>
+                                    </div>
+                                    <div class="av-settings-color-label">EXTENDED PALETTE</div>
+                                    <div class="av-settings-color-grid">
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#009688" data-name="Teal"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#009688;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Teal</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#3F51B5" data-name="Indigo"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#3F51B5;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Indigo</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#E91E63" data-name="Pink"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#E91E63;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Pink</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#CDDC39" data-name="Lime"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#CDDC39;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Lime</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#00BCD4" data-name="Cyan"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#00BCD4;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Cyan</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#FFB300" data-name="Amber"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#FFB300;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Amber</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#2ECC71" data-name="Emerald"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#2ECC71;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Emerald</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#8E44AD" data-name="Violet"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#8E44AD;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Violet</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#E84393" data-name="Rose"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#E84393;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Rose</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#03A9F4" data-name="Sky"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#03A9F4;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Sky</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#D980FA" data-name="Fuchsia"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#D980FA;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Fuchsia</span></div>
+                                        <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor:pointer;border:1px solid transparent;" data-color="#607D8B" data-name="Slate"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background:#607D8B;width:36px;height:36px;border-radius:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:14px;height:14px;fill:#fff;opacity:0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Slate</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="av-footer-bottom-widgets">
+                        <div class="av-social-links">
+                            <a href="#" class="av-social-link"><i class="fa fa-facebook"/></a>
+                            <a href="#" class="av-social-link"><i class="fa fa-instagram"/></a>
+                            <a href="#" class="av-social-link"><i class="fa fa-linkedin"/></a>
+                            <a href="#" class="av-social-link"><i class="fa fa-pinterest-p"/></a>
+                            <a href="#" class="av-social-link"><i class="fa fa-tiktok"/></a>
+                            <a href="#" class="av-social-link"><i class="fa fa-twitter"/></a>
+                            <a href="#" class="av-social-link"><i class="fa fa-youtube-play"/></a>
+                        </div>
+                        <div class="av-app-badges">
+                            <a href="#" class="av-app-badge">
+                                <i class="fa fa-apple me-2"/>
+                                <span>Download on App Store</span>
+                            </a>
+                            <a href="#" class="av-app-badge">
+                                <i class="fa fa-play me-2"/>
+                                <span>Get it on Google Play</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="av-footer-bottom">
+                <div class="av-container">
+                    <div class="av-footer-bottom-row">
+                        <p class="av-copyright">&#169; 2025 AVEENIX. All rights reserved.</p>
+                        <div class="av-footer-legal">
+                            <a href="#"><i class="fa fa-lock av-footer-link-icon"/>Privacy Policy</a>
+                            <a href="#"><i class="fa fa-check-circle av-footer-link-icon"/>Cookie Policy</a>
+                            <a href="#"><i class="fa fa-headphones av-footer-link-icon"/>Contact Support</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+    </template>
+
+    <!-- =========================================================
+         GLOBAL LAYOUT INHERIT
+         Replace Odoo's default header/footer inside #wrapwrap with
+         the Aveenix versions on ALL pages (/shop, /product, /cart,
+         /my, etc.) — homepage overrides separately.
+         ========================================================= -->
+    <template id="aveenix_layout" inherit_id="website.layout" name="Aveenix Global Layout" priority="99">
+        <xpath expr="//div[@id='wrapwrap']/header" position="replace">
+            <t t-call="aveenix_website.aveenix_header"/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']/footer" position="replace">
+            <t t-call="aveenix_website.aveenix_footer"/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <!-- Mobile bottom navigation bar -->
+            <nav class="av-mobile-nav">
+                <a href="/" class="av-mobile-nav-item" data-nav="home">
+                    <i class="fa fa-home"/>
+                    <span>Home</span>
+                </a>
+                <a href="/categories" class="av-mobile-nav-item" data-nav="category">
+                    <i class="fa fa-th-large"/>
+                    <span>Categories</span>
+                </a>
+                <button type="button" class="av-mobile-nav-item av-mobile-search-trigger" onclick="document.getElementById('av-search-overlay').classList.add('active')">
+                    <i class="fa fa-search"/>
+                    <span>Search</span>
+                </button>
+                <a href="/shop" class="av-mobile-nav-item" data-nav="shop">
+                    <i class="fa fa-shopping-bag"/>
+                    <span>Shop</span>
+                </a>
+                <a href="/my/account" class="av-mobile-nav-item" data-nav="account">
+                    <i class="fa fa-user"/>
+                    <span>Account</span>
+                </a>
+            </nav>
+
+            <!-- Mobile search overlay -->
+            <div id="av-search-overlay" class="av-search-overlay">
+                <div class="av-search-overlay-header">
+                    <button class="av-search-overlay-close" onclick="document.getElementById('av-search-overlay').classList.remove('active')">
+                        <i class="fa fa-times"/>
+                    </button>
+                    <form class="av-search-overlay-form" action="/shop" method="get">
+                        <input id="av-search-overlay-input" type="text" name="search"
+                               class="av-search-overlay-input"
+                               placeholder="Search products, brands, categories…"
+                               autocomplete="off"/>
+                    </form>
+                </div>
+
+                <div class="av-search-overlay-body">
+                    <!-- Recent searches -->
+                    <div class="av-search-section" id="av-recent-section" style="display:none;">
+                        <div class="av-search-section-header">
+                            <i class="fa fa-clock-o"/> Recent Searches
+                            <button class="av-search-clear" onclick="avClearRecent()">&#10005; Clear All</button>
+                        </div>
+                        <div class="av-search-tags" id="av-recent-tags"></div>
+                    </div>
+
+                    <!-- Trending searches -->
+                    <div class="av-search-section">
+                        <div class="av-search-section-header">
+                            <i class="fa fa-line-chart"/> Trending Searches
+                        </div>
+                        <div class="av-search-trending">
+                            <a href="/shop?search=Laptop" class="av-search-trending-item">Laptop</a>
+                            <a href="/shop?search=Smartphone" class="av-search-trending-item">Smartphone</a>
+                            <a href="/shop?search=Headphones" class="av-search-trending-item">Headphones</a>
+                            <a href="/shop?search=Smart+TV" class="av-search-trending-item">Smart TV</a>
+                            <a href="/shop?search=Gaming" class="av-search-trending-item">Gaming</a>
+                            <a href="/shop?search=Tablet" class="av-search-trending-item">Tablet</a>
+                            <a href="/shop?search=Camera" class="av-search-trending-item">Camera</a>
+                            <a href="/shop?search=Watch" class="av-search-trending-item">Watch</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+            (function(){
+                // Topbar dropdowns — country, language, currency
+                // Restore saved values on load using data-storage-key on wrapper div
+                document.querySelectorAll('.av-tb-dropdown[data-storage-key]').forEach(function(dd){
+                    var key = dd.getAttribute('data-storage-key');
+                    var saved = localStorage.getItem(key);
+                    if(!saved) return;
+                    var trigger = dd.querySelector('.av-tb-trigger');
+                    if(!trigger) return;
+                    // update trigger text (first text node)
+                    var textNode = trigger.firstChild;
+                    if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = saved + ' ';
+                    // mark selected item
+                    dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(item){
+                        item.classList.remove('av-tb-selected');
+                        if(item.getAttribute('data-val') === saved) item.classList.add('av-tb-selected');
+                    });
+                });
+
+                // Wire up all tb-dropdowns
+                document.querySelectorAll('.av-tb-dropdown').forEach(function(dd){
+                    var trigger = dd.querySelector('.av-tb-trigger');
+                    if(!trigger) return;
+                    trigger.addEventListener('click', function(e){
+                        e.stopPropagation();
+                        var isOpen = dd.classList.contains('open');
+                        document.querySelectorAll('.av-tb-dropdown.open').forEach(function(d){ d.classList.remove('open'); });
+                        if(!isOpen) {
+                            dd.classList.add('open');
+                            var sel = dd.querySelector('.av-tb-selected');
+                            if(sel) setTimeout(function(){ sel.scrollIntoView({block:'nearest'}); }, 50);
+                        }
+                    });
+                    // item selection — save to localStorage and sync mobile
+                    var storageKey = dd.getAttribute('data-storage-key');
+                    dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(item){
+                        item.addEventListener('click', function(e){
+                            if(item.tagName === 'A') {
+                                // language/currency links — update label then let navigate
+                                e.stopPropagation();
+                                var val = item.querySelector('.av-tb-dd-name') ? item.querySelector('.av-tb-dd-name').textContent.trim() : '';
+                                if(val) {
+                                    var textNode = trigger.firstChild;
+                                    if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = val + ' ';
+                                }
+                                dd.classList.remove('open');
+                                return; // let href navigate
+                            }
+                            e.stopPropagation();
+                            dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(i){ i.classList.remove('av-tb-selected'); });
+                            item.classList.add('av-tb-selected');
+                            var val = item.getAttribute('data-val') || item.querySelector('.av-tb-dd-name').textContent.trim();
+                            // update trigger label
+                            var textNode = trigger.firstChild;
+                            if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = val + ' ';
+                            // persist (country only — currency uses pricelist links)
+                            if(storageKey) localStorage.setItem(storageKey, val);
+                            // sync mobile country val display
+                            if(storageKey === 'av_country') {
+                                var mobileValEl = document.getElementById('av-country-val');
+                                if(mobileValEl) mobileValEl.textContent = val;
+                                var mobileDd = document.getElementById('av-country-dropdown');
+                                if(mobileDd) {
+                                    mobileDd.querySelectorAll('.av-settings-dropdown-item').forEach(function(i){
+                                        i.classList.remove('selected');
+                                        if(i.getAttribute('data-val') === val) i.classList.add('selected');
+                                    });
+                                }
+                            }
+                            dd.classList.remove('open');
+                        });
+                    });
+                });
+
+                // Close on outside click
+                document.addEventListener('click', function(){
+                    document.querySelectorAll('.av-tb-dropdown.open').forEach(function(d){ d.classList.remove('open'); });
+                });
+            })();
+
+            (function(){
+                // Current date in topbar
+                (function(){
+                    var el = document.getElementById('av-topbar-date');
+                    if(!el) return;
+                    var d = new Date();
+                    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                    var dateStr = days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + String(d.getDate()).padStart(2,'0') + ', ' + d.getFullYear();
+                    el.innerHTML = '<span class="av-topbar-date-text">' + dateStr + '</span>'
+                        + '<span class="av-topbar-sep" style="margin:0 8px;">|</span>'
+                        + '<span class="av-topbar-location" id="av-topbar-location">'
+                        + '<i class="fa fa-map-marker" style="margin-right:4px;color:var(--av-red);"></i>'
+                        + '<span id="av-topbar-city">Detecting&#8230;</span>'
+                        + '</span>';
+
+                    // DEBUG bar — uncomment to enable location debugging
+                    // (function(){
+                    //     var dbgBar = document.createElement('div');
+                    //     dbgBar.id = 'av-loc-debug';
+                    //     dbgBar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#111;color:#0f0;font-size:13px;padding:6px 12px;z-index:99999;font-family:monospace;white-space:nowrap;overflow:hidden;';
+                    //     dbgBar.textContent = 'Location: waiting...';
+                    //     document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(dbgBar); });
+                    // })();
+                    // function avLocDebug(msg) {
+                    //     var el = document.getElementById('av-loc-debug');
+                    //     if(el) el.textContent = msg;
+                    // }
+
+                    function avSetLocationSession(countryCode) {
+                        fetch('/aveenix/location/set', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({jsonrpc:'2.0',method:'call',id:1,params:{country_code: countryCode}})
+                        }).catch(function(){});
+                    }
+
+                    var avLocEl = document.getElementById('av-topbar-location');
+
+                    function avSetCityText(text) {
+                        var cityEl = document.getElementById('av-topbar-city');
+                        if(cityEl) {
+                            cityEl.textContent = text;
+                        } else if(avLocEl) {
+                            avLocEl.innerHTML = '<i class="fa fa-map-marker" style="margin-right:4px;color:var(--av-red);"></i>'
+                                + '<span id="av-topbar-city">' + text + '</span>';
+                        }
+                        var mobileVal = document.getElementById('av-mobile-location-val');
+                        if(mobileVal) mobileVal.textContent = text;
+                    }
+
+                    window.avMobileLocationTap = function() {
+                        var mobileVal = document.getElementById('av-mobile-location-val');
+                        if(mobileVal) mobileVal.textContent = 'Detecting…';
+                        avDetectLocation(true);
+                    };
+
+                    function avShowLocationBtn() {
+                        if(!avLocEl) return;
+                        avLocEl.innerHTML = '<i class="fa fa-map-marker" style="margin-right:4px;color:var(--av-red);"></i>'
+                            + '<button id="av-enable-location" style="background:none;border:none;padding:0;cursor:pointer;font-size:12px;color:inherit;text-decoration:underline;">Enable location</button>';
+                        document.getElementById('av-enable-location').addEventListener('click', function() {
+                            avLocEl.innerHTML = '<i class="fa fa-map-marker" style="margin-right:4px;color:var(--av-red);"></i>'
+                                + '<span id="av-topbar-city">Detecting&#8230;</span>';
+                            avDetectLocation(true);
+                        });
+                    }
+
+                    function avDetectLocation(fromBtn) {
+                        navigator.geolocation.getCurrentPosition(function(pos) {
+                            fetch('https://nominatim.openstreetmap.org/reverse?format=json&amp;lat=' + pos.coords.latitude + '&amp;lon=' + pos.coords.longitude)
+                                .then(function(r){ return r.json(); })
+                                .then(function(data) {
+                                    var city = (data.address &amp;&amp; (data.address.city || data.address.town || data.address.village || data.address.county)) || 'Unknown';
+                                    avSetCityText(city);
+                                    if(data.address &amp;&amp; data.address.country_code) {
+                                        avSetLocationSession(data.address.country_code.toUpperCase());
+                                    }
+                                })
+                                .catch(function(){ avSetCityText('Unknown'); });
+                        }, function() {
+                            avShowLocationBtn();
+                        }, {timeout: 10000, maximumAge: fromBtn ? 0 : 300000, enableHighAccuracy: false});
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        if(!navigator.geolocation) { avSetCityText('Unknown'); return; }
+                        fetch('/aveenix/location/get', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({jsonrpc:'2.0',method:'call',id:1,params:{}})
+                        }).then(function(r){ return r.json(); }).then(function(d) {
+                            var res = d.result || {};
+                            if(res.country_name) {
+                                avSetCityText(res.country_name);
+                            } else {
+                                avStartDetection();
+                            }
+                        }).catch(function() { avStartDetection(); });
+                    });
+
+                    function avStartDetection() {
+                        if(navigator.permissions) {
+                            navigator.permissions.query({name:'geolocation'}).then(function(result) {
+                                if(result.state === 'denied') {
+                                    avShowLocationBtn();
+                                } else {
+                                    avDetectLocation(false);
+                                }
+                                result.onchange = function() {
+                                    if(result.state === 'granted') avDetectLocation(true);
+                                    else if(result.state === 'denied') avShowLocationBtn();
+                                };
+                            }).catch(function(){ avDetectLocation(false); });
+                        } else {
+                            avDetectLocation(false);
+                        }
+                    }
+                })();
+
+                // Save search to recent
+                var form = document.querySelector('.av-search-overlay-form');
+                if(form) {
+                    form.addEventListener('submit', function(){
+                        var val = document.getElementById('av-search-overlay-input').value.trim();
+                        if(!val) return;
+                        var recent = JSON.parse(localStorage.getItem('av_recent_searches') || '[]');
+                        recent = recent.filter(function(r){ return r !== val; });
+                        recent.unshift(val);
+                        recent = recent.slice(0, 8);
+                        localStorage.setItem('av_recent_searches', JSON.stringify(recent));
+                    });
+                }
+
+                // Show recent searches when overlay opens
+                document.addEventListener('click', function(e){
+                    if(e.target.closest('.av-mobile-search-trigger')) {
+                        setTimeout(function(){
+                            avLoadRecent();
+                            var input = document.getElementById('av-search-overlay-input');
+                            if(input) input.focus();
+                        }, 100);
+                    }
+                });
+
+                window.avLoadRecent = function(){
+                    var recent = JSON.parse(localStorage.getItem('av_recent_searches') || '[]');
+                    var section = document.getElementById('av-recent-section');
+                    var tags = document.getElementById('av-recent-tags');
+                    if(!section || !tags) return;
+                    if(recent.length === 0){ section.style.display='none'; return; }
+                    section.style.display='block';
+                    tags.innerHTML = recent.map(function(r){
+                        return '<a href="/shop?search='+encodeURIComponent(r)+'" class="av-search-tag">'+r+'</a>';
+                    }).join('');
+                };
+
+                window.avClearRecent = function(){
+                    localStorage.removeItem('av_recent_searches');
+                    var section = document.getElementById('av-recent-section');
+                    if(section) section.style.display='none';
+                };
+
+                // Close overlay on backdrop click
+                var overlay = document.getElementById('av-search-overlay');
+                if(overlay){
+                    overlay.addEventListener('click', function(e){
+                        if(e.target === overlay) overlay.classList.remove('active');
+                    });
+                }
+
+                // Active state on bottom nav based on current URL
+                (function(){
+                    var path = window.location.pathname;
+                    // strip trailing slash except root
+                    if(path !== '/') path = path.replace(/\/$/, '');
+                    var active = null;
+                    if(path === '/') {
+                        active = 'home';
+                    } else if(path === '/shop') {
+                        active = 'shop';
+                    } else if(path.startsWith('/categories')) {
+                        active = 'category';
+                    } else if(path.startsWith('/shop/')) {
+                        active = 'shop';
+                    } else if(path.startsWith('/my/')) {
+                        active = 'account';
+                    }
+                    if(active) {
+                        var el = document.querySelector('.av-mobile-nav [data-nav="' + active + '"]');
+                        if(el) el.classList.add('active');
+                    }
+                })();
+
+                // Mobile settings — color panel toggle
+                var colorRow = document.getElementById('av-mobile-color-row');
+                var colorPanel = document.getElementById('av-mobile-color-panel');
+                var colorChevron = document.getElementById('av-mobile-color-chevron');
+                if(colorRow &amp;&amp; colorPanel) {
+                    colorRow.addEventListener('click', function(){
+                        var open = colorPanel.style.display !== 'none';
+                        colorPanel.style.display = open ? 'none' : 'block';
+                        if(colorChevron) colorChevron.style.transform = open ? '' : 'rotate(180deg)';
+                        var col = colorPanel.closest('.av-footer-col');
+                        if(col) col.classList.toggle('color-panel-open', !open);
+                    });
+                }
+
+                // Settings dropdowns: country, language, currency
+                (function(){
+                    var pairs = [
+                        ['av-country-row', 'av-country-dropdown', 'av_country'],
+                        ['av-lang-row',    'av-lang-dropdown',    null],
+                        ['av-currency-row','av-currency-dropdown', null]
+                    ];
+
+                    // Restore saved country value into mobile display
+                    pairs.forEach(function(pair){
+                        if(!pair[2]) return;
+                        var saved = localStorage.getItem(pair[2]);
+                        if(!saved) return;
+                        var row = document.getElementById(pair[0]);
+                        var dd  = document.getElementById(pair[1]);
+                        if(!row || !dd) return;
+                        var valEl = row.querySelector('.av-settings-val');
+                        if(valEl) valEl.textContent = saved;
+                        dd.querySelectorAll('.av-settings-dropdown-item').forEach(function(item){
+                            item.classList.remove('selected');
+                            if(item.getAttribute('data-val') === saved) item.classList.add('selected');
+                        });
+                    });
+                    pairs.forEach(function(pair){
+                        var row = document.getElementById(pair[0]);
+                        var dd  = document.getElementById(pair[1]);
+                        var storageKey = pair[2];
+                        if(!row || !dd) return;
+                        var valEl = row.querySelector('.av-settings-val');
+
+                        // Click on row header — toggle dropdown
+                        row.addEventListener('click', function(){
+                            var isOpen = dd.style.display !== 'none';
+                            pairs.forEach(function(p){
+                                var d = document.getElementById(p[1]);
+                                var r = document.getElementById(p[0]);
+                                if(d) d.style.display = 'none';
+                                if(r) r.classList.remove('open');
+                            });
+                            if(!isOpen) {
+                                dd.style.display = 'block';
+                                row.classList.add('open');
+                                var sel = dd.querySelector('.selected');
+                                if(sel) setTimeout(function(){ sel.scrollIntoView({block:'nearest'}); }, 50);
+                            }
+                        });
+
+                        // Click on item — select it and persist
+                        dd.querySelectorAll('.av-settings-dropdown-item').forEach(function(item){
+                            item.addEventListener('click', function(e){
+                                if(item.tagName === 'A') return; // let links navigate
+                                e.stopPropagation();
+                                dd.querySelectorAll('.av-settings-dropdown-item').forEach(function(i){ i.classList.remove('selected'); });
+                                item.classList.add('selected');
+                                var val = item.getAttribute('data-val') || item.querySelector('.av-dd-name').textContent;
+                                if(valEl) valEl.textContent = val;
+                                if(storageKey) localStorage.setItem(storageKey, val);
+                                // sync desktop topbar trigger label + selected state
+                                if(storageKey) {
+                                    var tbDd = document.querySelector('.av-tb-dropdown[data-storage-key="' + storageKey + '"]');
+                                    if(tbDd) {
+                                        var tbTrigger = tbDd.querySelector('.av-tb-trigger');
+                                        if(tbTrigger) {
+                                            var tn = tbTrigger.firstChild;
+                                            if(tn &amp;&amp; tn.nodeType === 3) tn.textContent = val + ' ';
+                                        }
+                                        tbDd.querySelectorAll('.av-tb-dropdown-item').forEach(function(i){
+                                            i.classList.remove('av-tb-selected');
+                                            if(i.getAttribute('data-val') === val) i.classList.add('av-tb-selected');
+                                        });
+                                    }
+                                }
+                                // close
+                                dd.style.display = 'none';
+                                row.classList.remove('open');
+                            });
+                        });
+                    });
+                })();
+
+                // Mobile dark mode toggle synced with main toggle
+                var mobileDarkBtn = document.getElementById('av-dark-toggle-mobile');
+                if(mobileDarkBtn) {
+                    mobileDarkBtn.addEventListener('click', function(){
+                        var mainToggle = document.getElementById('av-dark-toggle');
+                        if(mainToggle) mainToggle.click();
+                    });
+                }
+
+                // Sync mobile color dot + name with current theme
+                (function(){
+                    var dot = document.getElementById('av-mobile-color-dot');
+                    var name = document.getElementById('av-mobile-color-name');
+                    var saved = localStorage.getItem('av_color_theme');
+                    var savedName = localStorage.getItem('av_color_name');
+                    if(dot &amp;&amp; saved) dot.style.background = saved;
+                    if(name &amp;&amp; savedName) name.textContent = savedName;
+                    // Color buttons in mobile settings panel
+                    document.querySelectorAll('#av-mobile-color-panel .av-color-btn-wrapper').forEach(function(btn){
+                        btn.addEventListener('click', function(){
+                            var color = btn.getAttribute('data-color');
+                            var cname = btn.getAttribute('data-name');
+                            // Trigger same logic as desktop picker
+                            var desktopBtn = document.querySelector('.av-color-grid .av-color-btn-wrapper[data-color="' + color + '"]');
+                            if(desktopBtn) { desktopBtn.click(); }
+                            else {
+                                document.documentElement.style.setProperty('--av-red', color);
+                                localStorage.setItem('av_color_theme', color);
+                                localStorage.setItem('av_color_name', cname);
+                            }
+                            if(dot) dot.style.background = color;
+                            if(name) name.textContent = cname;
+                        });
+                    });
+                })();
+
+                // Footer accordion — mobile only
+                document.querySelectorAll('.av-footer-toggle').forEach(function(heading){
+                    heading.addEventListener('click', function(){
+                        if(window.innerWidth > 767) return;
+                        var col = heading.closest('.av-footer-col');
+                        var isOpen = col.classList.contains('open');
+                        document.querySelectorAll('.av-footer-col.open').forEach(function(c){ c.classList.remove('open'); });
+                        if(!isOpen) col.classList.add('open');
+                    });
+                });
+            })();
+            </script>
+        </xpath>
+        <!-- Inject color vars + anti-FOUC script into <head> before first paint -->
+        <xpath expr="//head" position="inside">
+            <t t-set="av_website" t-value="request.website.sudo()"/>
+            <t t-set="av_primary" t-value="av_website.aveenix_primary_color or '#CC0000'"/>
+            <t t-set="av_accent"  t-value="av_website.aveenix_accent_color  or '#FFB300'"/>
+            <!-- Backend color vars — always present so CSS has a base -->
+            <style>
+                :root {
+                    --av-red:      <t t-esc="av_primary"/>;
+                    --av-red-dark:  color-mix(in srgb, <t t-esc="av_primary"/> 75%, black);
+                    --av-yellow:   <t t-esc="av_accent"/>;
+                }
+                .av-cat-nav .av-cat-menu a:hover,
+                .av-cat-nav .av-menu-btn:hover {
+                    background: rgba(0,0,0,0.18) !important;
+                    color: #ffffff !important;
+                }
+                [data-theme="dark"] .av-header-action:hover,
+                [data-theme="dark"] .av-header-action:hover > i,
+                [data-theme="dark"] .av-header-action:hover > span.av-user-menu-toggle,
+                [data-theme="dark"] .av-header-action:hover > span.av-user-menu-toggle i,
+                [data-theme="dark"] .av-header-action:hover > span:not(.av-user-dropdown),
+                [data-theme="dark"] .av-header-cart:hover,
+                [data-theme="dark"] .av-header-cart:hover i,
+                [data-theme="dark"] .av-header-cart:hover span {
+                    color: var(--av-red) !important;
+                }
+                .av-user-menu:has(.av-user-dropdown:hover) .av-user-menu-toggle,
+                .av-user-menu:has(.av-user-dropdown:hover) .av-user-menu-toggle i,
+                .av-user-menu:has(.av-user-dropdown:hover) .av-user-menu-toggle span {
+                    color: inherit !important;
+                }
+                [data-theme="dark"] .av-user-dropdown .dropdown-item,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item i,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item:hover,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item:hover i,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item:hover span {
+                    color: #e0e0e0 !important;
+                }
+                [data-theme="dark"] .av-user-dropdown .dropdown-item.text-danger,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item.text-danger i,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item.text-danger:hover,
+                [data-theme="dark"] .av-user-dropdown .dropdown-item.text-danger:hover i {
+                    color: #dc3545 !important;
+                }
+                .av-header-action:hover .av-cart-badge,
+                .av-header-action:hover .av-compare-badge,
+                .av-header-action:hover .av-header-badge,
+                .av-header-cart:hover .av-cart-badge,
+                [data-theme="dark"] .av-header-action:hover .av-cart-badge,
+                [data-theme="dark"] .av-header-action:hover .av-compare-badge,
+                [data-theme="dark"] .av-header-action:hover .av-header-badge,
+                [data-theme="dark"] .av-header-cart:hover .av-cart-badge {
+                    background: var(--av-red) !important;
+                    color: #ffffff !important;
+                }
+                @media (max-width: 767px) {
+                    .av-header-inner { height: 56px; padding: 0 14px !important; }
+                    .av-logo-icon { height: 40px !important; width: auto !important; }
+                }
+            </style>
+            <!-- Anti-FOUC: apply dark mode + color theme before first paint -->
+            <script>
+                (function(){
+                    try {
+                        var r = document.documentElement;
+                        var theme = localStorage.getItem('av_theme');
+                        var prefersDark = window.matchMedia &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        if (theme === 'dark' || (theme === null &amp;&amp; prefersDark)) {
+                            r.setAttribute('data-theme', 'dark');
+                            r.setAttribute('data-bs-theme', 'dark');
+                        }
+                        var c = localStorage.getItem('av_primary_color');
+                        if (c) {
+                            r.style.setProperty('--av-red', c);
+                            r.style.setProperty('--av-red-dark', 'color-mix(in srgb, ' + c + ' 75%, black)');
+                            r.style.setProperty('--bs-primary', c);
+                        }
+                    } catch(e) {}
+                    // Anti-flash: mark fav/wish buttons before paint + update header badges.
+                    try {
+                        var favIds = JSON.parse(localStorage.getItem('av_fav_ids') || '[]');
+                        var wishIds = JSON.parse(localStorage.getItem('av_wish_ids') || '[]');
+                        function updateFavBadge() {
+                            favIds = JSON.parse(localStorage.getItem('av_fav_ids') || '[]');
+                            var badge = document.getElementById('av-fav-count');
+                            if (!badge) return;
+                            var n = favIds.length;
+                            badge.textContent = n;
+                            badge.style.display = n ? '' : 'none';
+                        }
+                        function updateWishBadge() {
+                            wishIds = JSON.parse(localStorage.getItem('av_wish_ids') || '[]');
+                            var badge = document.getElementById('av-wish-count');
+                            if (!badge) return;
+                            var n = wishIds.length;
+                            badge.textContent = n;
+                            badge.style.display = n ? '' : 'none';
+                        }
+                        function markBtn(el) {
+                            var id = String(el.dataset.productId || el.dataset.productTemplateId || '');
+                            if (!id) return;
+                            var icon = el.querySelector('.fa');
+                            var isFavBtn = el.classList.contains('av-add-to-fav') || el.classList.contains('o_add_wishlist_dyn');
+                            if (isFavBtn) {
+                                if (favIds.includes(id)) {
+                                    if (icon) { icon.classList.remove('fa-heart-o'); icon.classList.add('fa-heart'); }
+                                    el.classList.add('av-added-to-fav');
+                                } else {
+                                    if (icon) { icon.classList.remove('fa-heart'); icon.classList.add('fa-heart-o'); }
+                                    el.classList.remove('av-added-to-fav');
+                                }
+                            }
+                            if (el.classList.contains('av-add-to-wish')) {
+                                if (wishIds.includes(id)) {
+                                    if (icon) { icon.classList.remove('fa-star-o'); icon.classList.add('fa-star'); }
+                                    el.classList.add('av-added-to-wish');
+                                } else {
+                                    if (icon) { icon.classList.remove('fa-star'); icon.classList.add('fa-star-o'); }
+                                    el.classList.remove('av-added-to-wish');
+                                }
+                            }
+                        }
+                        function markAll() {
+                            document.querySelectorAll('.av-add-to-fav,.av-add-to-wish,.o_add_wishlist_dyn').forEach(markBtn);
+                            updateFavBadge();
+                            updateWishBadge();
+                        }
+                        function onFavChanged() {
+                            favIds = JSON.parse(localStorage.getItem('av_fav_ids') || '[]');
+                            document.querySelectorAll('.av-add-to-fav,.o_add_wishlist_dyn').forEach(markBtn);
+                            updateFavBadge();
+                        }
+                        function onWishChanged() {
+                            wishIds = JSON.parse(localStorage.getItem('av_wish_ids') || '[]');
+                            document.querySelectorAll('.av-add-to-wish').forEach(markBtn);
+                            updateWishBadge();
+                        }
+                        document.addEventListener('DOMContentLoaded', markAll);
+                        window.addEventListener('av-fav-changed', onFavChanged);
+                        window.addEventListener('av-wish-changed', onWishChanged);
+                        var obs = new MutationObserver(function(muts) {
+                            muts.forEach(function(m) {
+                                m.addedNodes.forEach(function(n) {
+                                    if (n.nodeType !== 1) return;
+                                    if (n.classList.contains('av-add-to-fav') || n.classList.contains('av-add-to-wish') || n.classList.contains('o_add_wishlist_dyn')) markBtn(n);
+                                    n.querySelectorAll &amp;&amp; n.querySelectorAll('.av-add-to-fav,.av-add-to-wish,.o_add_wishlist_dyn').forEach(markBtn);
+                                });
+                            });
+                        });
+                        obs.observe(document.documentElement, { childList: true, subtree: true });
+                        window.addEventListener('load', function() { obs.disconnect(); });
+                    } catch(e) {}
+                    // All Categories dropdown toggle
+                    try {
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var btn = document.getElementById('av-all-categories-btn');
+                            var drop = document.getElementById('av-cat-dropdown');
+                            if (!btn || !drop) return;
+                            btn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                drop.classList.toggle('av-cat-open');
+                            });
+                            document.addEventListener('click', function() {
+                                drop.classList.remove('av-cat-open');
+                            });
+                            drop.addEventListener('click', function(e) { e.stopPropagation(); });
+                        });
+                    } catch(e) {}
+                })();
+            </script>
+        </xpath>
+    </template>
+
+</odoo>

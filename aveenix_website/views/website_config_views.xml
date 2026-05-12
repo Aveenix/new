@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_website_form_aveenix_colors" model="ir.ui.view">
+        <field name="name">website.form.aveenix.colors</field>
+        <field name="model">website</field>
+        <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Aveenix Theme" name="page_aveenix_theme">
+                    <group string="Brand Colors">
+                        <group>
+                            <field name="aveenix_primary_color"
+                                   string="Primary Color"
+                                   help="Main brand color — header, search button, badges, nav bar. Hex value e.g. #CC0000"/>
+                            <field name="aveenix_accent_color"
+                                   string="Accent Color"
+                                   help="Accent / CTA color — Shop Now button, Add to Cart, stars. Hex value e.g. #FFB300"/>
+                        </group>
+                        <group>
+                            <div class="text-muted" colspan="2">
+                                Enter a hex color value (e.g. <code>#CC0000</code>). Changes apply on the next page load.
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Product form: Available Countries field -->
+    <record id="view_product_template_aveenix_location" model="ir.ui.view">
+        <field name="name">product.template.aveenix.location</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='extra_info']" position="inside">
+                <field name="available_country_ids"
+                       widget="many2many_tags"
+                       string="Available In Countries"
+                       help="Leave empty to show everywhere. Select countries to restrict to those locations."/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

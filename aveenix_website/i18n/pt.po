@@ -1,0 +1,1238 @@
+# Portuguese translation for aveenix_website
+# Copyright (C) 2024 Aveenix
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Portuguese\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Summer Electronics<br/>Sale"
+msgstr "Eletrônicos de verão<br/>Promoção"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Up to 70% Off"
+msgstr "Até 70% de desconto"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Get the latest gadgets at unbeatable prices"
+msgstr "Obtenha os gadgets mais recentes por preços imbatíveis"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Shop Now"
+msgstr "Comprar agora"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Fashion Week Special"
+msgstr "Especial Semana da Moda"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "New Arrivals"
+msgstr "Novidades"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Discover the latest trends in fashion"
+msgstr "Descubra as últimas tendências da moda"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Explore"
+msgstr "Explorar"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Home &amp; Garden"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Transform Your Space"
+msgstr "Transforme seu espaço"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Beautiful furniture and decor for every room"
+msgstr "Belos móveis e decoração para cada ambiente"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Browse"
+msgstr "Navegar"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n                        <span class=\"visually-hidden\">Previous</span>"
+msgstr "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n                        <span class=\"visually-hidden\">Anterior</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n                        <span class=\"visually-hidden\">Next</span>"
+msgstr "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n                        <span class=\"visually-hidden\">Próximo</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-title-icon\">🎁</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Shop by Category"
+msgstr "Comprar por categoria"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<i class=\"fa fa-sliders\"/> For You"
+msgstr "<i class=\"fa fa-sliders\"/> Para você"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<i class=\"fa fa-star\"/> Best Sellers"
+msgstr "<i class=\"fa fa-star\"/> Mais vendidos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<i class=\"fa fa-clock-o\"/> New Arrivals"
+msgstr "<i class=\"fa fa-clock-o\"/> Novidades"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "View All"
+msgstr "Ver tudo"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">Laptops</span>"
+msgstr "<span class=\"av-cat-label\">Notebooks</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">Mobile</span>"
+msgstr "<span class=\"av-cat-label\">Mobile</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">Gaming</span>"
+msgstr "<span class=\"av-cat-label\">Games</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">TV &amp; Video</span>"
+msgstr "<span class=\"av-cat-label\">TV e Vídeo</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">Monitors</span>"
+msgstr "<span class=\"av-cat-label\">Monitores</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">Headphones</span>"
+msgstr "<span class=\"av-cat-label\">Fones de ouvido</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-cat-label\">Smart Home</span>"
+msgstr "<span class=\"av-cat-label\">Casa inteligente</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Trending Products"
+msgstr "Produtos em alta"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "For You"
+msgstr "Para você"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Best Sellers"
+msgstr "Mais vendidos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-badge av-badge-red\">Sale</span>"
+msgstr "<span class=\"av-prod-badge av-badge-red\">Promoção</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<i class=\"fa fa-shopping-cart\"/> <span>Add to Cart</span>"
+msgstr "<i class=\"fa fa-shopping-cart\"/> <span>Adicionar ao carrinho</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-badge av-badge-red\">34%</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Home Security Camera 1080 Wi-Fi"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-price\">$49.99</span>\n                                            <span class=\"av-prod-original\">$299.95</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-badge av-badge-red\">38%</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "UZD RGB LED Video Light"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-price\">$29.95</span>\n                                            <span class=\"av-prod-original\">$239.95</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-badge av-badge-red\">19%</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Ergonomic Gaming Chair"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-price\">$159.99</span>\n                                            <span class=\"av-prod-original\">$1,439.95</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-badge av-badge-orange\">11% Off</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "COSORI Pro Smart Air Fryer 6 Qt"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-price\">$99.95</span>\n                                            <span class=\"av-prod-original\">$1,439.95</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-badge av-badge-orange\">19% off</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "4K Ultra HD Smart TV 55\" Android"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-price\">$379.95</span>\n                                            <span class=\"av-prod-original\">$489.95</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Xiaomi Robot Vacuum Mop Pro 2"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "<span class=\"av-prod-price\">$279.95</span>\n                                            <span class=\"av-prod-original\">$289.95</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Why Choose Aveenix?"
+msgstr "Por que escolher a Aveenix?"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Secure Payments"
+msgstr "Pagamentos seguros"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Safe and secure payment methods guaranteed."
+msgstr "Métodos de pagamento seguros e confiáveis garantidos."
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Fast Delivery"
+msgstr "Entrega rápida"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Current shipping at supreme delivery speeds."
+msgstr "Envio com velocidades de entrega supremas."
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Hassle Free Returns"
+msgstr "Devoluções sem complicações"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Simple and easy return policy for all products."
+msgstr "Política de devolução simples e fácil para todos os produtos."
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "24/7 Support"
+msgstr "Suporte 24/7"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Round-the-clock customer support team."
+msgstr "Equipe de suporte ao cliente disponível 24 horas."
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Sell on Aveenix"
+msgstr "Vender na Aveenix"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Reach millions of customers by becoming a seller on AVEENIX"
+msgstr "Alcance milhões de clientes tornando-se um vendedor na AVEENIX"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Start Selling"
+msgstr "Começar a vender"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "Compare Products"
+msgstr "Comparar produtos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "Compare products' features, pricing, and specifications side-by-side. Add as many products as you need to make informed decisions."
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<i class=\"fa fa-arrow-left\"/> Back to Home"
+msgstr "<i class=\"fa fa-arrow-left\"/> Voltar ao início"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "Compare features, pricing, and specifications side-by-side"
+msgstr "Compare recursos, preços e especificações lado a lado"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<span class=\"av-compare-stat-val\" id=\"av-cmp-count\">0</span>\n                            <span class=\"av-compare-stat-label\">Products to Compare</span>"
+msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-count\">0</span>\n                            <span class=\"av-compare-stat-label\">Produtos a comparar</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<span class=\"av-compare-stat-val\" id=\"av-cmp-total\">$0.00</span>\n                            <span class=\"av-compare-stat-label\">Total Value</span>"
+msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-total\">$0.00</span>\n                            <span class=\"av-compare-stat-label\">Valor total</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<span class=\"av-compare-stat-val\" id=\"av-cmp-stock\">0</span>\n                            <span class=\"av-compare-stat-label\">In Stock</span>"
+msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-stock\">0</span>\n                            <span class=\"av-compare-stat-label\">Em estoque</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<span class=\"av-compare-stat-val\" id=\"av-cmp-sale\">0</span>\n                            <span class=\"av-compare-stat-label\">On Sale</span>"
+msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-sale\">0</span>\n                            <span class=\"av-compare-stat-label\">Em promoção</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<span>Add All to Cart</span>"
+msgstr "<span>Adicionar tudo ao carrinho</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<i class=\"fa fa-balance-scale\"/> Clear Comparison"
+msgstr "<i class=\"fa fa-balance-scale\"/> Limpar comparação"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<span class=\"av-compare-item-count ms-auto\" id=\"av-cmp-item-label\">0 items</span>"
+msgstr "<span class=\"av-compare-item-count ms-auto\" id=\"av-cmp-item-label\">0 itens</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "Start Comparing Products"
+msgstr "Começar a comparar produtos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "Search and add products to compare their features, pricing, and specifications side-by-side."
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
+msgid "<i class=\"fa fa-plus\"/> Add Products"
+msgstr "<i class=\"fa fa-plus\"/> Adicionar produtos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_wishlist_title
+msgid "<span class=\"o_label small ms-2\">Add to favourite</span>"
+msgstr "<span class=\"o_label small ms-2\">Adicionar aos favoritos</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_wishlist_title
+msgid "Add to favourite"
+msgstr "Adicionar aos favoritos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_wishlist_title
+msgid "Add to wishlist"
+msgstr "Adicionar à lista de desejos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+msgid "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to favourites\"/>"
+msgstr "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Adicionar aos favoritos\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+msgid "Add to favourites"
+msgstr "Adicionar aos favoritos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+msgid "<i class=\"fa fa-star-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr "<i class=\"fa fa-star-o me-2 me-lg-0\" role=\"img\" aria-label=\"Adicionar à lista de desejos\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+msgid "<i class=\"fa fa-balance-scale me-2\" role=\"img\" aria-label=\"Add to Compare\"/>\n                <span>Add to Compare</span>"
+msgstr "<i class=\"fa fa-balance-scale me-2\" role=\"img\" aria-label=\"Adicionar à comparação\"/>\n                <span>Adicionar à comparação</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+msgid "Add to Compare"
+msgstr "Adicionar à comparação"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "My Favourites"
+msgstr "Meus favoritos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "Items you frequently purchase or access. Quick reorder your most loved products and track your shopping habits."
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "Items you frequently purchase or access"
+msgstr "Itens que você compra frequentemente"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<select class=\"av-fav-filter\" id=\"av-fav-filter\">\n                                <option value=\"all\">All Items</option>\n                                <option value=\"in-stock\">In Stock</option>\n                                <option value=\"on-sale\">On Sale</option>\n                            </select>"
+msgstr "<select class=\"av-fav-filter\" id=\"av-fav-filter\">\n                                <option value=\"all\">Todos os itens</option>\n                                <option value=\"in-stock\">Em estoque</option>\n                                <option value=\"on-sale\">Em promoção</option>\n                            </select>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<i class=\"fa fa-th\"/> List View"
+msgstr "<i class=\"fa fa-th\"/> Visualização em lista"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Toggle View"
+msgstr "Alternar visualização"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<span class=\"av-fav-stat-val\" id=\"av-fav-count\">0</span>\n                            <span class=\"av-fav-stat-label\">Total Favourites</span>"
+msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-count\">0</span>\n                            <span class=\"av-fav-stat-label\">Total de favoritos</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<span class=\"av-fav-stat-val\" id=\"av-fav-total\">$0.00</span>\n                            <span class=\"av-fav-stat-label\">Total Value</span>"
+msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-total\">$0.00</span>\n                            <span class=\"av-fav-stat-label\">Valor total</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<span class=\"av-fav-stat-val\" id=\"av-fav-stock\">0</span>\n                            <span class=\"av-fav-stat-label\">In Stock</span>"
+msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-stock\">0</span>\n                            <span class=\"av-fav-stat-label\">Em estoque</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<span class=\"av-fav-stat-val\" id=\"av-fav-sale\">0</span>\n                            <span class=\"av-fav-stat-label\">On Sale</span>"
+msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-sale\">0</span>\n                            <span class=\"av-fav-stat-label\">Em promoção</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<i class=\"fa fa-shopping-cart\"/> <span>Add All to Cart</span>"
+msgstr "<i class=\"fa fa-shopping-cart\"/> <span>Adicionar tudo ao carrinho</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<i class=\"fa fa-heart-o\"/> Clear Favourites"
+msgstr "<i class=\"fa fa-heart-o\"/> Limpar favoritos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "<span class=\"av-fav-item-count ms-auto\" id=\"av-fav-item-label\">0 items</span>"
+msgstr "<span class=\"av-fav-item-count ms-auto\" id=\"av-fav-item-label\">0 itens</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "No favourites yet"
+msgstr "Nenhum favorito ainda"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+msgid "Add products to your favourites by clicking the heart icon on product cards"
+msgstr "Clique no ícone de coração nos cartões de produto"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Start Shopping"
+msgstr "Começar a comprar"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "My Wishlist"
+msgstr "Minha lista de desejos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Save items for later and track price changes. Create lists for different occasions and monitor price drops."
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Save items for later and track price changes"
+msgstr "Salve itens para depois e acompanhe preços"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<select class=\"av-wish-filter\" id=\"av-wish-filter\">\n                                <option value=\"all\">All Items</option>\n                                <option value=\"in-stock\">In Stock</option>\n                                <option value=\"on-sale\">On Sale</option>\n                            </select>"
+msgstr "<select class=\"av-wish-filter\" id=\"av-wish-filter\">\n                                <option value=\"all\">Todos os itens</option>\n                                <option value=\"in-stock\">Em estoque</option>\n                                <option value=\"on-sale\">Em promoção</option>\n                            </select>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<span class=\"av-wish-stat-val\" id=\"av-wish-count\">0</span>\n                            <span class=\"av-wish-stat-label\">Total Wishlist</span>"
+msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-count\">0</span>\n                            <span class=\"av-wish-stat-label\">Total da lista de desejos</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<span class=\"av-wish-stat-val\" id=\"av-wish-total\">$0.00</span>\n                            <span class=\"av-wish-stat-label\">Total Value</span>"
+msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-total\">$0.00</span>\n                            <span class=\"av-wish-stat-label\">Valor total</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<span class=\"av-wish-stat-val\" id=\"av-wish-stock\">0</span>\n                            <span class=\"av-wish-stat-label\">In Stock</span>"
+msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-stock\">0</span>\n                            <span class=\"av-wish-stat-label\">Em estoque</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<span class=\"av-wish-stat-val\" id=\"av-wish-sale\">0</span>\n                            <span class=\"av-wish-stat-label\">On Sale</span>"
+msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-sale\">0</span>\n                            <span class=\"av-wish-stat-label\">Em promoção</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Add All to Cart"
+msgstr "Adicionar tudo ao carrinho"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<i class=\"fa fa-star-o\"/> Clear Wishlist"
+msgstr "<i class=\"fa fa-star-o\"/> Limpar lista de desejos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "<span class=\"av-wish-item-count ms-auto\" id=\"av-wish-item-label\">0 items</span>"
+msgstr "<span class=\"av-wish-item-count ms-auto\" id=\"av-wish-item-label\">0 itens</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Your wishlist is empty"
+msgstr "Sua lista de desejos está vazia"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
+msgid "Add products to your wishlist by clicking the star icon on product cards"
+msgstr "Clique no ícone de estrela nos cartões de produto"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Contact Us"
+msgstr "Entre em contato"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Location"
+msgstr "Localização"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Aveenix Express"
+msgstr "Aveenix Express"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Regional Delivery Centers"
+msgstr "Centros de entrega regionais"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "401 Ellerslie Panmure Highway Mount Wellington, Auckland 1060"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Business Hours"
+msgstr "Horário de funcionamento"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Monday – Sunday: 06:00 – 18:00"
+msgstr "Segunda – Domingo: 06:00 – 18:00"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Public Holidays – Closed"
+msgstr "Feriados – Fechado"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Contact us"
+msgstr "Entre em contato"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Got questions or need assistance? We're here to help! At Aveenix, your satisfaction is our top priority. Whether you have inquiries about your order, need help navigating our website, or simply want to connect, our dedicated support team is ready to assist you."
+msgstr "Tem dúvidas ou precisa de ajuda? Estamos aqui para ajudar! Na Aveenix, sua satisfação é nossa prioridade máxima. Seja para dúvidas sobre seu pedido, ajuda para navegar em nosso site ou apenas para entrar em contato, nossa equipe de suporte dedicada está pronta para atendê-lo."
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Reach out through the contact form below for a swift and helpful response. Enjoy a seamless shopping experience with Aveenix, where we're committed to making your online journey exceptional. Shop with confidence knowing we're just a message away!"
+msgstr "Entre em contato pelo formulário abaixo para uma resposta rápida e útil. Aproveite uma experiência de compra perfeita com a Aveenix, onde nos comprometemos a tornar sua jornada online excepcional. Compre com confiança sabendo que estamos a apenas uma mensagem de distância!"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Contact support team"
+msgstr "Contatar equipe de suporte"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Send A Message"
+msgstr "Enviar uma mensagem"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Name*"
+msgstr "Nome*"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Email Address*"
+msgstr "Endereço de e-mail*"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Phone Number"
+msgstr "Número de telefone"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Website"
+msgstr "Site"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Your message...*"
+msgstr "Sua mensagem...*"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Free Consultancy"
+msgstr "Consultoria gratuita"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Notifications"
+msgstr "Notificações"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Stay updated with order status, promotions, and important updates"
+msgstr "Fique atualizado sobre pedidos, promoções e atualizações importantes"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Notifications <span class=\"av-notif-new-badge\" id=\"av-notif-new-count\" style=\"display:none;\"/>"
+msgstr "Notificações <span class=\"av-notif-new-badge\" id=\"av-notif-new-count\" style=\"display:none;\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "<i class=\"fa fa-check\"/> Mark All Read"
+msgstr "<i class=\"fa fa-check\"/> Marcar tudo como lido"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "<i class=\"fa fa-filter\"/> Filters"
+msgstr "<i class=\"fa fa-filter\"/> Filtros"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "All"
+msgstr "Todos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Unread"
+msgstr "Não lido"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Orders"
+msgstr "Pedidos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Promotions"
+msgstr "Promoções"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Inventory"
+msgstr "Inventário"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "<span class=\"ms-auto av-notif-summary\" id=\"av-notif-summary\">0 of 0 notifications</span>"
+msgstr "<span class=\"ms-auto av-notif-summary\" id=\"av-notif-summary\">0 de 0 notificações</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "No notifications"
+msgstr "Sem notificações"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "You're all caught up!"
+msgstr "Você está em dia!"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.categories_page
+msgid "All Categories"
+msgstr "Todas as categorias"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.categories_page
+msgid "Browse all product categories"
+msgstr "Explorar todas as categorias de produtos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.categories_page
+msgid "products"
+msgstr "produtos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-topbar-sep\">|</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-user-circle\"/> My Account"
+msgstr "<i class=\"fa fa-user-circle\"/> Minha conta"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-phone\"/> Contact"
+msgstr "<i class=\"fa fa-phone\"/> Contato"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-bell\"/> Notifications\n                            <span id=\"av-notif-count\" class=\"av-header-badge\" style=\"display:none;\"/>"
+msgstr "<i class=\"fa fa-bell\"/> Notificações\n                            <span id=\"av-notif-count\" class=\"av-header-badge\" style=\"display:none;\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-topbar-link\" data-bs-toggle=\"dropdown\" style=\"cursor:pointer;\">\n                                <i class=\"fa fa-tint\"/> Color <i class=\"fa fa-chevron-down\" style=\"font-size:10px;\"/>\n                            </span>"
+msgstr "<span class=\"av-topbar-link\" data-bs-toggle=\"dropdown\" style=\"cursor:pointer;\">\n                                <i class=\"fa fa-tint\"/> Cor <i class=\"fa fa-chevron-down\" style=\"font-size:10px;\"/>\n                            </span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"fw-bold av-color-popup-title\">Color Theme</span>"
+msgstr "<span class=\"fw-bold av-color-popup-title\">Tema de cor</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span id=\"av-current-color-name\">Default</span>\n                                        <i class=\"fa fa-chevron-up\" style=\"font-size: 10px;\"/>"
+msgstr "<span id=\"av-current-color-name\">Padrão</span>\n                                        <i class=\"fa fa-chevron-up\" style=\"font-size: 10px;\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "Popular"
+msgstr "Popular"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label\">Yellow</span>"
+msgstr "<span class=\"av-color-btn-label\">Amarelo</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label\">Blue</span>"
+msgstr "<span class=\"av-color-btn-label\">Azul</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label\">Green</span>"
+msgstr "<span class=\"av-color-btn-label\">Verde</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label\">Purple</span>"
+msgstr "<span class=\"av-color-btn-label\">Roxo</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label\">Red</span>"
+msgstr "<span class=\"av-color-btn-label\">Vermelho</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label\">Orange</span>"
+msgstr "<span class=\"av-color-btn-label\">Laranja</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "Extended Palette"
+msgstr "Paleta estendida"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Teal</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Verde-azulado</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Indigo</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Índigo</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Pink</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Rosa</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Lime</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Lima</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Cyan</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Ciano</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Amber</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Âmbar</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Emerald</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Esmeralda</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Violet</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Violeta</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Rose</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Rosa escuro</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Sky</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Céu</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Fuchsia</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Fúcsia</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-color-btn-label-small\">Slate</span>"
+msgstr "<span class=\"av-color-btn-label-small\">Ardósia</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"av-toggle-icon\">☾</span>\n                            <span class=\"av-toggle-label\">Dark</span>"
+msgstr "<span class=\"av-toggle-icon\">☾</span>\n                            <span class=\"av-toggle-label\">Escuro</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "Toggle dark mode"
+msgstr "Alternar modo escuro"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "Search items on Aveenix…"
+msgstr "Pesquisar itens na Aveenix…"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-balance-scale\"/>\n                                <span class=\"av-compare-badge\" id=\"av-compare-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Compare</span>"
+msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-balance-scale\"/>\n                                <span class=\"av-compare-badge\" id=\"av-compare-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Comparar</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-heart\"/>\n                                <span class=\"av-compare-badge\" id=\"av-fav-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Favourites</span>"
+msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-heart\"/>\n                                <span class=\"av-compare-badge\" id=\"av-fav-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Favoritos</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-star\"/>\n                                <span class=\"av-compare-badge\" id=\"av-wish-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Wishlist</span>"
+msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-star\"/>\n                                <span class=\"av-compare-badge\" id=\"av-wish-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Lista de desejos</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-user\"/>\n                                <span>Login</span>"
+msgstr "<i class=\"fa fa-user\"/>\n                                <span>Entrar</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-user me-2\"/>My Account"
+msgstr "<i class=\"fa fa-user me-2\"/>Minha conta"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-sign-out me-2\"/>Log Out"
+msgstr "<i class=\"fa fa-sign-out me-2\"/>Sair"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<i class=\"fa fa-bars\"/>\n                        <span>All Categories</span>\n                        <i class=\"fa fa-chevron-down ms-2\" style=\"font-size: 10px;\"/>"
+msgstr "<i class=\"fa fa-bars\"/>\n                        <span>Todas as categorias</span>\n                        <i class=\"fa fa-chevron-down ms-2\" style=\"font-size: 10px;\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "View All Categories →"
+msgstr "Ver todas as categorias →"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "Shop"
+msgstr "Loja"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Get <span class=\"av-promo-highlight\">$20 OFF</span> your first order!"
+msgstr "Get <span class=\"av-promo-highlight\">R$20 de desconto</span> your first order!"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Enter your email"
+msgstr "Digite seu e-mail"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Get $20 OFF"
+msgstr "Ganhe R$20 de desconto"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Customer Service<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+msgstr "Atendimento ao cliente<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Site Us"
+msgstr "Sobre nós"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "FAQs"
+msgstr "Perguntas frequentes"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Order Tracking"
+msgstr "Rastreamento de pedido"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Information<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+msgstr "Informações<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Features"
+msgstr "Recursos"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Partners"
+msgstr "Parceiros"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Privacy Policy"
+msgstr "Política de privacidade"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Shipping Policy"
+msgstr "Política de envio"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Account<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+msgstr "Conta<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "My Account"
+msgstr "Minha conta"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Services"
+msgstr "Serviços"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Connect Aveenix"
+msgstr "Conectar Aveenix"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Registration"
+msgstr "Cadastro"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Support<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+msgstr "Suporte<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Purple Parlay"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Tarcount"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Career Policy"
+msgstr "Política de carreira"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Terms of Use"
+msgstr "Termos de uso"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Legal<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+msgstr "Legal<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Cookie Policy"
+msgstr "Política de cookies"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Contact Support"
+msgstr "Contatar suporte"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Settings<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+msgstr "Configurações<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-globe av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Country</span>"
+msgstr "<i class=\"fa fa-globe av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">País</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-language av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Language</span>"
+msgstr "<i class=\"fa fa-language av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Idioma</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-dollar av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Currency</span>"
+msgstr "<i class=\"fa fa-dollar av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Moeda</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-moon-o av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Dark Mode</span>"
+msgstr "<i class=\"fa fa-moon-o av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Modo escuro</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-tint av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Color Theme</span>\n                                    <span class=\"av-settings-color-dot\" id=\"av-mobile-color-dot\"/>\n                                    <span class=\"av-settings-val\" id=\"av-mobile-color-name\">Default</span>\n                                    <i class=\"fa fa-chevron-down av-settings-arrow\" id=\"av-mobile-color-chevron\"/>"
+msgstr "<i class=\"fa fa-tint av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Tema de cor</span>\n                                    <span class=\"av-settings-color-dot\" id=\"av-mobile-color-dot\"/>\n                                    <span class=\"av-settings-val\" id=\"av-mobile-color-name\">Padrão</span>\n                                    <i class=\"fa fa-chevron-down av-settings-arrow\" id=\"av-mobile-color-chevron\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "POPULAR"
+msgstr "POPULAR"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "EXTENDED PALETTE"
+msgstr "PALETA ESTENDIDA"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-apple me-2\"/>\n                                <span>Download on App Store</span>"
+msgstr "<i class=\"fa fa-apple me-2\"/>\n                                <span>Baixar na App Store</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-play me-2\"/>\n                                <span>Get it on Google Play</span>"
+msgstr "<i class=\"fa fa-play me-2\"/>\n                                <span>Disponível no Google Play</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "© 2025 AVEENIX. All rights reserved."
+msgstr "© 2025 AVEENIX. Todos os direitos reservados."
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-home\"/>\n                    <span>Home</span>"
+msgstr "<i class=\"fa fa-home\"/>\n                    <span>Início</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-th-large\"/>\n                    <span>Categories</span>"
+msgstr "<i class=\"fa fa-th-large\"/>\n                    <span>Categorias</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-search\"/>\n                    <span>Search</span>"
+msgstr "<i class=\"fa fa-search\"/>\n                    <span>Pesquisar</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-shopping-bag\"/>\n                    <span>Shop</span>"
+msgstr "<i class=\"fa fa-shopping-bag\"/>\n                    <span>Loja</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-user\"/>\n                    <span>Account</span>"
+msgstr "<i class=\"fa fa-user\"/>\n                    <span>Conta</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Search products, brands, categories…"
+msgstr "Pesquisar produtos, marcas, categorias…"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-clock-o\"/> Recent Searches"
+msgstr "<i class=\"fa fa-clock-o\"/> Pesquisas recentes"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "✕ Clear All"
+msgstr "✕ Limpar tudo"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "<i class=\"fa fa-line-chart\"/> Trending Searches"
+msgstr "<i class=\"fa fa-line-chart\"/> Pesquisas em alta"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Laptop"
+msgstr "Notebook"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Smartphone"
+msgstr "Smartphone"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Headphones"
+msgstr "Fones de ouvido"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Smart TV"
+msgstr "Smart TV"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Gaming"
+msgstr "Games"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Tablet"
+msgstr "Tablet"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Camera"
+msgstr "Câmera"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
+msgid "Watch"
+msgstr "Relógio"

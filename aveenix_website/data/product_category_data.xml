@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         AVEENIX WEBSITE CATEGORIES
+         These are product.public.category records shown on the
+         homepage "Shop by Category" section (limit=7).
+         ═══════════════════════════════════════════════════════════ -->
+
+    <record id="cat_laptops" model="product.public.category">
+        <field name="name">Laptops</field>
+        <field name="website_description">&lt;p&gt;Shop the latest laptops for work, gaming, and everyday use.&lt;/p&gt;</field>
+    </record>
+
+    <record id="cat_mobile" model="product.public.category">
+        <field name="name">Mobile</field>
+        <field name="website_description">&lt;p&gt;Explore smartphones and mobile accessories from top brands.&lt;/p&gt;</field>
+    </record>
+
+    <record id="cat_gaming" model="product.public.category">
+        <field name="name">Gaming</field>
+        <field name="website_description">&lt;p&gt;Level up with gaming consoles, accessories, and gear.&lt;/p&gt;</field>
+    </record>
+
+    <record id="cat_tv_video" model="product.public.category">
+        <field name="name">TV &amp; Video</field>
+        <field name="website_description">&lt;p&gt;Find the best TVs and home theatre systems.&lt;/p&gt;</field>
+    </record>
+
+    <record id="cat_headphones" model="product.public.category">
+        <field name="name">Headphones</field>
+        <field name="website_description">&lt;p&gt;Premium audio headphones, earbuds, and speakers.&lt;/p&gt;</field>
+    </record>
+
+    <record id="cat_smart_home" model="product.public.category">
+        <field name="name">Smart Home</field>
+        <field name="website_description">&lt;p&gt;Smart home devices, automation, and security systems.&lt;/p&gt;</field>
+    </record>
+
+    <record id="cat_cameras" model="product.public.category">
+        <field name="name">Cameras</field>
+        <field name="website_description">&lt;p&gt;Digital cameras, security cameras, and photography equipment.&lt;/p&gt;</field>
+    </record>
+
+</odoo>

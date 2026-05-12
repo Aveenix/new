@@ -1,0 +1,1154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         AVEENIX HOMEPAGE
+         Only page body — header, footer, scripts come from the
+         global aveenix_layout inheritance (see layout.xml).
+         ========================================================= -->
+    <template id="homepage" name="Aveenix Homepage">
+        <t t-set="_av_country_id" t-value="request.session.get('av_user_country_id')"/>
+        <t t-set="_av_all_products" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)])"/>
+        <t t-if="not _av_all_products" t-set="_av_all_products" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True)])"/>
+        <t t-if="_av_country_id" t-set="trending_products" t-value="_av_all_products.filtered(lambda p: not p.available_country_ids or _av_country_id in p.available_country_ids.ids)[:6]"/>
+        <t t-else="" t-set="trending_products" t-value="_av_all_products[:6]"/>
+        <t t-set="categories" t-value="request.env['product.public.category'].sudo().search([('has_published_products','=',True)] if request.env.user._is_public() else [], limit=7)"/>
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'homepage'"/>
+
+            <!-- ── PAGE BODY ──────────────────────────────────── -->
+            <div id="wrap" class="av-homepage oe_structure">
+
+                <!-- ════════════════════════════════════════════
+                     HERO BANNER (SLIDER)
+                     ════════════════════════════════════════════ -->
+                <div class="av-carousel-wrap"><section id="aveenixHomeCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+                    <ol class="carousel-indicators" style="z-index: 2;">
+                        <li data-bs-target="#aveenixHomeCarousel" data-bs-slide-to="0" class="active"></li>
+                        <li data-bs-target="#aveenixHomeCarousel" data-bs-slide-to="1"></li>
+                        <li data-bs-target="#aveenixHomeCarousel" data-bs-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <!-- Slide 1 -->
+                        <div class="carousel-item active oe_structure">
+                            <div class="av-hero oe_img_bg o_bg_img_center" style="background-image: url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1200&amp;h=400');">
+                                <div class="av-hero-overlay" style="background: linear-gradient(rgba(48, 63, 159, 0.75), rgba(48, 63, 159, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
+                                <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
+                                    <div class="av-hero-text" style="color: #fff;">
+                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Summer Electronics<br/>Sale</h1>
+                                        <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Up to 70% Off</h3>
+                                        <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Get the latest gadgets at unbeatable prices</p>
+                                        <div class="av-hero-btns">
+                                            <a href="/shop?category=electronics" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Shop Now</a>
+                                        </div>
+                                    </div>
+                                    <div class="av-hero-visuals"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 2 -->
+                        <div class="carousel-item oe_structure">
+                            <div class="av-hero oe_img_bg o_bg_img_center" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1200&amp;h=400');">
+                                <div class="av-hero-overlay" style="background: linear-gradient(rgba(194, 24, 91, 0.75), rgba(194, 24, 91, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
+                                <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
+                                    <div class="av-hero-text" style="color: #fff;">
+                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Fashion Week Special</h1>
+                                        <h3 class="av-hero-sub" style="color: #CDEE3A; font-weight: 700; margin-bottom: 1.25rem;">New Arrivals</h3>
+                                        <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Discover the latest trends in fashion</p>
+                                        <div class="av-hero-btns">
+                                            <a href="/shop?category=fashion" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Explore</a>
+                                        </div>
+                                    </div>
+                                    <div class="av-hero-visuals"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 3 -->
+                        <div class="carousel-item oe_structure">
+                            <div class="av-hero oe_img_bg o_bg_img_center" style="background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1200&amp;h=400');">
+                                <div class="av-hero-overlay" style="background: linear-gradient(rgba(38, 166, 154, 0.75), rgba(38, 166, 154, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
+                                <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
+                                    <div class="av-hero-text" style="color: #fff;">
+                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Home &amp; Garden</h1>
+                                        <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Transform Your Space</h3>
+                                        <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Beautiful furniture and decor for every room</p>
+                                        <div class="av-hero-btns">
+                                            <a href="/shop?category=home" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Browse</a>
+                                        </div>
+                                    </div>
+                                    <div class="av-hero-visuals"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <a class="carousel-control-prev" href="#aveenixHomeCarousel" role="button" data-bs-slide="prev" style="z-index: 2;">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#aveenixHomeCarousel" role="button" data-bs-slide="next" style="z-index: 2;">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </section></div>
+
+                <!-- ════════════════════════════════════════════
+                     SHOP BY CATEGORY
+                     ════════════════════════════════════════════ -->
+                <section class="av-section av-categories-section oe_structure">
+                    <div class="av-container">
+                        <div class="av-section-header">
+                            <div class="av-section-title-wrap">
+                                <span class="av-title-icon">&#127873;</span>
+                                <h2 class="av-section-heading">Shop by Category</h2>
+                            </div>
+                            <div class="av-tabs">
+                                <a href="#" class="av-tab av-tab-active">
+                                    <i class="fa fa-sliders"/> For You
+                                </a>
+                                <a href="#" class="av-tab">
+                                    <i class="fa fa-star"/> Best Sellers
+                                </a>
+                                <a href="#" class="av-tab">
+                                    <i class="fa fa-clock-o"/> New Arrivals
+                                </a>
+                            </div>
+                            <a href="/categories" class="av-view-all">View All</a>
+                        </div>
+
+                        <div class="av-cat-grid">
+                            <t t-if="categories">
+                                <t t-foreach="categories" t-as="cat">
+                                    <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-card">
+                                        <div class="av-cat-img-wrap">
+                                            <img t-att-src="'/web/image/product.public.category/%s/image_128' % cat.id if cat.image_128 else '/web/static/img/placeholder.png'"
+                                                 t-att-alt="cat.sudo().name" class="av-cat-img"/>
+                                        </div>
+                                        <span class="av-cat-label" t-esc="cat.sudo().name"/>
+                                    </a>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <a href="/shop" class="av-cat-card av-cat-red">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-laptop fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">Laptops</span>
+                                </a>
+                                <a href="/shop" class="av-cat-card av-cat-light">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-mobile fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">Mobile</span>
+                                </a>
+                                <a href="/shop" class="av-cat-card av-cat-green">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-gamepad fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">Gaming</span>
+                                </a>
+                                <a href="/shop" class="av-cat-card av-cat-dark">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-tv fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">TV &amp; Video</span>
+                                </a>
+                                <a href="/shop" class="av-cat-card av-cat-orange">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-desktop fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">Monitors</span>
+                                </a>
+                                <a href="/shop" class="av-cat-card av-cat-blue">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-headphones fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">Headphones</span>
+                                </a>
+                                <a href="/shop" class="av-cat-card av-cat-pale">
+                                    <div class="av-cat-img-wrap"><i class="fa fa-home fa-2x av-cat-icon-fa"/></div>
+                                    <span class="av-cat-label">Smart Home</span>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ════════════════════════════════════════════
+                     TRENDING PRODUCTS
+                     ════════════════════════════════════════════ -->
+                <section class="av-section av-trending-section oe_structure">
+                    <div class="av-container">
+                        <div class="av-section-header">
+                            <h2 class="av-section-heading">Trending Products</h2>
+                            <div class="av-tabs">
+                                <a href="#" class="av-tab av-tab-active">For You</a>
+                                <a href="#" class="av-tab">Best Sellers</a>
+                                <a href="#" class="av-tab">New Arrivals</a>
+                            </div>
+                            <a href="/shop" class="av-view-all">View All</a>
+                        </div>
+
+                        <div class="av-products-grid">
+                            <t t-if="trending_products">
+                                <t t-foreach="trending_products" t-as="product">
+                                    <div class="av-product-card">
+                                        <span class="av-prod-badge av-badge-red">Sale</span>
+                                        <a t-attf-href="/shop/product/#{product.id}" class="av-prod-img-link stretched-link">
+                                            <t t-if="product.image_512">
+                                                <img t-attf-src="/web/image/product.template/#{product.id}/image_512"
+                                                     t-att-alt="product.name" class="av-prod-img"/>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="av-prod-placeholder">
+                                                    <i class="fa fa-image fa-3x"/>
+                                                </div>
+                                            </t>
+                                        </a>
+                                        <div class="av-prod-body">
+                                            <p class="av-prod-name" t-esc="product.name"/>
+                                            <div class="av-prod-stars">
+                                                <i class="fa fa-star"/><i class="fa fa-star"/>
+                                                <i class="fa fa-star"/><i class="fa fa-star"/>
+                                                <i class="fa fa-star"/>
+                                            </div>
+                                            <div class="av-prod-prices">
+                                                <span class="av-prod-price"
+                                                      t-esc="'$%.2f' % product.list_price"/>
+                                            </div>
+                                            <button type="button" class="av-add-to-cart js_av_add_to_cart"
+                                                    t-att-data-product-id="product.product_variant_id.id"
+                                                    t-att-data-product-template-id="product.id">
+                                                <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <div class="av-product-card">
+                                    <span class="av-prod-badge av-badge-red">34%</span>
+                                    <a href="/shop" class="stretched-link">
+                                        <div class="av-prod-placeholder"><i class="fa fa-camera fa-3x"/></div>
+                                    </a>
+                                    <div class="av-prod-body">
+                                        <p class="av-prod-name">Home Security Camera 1080 Wi-Fi</p>
+                                        <div class="av-prod-stars">
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/>
+                                        </div>
+                                        <div class="av-prod-prices">
+                                            <span class="av-prod-price">$49.99</span>
+                                            <span class="av-prod-original">$299.95</span>
+                                        </div>
+                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
+                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="av-product-card">
+                                    <span class="av-prod-badge av-badge-red">38%</span>
+                                    <a href="/shop" class="stretched-link">
+                                        <div class="av-prod-placeholder"><i class="fa fa-lightbulb-o fa-3x"/></div>
+                                    </a>
+                                    <div class="av-prod-body">
+                                        <p class="av-prod-name">UZD RGB LED Video Light</p>
+                                        <div class="av-prod-stars">
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/>
+                                        </div>
+                                        <div class="av-prod-prices">
+                                            <span class="av-prod-price">$29.95</span>
+                                            <span class="av-prod-original">$239.95</span>
+                                        </div>
+                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
+                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="av-product-card">
+                                    <span class="av-prod-badge av-badge-red">19%</span>
+                                    <a href="/shop" class="stretched-link">
+                                        <div class="av-prod-placeholder"><i class="fa fa-cube fa-3x"/></div>
+                                    </a>
+                                    <div class="av-prod-body">
+                                        <p class="av-prod-name">Ergonomic Gaming Chair</p>
+                                        <div class="av-prod-stars">
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/>
+                                        </div>
+                                        <div class="av-prod-prices">
+                                            <span class="av-prod-price">$159.99</span>
+                                            <span class="av-prod-original">$1,439.95</span>
+                                        </div>
+                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
+                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="av-product-card">
+                                    <span class="av-prod-badge av-badge-orange">11% Off</span>
+                                    <div class="av-prod-placeholder"><i class="fa fa-fire fa-3x"/></div>
+                                    <div class="av-prod-body">
+                                        <p class="av-prod-name">COSORI Pro Smart Air Fryer 6 Qt</p>
+                                        <div class="av-prod-stars">
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/>
+                                        </div>
+                                        <div class="av-prod-prices">
+                                            <span class="av-prod-price">$99.95</span>
+                                            <span class="av-prod-original">$1,439.95</span>
+                                        </div>
+                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
+                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="av-product-card">
+                                    <span class="av-prod-badge av-badge-orange">19% off</span>
+                                    <a href="/shop" class="stretched-link">
+                                        <div class="av-prod-placeholder"><i class="fa fa-television fa-3x"/></div>
+                                    </a>
+                                    <div class="av-prod-body">
+                                        <p class="av-prod-name">4K Ultra HD Smart TV 55" Android</p>
+                                        <div class="av-prod-stars">
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/>
+                                        </div>
+                                        <div class="av-prod-prices">
+                                            <span class="av-prod-price">$379.95</span>
+                                            <span class="av-prod-original">$489.95</span>
+                                        </div>
+                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
+                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="av-product-card">
+                                    <a href="/shop" class="stretched-link">
+                                        <div class="av-prod-placeholder"><i class="fa fa-headphones fa-3x"/></div>
+                                    </a>
+                                    <div class="av-prod-body">
+                                        <p class="av-prod-name">Xiaomi Robot Vacuum Mop Pro 2</p>
+                                        <div class="av-prod-stars">
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/><i class="fa fa-star"/>
+                                            <i class="fa fa-star"/>
+                                        </div>
+                                        <div class="av-prod-prices">
+                                            <span class="av-prod-price">$279.95</span>
+                                            <span class="av-prod-original">$289.95</span>
+                                        </div>
+                                        <a href="/shop" class="av-add-to-cart">
+                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ════════════════════════════════════════════
+                     WHY CHOOSE AVEENIX
+                     ════════════════════════════════════════════ -->
+                <section class="av-section av-why-section oe_structure">
+                    <div class="av-container">
+                        <h2 class="av-section-heading">Why Choose Aveenix?</h2>
+                        <div class="av-features-row">
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-shield"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">Secure Payments</h3>
+                                    <p class="av-feat-desc">Safe and secure payment methods guaranteed.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-truck"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">Fast Delivery</h3>
+                                    <p class="av-feat-desc">Current shipping at supreme delivery speeds.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-refresh"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">Hassle Free Returns</h3>
+                                    <p class="av-feat-desc">Simple and easy return policy for all products.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-headphones"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">24/7 Support</h3>
+                                    <p class="av-feat-desc">Round-the-clock customer support team.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-lock"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">SSL Encrypted</h3>
+                                    <p class="av-feat-desc">Guaranteed data encryption and protection.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-gift"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">Earn Rewards</h3>
+                                    <p class="av-feat-desc">Become a part of the customer loyalty program.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ════════════════════════════════════════════
+                     SELL ON AVEENIX BANNER
+                     ════════════════════════════════════════════ -->
+                <div class="av-sell-wrap"><section class="av-sell-banner">
+                    <div class="av-container av-sell-content">
+                        <div class="av-sell-text">
+                            <h2 class="av-sell-title">Sell on Aveenix</h2>
+                            <p class="av-sell-desc">
+                                Reach millions of customers by becoming a seller on AVEENIX
+                            </p>
+                            <a href="#" class="av-btn-sell">Start Selling</a>
+                        </div>
+                        <div class="av-sell-visual">
+                            <div class="av-sell-box"/>
+                        </div>
+                    </div>
+                </section></div>
+
+            </div><!-- /#wrap -->
+
+
+        </t>
+    </template>
+
+
+
+    <!-- =========================================================
+         COMPARE PAGE
+         ========================================================= -->
+    <template id="compare_page" name="Aveenix Compare Products">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'compare'"/>
+
+            <div id="wrap" class="av-compare-page">
+
+                <!-- Hero -->
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon">
+                            <i class="fa fa-balance-scale"/>
+                        </div>
+                        <h1 class="av-compare-hero-title">Compare Products</h1>
+                        <p class="av-compare-hero-sub">Compare products' features, pricing, and specifications side-by-side. Add as many products as you need to make informed decisions.</p>
+                    </div>
+                </section>
+
+                <div class="av-container av-compare-body">
+
+                    <!-- Breadcrumb -->
+                    <div class="av-compare-breadcrumb">
+                        <a href="/" class="av-compare-back">
+                            <i class="fa fa-arrow-left"/> Back to Home
+                        </a>
+                        <div class="av-compare-breadcrumb-title">
+                            <h2>Compare Products</h2>
+                            <p>Compare features, pricing, and specifications side-by-side</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats bar -->
+                    <div class="av-compare-stats">
+                        <div class="av-compare-stat">
+                            <span class="av-compare-stat-val" id="av-cmp-count">0</span>
+                            <span class="av-compare-stat-label">Products to Compare</span>
+                        </div>
+                        <div class="av-compare-stat av-compare-stat-primary">
+                            <span class="av-compare-stat-val" id="av-cmp-total">$0.00</span>
+                            <span class="av-compare-stat-label">Total Value</span>
+                        </div>
+                        <div class="av-compare-stat av-compare-stat-primary">
+                            <span class="av-compare-stat-val" id="av-cmp-stock">0</span>
+                            <span class="av-compare-stat-label">In Stock</span>
+                        </div>
+                        <div class="av-compare-stat av-compare-stat-primary">
+                            <span class="av-compare-stat-val" id="av-cmp-sale">0</span>
+                            <span class="av-compare-stat-label">On Sale</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="av-compare-actions">
+                        <button class="av-compare-add-all" id="av-cmp-add-all"><span>Add All to Cart</span></button>
+                        <button class="av-compare-clear" id="av-cmp-clear">
+                            <i class="fa fa-balance-scale"/> Clear Comparison
+                        </button>
+                        <span class="av-compare-item-count ms-auto" id="av-cmp-item-label">0 items</span>
+                    </div>
+
+                    <!-- Product grid — populated by ComparePage Interaction -->
+                    <div id="av-compare-grid">
+                        <div class="av-compare-empty" id="av-compare-empty">
+                            <div class="av-compare-empty-icon">
+                                <i class="fa fa-balance-scale"/>
+                            </div>
+                            <h3>Start Comparing Products</h3>
+                            <p>Search and add products to compare their features, pricing, and specifications side-by-side.</p>
+                            <a href="/shop" class="av-compare-add-products-btn">
+                                <i class="fa fa-plus"/> Add Products
+                            </a>
+                        </div>
+                    </div>
+
+                </div><!-- /.av-container -->
+
+            </div><!-- /#wrap -->
+        </t>
+    </template>
+
+
+
+<!-- Shop card wishlist btn title → favourites + add star wishlist btn -->
+    <template id="av_shop_wishlist_title" inherit_id="website_sale_wishlist.add_to_wishlist" name="Aveenix: Shop Wishlist → Favourite">
+        <xpath expr="//button[@data-action='o_wishlist']" position="replace">
+            <!-- Heart btn: no disabled, class o_add_wishlist_dyn so JS patch intercepts it -->
+            <button
+                t-if="product_variant_id"
+                type="button"
+                t-attf-class="btn o_add_wishlist o_add_wishlist_dyn #{in_wish and 'o_in_wishlist'}"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-product-id="product_variant_id"
+                data-action="o_wishlist"
+                title="Add to favourite"
+            >
+                <span
+                    t-attf-class="fa o_not-animable #{in_wish and 'fa-heart' or 'fa-heart-o'}"
+                    role="presentation"
+                />
+                <span class="o_label small ms-2">Add to favourite</span>
+            </button>
+            <!-- Star btn: wishlist -->
+            <button t-if="product_variant_id" type="button"
+                class="btn av-add-to-wish"
+                t-att-data-product-template-id="product.id"
+                title="Add to wishlist">
+                <span class="fa fa-star-o o_not-animable" role="presentation"/>
+            </button>
+        </xpath>
+    </template>
+
+    <!-- Override product detail page wishlist button label -->
+    <template id="av_product_option_to_favourites" inherit_id="website_sale_wishlist.product_add_to_wishlist" name="Aveenix: Product Option → Favourites">
+        <xpath expr="//a[@data-action='o_wishlist']" position="replace">
+            <a
+                t-if="product_variant"
+                t-att-class="_button_classes"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-product-id="product_variant.id"
+                data-action="o_wishlist"
+                title="Add to favourites"
+            >
+                <i class="fa fa-heart-o me-2 me-lg-0" role="img" aria-label="Add to favourites"/>
+                <t t-set="_span_classes" t-valuef="d-inline"/>
+                <t
+                    t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
+                    t-set="_span_classes"
+                    t-value="_span_classes + ' d-lg-none'"
+                />
+                <span t-att-class="_span_classes">Add to favourites</span>
+            </a>
+            <a
+                t-if="product_variant"
+                t-att-class="_button_classes.replace('o_add_wishlist_dyn', '')"
+                class="av-add-to-wish"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-product-id="product_variant.id"
+                data-action="av_add_to_wishlist"
+                title="Add to wishlist"
+            >
+                <i class="fa fa-star-o me-2 me-lg-0" role="img" aria-label="Add to wishlist"/>
+                <t t-set="_span_classes" t-valuef="d-inline"/>
+                <t
+                    t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
+                    t-set="_span_classes"
+                    t-value="_span_classes + ' d-lg-none'"
+                />
+                <span t-att-class="_span_classes">Add to wishlist</span>
+            </a>
+            <script><![CDATA[
+                (function(){
+                    try {
+                        var btn = document.currentScript.previousElementSibling;
+                        var templateId = btn && btn.dataset.productTemplateId;
+                        if (!templateId) return;
+                        var ids = JSON.parse(localStorage.getItem('av_wish_ids') || '[]');
+                        if (ids.includes(String(templateId))) {
+                            var icon = btn.querySelector('.fa');
+                            if (icon) { icon.className = icon.className.replace('fa-star-o', 'fa-star'); }
+                            btn.title = 'Added to wishlist';
+                        }
+                    } catch(e) {}
+                })();
+            ]]></script>
+            <!-- Compare btn on product detail page -->
+            <button t-if="product_variant"
+                type="button"
+                class="btn av-add-to-compare"
+                t-att-data-product-id="product.id"
+                title="Add to Compare"
+            >
+                <i class="fa fa-balance-scale me-2" role="img" aria-label="Add to Compare"/>
+                <span>Add to Compare</span>
+            </button>
+        </xpath>
+    </template>
+
+    <!-- Override product detail page wishlist button → use custom favourites -->
+    <!-- <template id="av_product_option_to_favourites_old" inherit_id="website_sale_wishlist.product_add_to_wishlist" name="Aveenix: Product Option → Favourites OLD">
+        <xpath expr="//a[@data-action='o_wishlist']" position="replace">
+            <a
+                t-if="product_variant"
+                class="btn btn-outline-primary av-add-to-fav px-3"
+                t-att-disabled="in_wish or None"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-product-id="product_variant.id"
+                data-action="av_favourites"
+                t-att-title="in_wish and 'In your favourites' or 'Add to favourite'"
+            >
+                <i t-attf-class="fa #{in_wish and 'fa-heart' or 'fa-heart-o'}" role="img" aria-label="Add to favourite"/>
+            </a>
+        </xpath>
+    </template> -->
+
+    <!-- Override Odoo wishlist button → use custom favourites -->
+    <!-- <template id="av_wishlist_to_favourites" inherit_id="website_sale_wishlist.add_to_wishlist" name="Aveenix: Wishlist → Favourites">
+        <xpath expr="//button[@data-action='o_wishlist']" position="replace">
+            <button
+                t-if="product_variant_id"
+                type="button"
+                t-attf-class="btn av-add-to-fav #{in_wish and 'av-added-to-fav'}"
+                t-att-disabled="in_wish or None"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-product-id="product_variant_id"
+                data-action="av_favourites"
+                t-att-title="in_wish and 'In your favourites' or 'Add to favourite'"
+            >
+                <span t-attf-class="fa o_not-animable #{in_wish and 'fa-heart' or 'fa-heart-o'}" role="presentation"/>
+            </button>
+        </xpath>
+    </template> -->
+
+    <!-- =========================================================
+         FAVOURITES PAGE
+         ========================================================= -->
+    <template id="favourites_page" name="Aveenix My Favourites">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'favourites'"/>
+
+            <div id="wrap" class="av-favourites-page">
+
+                <!-- Hero -->
+                <section class="av-fav-hero">
+                    <div class="av-fav-hero-circles">
+                        <div class="av-fav-circle av-fav-circle-1"/>
+                        <div class="av-fav-circle av-fav-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-fav-hero-icon">
+                            <i class="fa fa-heart"/>
+                        </div>
+                        <h1 class="av-fav-hero-title">My Favourites</h1>
+                        <p class="av-fav-hero-sub">Items you frequently purchase or access. Quick reorder your most loved products and track your shopping habits.</p>
+                    </div>
+                </section>
+
+                <div class="av-container av-fav-body">
+
+                    <!-- Breadcrumb row -->
+                    <div class="av-fav-breadcrumb">
+                        <a href="/" class="av-fav-back">
+                            <i class="fa fa-arrow-left"/> Back to Home
+                        </a>
+                        <div class="av-fav-breadcrumb-title">
+                            <h2>My Favourites</h2>
+                            <p>Items you frequently purchase or access</p>
+                        </div>
+                        <div class="av-fav-breadcrumb-controls">
+                            <select class="av-fav-filter" id="av-fav-filter">
+                                <option value="all">All Items</option>
+                                <option value="in-stock">In Stock</option>
+                                <option value="on-sale">On Sale</option>
+                            </select>
+                            <button class="av-fav-view-toggle" id="av-fav-view-toggle" title="Toggle View">
+                                <i class="fa fa-th"/> List View
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats bar -->
+                    <div class="av-fav-stats">
+                        <div class="av-fav-stat">
+                            <span class="av-fav-stat-val" id="av-fav-count">0</span>
+                            <span class="av-fav-stat-label">Total Favourites</span>
+                        </div>
+                        <div class="av-fav-stat av-fav-stat-primary">
+                            <span class="av-fav-stat-val" id="av-fav-total">$0.00</span>
+                            <span class="av-fav-stat-label">Total Value</span>
+                        </div>
+                        <div class="av-fav-stat av-fav-stat-primary">
+                            <span class="av-fav-stat-val" id="av-fav-stock">0</span>
+                            <span class="av-fav-stat-label">In Stock</span>
+                        </div>
+                        <div class="av-fav-stat av-fav-stat-primary">
+                            <span class="av-fav-stat-val" id="av-fav-sale">0</span>
+                            <span class="av-fav-stat-label">On Sale</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="av-fav-actions">
+                        <button class="av-fav-add-all" id="av-fav-add-all">
+                            <i class="fa fa-shopping-cart"/> <span>Add All to Cart</span>
+                        </button>
+                        <button class="av-fav-clear" id="av-fav-clear">
+                            <i class="fa fa-heart-o"/> Clear Favourites
+                        </button>
+                        <span class="av-fav-item-count ms-auto" id="av-fav-item-label">0 items</span>
+                    </div>
+
+                    <!-- Product grid — populated by FavouritesPage Interaction -->
+                    <div id="av-fav-grid">
+                        <div class="av-fav-empty" id="av-fav-empty">
+                            <div class="av-fav-empty-icon">
+                                <i class="fa fa-heart-o"/>
+                            </div>
+                            <h3>No favourites yet</h3>
+                            <p>Add products to your favourites by clicking the heart icon on product cards</p>
+                            <a href="/shop" class="av-fav-start-btn">
+                                Start Shopping
+                            </a>
+                        </div>
+                    </div>
+
+                </div><!-- /.av-container -->
+
+            </div><!-- /#wrap -->
+        </t>
+    </template>
+
+
+
+    <!-- =========================================================
+         WISHLIST PAGE  (/wishlist)
+         ========================================================= -->
+    <template id="wishlist_page" name="Aveenix My Wishlist">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'wishlist'"/>
+
+            <div id="wrap" class="av-wishlist-page">
+
+                <!-- Hero -->
+                <section class="av-wish-hero">
+                    <div class="av-wish-hero-circles">
+                        <div class="av-wish-circle av-wish-circle-1"/>
+                        <div class="av-wish-circle av-wish-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-wish-hero-icon">
+                            <i class="fa fa-star-o"/>
+                        </div>
+                        <h1 class="av-wish-hero-title">My Wishlist</h1>
+                        <p class="av-wish-hero-sub">Save items for later and track price changes. Create lists for different occasions and monitor price drops.</p>
+                    </div>
+                </section>
+
+                <div class="av-container av-wish-body">
+
+                    <!-- Breadcrumb row -->
+                    <div class="av-wish-breadcrumb">
+                        <a href="/" class="av-wish-back">
+                            <i class="fa fa-arrow-left"/> Back to Home
+                        </a>
+                        <div class="av-wish-breadcrumb-title">
+                            <h2>My Wishlist</h2>
+                            <p>Save items for later and track price changes</p>
+                        </div>
+                        <div class="av-wish-breadcrumb-controls">
+                            <select class="av-wish-filter" id="av-wish-filter">
+                                <option value="all">All Items</option>
+                                <option value="in-stock">In Stock</option>
+                                <option value="on-sale">On Sale</option>
+                            </select>
+                            <button class="av-wish-view-toggle" id="av-wish-view-toggle" title="Toggle View">
+                                <i class="fa fa-th"/> List View
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats bar -->
+                    <div class="av-wish-stats">
+                        <div class="av-wish-stat">
+                            <span class="av-wish-stat-val" id="av-wish-count">0</span>
+                            <span class="av-wish-stat-label">Total Wishlist</span>
+                        </div>
+                        <div class="av-wish-stat av-wish-stat-primary">
+                            <span class="av-wish-stat-val" id="av-wish-total">$0.00</span>
+                            <span class="av-wish-stat-label">Total Value</span>
+                        </div>
+                        <div class="av-wish-stat av-wish-stat-primary">
+                            <span class="av-wish-stat-val" id="av-wish-stock">0</span>
+                            <span class="av-wish-stat-label">In Stock</span>
+                        </div>
+                        <div class="av-wish-stat av-wish-stat-primary">
+                            <span class="av-wish-stat-val" id="av-wish-sale">0</span>
+                            <span class="av-wish-stat-label">On Sale</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="av-wish-actions">
+                        <button class="av-wish-add-all" id="av-wish-add-all">
+                            Add All to Cart
+                        </button>
+                        <button class="av-wish-clear" id="av-wish-clear">
+                            <i class="fa fa-star-o"/> Clear Wishlist
+                        </button>
+                        <span class="av-wish-item-count ms-auto" id="av-wish-item-label">0 items</span>
+                    </div>
+
+                    <!-- Product grid — populated by WishlistPage Interaction -->
+                    <div id="av-wish-grid">
+                        <div class="av-wish-empty" id="av-wish-empty">
+                            <div class="av-wish-empty-icon">
+                                <i class="fa fa-star-o"/>
+                            </div>
+                            <h3>Your wishlist is empty</h3>
+                            <p>Add products to your wishlist by clicking the star icon on product cards</p>
+                            <a href="/shop" class="av-wish-start-btn">
+                                Start Shopping
+                            </a>
+                        </div>
+                    </div>
+
+                </div><!-- /.av-container -->
+
+            </div><!-- /#wrap -->
+        </t>
+    </template>
+
+
+
+    <!-- =========================================================
+         CONTACT US PAGE  (/contactus)
+         ========================================================= -->
+    <template id="contact_us_page" name="Aveenix Contact Us">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'contactus'"/>
+
+            <div id="wrap" class="av-contact-page">
+
+                <!-- Hero Banner -->
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon">
+                            <i class="fa fa-envelope"/>
+                        </div>
+                        <h1 class="av-compare-hero-title">Contact Us</h1>
+                        <p class="av-compare-hero-sub">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                    </div>
+                </section>
+
+                <!-- Info + Form Row -->
+                <section class="av-contact-body">
+                    <div class="av-container">
+                        <div class="av-contact-row">
+
+                            <!-- Left: Location Info -->
+                            <div class="av-contact-info">
+                                <h2 class="av-contact-info-title">Location</h2>
+                                <h3 class="av-contact-brand">Aveenix Express</h3>
+                                <h4 class="av-contact-sub">Regional Delivery Centers</h4>
+                                <p class="av-contact-address">401 Ellerslie Panmure Highway Mount Wellington, Auckland 1060</p>
+
+                                <h4 class="av-contact-hours-title">Business Hours</h4>
+                                <p class="av-contact-hours">Monday – Sunday: 06:00 – 18:00</p>
+                                <p class="av-contact-hours">Public Holidays – Closed</p>
+                            </div>
+
+                            <!-- Right: Contact Us text -->
+                            <div class="av-contact-right">
+                                <h2 class="av-contact-right-title">Contact us</h2>
+                                <p>Got questions or need assistance? We're here to help! At Aveenix, your satisfaction is our top priority. Whether you have inquiries about your order, need help navigating our website, or simply want to connect, our dedicated support team is ready to assist you.</p>
+                                <p>Reach out through the contact form below for a swift and helpful response. Enjoy a seamless shopping experience with Aveenix, where we're committed to making your online journey exceptional. Shop with confidence knowing we're just a message away!</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Image + Form Split -->
+                <section class="av-contact-split">
+                    <div class="av-contact-split-inner">
+
+                        <!-- Left: Photo -->
+                        <div class="av-contact-photo">
+                            <img src="/aveenix_website/static/src/img/people-working-call-center.jpg"
+                                 alt="Contact support team"/>
+                        </div>
+
+                        <!-- Right: Form -->
+                        <div class="av-contact-form-wrap">
+                            <h2 class="av-contact-form-title">Send A Message</h2>
+                            <form class="av-contact-form s_website_form"
+                                  method="post"
+                                  action="/website/form/"
+                                  enctype="multipart/form-data"
+                                  data-model_name="crm.lead"
+                                  data-success-mode="redirect"
+                                  data-success-page="/contactus-thank-you">
+                                <input type="hidden" name="name" value="Free Consultancy Request" class="s_website_form_input"/>
+                                <div class="av-contact-form-row">
+                                    <div class="s_website_form_field s_website_form_required" data-type="char" data-name="contact_name">
+                                        <input type="text" name="contact_name" placeholder="Name*" class="av-contact-input s_website_form_input form-control" required=""/>
+                                    </div>
+                                    <div class="s_website_form_field s_website_form_required" data-type="email" data-name="email_from">
+                                        <input type="email" name="email_from" placeholder="Email Address*" class="av-contact-input s_website_form_input form-control" required=""/>
+                                    </div>
+                                </div>
+                                <div class="av-contact-form-row">
+                                    <div class="s_website_form_field" data-type="tel" data-name="phone">
+                                        <input type="tel" name="phone" placeholder="Phone Number" class="av-contact-input s_website_form_input form-control"/>
+                                    </div>
+                                    <div class="s_website_form_field" data-type="char" data-name="partner_name">
+                                        <input type="text" name="partner_name" placeholder="Website" class="av-contact-input s_website_form_input form-control"/>
+                                    </div>
+                                </div>
+                                <div class="s_website_form_field s_website_form_required" data-type="text" data-name="description">
+                                    <textarea name="description" placeholder="Your message...*" class="av-contact-textarea s_website_form_input form-control" rows="5" required=""></textarea>
+                                </div>
+                                <div id="s_website_form_result"/>
+                                <div class="text-center">
+                                    <button type="submit" class="av-contact-submit s_website_form_send">Free Consultancy</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div><!-- /#wrap -->
+        </t>
+    </template>
+
+
+
+    <!-- =========================================================
+         NOTIFICATIONS PAGE  (/notifications)
+         ========================================================= -->
+    <template id="notifications_page" name="Aveenix Notifications">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'notifications'"/>
+
+            <div id="wrap" class="av-notif-page">
+
+                <!-- Hero -->
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon">
+                            <i class="fa fa-bell"/>
+                        </div>
+                        <h1 class="av-compare-hero-title">Notifications</h1>
+                        <p class="av-compare-hero-sub">Stay updated with order status, promotions, and important updates. Never miss a deal, shipment alert, or platform announcement.</p>
+                    </div>
+                </section>
+
+                <div class="av-container av-notif-body">
+
+                    <!-- Breadcrumb -->
+                    <div class="av-notif-breadcrumb">
+                        <a href="/" class="av-notif-back">
+                            <i class="fa fa-arrow-left"/> Back to Home
+                        </a>
+                        <div class="av-notif-breadcrumb-title">
+                            <h2>Notifications <span class="av-notif-new-badge" id="av-notif-new-count" style="display:none;"/></h2>
+                            <p>Stay updated with order status, promotions, and important updates</p>
+                        </div>
+                    </div>
+
+                    <!-- Actions bar -->
+                    <div class="av-notif-actions">
+                        <button class="av-notif-mark-all" id="av-notif-mark-all">
+                            <i class="fa fa-check"/> Mark All Read
+                        </button>
+                        <button class="av-notif-filter-btn" id="av-notif-filter-btn">
+                            <i class="fa fa-filter"/> Filters
+                        </button>
+
+                        <!-- Filter dropdown -->
+                        <div class="av-notif-filter-dropdown" id="av-notif-filter-dropdown" style="display:none;">
+                            <button class="av-notif-filter-opt av-notif-filter-active" data-filter="all">All</button>
+                            <button class="av-notif-filter-opt" data-filter="unread">Unread</button>
+                            <button class="av-notif-filter-opt" data-filter="orders">Orders</button>
+                            <button class="av-notif-filter-opt" data-filter="promotions">Promotions</button>
+                            <button class="av-notif-filter-opt" data-filter="inventory">Inventory</button>
+                        </div>
+
+                        <span class="ms-auto av-notif-summary" id="av-notif-summary">0 of 0 notifications</span>
+                    </div>
+
+                    <!-- Notification list -->
+                    <div id="av-notif-list">
+                        <div class="av-notif-empty" id="av-notif-empty" style="display:none;">
+                            <div class="av-notif-empty-icon"><i class="fa fa-bell-slash-o"/></div>
+                            <h3>No notifications</h3>
+                            <p>You're all caught up!</p>
+                        </div>
+                    </div>
+
+                </div><!-- /.av-container -->
+
+            </div><!-- /#wrap -->
+        </t>
+    </template>
+
+    <!-- ── Categories page ──────────────────────────────────────── -->
+    <template id="categories_page" name="Aveenix Categories">
+        <t t-call="website.layout">
+            <div id="wrap" class="av-categories-page">
+                <section class="av-cat-page-hero">
+                    <div class="av-cat-page-hero-circles">
+                        <div class="av-cat-page-circle av-cat-page-circle-1"/>
+                        <div class="av-cat-page-circle av-cat-page-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-cat-page-hero-icon">
+                            <i class="fa fa-th-large"/>
+                        </div>
+                        <h1 class="av-cat-page-title">All Categories</h1>
+                        <p class="av-cat-page-sub">Browse all product categories</p>
+                    </div>
+                </section>
+
+                <div class="av-container" style="padding-top: 40px; padding-bottom: 60px;">
+                    <div class="av-cat-page-grid">
+                        <t t-foreach="categories" t-as="cat">
+                            <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-page-card">
+                                <div class="av-cat-page-card-img">
+                                    <img t-att-src="'/web/image/product.public.category/%s/image_128' % cat.id if cat.image_128 else '/web/static/img/placeholder.png'"
+                                         t-att-alt="cat.name"/>
+                                </div>
+                                <div class="av-cat-page-card-name">
+                                    <t t-esc="cat.name"/>
+                                </div>
+                                <div class="av-cat-page-card-count">
+                                    <t t-esc="count_map.get(cat.id, 0)"/> products
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- =========================================================
+         BANNER: Cart + Confirmation + Checkout Pages (full width via checkout_layout)
+         ========================================================= -->
+    <template id="av_checkout_layout_hero" inherit_id="website_sale.checkout_layout" name="Aveenix: Checkout Layout Hero Banner">
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="before">
+            <t t-if="pageName == 'cart' or request.httprequest.path == '/shop/cart'">
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon"><i class="fa fa-shopping-cart"/></div>
+                        <h1 class="av-compare-hero-title">Shopping Cart</h1>
+                        <p class="av-compare-hero-sub">Review your selected items, apply coupons, and proceed to checkout when you're ready.</p>
+                    </div>
+                </section>
+            </t>
+            <t t-if="request.httprequest.path == '/shop/confirmation'">
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon"><i class="fa fa-check-circle"/></div>
+                        <h1 class="av-compare-hero-title">Order Confirmed!</h1>
+                        <p class="av-compare-hero-sub">Thank you for your purchase. Your order has been placed and is being processed.</p>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         BANNER: My Account Page (/my/account)
+         ========================================================= -->
+    <template id="av_account_hero" inherit_id="portal.portal_my_details" name="Aveenix: My Account Hero Banner">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="inside">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_customer_address_fill')]" position="before">
+            <section class="av-compare-hero av-full-bleed">
+                <div class="av-compare-hero-circles">
+                    <div class="av-compare-circle av-compare-circle-1"/>
+                    <div class="av-compare-circle av-compare-circle-2"/>
+                </div>
+                <div class="av-container text-center" style="position:relative; z-index:1;">
+                    <div class="av-compare-hero-icon"><i class="fa fa-user-circle"/></div>
+                    <h1 class="av-compare-hero-title">My Account</h1>
+                    <p class="av-compare-hero-sub">Update your personal details, billing address, and contact information. Keep your account information accurate and up to date.</p>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         BANNER: Login Page
+         ========================================================= -->
+    <template id="av_login_hero" inherit_id="web.login" name="Aveenix: Login Hero Banner">
+        <xpath expr="//div[@id='oe_structure_login_top']" position="before">
+            <section class="av-compare-hero">
+                <div class="av-compare-hero-circles">
+                    <div class="av-compare-circle av-compare-circle-1"/>
+                    <div class="av-compare-circle av-compare-circle-2"/>
+                </div>
+                <div class="av-container text-center" style="position:relative; z-index:1;">
+                    <div class="av-compare-hero-icon">
+                        <i class="fa fa-user"/>
+                    </div>
+                    <h1 class="av-compare-hero-title">Welcome Back</h1>
+                    <p class="av-compare-hero-sub">Sign in to your Aveenix account to manage orders, track shipments, and access exclusive deals.</p>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>
+
+

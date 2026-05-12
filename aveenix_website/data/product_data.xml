@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         AVEENIX TRENDING PRODUCTS
+         6 products shown on the homepage "Trending Products" section.
+         All are sale_ok=True and is_published=True so they appear
+         in the live query (website_published = is_published).
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- 1. Home Security Camera -->
+    <record id="product_home_security_camera" model="product.template">
+        <field name="name">Home Security Camera 1080 Wi-Fi</field>
+        <field name="list_price">49.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">1080p HD Wi-Fi security camera with night vision, motion detection, and two-way audio. Monitor your home 24/7 from anywhere.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_cameras'))]"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- 2. UZD RGB LED Video Light -->
+    <record id="product_uzd_rgb_led_light" model="product.template">
+        <field name="name">UZD RGB LED Video Light</field>
+        <field name="list_price">29.95</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Professional RGB LED video light panel with adjustable color temperature and brightness. Perfect for live streaming, photography, and video production.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_cameras'))]"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- 3. Ergonomic Gaming Chair -->
+    <record id="product_ergonomic_gaming_chair" model="product.template">
+        <field name="name">Ergonomic Gaming Chair Adjustable Armrests</field>
+        <field name="list_price">159.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Premium ergonomic gaming chair with lumbar support, adjustable armrests, and reclining backrest. Built for long gaming sessions and office use.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_gaming'))]"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- 4. COSORI Pro Smart Air Fryer -->
+    <record id="product_cosori_air_fryer" model="product.template">
+        <field name="name">COSORI Pro Smart Air Fryer 6 Qt</field>
+        <field name="list_price">99.95</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">6-quart smart air fryer with Wi-Fi connectivity, 100+ recipes, and 13 cooking functions. App-controlled for effortless healthy cooking.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_smart_home'))]"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- 5. 4K Ultra HD Smart TV -->
+    <record id="product_4k_smart_tv" model="product.template">
+        <field name="name">4K Ultra HD Smart TV 55" Android</field>
+        <field name="list_price">379.95</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">55-inch 4K Ultra HD Smart TV with Android OS, built-in Google Assistant, HDR10, and Dolby Audio for a premium home theatre experience.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_tv_video'))]"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- 6. Xiaomi Robot Vacuum Mop Pro 2 -->
+    <record id="product_xiaomi_robot_vacuum" model="product.template">
+        <field name="name">Xiaomi Robot Vacuum Mop Pro 2</field>
+        <field name="list_price">279.95</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Advanced robot vacuum and mop combo with laser navigation, 4000Pa suction, and smart mapping. Cleans every corner automatically.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_smart_home'))]"/>
+        <field name="type">consu</field>
+    </record>
+
+</odoo>
