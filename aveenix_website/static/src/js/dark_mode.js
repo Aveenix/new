@@ -67,15 +67,28 @@
         try { storedColor = localStorage.getItem(COLOR_STORAGE_KEY); } catch(e) {}
         if (storedColor) { applyColor(storedColor); }
 
+        var popup = document.getElementById("av-color-popup");
+        var DEFAULT_COLOR = popup ? popup.getAttribute("data-default-color") : null;
+
         document.querySelectorAll(".av-color-btn-wrapper").forEach(function(btn) {
             btn.addEventListener("click", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 var color = this.getAttribute("data-color");
+                var isDefault = this.getAttribute("data-is-default") === "1";
                 applyColor(color);
-                try { localStorage.setItem(COLOR_STORAGE_KEY, color); } catch(e) {}
+                try {
+                    if (isDefault) {
+                        localStorage.removeItem(COLOR_STORAGE_KEY);
+                    } else {
+                        localStorage.setItem(COLOR_STORAGE_KEY, color);
+                    }
+                } catch(e) {}
             });
         });
+
+        // On load: if no stored color, highlight the default button
+        if (!storedColor && DEFAULT_COLOR) { applyColor(DEFAULT_COLOR); }
 
         // ── Direct Add to Cart (AJAX) ───────────────────────────────
         document.addEventListener("click", function(e) {

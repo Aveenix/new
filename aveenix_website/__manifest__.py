@@ -5,7 +5,7 @@
     'summary': 'Modern eCommerce website - red & gold design',
     'description': 'Modern eCommerce website - red & gold design',
     'author': 'Custom',
-    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist'],
+    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist', 'product_brand'],
     'data': [
         'security/security.xml',
         'data/product_category_data.xml',
@@ -20,6 +20,7 @@
             'aveenix_website/static/src/js/dark_mode.js',
             'aveenix_website/static/src/js/compare.js',
             'aveenix_website/static/src/js/wishlist_no_disable.js',
+            'aveenix_website/static/src/js/shop_filters.js',
         ],
     },
     'installable': True,

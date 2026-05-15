@@ -7,6 +7,19 @@ _LOCATION_SESSION_KEY = 'av_user_country_id'
 
 class AveenixWebsite(WebsiteSale):
 
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
+    ], type='http', auth='public', website=True)
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
+        website = request.env['website'].get_current_website()
+        if website.shop_ppg != 25 or website.shop_ppr != 5:
+            website.sudo().write({'shop_ppg': 25, 'shop_ppr': 5})
+        return super().shop(page=page, category=category, search=search,
+                            min_price=min_price, max_price=max_price, tags=tags, **post)
+
     @http.route('/', type='http', auth='public', website=True)
     def homepage(self, **kwargs):
         return request.render('aveenix_website.homepage', {})
@@ -28,6 +41,43 @@ class AveenixWebsite(WebsiteSale):
         products = products[:int(limit)]
         return products.read(['id', 'name', 'list_price', 'website_url', 'image_512'])
 
+    def _shop_get_query_url_kwargs(self, search, min_price, max_price, order=None, tags=None, **kwargs):
+        result = super()._shop_get_query_url_kwargs(search, min_price, max_price, order=order, tags=tags, **kwargs)
+        result['brand'] = kwargs.get('brand')
+        result['stock'] = kwargs.get('stock')
+        result['categ'] = kwargs.get('categ')
+        return result
+
+    def _get_additional_shop_values(self, values, **kwargs):
+        extra = super()._get_additional_shop_values(values, **kwargs)
+
+        Brand = request.env['product.brand']
+        all_brands = Brand.sudo().search([], order='name asc')
+        brand_id = kwargs.get('brand')
+        try:
+            brand_id = int(brand_id) if brand_id else 0
+        except (TypeError, ValueError):
+            brand_id = 0
+
+        categ_id = kwargs.get('categ')
+        try:
+            categ_id = int(categ_id) if categ_id else 0
+        except (TypeError, ValueError):
+            categ_id = 0
+
+        all_categs = request.env['product.public.category'].sudo().search(
+            [('parent_id', '=', False)], order='name asc'
+        )
+
+        extra.update({
+            'all_brands': all_brands,
+            'selected_brand': brand_id,
+            'selected_stock': kwargs.get('stock', ''),
+            'all_categs': all_categs,
+            'selected_categ': categ_id,
+        })
+        return extra
+
     def _shop_lookup_products(self, options, post, search, website):
         fuzzy_search_term, product_count, search_result = super()._shop_lookup_products(
             options, post, search, website
@@ -40,6 +90,44 @@ class AveenixWebsite(WebsiteSale):
             )
             product_count = len(filtered)
             search_result = filtered
+
+        # Category filter (query-param based, independent of URL path category)
+        categ_id = post.get('categ')
+        try:
+            categ_id = int(categ_id) if categ_id else 0
+        except (TypeError, ValueError):
+            categ_id = 0
+        if categ_id:
+            child_ids = set(
+                request.env['product.public.category'].sudo()
+                .search([('id', 'child_of', categ_id)]).ids
+            )
+            search_result = search_result.filtered(
+                lambda p: bool(set(p.public_categ_ids.ids) & child_ids)
+            )
+            product_count = len(search_result)
+
+        # Brand filter
+        brand_id = post.get('brand')
+        try:
+            brand_id = int(brand_id) if brand_id else 0
+        except (TypeError, ValueError):
+            brand_id = 0
+        if brand_id:
+            search_result = search_result.filtered(
+                lambda p: p.product_brand_id and p.product_brand_id.id == brand_id
+            )
+            product_count = len(search_result)
+
+        # Stock filter
+        stock = post.get('stock', '')
+        if stock == 'instock':
+            search_result = search_result.filtered(lambda p: p.virtual_available > 0)
+            product_count = len(search_result)
+        elif stock == 'onsale':
+            search_result = search_result.filtered(lambda p: p.compare_list_price and p.compare_list_price > p.list_price)
+            product_count = len(search_result)
+
         return fuzzy_search_term, product_count, search_result
 
     @http.route('/compare', type='http', auth='public', website=True)

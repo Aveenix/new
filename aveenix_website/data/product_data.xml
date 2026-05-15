@@ -2,6 +2,80 @@
 <odoo>
 
     <!-- ═══════════════════════════════════════════════════════════
+         PRODUCT BRANDS
+         ═══════════════════════════════════════════════════════════ -->
+
+    <record id="brand_securevision" model="product.brand">
+        <field name="name">SecureVision</field>
+        <field name="description">Smart home security cameras and surveillance solutions.</field>
+    </record>
+
+    <record id="brand_uzd" model="product.brand">
+        <field name="name">UZD</field>
+        <field name="description">Professional photography and video lighting equipment.</field>
+    </record>
+
+    <record id="brand_ergoplay" model="product.brand">
+        <field name="name">ErgoPlay</field>
+        <field name="description">Ergonomic gaming furniture and accessories.</field>
+    </record>
+
+    <record id="brand_cosori" model="product.brand">
+        <field name="name">COSORI</field>
+        <field name="description">Smart kitchen appliances for healthy cooking.</field>
+    </record>
+
+    <record id="brand_viewtech" model="product.brand">
+        <field name="name">ViewTech</field>
+        <field name="description">Premium 4K smart televisions and home entertainment.</field>
+    </record>
+
+    <record id="brand_xiaomi" model="product.brand">
+        <field name="name">Xiaomi</field>
+        <field name="description">Innovative smart home and consumer electronics.</field>
+    </record>
+
+    <record id="brand_sony" model="product.brand">
+        <field name="name">Sony</field>
+        <field name="description">World-class audio, cameras, and entertainment electronics.</field>
+    </record>
+
+    <record id="brand_samsung" model="product.brand">
+        <field name="name">Samsung</field>
+        <field name="description">Leading smartphones, TVs, and home appliances.</field>
+    </record>
+
+    <record id="brand_apple" model="product.brand">
+        <field name="name">Apple</field>
+        <field name="description">Premium laptops, phones, and ecosystem devices.</field>
+    </record>
+
+    <record id="brand_logitech" model="product.brand">
+        <field name="name">Logitech</field>
+        <field name="description">Gaming peripherals, mice, keyboards, and webcams.</field>
+    </record>
+
+    <record id="brand_jbl" model="product.brand">
+        <field name="name">JBL</field>
+        <field name="description">Legendary audio speakers, headphones, and earbuds.</field>
+    </record>
+
+    <record id="brand_asus" model="product.brand">
+        <field name="name">ASUS</field>
+        <field name="description">High-performance laptops, monitors, and gaming gear.</field>
+    </record>
+
+    <record id="brand_google" model="product.brand">
+        <field name="name">Google</field>
+        <field name="description">Smart home devices, phones, and AI-powered products.</field>
+    </record>
+
+    <record id="brand_razer" model="product.brand">
+        <field name="name">Razer</field>
+        <field name="description">Premium gaming laptops, peripherals, and accessories.</field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════
          AVEENIX TRENDING PRODUCTS
          6 products shown on the homepage "Trending Products" section.
          All are sale_ok=True and is_published=True so they appear
@@ -16,6 +90,7 @@
         <field name="is_published">True</field>
         <field name="description_sale">1080p HD Wi-Fi security camera with night vision, motion detection, and two-way audio. Monitor your home 24/7 from anywhere.</field>
         <field name="public_categ_ids" eval="[(4, ref('cat_cameras'))]"/>
+        <field name="product_brand_id" ref="brand_securevision"/>
         <field name="type">consu</field>
     </record>
 
@@ -27,6 +102,7 @@
         <field name="is_published">True</field>
         <field name="description_sale">Professional RGB LED video light panel with adjustable color temperature and brightness. Perfect for live streaming, photography, and video production.</field>
         <field name="public_categ_ids" eval="[(4, ref('cat_cameras'))]"/>
+        <field name="product_brand_id" ref="brand_uzd"/>
         <field name="type">consu</field>
     </record>
 
@@ -38,6 +114,7 @@
         <field name="is_published">True</field>
         <field name="description_sale">Premium ergonomic gaming chair with lumbar support, adjustable armrests, and reclining backrest. Built for long gaming sessions and office use.</field>
         <field name="public_categ_ids" eval="[(4, ref('cat_gaming'))]"/>
+        <field name="product_brand_id" ref="brand_ergoplay"/>
         <field name="type">consu</field>
     </record>
 
@@ -49,6 +126,7 @@
         <field name="is_published">True</field>
         <field name="description_sale">6-quart smart air fryer with Wi-Fi connectivity, 100+ recipes, and 13 cooking functions. App-controlled for effortless healthy cooking.</field>
         <field name="public_categ_ids" eval="[(4, ref('cat_smart_home'))]"/>
+        <field name="product_brand_id" ref="brand_cosori"/>
         <field name="type">consu</field>
     </record>
 
@@ -60,6 +138,7 @@
         <field name="is_published">True</field>
         <field name="description_sale">55-inch 4K Ultra HD Smart TV with Android OS, built-in Google Assistant, HDR10, and Dolby Audio for a premium home theatre experience.</field>
         <field name="public_categ_ids" eval="[(4, ref('cat_tv_video'))]"/>
+        <field name="product_brand_id" ref="brand_viewtech"/>
         <field name="type">consu</field>
     </record>
 
@@ -71,6 +150,230 @@
         <field name="is_published">True</field>
         <field name="description_sale">Advanced robot vacuum and mop combo with laser navigation, 4000Pa suction, and smart mapping. Cleans every corner automatically.</field>
         <field name="public_categ_ids" eval="[(4, ref('cat_smart_home'))]"/>
+        <field name="product_brand_id" ref="brand_xiaomi"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── LAPTOPS ─────────────────────────────────────────────── -->
+
+    <record id="product_macbook_air_m3" model="product.template">
+        <field name="name">Apple MacBook Air 13" M3 Chip</field>
+        <field name="list_price">1099.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Apple MacBook Air with M3 chip, 8GB RAM, 256GB SSD. Fanless design, 18-hour battery, and stunning Liquid Retina display.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_laptops'))]"/>
+        <field name="product_brand_id" ref="brand_apple"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_asus_rog_strix" model="product.template">
+        <field name="name">ASUS ROG Strix G16 Gaming Laptop</field>
+        <field name="list_price">1349.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">16-inch QHD 165Hz gaming laptop with Intel Core i7, RTX 4060 GPU, 16GB DDR5 RAM, and 512GB NVMe SSD. Dominate every game.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_laptops'))]"/>
+        <field name="product_brand_id" ref="brand_asus"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_razer_blade_15" model="product.template">
+        <field name="name">Razer Blade 15 Gaming Laptop</field>
+        <field name="list_price">1799.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Razor-thin 15.6" FHD 360Hz gaming laptop with Intel Core i9, RTX 4070, 32GB RAM. The ultimate gaming powerhouse in a sleek aluminum chassis.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_laptops'))]"/>
+        <field name="product_brand_id" ref="brand_razer"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── MOBILE ──────────────────────────────────────────────── -->
+
+    <record id="product_samsung_galaxy_s24" model="product.template">
+        <field name="name">Samsung Galaxy S24 Ultra 256GB</field>
+        <field name="list_price">1199.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Samsung Galaxy S24 Ultra with 6.8" Dynamic AMOLED display, 200MP camera, built-in S Pen, 5000mAh battery, and Galaxy AI features.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_mobile'))]"/>
+        <field name="product_brand_id" ref="brand_samsung"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_iphone_15_pro" model="product.template">
+        <field name="name">Apple iPhone 15 Pro 128GB</field>
+        <field name="list_price">999.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">iPhone 15 Pro with A17 Pro chip, titanium design, 48MP main camera with 5x optical zoom, and Action Button for instant controls.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_mobile'))]"/>
+        <field name="product_brand_id" ref="brand_apple"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_xiaomi_14_pro" model="product.template">
+        <field name="name">Xiaomi 14 Pro 5G 512GB</field>
+        <field name="list_price">849.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Xiaomi 14 Pro with Snapdragon 8 Gen 3, Leica Summilux camera system, 120Hz LTPO AMOLED display, and 120W HyperCharge.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_mobile'))]"/>
+        <field name="product_brand_id" ref="brand_xiaomi"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── GAMING ─────────────────────────────────────────────── -->
+
+    <record id="product_logitech_g502_x" model="product.template">
+        <field name="name">Logitech G502 X Plus Wireless Gaming Mouse</field>
+        <field name="list_price">99.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Wireless gaming mouse with LIGHTFORCE hybrid switches, HERO 25K sensor, LIGHTSPEED wireless, and up to 130 hours battery life.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_gaming'))]"/>
+        <field name="product_brand_id" ref="brand_logitech"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_razer_blackwidow_v4" model="product.template">
+        <field name="name">Razer BlackWidow V4 Mechanical Keyboard</field>
+        <field name="list_price">139.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Full-size mechanical gaming keyboard with Razer Yellow switches, Chroma RGB per-key lighting, dedicated media keys, and magnetic wrist rest.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_gaming'))]"/>
+        <field name="product_brand_id" ref="brand_razer"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_logitech_g923" model="product.template">
+        <field name="name">Logitech G923 Racing Wheel and Pedals</field>
+        <field name="list_price">299.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Racing wheel with TRUEFORCE force feedback, 900° rotation, dual-clutch launch assist, and responsive pedal set for PC and PlayStation.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_gaming'))]"/>
+        <field name="product_brand_id" ref="brand_logitech"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── TV &amp; VIDEO ──────────────────────────────────────── -->
+
+    <record id="product_samsung_qled_65" model="product.template">
+        <field name="name">Samsung 65" QLED 4K Smart TV Q80C</field>
+        <field name="list_price">997.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">65-inch QLED 4K TV with Quantum HDR+, Motion Xcelerator 120Hz, Object Tracking Sound, and built-in Alexa &amp; Google Assistant.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_tv_video'))]"/>
+        <field name="product_brand_id" ref="brand_samsung"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_sony_bravia_oled" model="product.template">
+        <field name="name">Sony Bravia 55" OLED 4K Google TV</field>
+        <field name="list_price">1299.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Sony 55" OLED TV with XR Processor, Acoustic Surface Audio+, HDMI 2.1 for gaming, and built-in Google TV with Chromecast.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_tv_video'))]"/>
+        <field name="product_brand_id" ref="brand_sony"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── HEADPHONES ─────────────────────────────────────────── -->
+
+    <record id="product_sony_wh1000xm5" model="product.template">
+        <field name="name">Sony WH-1000XM5 Wireless Headphones</field>
+        <field name="list_price">349.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Industry-leading noise cancelling headphones with 30-hour battery, multipoint connection, crystal-clear hands-free calling, and Speak-to-Chat.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_headphones'))]"/>
+        <field name="product_brand_id" ref="brand_sony"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_jbl_tour_pro2" model="product.template">
+        <field name="name">JBL Tour Pro 2 True Wireless Earbuds</field>
+        <field name="list_price">199.95</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">JBL Tour Pro 2 with Smart Charging Case featuring a touchscreen, adaptive ANC, 40-hour total battery, and Hi-Res audio support.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_headphones'))]"/>
+        <field name="product_brand_id" ref="brand_jbl"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_jbl_charge5" model="product.template">
+        <field name="name">JBL Charge 5 Portable Bluetooth Speaker</field>
+        <field name="list_price">179.95</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">IP67 waterproof Bluetooth speaker with 20 hours playtime, built-in powerbank, PartyBoost for stereo pairing, and deep powerful bass.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_headphones'))]"/>
+        <field name="product_brand_id" ref="brand_jbl"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_apple_airpods_pro2" model="product.template">
+        <field name="name">Apple AirPods Pro 2nd Generation</field>
+        <field name="list_price">249.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">AirPods Pro with H2 chip, up to 2x more Active Noise Cancellation, Adaptive Audio, Transparency mode, and MagSafe Charging Case.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_headphones'))]"/>
+        <field name="product_brand_id" ref="brand_apple"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── SMART HOME ─────────────────────────────────────────── -->
+
+    <record id="product_google_nest_hub" model="product.template">
+        <field name="name">Google Nest Hub 2nd Gen Smart Display</field>
+        <field name="list_price">99.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">7" smart home display with Google Assistant, Sleep Sensing, ambient EQ display, and control for all your smart home devices.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_smart_home'))]"/>
+        <field name="product_brand_id" ref="brand_google"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_google_nest_doorbell" model="product.template">
+        <field name="name">Google Nest Doorbell Wired 2nd Gen</field>
+        <field name="list_price">179.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Wired video doorbell with HDR video, 24/7 continuous recording, intelligent alerts for people, packages, animals, and vehicles.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_smart_home'))]"/>
+        <field name="product_brand_id" ref="brand_google"/>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ── CAMERAS ────────────────────────────────────────────── -->
+
+    <record id="product_sony_zv_e10" model="product.template">
+        <field name="name">Sony ZV-E10 Mirrorless Vlog Camera</field>
+        <field name="list_price">748.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">APS-C mirrorless camera with 24.2MP sensor, 4K video, real-time eye AF, directional 3-capsule mic, and interchangeable E-mount lenses.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_cameras'))]"/>
+        <field name="product_brand_id" ref="brand_sony"/>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="product_logitech_brio_4k" model="product.template">
+        <field name="name">Logitech Brio 4K Ultra HD Webcam</field>
+        <field name="list_price">149.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">4K ultra HD webcam with 5x zoom, HDR, Windows Hello support, and advanced noise-cancelling mic for crystal-clear video calls and streaming.</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_cameras'))]"/>
+        <field name="product_brand_id" ref="brand_logitech"/>
         <field name="type">consu</field>
     </record>
 

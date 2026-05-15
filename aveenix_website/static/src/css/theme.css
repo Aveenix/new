@@ -59,7 +59,7 @@ body.modal-open {
 
 /* ── Shared container ──────────────────────────────────────── */
 .av-container {
-    max-width: 1380px;
+    max-width: 1920px;
     margin: 0 auto;
     padding-left: 24px;
     padding-right: 24px;
@@ -85,7 +85,7 @@ body.modal-open {
 }
 
 .av-topbar-utility-inner {
-    max-width: 1380px;
+    max-width: 1920px;
     margin: 0 auto;
     padding: 6px 24px;
     display: flex;
@@ -234,7 +234,7 @@ body.modal-open {
 }
 
 .av-topbar-inner {
-    max-width: 1380px;
+    max-width: 1920px;
     margin: 0 auto;
     padding: 12px 24px;
     display: flex;
@@ -511,7 +511,7 @@ body.modal-open {
 }
 .av-mobile-shop-btn { display: none; }
 .av-cat-nav .av-cat-nav-inner {
-    max-width: 1380px;
+    max-width: 1920px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
@@ -650,9 +650,29 @@ body.modal-open {
     margin: 0;
     padding: 0;
     border-radius: 0;
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
+    position: relative;
 }
+
+/* Carousel arrow controls */
+#aveenixHomeCarousel .carousel-control-prev,
+#aveenixHomeCarousel .carousel-control-next {
+    width: 44px;
+    height: 44px;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.45);
+    border-radius: 50%;
+    opacity: 1;
+    z-index: 10;
+    position: absolute;
+}
+#aveenixHomeCarousel .carousel-control-prev { left: 12px; top: 50%; bottom: auto; transform: translateY(-50%); }
+#aveenixHomeCarousel .carousel-control-next { right: 12px; top: 50%; bottom: auto; transform: translateY(-50%); }
+#aveenixHomeCarousel .carousel-control-prev:hover,
+#aveenixHomeCarousel .carousel-control-next:hover { background: rgba(0,0,0,0.7); }
 
 #aveenixHomeCarousel,
 #aveenixHomeCarousel .carousel-inner {
@@ -766,14 +786,17 @@ body.modal-open {
     position: relative;
     z-index: 1;
     width: 100%;
-    padding-top: 56px;
-    padding-bottom: 56px;
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+    padding-left: 80px !important;
+    padding-right: 80px !important;
 }
 
-.av-hero-text { max-width: 480px; }
+.av-hero-text { max-width: 600px; }
 
 .av-hero-title {
-    font-size: 44px;
+    font-size: 36px;
+    white-space: nowrap;
     font-weight: 900;
     color: var(--av-white);
     line-height: 1.1;
@@ -965,12 +988,13 @@ body.modal-open {
     text-decoration: none !important;
     transition: transform .2s, box-shadow .2s;
     cursor: pointer;
-    background: var(--av-light);
+    background: var(--av-white);
+    border: 1px solid var(--av-border);
 }
 
 .av-cat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.12);
 }
 
 .av-cat-img-wrap {
@@ -1223,17 +1247,17 @@ body.modal-open {
    SELL ON AVEENIX BANNER
    ============================================================= */
 .av-sell-wrap {
-    max-width: 1380px;
-    margin: 20px auto;
-    padding: 0 24px;
-    border-radius: 12px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
     overflow: hidden;
     box-sizing: border-box;
 }
 
-@media (max-width: 1199px) { .av-sell-wrap { padding: 0 16px; } }
-@media (max-width: 767px)  { .av-sell-wrap { padding: 0; border-radius: 0; margin: 0; max-width: 100%; } }
-@media (max-width: 480px)  { .av-sell-wrap { padding: 0; border-radius: 0; margin: 0; max-width: 100%; } }
+@media (max-width: 1199px) { .av-sell-wrap { padding: 0; } }
+@media (max-width: 767px)  { .av-sell-wrap { padding: 0; margin: 0; } }
+@media (max-width: 480px)  { .av-sell-wrap { padding: 0; margin: 0; } }
 
 .av-sell-banner {
     background: linear-gradient(120deg, #3D0000 0%, var(--av-red-dim) 25%, #AA2200 50%, var(--av-red) 75%, #FF7043 90%, #FF8F00 100%);
@@ -1320,7 +1344,7 @@ body.modal-open {
 }
 
 .av-container {
-    max-width: 1380px;
+    max-width: 1920px;
     margin: 0 auto;
     padding: 0 24px;
     width: 100%;
@@ -1460,7 +1484,7 @@ body.modal-open {
 .av-social-link {
     width: 40px;
     height: 40px;
-    background: #111;
+    background: #333;
     color: #ffffff !important;
     border-radius: 50%;
     display: flex;
@@ -1469,17 +1493,25 @@ body.modal-open {
     font-size: 18px;
     transition: all 0.3s;
     text-decoration: none !important;
+    border: 2px solid transparent;
 }
 
 .av-social-link i {
     display: block;
+    transition: color 0.3s;
 }
 
 .av-social-link:hover {
-    background: var(--av-red);
-    color: #ffffff !important;
+    background: transparent !important;
+    border-color: var(--av-red) !important;
+    color: var(--av-red) !important;
     transform: translateY(-3px);
     text-decoration: none !important;
+}
+.av-social-link:hover i { color: var(--av-red) !important; }
+
+.av-social-link:hover i {
+    color: var(--av-red) !important;
 }
 
 .av-app-badges {
@@ -1545,10 +1577,25 @@ body.modal-open {
     color: #888 !important;
     font-size: 13px;
     text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+}
+
+.av-legal-icon {
+    font-size: 13px;
+    color: #aaa;
+    transition: color 0.2s, transform 0.2s;
 }
 
 .av-footer-legal a:hover {
     color: var(--av-red) !important;
+}
+
+.av-footer-legal a:hover .av-legal-icon {
+    color: var(--av-red) !important;
+    transform: scale(1.2);
 }
 
 .av-footer-legal a:hover .av-footer-link-icon {
@@ -1770,10 +1817,13 @@ body.modal-open {
     background: #333 !important;
     color: #fff !important;
 }
-
 [data-theme="dark"] .av-social-link:hover {
-    background: var(--av-red) !important;
-    color: #fff !important;
+    background: transparent !important;
+    border-color: var(--av-red) !important;
+    color: var(--av-red) !important;
+}
+[data-theme="dark"] .av-social-link:hover i {
+    color: var(--av-red) !important;
 }
 
 [data-theme="dark"] .av-copyright {
@@ -4066,8 +4116,9 @@ html[data-theme="dark"] .av-footer-main .av-footer-heading {
 }
 
 .av-social-link:hover {
-    background: var(--av-red) !important;
-    color: #fff !important;
+    background: transparent !important;
+    border-color: var(--av-red) !important;
+    color: var(--av-red) !important;
 }
 
 .av-app-badges {
@@ -5240,7 +5291,7 @@ a.mt-2.mt-lg-0.text-center:hover {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: var(--av-shadow);
-    max-width: 1380px;
+    max-width: 1920px;
     margin: 0 auto;
 }
 .av-contact-photo {
@@ -5580,4 +5631,61 @@ a.mt-2.mt-lg-0.text-center:hover {
 }
 [data-theme="dark"] .av-cat-page-card-count {
     background: color-mix(in srgb, var(--av-red) 20%, transparent);
+}
+
+/* =============================================================
+   SHOP PAGE — wider layout + 2-column sidebar filters
+   ============================================================= */
+
+/* Widen the shop container to use more screen width */
+.o_wsale_page_contained {
+    max-width: 1600px !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+/* Wider sidebar to fit 2-column filter lists */
+#products_grid_before {
+    min-width: 280px;
+    max-width: 280px;
+    width: 280px;
+}
+
+/* Brand filter — 2 columns */
+.av-filter-brand .accordion-collapse .d-flex,
+.av-filter-category .accordion-collapse .d-flex {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+}
+
+/* Keep active item style */
+.av-brand-item,
+.av-cat-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 3px 0;
+}
+
+.av-brand-item.fw-bold,
+.av-cat-item.fw-bold {
+    color: var(--av-red) !important;
+}
+
+/* Stock status — single column, no change needed */
+.av-filter-stock .d-flex {
+    flex-direction: column;
+}
+
+/* Accordion headers consistent styling */
+.av-filter-brand .accordion-button,
+.av-filter-category .accordion-button,
+.av-filter-stock .accordion-button {
+    font-size: .9rem;
+}
+
+/* Tighten sidebar scrollable areas */
+#products_grid_before .o_wsale_products_grid_before_rail {
+    padding-right: .5rem;
 }

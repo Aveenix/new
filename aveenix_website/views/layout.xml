@@ -94,11 +94,13 @@
                         </a>
                         <span class="av-topbar-sep">|</span>
                         <!-- Color picker (moved to topbar) -->
+                        <t t-set="av_ws" t-value="request.website.sudo()"/>
+                        <t t-set="av_default_color" t-value="av_ws.aveenix_primary_color or '#CC0000'"/>
                         <div class="dropdown" style="display:inline-block;">
                             <span class="av-topbar-link" data-bs-toggle="dropdown" style="cursor:pointer;">
                                 <i class="fa fa-tint"/> Color <i class="fa fa-chevron-down" style="font-size:10px;"/>
                             </span>
-                            <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0" style="width: 280px; border-radius: 12px; margin-top: 8px;">
+                            <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0" id="av-color-popup" t-att-data-default-color="av_default_color" style="width: 280px; border-radius: 12px; margin-top: 8px;">
                                 <div class="d-flex justify-content-between align-items-center mb-2 px-1">
                                     <div class="d-flex align-items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="av-color-popup-icon"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg>
@@ -107,6 +109,16 @@
                                     <div class="d-flex align-items-center gap-1 av-color-popup-status">
                                         <span id="av-current-color-name">Default</span>
                                         <i class="fa fa-chevron-up" style="font-size: 10px;"/>
+                                    </div>
+                                </div>
+                                <hr class="my-2" style="border-color: #eee;"/>
+                                <div class="av-color-btn-wrapper d-flex align-items-center gap-2 p-2 rounded mb-2" id="av-default-color-btn" style="cursor:pointer; border:1px solid transparent;" t-att-data-color="av_default_color" data-name="Default" data-is-default="1">
+                                    <div class="av-color-swatch d-flex align-items-center justify-content-center flex-shrink-0" t-attf-style="background:{{av_default_color}}; width:36px; height:36px; border-radius:10px;">
+                                        <i class="fa fa-undo" style="color:#fff; font-size:14px;"/>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-bold" style="font-size:13px;">Default</span>
+                                        <span class="text-muted" style="font-size:11px; word-break:break-all;" t-out="av_default_color"/>
                                     </div>
                                 </div>
                                 <hr class="my-2" style="border-color: #eee;"/>
@@ -277,7 +289,7 @@
                             </t>
                         </ul>
                         <div class="av-cat-dropdown-footer">
-                            <a href="/categories">View All Categories →</a>
+                            <a href="/shop">View All Categories →</a>
                         </div>
                     </div>
                     <ul class="av-cat-menu">
@@ -503,12 +515,27 @@
 
             <div class="av-footer-bottom">
                 <div class="av-container">
-                    <div class="av-footer-bottom-row">
+                    <div class="av-footer-bottom-row" style="justify-content: space-between;">
+                        <div class="av-footer-legal" style="gap: 16px;">
+                            <a href="/about">
+                                <i class="fa fa-info-circle av-legal-icon"/>
+                                About Us
+                            </a>
+                            <a href="/contactus">
+                                <i class="fa fa-envelope av-legal-icon"/>
+                                Contact Us
+                            </a>
+                        </div>
                         <p class="av-copyright">&#169; 2025 AVEENIX. All rights reserved.</p>
-                        <div class="av-footer-legal">
-                            <a href="#"><i class="fa fa-lock av-footer-link-icon"/>Privacy Policy</a>
-                            <a href="#"><i class="fa fa-check-circle av-footer-link-icon"/>Cookie Policy</a>
-                            <a href="#"><i class="fa fa-headphones av-footer-link-icon"/>Contact Support</a>
+                        <div class="av-footer-legal" style="gap: 16px;">
+                            <a href="/privacy">
+                                <i class="fa fa-shield av-legal-icon"/>
+                                Privacy Policy
+                            </a>
+                            <a href="/terms">
+                                <i class="fa fa-file-text av-legal-icon"/>
+                                Terms &amp; Conditions
+                            </a>
                         </div>
                     </div>
                 </div>

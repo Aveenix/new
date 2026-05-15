@@ -35,7 +35,7 @@
                                 <div class="av-hero-overlay" style="background: linear-gradient(rgba(48, 63, 159, 0.75), rgba(48, 63, 159, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
                                 <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
                                     <div class="av-hero-text" style="color: #fff;">
-                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Summer Electronics<br/>Sale</h1>
+                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Summer Electronics Sale</h1>
                                         <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Up to 70% Off</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Get the latest gadgets at unbeatable prices</p>
                                         <div class="av-hero-btns">
@@ -82,11 +82,11 @@
                         </div>
 
                     </div>
-                    <a class="carousel-control-prev" href="#aveenixHomeCarousel" role="button" data-bs-slide="prev" style="z-index: 2;">
+                    <a class="carousel-control-prev" href="#aveenixHomeCarousel" role="button" data-bs-slide="prev" style="z-index: 10; width: 44px; height: 44px; top: 50%; bottom: auto; transform: translateY(-50%); left: 16px; background: rgba(0,0,0,0.45); border-radius: 50%; opacity: 1;">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
                     </a>
-                    <a class="carousel-control-next" href="#aveenixHomeCarousel" role="button" data-bs-slide="next" style="z-index: 2;">
+                    <a class="carousel-control-next" href="#aveenixHomeCarousel" role="button" data-bs-slide="next" style="z-index: 10; width: 44px; height: 44px; top: 50%; bottom: auto; transform: translateY(-50%); right: 16px; background: rgba(0,0,0,0.45); border-radius: 50%; opacity: 1;">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </a>
@@ -360,6 +360,15 @@
                             </div>
                             <div class="av-feature-item">
                                 <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-lock"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">SSL Encrypted</h3>
+                                    <p class="av-feat-desc">Guaranteed data encryption and protection.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
                                     <i class="fa fa-truck"/>
                                 </div>
                                 <div>
@@ -378,29 +387,20 @@
                             </div>
                             <div class="av-feature-item">
                                 <div class="av-feature-icon-wrap">
-                                    <i class="fa fa-headphones"/>
-                                </div>
-                                <div>
-                                    <h3 class="av-feat-title">24/7 Support</h3>
-                                    <p class="av-feat-desc">Round-the-clock customer support team.</p>
-                                </div>
-                            </div>
-                            <div class="av-feature-item">
-                                <div class="av-feature-icon-wrap">
-                                    <i class="fa fa-lock"/>
-                                </div>
-                                <div>
-                                    <h3 class="av-feat-title">SSL Encrypted</h3>
-                                    <p class="av-feat-desc">Guaranteed data encryption and protection.</p>
-                                </div>
-                            </div>
-                            <div class="av-feature-item">
-                                <div class="av-feature-icon-wrap">
                                     <i class="fa fa-gift"/>
                                 </div>
                                 <div>
                                     <h3 class="av-feat-title">Earn Rewards</h3>
                                     <p class="av-feat-desc">Become a part of the customer loyalty program.</p>
+                                </div>
+                            </div>
+                            <div class="av-feature-item">
+                                <div class="av-feature-icon-wrap">
+                                    <i class="fa fa-headphones"/>
+                                </div>
+                                <div>
+                                    <h3 class="av-feat-title">24/7 Support</h3>
+                                    <p class="av-feat-desc">Round-the-clock customer support team.</p>
                                 </div>
                             </div>
                         </div>
@@ -1126,6 +1126,260 @@
                 </div>
             </section>
         </xpath>
+    </template>
+
+    <!-- =========================================================
+         SHOP SIDEBAR: Brand / Category / Stock filters
+         ========================================================= -->
+    <template id="av_shop_extra_filters" inherit_id="website_sale.products" name="Aveenix: Extra Shop Filters">
+        <!-- Always show sidebar so our custom filters are visible -->
+        <xpath expr="//t[@t-set='hasLeftColumn']" position="attributes">
+            <attribute name="t-value">True</attribute>
+        </xpath>
+
+        <!-- Always show the mobile Filters button for our custom filters -->
+        <xpath expr="//t[@t-set='wsale_has_filters_btn']" position="attributes">
+            <attribute name="t-value">True</attribute>
+        </xpath>
+
+        <!-- Extend "Clear Filters" to include categ/brand/stock and show when any is active -->
+        <xpath expr="//div[contains(@class,'py-3') and contains(@class,'border-bottom')]" position="replace">
+            <div t-if="attrib_values or tags or selected_categ or selected_brand or selected_stock or (show_price_filter and isFilteringByPrice)"
+                 class="py-3 border-bottom">
+                <a t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0, categ=0, brand=0, stock='')"
+                   t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
+                   title="Clear Filters">
+                    <small class="mx-auto"><b>Clear Filters</b></small>
+                    <i class="oi oi-close" role="presentation"/>
+                </a>
+            </div>
+        </xpath>
+
+        <!-- Inject brand + category + stock filters just before the bottom dropzone -->
+        <xpath expr="//t[@t-call='website_sale.sidebar_dropzone_at_bottom']" position="before">
+            <!-- ── Filter by Brand ──────────────────────────────────── -->
+            <t t-if="all_brands">
+                <div class="accordion accordion-flush border-top av-filter-brand">
+                    <div class="accordion-item">
+                        <div class="accordion-header h6 mb-0">
+                            <button class="accordion-button px-0 bg-transparent shadow-none"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#av_brand_filter_inner"
+                                    aria-controls="av_brand_filter_inner"
+                                    aria-expanded="true">
+                                <b>Filter by Brand</b>
+                            </button>
+                        </div>
+                        <div id="av_brand_filter_inner" class="accordion-collapse collapse show">
+                            <div class="d-flex flex-column mb-3 pt-1" style="max-height:300px; overflow-y:auto;">
+                                <t t-foreach="all_brands" t-as="brand">
+                                    <a t-att-href="keep(brand=brand.id if brand.id != selected_brand else 0)"
+                                       t-attf-class="text-decoration-none py-1 small av-brand-item {{brand.id == selected_brand and 'fw-bold text-primary' or 'text-body'}}">
+                                        <t t-out="brand.name"/>
+                                    </a>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- ── Filter by Category ──────────────────────────────── -->
+            <t t-if="all_categs">
+                <div class="accordion accordion-flush border-top av-filter-category">
+                    <div class="accordion-item">
+                        <div class="accordion-header h6 mb-0">
+                            <button class="accordion-button px-0 bg-transparent shadow-none"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#av_category_filter_inner"
+                                    aria-controls="av_category_filter_inner"
+                                    aria-expanded="true">
+                                <b>Filter by Category</b>
+                            </button>
+                        </div>
+                        <div id="av_category_filter_inner" class="accordion-collapse collapse show">
+                            <div class="d-flex flex-column mb-3 pt-1" style="max-height:300px; overflow-y:auto;">
+                                <t t-foreach="all_categs" t-as="cat">
+                                    <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
+                                       t-attf-class="text-decoration-none py-1 small av-cat-item {{cat.id == selected_categ and 'fw-bold text-primary' or 'text-body'}}">
+                                        <t t-out="cat.name"/>
+                                    </a>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- ── Stock Status ────────────────────────────────────── -->
+            <div class="accordion accordion-flush border-top av-filter-stock">
+                <div class="accordion-item">
+                    <div class="accordion-header h6 mb-0">
+                        <button class="accordion-button px-0 bg-transparent shadow-none"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#av_stock_filter_inner"
+                                aria-controls="av_stock_filter_inner"
+                                aria-expanded="true">
+                            <b>Stock Status</b>
+                        </button>
+                    </div>
+                    <div id="av_stock_filter_inner" class="accordion-collapse collapse show">
+                        <div class="d-flex flex-column mb-3 pt-1 gap-1">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input av-stock-check"
+                                       id="av_stock_instock"
+                                       t-att-data-href="keep(stock='instock' if selected_stock != 'instock' else '')"
+                                       t-att-checked="'checked' if selected_stock == 'instock' else None"/>
+                                <label class="form-check-label fw-normal small" for="av_stock_instock">In stock</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input av-stock-check"
+                                       id="av_stock_onsale"
+                                       t-att-data-href="keep(stock='onsale' if selected_stock != 'onsale' else '')"
+                                       t-att-checked="'checked' if selected_stock == 'onsale' else None"/>
+                                <label class="form-check-label fw-normal small" for="av_stock_onsale">On sale</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Mobile offcanvas: add Brand / Category / Stock filters + fix Clear Filters -->
+    <template id="av_offcanvas_extra_filters" inherit_id="website_sale.o_wsale_offcanvas" name="Aveenix: Mobile Extra Filters">
+
+        <!-- Append Brand, Category, Stock before the bottom action bar -->
+        <xpath expr="//div[@id='o_wsale_offcanvas_content']" position="inside">
+
+            <!-- ── Filter by Brand ─────────────────────────────────── -->
+            <t t-if="all_brands">
+                <div class="accordion-item">
+                    <h2 id="av_offcanvas_brand_header" class="accordion-header mb-0">
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#av_offcanvas_brand"
+                                aria-expanded="false"
+                                aria-controls="av_offcanvas_brand">
+                            <b>Filter by Brand</b>
+                        </button>
+                    </h2>
+                    <div id="av_offcanvas_brand"
+                         class="accordion-collapse collapse"
+                         aria-labelledby="av_offcanvas_brand_header">
+                        <div class="accordion-body pt-0">
+                            <div class="list-group list-group-flush">
+                                <t t-foreach="all_brands" t-as="brand">
+                                    <a t-att-href="keep(brand=brand.id if brand.id != selected_brand else 0)"
+                                       class="list-group-item border-0 ps-0 pb-0 text-decoration-none">
+                                        <div class="form-check d-inline-block">
+                                            <input type="radio"
+                                                   class="form-check-input o_not_editable"
+                                                   name="av_brand_radios"
+                                                   t-att-checked="brand.id == selected_brand and 'checked' or None"/>
+                                            <label class="form-check-label fw-normal" t-out="brand.name"/>
+                                        </div>
+                                    </a>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- ── Filter by Category ──────────────────────────────── -->
+            <t t-if="all_categs">
+                <div class="accordion-item">
+                    <h2 id="av_offcanvas_categ_header" class="accordion-header mb-0">
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#av_offcanvas_categ"
+                                aria-expanded="false"
+                                aria-controls="av_offcanvas_categ">
+                            <b>Filter by Category</b>
+                        </button>
+                    </h2>
+                    <div id="av_offcanvas_categ"
+                         class="accordion-collapse collapse"
+                         aria-labelledby="av_offcanvas_categ_header">
+                        <div class="accordion-body pt-0">
+                            <div class="list-group list-group-flush">
+                                <t t-foreach="all_categs" t-as="cat">
+                                    <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
+                                       class="list-group-item border-0 ps-0 pb-0 text-decoration-none">
+                                        <div class="form-check d-inline-block">
+                                            <input type="radio"
+                                                   class="form-check-input o_not_editable"
+                                                   name="av_categ_radios"
+                                                   t-att-checked="cat.id == selected_categ and 'checked' or None"/>
+                                            <label class="form-check-label fw-normal" t-out="cat.name"/>
+                                        </div>
+                                    </a>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- ── Stock Status ────────────────────────────────────── -->
+            <div class="accordion-item">
+                <h2 id="av_offcanvas_stock_header" class="accordion-header mb-0">
+                    <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#av_offcanvas_stock"
+                            aria-expanded="false"
+                            aria-controls="av_offcanvas_stock">
+                        <b>Stock Status</b>
+                    </button>
+                </h2>
+                <div id="av_offcanvas_stock"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="av_offcanvas_stock_header">
+                    <div class="accordion-body pt-0">
+                        <div class="list-group list-group-flush">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input av-stock-check"
+                                       id="av_mob_stock_instock"
+                                       t-att-data-href="keep(stock='instock' if selected_stock != 'instock' else '')"
+                                       t-att-checked="'checked' if selected_stock == 'instock' else None"/>
+                                <label class="form-check-label fw-normal" for="av_mob_stock_instock">In stock</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input av-stock-check"
+                                       id="av_mob_stock_onsale"
+                                       t-att-data-href="keep(stock='onsale' if selected_stock != 'onsale' else '')"
+                                       t-att-checked="'checked' if selected_stock == 'onsale' else None"/>
+                                <label class="form-check-label fw-normal" for="av_mob_stock_onsale">On sale</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </xpath>
+
+        <!-- Fix offcanvas Clear Filters: always visible, clears all custom filters too -->
+        <xpath expr="//div[contains(@class,'offcanvas-body') and contains(@class,'border-top')]" position="replace">
+            <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
+                <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2"
+                   t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0, categ=0, brand=0, stock='')">
+                    Clear Filters
+                </a>
+            </div>
+        </xpath>
+
+    </template>
+
+    <!-- Hide pricelist dropdown from shop page -->
+    <template id="av_hide_pricelist" inherit_id="website_sale.pricelist_list" name="Aveenix: Hide Pricelist Dropdown">
+        <xpath expr="//div[@t-attf-class]" position="replace"/>
     </template>
 
     <!-- =========================================================
