@@ -4,8 +4,9 @@
     'category': 'Website',
     'summary': 'Modern eCommerce website - red & gold design',
     'description': 'Modern eCommerce website - red & gold design',
-    'author': 'Custom',
-    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist', 'product_brand'],
+    'author': 'Anantam Innovision Private Limited',
+    'website': 'https://anantaminnovision.com/',
+    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist', 'product_brand', 'account'],
     'data': [
         'security/security.xml',
         'data/product_category_data.xml',

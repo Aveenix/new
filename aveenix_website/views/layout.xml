@@ -526,7 +526,7 @@
                                 Contact Us
                             </a>
                         </div>
-                        <p class="av-copyright">&#169; 2025 AVEENIX. All rights reserved.</p>
+                        <p class="av-copyright">&#169; <t t-esc="datetime.datetime.now().year"/> AVEENIX. All rights reserved.</p>
                         <div class="av-footer-legal" style="gap: 16px;">
                             <a href="/privacy">
                                 <i class="fa fa-shield av-legal-icon"/>

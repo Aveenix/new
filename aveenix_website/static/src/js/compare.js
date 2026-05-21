@@ -177,12 +177,10 @@ export class CompareHeaderBadge extends Interaction {
 
 // ── "Add to Compare" buttons on shop / product pages ─────────────
 export class AddToCompareButton extends Interaction {
-    static selector = ".av-add-to-compare";
+    static selector = '[data-action="av_add_to_compare"]';
 
     dynamicContent = {
-        _root: {
-            "t-on-click": (ev) => this.onClick(ev),
-        },
+        _root: { 't-on-click': (ev) => this.onClick(ev) },
     };
 
     setup() {
@@ -190,6 +188,8 @@ export class AddToCompareButton extends Interaction {
         if (id && compareStore.has(id)) {
             this.el.classList.add("av-added-to-compare");
             this.el.title = "Added to Compare";
+            const icon = this.el.querySelector(".fa");
+            if (icon) { icon.classList.remove("fa-plus-square-o"); icon.classList.add("fa-plus-square"); }
         }
     }
 
@@ -197,9 +197,24 @@ export class AddToCompareButton extends Interaction {
         ev.preventDefault();
         const id = this.el.dataset.productId;
         if (!id) return;
-        compareStore.add(id);
-        this.el.classList.add("av-added-to-compare");
-        this.el.title = "Added to Compare";
+        const icon = this.el.querySelector(".fa");
+        if (compareStore.has(id)) {
+            compareStore.remove(id);
+            this.el.classList.remove("av-added-to-compare");
+            this.el.title = "Add to Compare";
+            if (icon) { icon.classList.remove("fa-plus-square"); icon.classList.add("fa-plus-square-o"); }
+        } else {
+            compareStore.add(id);
+            this.el.classList.add("av-added-to-compare");
+            this.el.title = "Added to Compare";
+            if (icon) { icon.classList.remove("fa-plus-square-o"); icon.classList.add("fa-plus-square"); }
+        }
+        this.el.classList.remove("av-icon-bounce");
+        void this.el.offsetWidth;
+        this.el.classList.add("av-icon-bounce");
+        const fa = this.el.querySelector(".fa") || this.el;
+        fa.addEventListener("animationend", () => this.el.classList.remove("av-icon-bounce"), { once: true });
+        window.dispatchEvent(new CustomEvent("av-compare-changed"));
     }
 }
 
@@ -611,10 +626,11 @@ export class AddToWishButton extends Interaction {
             this.el.title = "Added to Wishlist";
             if (icon) { icon.classList.remove("fa-star-o"); icon.classList.add("fa-star"); }
         }
+        const wishFa = this.el.querySelector(".fa") || this.el;
         this.el.classList.remove("av-icon-bounce");
         void this.el.offsetWidth;
         this.el.classList.add("av-icon-bounce");
-        this.el.addEventListener("animationend", () => this.el.classList.remove("av-icon-bounce"), { once: true });
+        wishFa.addEventListener("animationend", () => this.el.classList.remove("av-icon-bounce"), { once: true });
         window.dispatchEvent(new CustomEvent("av-wish-changed"));
     }
 }

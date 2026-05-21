@@ -227,6 +227,14 @@ class AveenixWebsite(WebsiteSale):
     def contact_us_page(self, **kwargs):
         return request.render('aveenix_website.contact_us_page', {})
 
+    @http.route('/privacy', type='http', auth='public', website=True)
+    def privacy_policy_page(self, **kwargs):
+        return request.render('aveenix_website.privacy_policy_page', {})
+
+    @http.route('/about', type='http', auth='public', website=True)
+    def about_us_page(self, **kwargs):
+        return request.render('aveenix_website.about_us_page', {})
+
     # ── User list sync endpoints ──────────────────────────────────
 
     _LIST_FIELD = {

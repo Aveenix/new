@@ -604,15 +604,18 @@
                 })();
             ]]></script>
             <!-- Compare btn on product detail page -->
-            <button t-if="product_variant"
-                type="button"
-                class="btn av-add-to-compare"
+            <a
+                t-if="product_variant"
+                t-att-class="_button_classes.replace('o_add_wishlist_dyn', '')"
+                class="av-add-to-compare"
+                href="#"
+                data-action="av_add_to_compare"
                 t-att-data-product-id="product.id"
                 title="Add to Compare"
             >
-                <i class="fa fa-balance-scale me-2" role="img" aria-label="Add to Compare"/>
+                <i class="fa fa-plus-square-o me-2" role="img" aria-label="Add to Compare"/>
                 <span>Add to Compare</span>
-            </button>
+            </a>
         </xpath>
     </template>
 
@@ -1090,6 +1093,45 @@
                     </div>
                 </section>
             </t>
+            <t t-if="request.httprequest.path == '/shop/address' or request.httprequest.path.startswith('/shop/address?')">
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon"><i class="fa fa-map-marker"/></div>
+                        <h1 class="av-compare-hero-title">Delivery Address</h1>
+                        <p class="av-compare-hero-sub">Enter or select your delivery address to proceed with your order.</p>
+                    </div>
+                </section>
+            </t>
+            <t t-if="request.httprequest.path == '/shop/payment'">
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon"><i class="fa fa-lock"/></div>
+                        <h1 class="av-compare-hero-title">Secure Payment</h1>
+                        <p class="av-compare-hero-sub">Select your preferred payment method and complete your purchase securely.</p>
+                    </div>
+                </section>
+            </t>
+            <t t-if="request.httprequest.path == '/shop/checkout'">
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon"><i class="fa fa-credit-card"/></div>
+                        <h1 class="av-compare-hero-title">Checkout</h1>
+                        <p class="av-compare-hero-sub">Complete your order securely. Enter your delivery details and choose your preferred payment method.</p>
+                    </div>
+                </section>
+            </t>
             <t t-if="request.httprequest.path == '/shop/confirmation'">
                 <section class="av-compare-hero">
                     <div class="av-compare-hero-circles">
@@ -1172,7 +1214,7 @@
                             </button>
                         </div>
                         <div id="av_brand_filter_inner" class="accordion-collapse collapse show">
-                            <div class="d-flex flex-column mb-3 pt-1" style="max-height:300px; overflow-y:auto;">
+                            <div class="d-flex flex-column mb-3 pt-1">
                                 <t t-foreach="all_brands" t-as="brand">
                                     <a t-att-href="keep(brand=brand.id if brand.id != selected_brand else 0)"
                                        t-attf-class="text-decoration-none py-1 small av-brand-item {{brand.id == selected_brand and 'fw-bold text-primary' or 'text-body'}}">
@@ -1200,7 +1242,7 @@
                             </button>
                         </div>
                         <div id="av_category_filter_inner" class="accordion-collapse collapse show">
-                            <div class="d-flex flex-column mb-3 pt-1" style="max-height:300px; overflow-y:auto;">
+                            <div class="d-flex flex-column mb-3 pt-1">
                                 <t t-foreach="all_categs" t-as="cat">
                                     <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
                                        t-attf-class="text-decoration-none py-1 small av-cat-item {{cat.id == selected_categ and 'fw-bold text-primary' or 'text-body'}}">
@@ -1245,6 +1287,37 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- ── Top Rated Products ─────────────────────────────── -->
+            <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+            <t t-if="not _av_tr_pool">
+                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True)], limit=50)"/>
+            </t>
+            <t t-set="av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:3]"/>
+            <div class="border-top pt-3 mt-1 av-top-rated-widget">
+                <p class="fw-bold text-uppercase small mb-2" style="letter-spacing:.5px;">Top Rated Products</p>
+                <t t-foreach="av_top_rated" t-as="trp">
+                    <a t-attf-href="/shop/product/#{trp.id}" class="d-flex align-items-center gap-2 text-decoration-none mb-3 av-top-rated-item">
+                        <div class="av-top-rated-img flex-shrink-0">
+                            <t t-if="trp.image_128">
+                                <img t-attf-src="/web/image/product.template/#{trp.id}/image_128"
+                                     t-att-alt="trp.name"
+                                     style="width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid #eee;"/>
+                            </t>
+                            <t t-else="">
+                                <div style="width:56px;height:56px;background:#f5f5f5;border-radius:6px;border:1px solid #eee;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fa fa-image text-muted"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="av-top-rated-info" style="min-width:0;">
+                            <p class="mb-0 small fw-medium text-dark" style="line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;" t-esc="trp.name"/>
+                            <span class="small fw-bold" style="color:var(--av-red);"
+                                  t-esc="'$%.2f' % trp.list_price"/>
+                        </div>
+                    </a>
+                </t>
             </div>
         </xpath>
     </template>
@@ -1401,6 +1474,513 @@
                 </div>
             </section>
         </xpath>
+    </template>
+
+    <!-- =========================================================
+         BANNER: Product Detail Page (/shop/product/...)
+         ========================================================= -->
+    <template id="av_product_detail_hero" inherit_id="website_sale.product" name="Aveenix: Product Detail Hero Banner">
+        <xpath expr="//div[@id='oe_structure_website_sale_product_1']" position="before">
+            <section class="av-compare-hero">
+                <div class="av-compare-hero-circles">
+                    <div class="av-compare-circle av-compare-circle-1"/>
+                    <div class="av-compare-circle av-compare-circle-2"/>
+                </div>
+                <div class="av-container text-center" style="position:relative; z-index:1;">
+                    <div class="av-compare-hero-icon">
+                        <i class="fa fa-tag"/>
+                    </div>
+                    <h1 class="av-compare-hero-title" t-esc="product.name"/>
+                    <p class="av-compare-hero-sub">View product details, specifications, and pricing. Add to cart or compare with similar items.</p>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         PRIVACY POLICY PAGE  (/privacy)
+         ========================================================= -->
+    <template id="privacy_policy_page" name="Aveenix Privacy Policy">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'privacy'"/>
+            <t t-set="additional_title">Privacy Policy</t>
+
+            <div id="wrap" class="av-privacy-page">
+
+                <!-- Hero — same as other pages -->
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                        <div class="av-compare-hero-icon">
+                            <i class="fa fa-shield"/>
+                        </div>
+                        <h1 class="av-compare-hero-title">Privacy Policy</h1>
+                        <p class="av-compare-hero-sub">This Privacy Policy explains how Aveenix collects, uses, stores, and protects your personal information when you use our services.</p>
+                        <p class="av-compare-hero-sub" style="font-size:13px; opacity:.75; margin-top:8px;"><i class="fa fa-calendar"/> Last updated: 20 May 2024</p>
+                    </div>
+                </section>
+
+                <div class="av-container av-privacy-body">
+                    <div class="row g-4">
+
+                        <!-- ── LEFT SIDEBAR ──────────────────────────── -->
+                        <div class="col-lg-3 col-md-4">
+                            <div class="av-privacy-sidebar">
+                                <h6 class="av-privacy-sidebar-heading">Privacy Policy</h6>
+                                <nav class="av-privacy-nav">
+                                    <a href="#information-collect"  class="av-privacy-nav-link active"><i class="fa fa-shield"/>      Overview</a>
+                                    <a href="#information-collect"  class="av-privacy-nav-link"><i class="fa fa-user"/>        Information We Collect</a>
+                                    <a href="#how-we-use"           class="av-privacy-nav-link"><i class="fa fa-database"/>    How We Use Information</a>
+                                    <a href="#information-sharing"  class="av-privacy-nav-link"><i class="fa fa-share-alt"/>   Information Sharing</a>
+                                    <a href="#cookies"              class="av-privacy-nav-link"><i class="fa fa-circle-o"/>    Cookies &amp; Tracking</a>
+                                    <a href="#data-security"        class="av-privacy-nav-link"><i class="fa fa-lock"/>        Data Security</a>
+                                    <a href="#your-rights"          class="av-privacy-nav-link"><i class="fa fa-user-circle"/> Your Rights &amp; Choices</a>
+                                    <a href="#data-retention"       class="av-privacy-nav-link"><i class="fa fa-clock-o"/>     Data Retention</a>
+                                    <a href="#childrens-privacy"    class="av-privacy-nav-link"><i class="fa fa-child"/>       Children's Privacy</a>
+                                    <a href="#international"        class="av-privacy-nav-link"><i class="fa fa-globe"/>       International Transfers</a>
+                                    <a href="#third-party"          class="av-privacy-nav-link"><i class="fa fa-link"/>        Third-Party Links</a>
+                                    <a href="#policy-updates"       class="av-privacy-nav-link"><i class="fa fa-file-text"/>   Policy Updates</a>
+                                    <a href="#contact"              class="av-privacy-nav-link"><i class="fa fa-envelope"/>    Contact Us</a>
+                                </nav>
+                                <!-- Privacy note box -->
+                                <div class="av-privacy-note-box">
+                                    <div class="av-privacy-note-icon">
+                                        <i class="fa fa-shield"/>
+                                    </div>
+                                    <strong class="av-privacy-note-title">Your privacy is important to us.</strong>
+                                    <p class="av-privacy-note-text">We are committed to protecting your personal information and being transparent about how we use it.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── RIGHT MAIN CONTENT ────────────────────── -->
+                        <div class="col-lg-9 col-md-8">
+
+                            <!-- Policy Topics grid -->
+                            <div class="av-privacy-topics">
+                                <h2 class="av-privacy-topics-title">Policy Topics</h2>
+                                <p class="av-privacy-topics-sub">Explore the topics below to learn more about how we handle your information.</p>
+                                <div class="row g-3">
+                                    <div class="col-md-6" id="information-collect">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-user"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Information We Collect</strong>
+                                                <span>Learn about the types of personal information we collect from you.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="how-we-use">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-database"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>How We Use Information</strong>
+                                                <span>Understand how we use your personal information to provide our services.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="information-sharing">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-share-alt"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Information Sharing</strong>
+                                                <span>We do not sell your personal data. See when and why we share it.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="cookies">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-circle-o"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Cookies &amp; Tracking</strong>
+                                                <span>How we use cookies and similar technologies to enhance your experience.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="data-security">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-lock"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Data Security</strong>
+                                                <span>The security measures we use to protect your information.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="your-rights">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-user-circle"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Your Rights &amp; Choices</strong>
+                                                <span>Your rights to access, update, delete, or control your personal data.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="data-retention">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-clock-o"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Data Retention</strong>
+                                                <span>How long we keep your information and the criteria we use.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="childrens-privacy">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-child"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Children's Privacy</strong>
+                                                <span>Our commitment to protecting the privacy of children online.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="international">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-globe"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>International Transfers</strong>
+                                                <span>How your information may be transferred outside your country.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="third-party">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-link"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Third-Party Links</strong>
+                                                <span>Our website may contain links to other sites. Learn more.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="policy-updates">
+                                        <div class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-file-text"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Policy Updates</strong>
+                                                <span>We may update this policy from time to time. See what's changed.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="contact">
+                                        <a href="/contactus" class="av-privacy-topic-card">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-envelope"/></div>
+                                            <div class="av-privacy-topic-body">
+                                                <strong>Contact Us</strong>
+                                                <span>Have questions or concerns? We're here to help.</span>
+                                            </div>
+                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottom CTA -->
+                            <div class="av-privacy-cta">
+                                <div class="av-privacy-cta-left">
+                                    <div class="av-privacy-cta-icon"><i class="fa fa-shield"/></div>
+                                    <div>
+                                        <strong>We're committed to transparency</strong>
+                                        <span>If you have any questions about this Privacy Policy or how we handle your data, please don't hesitate to get in touch with us.</span>
+                                    </div>
+                                </div>
+                                <a href="/contactus" class="av-privacy-cta-btn">Contact Us</a>
+                            </div>
+
+                        </div><!-- /col main -->
+                    </div><!-- /row -->
+                </div><!-- /av-container -->
+
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var links = document.querySelectorAll('.av-privacy-nav-link');
+                        var sections = Array.from(links).map(function(l) {
+                            return document.querySelector(l.getAttribute('href'));
+                        }).filter(Boolean);
+                        function onScroll() {
+                            var scrollY = window.scrollY + 140;
+                            var active = sections[0];
+                            sections.forEach(function(s) { if (s.offsetTop &lt;= scrollY) active = s; });
+                            links.forEach(function(l) {
+                                l.classList.toggle('active', l.getAttribute('href') === '#' + active.id);
+                            });
+                        }
+                        window.addEventListener('scroll', onScroll, {passive: true});
+                    });
+                </script>
+            </div><!-- /wrap -->
+        </t>
+    </template>
+
+    <!-- =========================================================
+         BANNER: Shop Page (/shop)
+         ========================================================= -->
+    <template id="av_shop_hero" inherit_id="website_sale.products" name="Aveenix: Shop Hero Banner">
+        <xpath expr="//div[@id='o_wsale_container']" position="before">
+            <section class="av-compare-hero">
+                <div class="av-compare-hero-circles">
+                    <div class="av-compare-circle av-compare-circle-1"/>
+                    <div class="av-compare-circle av-compare-circle-2"/>
+                </div>
+                <div class="av-container text-center" style="position:relative; z-index:1;">
+                    <div class="av-compare-hero-icon">
+                        <i class="fa fa-shopping-bag"/>
+                    </div>
+                    <h1 class="av-compare-hero-title">Shop</h1>
+                    <p class="av-compare-hero-sub">Browse our full product catalog. Filter by category, brand, and price to find exactly what you need.</p>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         BANNER: Terms & Conditions Page (/terms)
+         ========================================================= -->
+    <template id="av_terms_hero" inherit_id="account.account_terms_conditions_page" name="Aveenix: Terms Hero Banner">
+        <xpath expr="//div[hasclass('oe_structure')]" position="before">
+            <style>
+                /* Remove gap before hero on /terms */
+                main > .container.mt-3 { margin-top: 0 !important; padding-top: 0 !important; }
+                .oe_structure:empty { display: none; }
+            </style>
+            <section class="av-compare-hero">
+                <div class="av-compare-hero-circles">
+                    <div class="av-compare-circle av-compare-circle-1"/>
+                    <div class="av-compare-circle av-compare-circle-2"/>
+                </div>
+                <div class="av-container text-center" style="position:relative; z-index:1;">
+                    <div class="av-compare-hero-icon">
+                        <i class="fa fa-file-text"/>
+                    </div>
+                    <h1 class="av-compare-hero-title">Terms &amp; Conditions</h1>
+                    <p class="av-compare-hero-sub">Please read these terms and conditions carefully before using our services.</p>
+                </div>
+            </section>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_website_terms_conditions')]" position="attributes">
+            <attribute name="style">padding: 48px 0 80px;</attribute>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         ABOUT US PAGE  (/about)
+         ========================================================= -->
+    <template id="about_us_page" name="Aveenix About Us">
+        <t t-call="website.layout">
+            <div id="wrap" class="av-about-page">
+
+                <!-- Hero Banner -->
+                <section class="av-compare-hero">
+                    <div class="av-compare-hero-circles">
+                        <div class="av-compare-circle av-compare-circle-1"/>
+                        <div class="av-compare-circle av-compare-circle-2"/>
+                    </div>
+                    <div class="av-container text-center" style="position:relative;z-index:1;">
+                        <div class="av-compare-hero-icon"><i class="fa fa-building"/></div>
+                        <h1 class="av-compare-hero-title">About Aveenix</h1>
+                        <p class="av-compare-hero-sub">Shop Smarter. Earn More. Give Back.</p>
+                    </div>
+                </section>
+
+                <div class="av-container av-about-body">
+
+                    <!-- Our Story -->
+                    <section class="av-about-section" id="story">
+                        <h2 class="av-about-section-title"><i class="fa fa-book"/> Our Story</h2>
+                        <p>At Aveenix, we're building more than just another online store — we're creating a smarter way to shop. Powered by automation, curated by insight, and driven by community values, Aveenix connects you with top-rated global products while rewarding every purchase you make.</p>
+                        <p>Our platform combines affiliate, dropshipping, branded, and multivendor models to offer a wide product range — from trending tech and everyday essentials to unique niche finds. We focus on what's popular, what's proven, and what gives back.</p>
+                        <p>We believe shopping should do more than just fill your cart. At the heart of Aveenix is a simple idea: When we share the value we create, everyone wins — customers, sellers, and communities alike.</p>
+                    </section>
+
+                    <!-- Key Achievements -->
+                    <section class="av-about-section" id="achievements">
+                        <h2 class="av-about-section-title"><i class="fa fa-trophy"/> Key Achievements</h2>
+                        <div class="av-about-stats">
+                            <div class="av-about-stat">
+                                <div class="av-about-stat-icon"><i class="fa fa-users"/></div>
+                                <div class="av-about-stat-val">500K+</div>
+                                <div class="av-about-stat-label">Active Users</div>
+                            </div>
+                            <div class="av-about-stat">
+                                <div class="av-about-stat-icon"><i class="fa fa-globe"/></div>
+                                <div class="av-about-stat-val">50+</div>
+                                <div class="av-about-stat-label">Countries Served</div>
+                            </div>
+                            <div class="av-about-stat">
+                                <div class="av-about-stat-icon"><i class="fa fa-line-chart"/></div>
+                                <div class="av-about-stat-val">1M+</div>
+                                <div class="av-about-stat-label">Transactions</div>
+                            </div>
+                            <div class="av-about-stat">
+                                <div class="av-about-stat-icon"><i class="fa fa-bolt"/></div>
+                                <div class="av-about-stat-val">99.9%</div>
+                                <div class="av-about-stat-label">Uptime</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Mission & Values -->
+                    <section class="av-about-section" id="mission">
+                        <h2 class="av-about-section-title"><i class="fa fa-heart-o"/> Our Mission &amp; Values</h2>
+                        <h3 class="av-about-sub-title">Why Shop With Us?</h3>
+                        <p>By shopping at Aveenix, you're not just getting better products — you're joining a smarter, more meaningful way to shop. Let's build a platform that's good for people, good for business, and good for the planet.</p>
+                        <h4 class="av-about-sub-title" style="margin-top:24px;">Core Values</h4>
+                        <div class="av-about-values">
+                            <div class="av-about-value-card">
+                                <div class="av-about-value-icon"><i class="fa fa-star"/></div>
+                                <div><strong>Top-Rated, Always</strong><p>We automatically source products rated 4 stars and above — so you're not guessing what's good. Then we handpick 2–3 trending products from every category.</p></div>
+                            </div>
+                            <div class="av-about-value-card">
+                                <div class="av-about-value-icon"><i class="fa fa-money"/></div>
+                                <div><strong>Real Cashback on Every Purchase</strong><p>Every time you shop, we share a portion of our affiliate or vendor commission with you — tracked transparently in your rewards dashboard.</p></div>
+                            </div>
+                            <div class="av-about-value-card">
+                                <div class="av-about-value-icon"><i class="fa fa-handshake-o"/></div>
+                                <div><strong>Support That Works Both Ways</strong><p>We reinvest a portion of sales into rewarding our trusted suppliers and small businesses — because better partnerships build better products.</p></div>
+                            </div>
+                            <div class="av-about-value-card">
+                                <div class="av-about-value-icon"><i class="fa fa-leaf"/></div>
+                                <div><strong>Sustainability, Built-In</strong><p>We prioritize eco-conscious vendors and encourage circular practices, from packaging to supply chain. Every action counts toward a greener future.</p></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Giving Back -->
+                    <section class="av-about-section" id="giving">
+                        <h2 class="av-about-section-title"><i class="fa fa-heart-o"/> Giving Back Matters</h2>
+                        <div class="av-about-giving">
+                            <div class="av-about-giving-card">
+                                <div class="av-about-giving-icon"><i class="fa fa-heart"/></div>
+                                <strong>Community Support</strong>
+                                <p>A percentage of profits goes to local community initiatives and children's charities like Starship.</p>
+                            </div>
+                            <div class="av-about-giving-card">
+                                <div class="av-about-giving-icon"><i class="fa fa-globe"/></div>
+                                <strong>Meaningful Impact</strong>
+                                <p>When you shop with us, you're helping more than just yourself — you're contributing to positive change.</p>
+                            </div>
+                            <div class="av-about-giving-card">
+                                <div class="av-about-giving-icon"><i class="fa fa-users"/></div>
+                                <strong>Cycle That Lifts Everyone</strong>
+                                <p>Our simple idea: when we share the value we create, everyone wins — customers, sellers, and communities.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Awards -->
+                    <section class="av-about-section" id="awards">
+                        <h2 class="av-about-section-title"><i class="fa fa-certificate"/> Awards &amp; Certifications</h2>
+                        <div class="av-about-awards">
+                            <div class="av-about-award-card">
+                                <div class="av-about-award-icon"><i class="fa fa-shield"/></div>
+                                <strong>SOC 2 Certified</strong><span>Security Compliance</span>
+                            </div>
+                            <div class="av-about-award-card">
+                                <div class="av-about-award-icon"><i class="fa fa-lock"/></div>
+                                <strong>GDPR Compliant</strong><span>Data Protection</span>
+                            </div>
+                            <div class="av-about-award-card">
+                                <div class="av-about-award-icon"><i class="fa fa-line-chart"/></div>
+                                <strong>Tech Innovation</strong><span>Industry Award 2024</span>
+                            </div>
+                            <div class="av-about-award-card">
+                                <div class="av-about-award-icon"><i class="fa fa-paint-brush"/></div>
+                                <strong>Best UX Design</strong><span>Platform Excellence</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Journey + Tech Stack -->
+                    <section class="av-about-section" id="journey">
+                        <div class="av-about-two-col">
+                            <div class="av-about-journey">
+                                <h2 class="av-about-section-title"><i class="fa fa-map-o"/> Our Journey</h2>
+                                <div class="av-about-timeline">
+                                    <div class="av-about-tl-item"><div class="av-about-tl-dot">20</div><div><strong>Company Founded</strong> <span class="av-about-tl-year">(2020)</span><p>Started with a vision to create a unified platform for businesses and consumers.</p></div></div>
+                                    <div class="av-about-tl-item"><div class="av-about-tl-dot">21</div><div><strong>Platform Launch</strong> <span class="av-about-tl-year">(2021)</span><p>Launched our first e-commerce platform with basic marketplace functionality.</p></div></div>
+                                    <div class="av-about-tl-item"><div class="av-about-tl-dot">22</div><div><strong>SaaS Integration</strong> <span class="av-about-tl-year">(2022)</span><p>Expanded to include comprehensive business management tools and analytics.</p></div></div>
+                                    <div class="av-about-tl-item"><div class="av-about-tl-dot">23</div><div><strong>AI Implementation</strong> <span class="av-about-tl-year">(2023)</span><p>Introduced AI-powered features including Jarvis assistant and intelligent recommendations.</p></div></div>
+                                    <div class="av-about-tl-item"><div class="av-about-tl-dot">24</div><div><strong>Global Expansion</strong> <span class="av-about-tl-year">(2024)</span><p>Reached 50+ countries with localized services and multi-currency support.</p></div></div>
+                                </div>
+                            </div>
+                            <div class="av-about-tech">
+                                <h2 class="av-about-section-title"><i class="fa fa-code"/> Technology Stack</h2>
+                                <div class="av-about-tech-grid">
+                                    <span class="av-about-tech-tag"><i class="fa fa-desktop"/> React</span>
+                                    <span class="av-about-tech-tag"><i class="fa fa-server"/> Node.js</span>
+                                    <span class="av-about-tech-tag"><i class="fa fa-magic"/> AI/ML</span>
+                                    <span class="av-about-tech-tag"><i class="fa fa-cloud"/> Cloud</span>
+                                    <span class="av-about-tech-tag"><i class="fa fa-database"/> PostgreSQL</span>
+                                    <span class="av-about-tech-tag"><i class="fa fa-code"/> TypeScript</span>
+                                </div>
+                                <p style="margin-top:16px;">Built with modern, scalable technologies to ensure reliability, performance, and security across all platform modules.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Why Choose Aveenix -->
+                    <section class="av-about-section" id="why">
+                        <h2 class="av-about-section-title"><i class="fa fa-check-square-o"/> Why Choose Aveenix</h2>
+                        <div class="av-about-why-grid">
+                            <div class="av-about-why-item"><i class="fa fa-check-circle"/><div><strong>All-in-One Platform</strong><p>Combine e-commerce, business management, and AI tools in one unified platform.</p></div></div>
+                            <div class="av-about-why-item"><i class="fa fa-check-circle"/><div><strong>Global Reach</strong><p>Serve customers worldwide with multi-currency and localization support.</p></div></div>
+                            <div class="av-about-why-item"><i class="fa fa-check-circle"/><div><strong>AI-Powered Insights</strong><p>Leverage Jarvis AI for intelligent business automation and analytics.</p></div></div>
+                            <div class="av-about-why-item"><i class="fa fa-check-circle"/><div><strong>24/7 Support</strong><p>Get help whenever you need it with our comprehensive support system.</p></div></div>
+                            <div class="av-about-why-item"><i class="fa fa-check-circle"/><div><strong>Scalable Solutions</strong><p>Grow from startup to enterprise with our flexible platform architecture.</p></div></div>
+                            <div class="av-about-why-item"><i class="fa fa-check-circle"/><div><strong>Continuous Innovation</strong><p>Stay ahead with regular updates and cutting-edge features.</p></div></div>
+                        </div>
+                    </section>
+
+                    <!-- Get in Touch -->
+                    <section class="av-about-section av-about-contact-section" id="contact">
+                        <h2 class="av-about-section-title"><i class="fa fa-envelope-o"/> Get in Touch</h2>
+                        <p>Ready to transform your business with Aveenix? We'd love to hear from you and discuss how our platform can help you achieve your goals.</p>
+                        <div class="av-about-contact-cards">
+                            <div class="av-about-contact-card">
+                                <div class="av-about-contact-icon"><i class="fa fa-envelope"/></div>
+                                <strong>Email Support</strong>
+                                <span>Quick response time</span>
+                                <a href="#">Send us an email</a>
+                                <small>Within 24 hours</small>
+                            </div>
+                            <div class="av-about-contact-card">
+                                <div class="av-about-contact-icon"><i class="fa fa-phone"/></div>
+                                <strong>Phone Support</strong>
+                                <span>Speak with our team</span>
+                                <a href="#">Call us directly</a>
+                                <small>Mon-Fri 9AM-6PM EST</small>
+                            </div>
+                            <div class="av-about-contact-card">
+                                <div class="av-about-contact-icon"><i class="fa fa-comments"/></div>
+                                <strong>Live Chat</strong>
+                                <span>Chat with support</span>
+                                <a href="#">Available on our platform</a>
+                                <small>Real-time assistance</small>
+                            </div>
+                            <div class="av-about-contact-card av-about-contact-card-cta">
+                                <div class="av-about-contact-icon"><i class="fa fa-arrow-right"/></div>
+                                <strong>Contact Page</strong>
+                                <span>Full contact options</span>
+                                <a href="/contactus" class="av-about-cta-btn">Visit Contact Page</a>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </t>
     </template>
 
 </odoo>
