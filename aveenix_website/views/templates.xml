@@ -39,7 +39,7 @@
                                         <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Up to 70% Off</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Get the latest gadgets at unbeatable prices</p>
                                         <div class="av-hero-btns">
-                                            <a href="/shop?category=electronics" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Shop Now</a>
+                                            <a href="#" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Shop Now</a>
                                         </div>
                                     </div>
                                     <div class="av-hero-visuals"></div>
@@ -56,7 +56,7 @@
                                         <h3 class="av-hero-sub" style="color: #CDEE3A; font-weight: 700; margin-bottom: 1.25rem;">New Arrivals</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Discover the latest trends in fashion</p>
                                         <div class="av-hero-btns">
-                                            <a href="/shop?category=fashion" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Explore</a>
+                                            <a href="#" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Explore</a>
                                         </div>
                                     </div>
                                     <div class="av-hero-visuals"></div>
@@ -73,7 +73,7 @@
                                         <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Transform Your Space</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Beautiful furniture and decor for every room</p>
                                         <div class="av-hero-btns">
-                                            <a href="/shop?category=home" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Browse</a>
+                                            <a href="#" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: 600; background-color: var(--av-red) !important; border-color: var(--av-red) !important; color: #ffffff !important;">Browse</a>
                                         </div>
                                     </div>
                                     <div class="av-hero-visuals"></div>
@@ -1184,6 +1184,10 @@
             <attribute name="t-value">True</attribute>
         </xpath>
 
+        <!-- Remove category filmstrip above product grid -->
+        <xpath expr="//t[@t-call='website_sale.filmstrip_categories']" position="replace"/>
+
+
         <!-- Extend "Clear Filters" to include categ/brand/stock and show when any is active -->
         <xpath expr="//div[contains(@class,'py-3') and contains(@class,'border-bottom')]" position="replace">
             <div t-if="attrib_values or tags or selected_categ or selected_brand or selected_stock or (show_price_filter and isFilteringByPrice)"
@@ -1214,7 +1218,7 @@
                             </button>
                         </div>
                         <div id="av_brand_filter_inner" class="accordion-collapse collapse show">
-                            <div class="d-flex flex-column mb-3 pt-1">
+                            <div class="d-flex flex-column pt-1 mb-3 av-filter-scroll">
                                 <t t-foreach="all_brands" t-as="brand">
                                     <a t-att-href="keep(brand=brand.id if brand.id != selected_brand else 0)"
                                        t-attf-class="text-decoration-none py-1 small av-brand-item {{brand.id == selected_brand and 'fw-bold text-primary' or 'text-body'}}">
@@ -1242,7 +1246,7 @@
                             </button>
                         </div>
                         <div id="av_category_filter_inner" class="accordion-collapse collapse show">
-                            <div class="d-flex flex-column mb-3 pt-1">
+                            <div class="d-flex flex-column pt-1 mb-3 av-filter-scroll">
                                 <t t-foreach="all_categs" t-as="cat">
                                     <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
                                        t-attf-class="text-decoration-none py-1 small av-cat-item {{cat.id == selected_categ and 'fw-bold text-primary' or 'text-body'}}">
@@ -1345,7 +1349,7 @@
                          class="accordion-collapse collapse"
                          aria-labelledby="av_offcanvas_brand_header">
                         <div class="accordion-body pt-0">
-                            <div class="list-group list-group-flush">
+                            <div class="list-group list-group-flush av-filter-scroll av-filter-scroll-mobile">
                                 <t t-foreach="all_brands" t-as="brand">
                                     <a t-att-href="keep(brand=brand.id if brand.id != selected_brand else 0)"
                                        class="list-group-item border-0 ps-0 pb-0 text-decoration-none">
@@ -1381,7 +1385,7 @@
                          class="accordion-collapse collapse"
                          aria-labelledby="av_offcanvas_categ_header">
                         <div class="accordion-body pt-0">
-                            <div class="list-group list-group-flush">
+                            <div class="list-group list-group-flush av-filter-scroll av-filter-scroll-mobile">
                                 <t t-foreach="all_categs" t-as="cat">
                                     <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
                                        class="list-group-item border-0 ps-0 pb-0 text-decoration-none">
