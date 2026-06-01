@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_rewards" model="ir.ui.view">
+        <field name="name">sale.order.rewards.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button in stat buttons area -->
+            <div name="button_box" position="inside">
+                <button name="action_view_rewards" type="object"
+                        class="oe_stat_button" icon="fa-gift"
+                        invisible="reward_count == 0">
+                    <field name="reward_count" widget="statinfo" string="Rewards"/>
+                </button>
+            </div>
+
+            <!-- Affiliate commission section — appears below order lines -->
+            <page name="other_information" position="after">
+                <page string="Affiliate Commission" name="affiliate_commission"
+                      invisible="not has_affiliate_lines">
+                    <group>
+                        <group>
+                            <field name="commission_received"
+                                   readonly="commission_confirmed"/>
+                            <field name="commission_confirmed" readonly="1"/>
+                        </group>
+                        <group>
+                            <button name="action_confirm_commission"
+                                    string="Confirm Commission Received"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="commission_confirmed or state not in ('sale','done')"
+                                    groups="aveenix_rewards.group_reward_manager"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Reward Record Form ── -->
+    <record id="view_reward_record_form" model="ir.ui.view">
+        <field name="name">aveenix.reward.record.form</field>
+        <field name="model">aveenix.reward.record</field>
+        <field name="arch" type="xml">
+            <form string="Reward Record">
+                <header>
+                    <button name="button_approve" string="Approve" type="object"
+                            class="btn-primary"
+                            invisible="state != 'pending'"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <button name="button_cancel" string="Cancel" type="object"
+                            invisible="state != 'pending'"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <button name="button_reverse" string="Reverse" type="object"
+                            invisible="state != 'approved'"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <button name="button_reset_to_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'cancelled'"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="pending,approved,reversed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Order Details">
+                            <field name="sale_order_id"/>
+                            <field name="product_type"/>
+                            <field name="confirm_date"/>
+                            <field name="auto_approve_date"/>
+                        </group>
+                        <group string="Recipient">
+                            <field name="partner_id"/>
+                            <field name="participant_type"/>
+                            <field name="loyalty_card_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Financial Snapshot">
+                            <field name="locked_cost"/>
+                            <field name="selling_price"/>
+                            <field name="margin"/>
+                            <field name="commission_received"/>
+                            <field name="reward_pool_perc" string="Product Pool %"/>
+                            <field name="reward_pool"/>
+                            <field name="distribution_perc" string="Distribution %"/>
+                            <field name="reward_amount"/>
+                        </group>
+                        <group string="Approval">
+                            <field name="approved_date" readonly="1"/>
+                            <field name="reversed_date" readonly="1"/>
+                            <field name="config_id" readonly="1"/>
+                            <field name="pending_days" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── Reward Record List ── -->
+    <record id="view_reward_record_list" model="ir.ui.view">
+        <field name="name">aveenix.reward.record.list</field>
+        <field name="model">aveenix.reward.record</field>
+        <field name="arch" type="xml">
+            <list string="Reward Records" decoration-success="state == 'approved'"
+                  decoration-warning="state == 'pending'"
+                  decoration-danger="state in ('reversed', 'cancelled')">
+                <field name="name"/>
+                <field name="sale_order_id"/>
+                <field name="partner_id"/>
+                <field name="participant_type"/>
+                <field name="product_type"/>
+                <field name="reward_amount"/>
+                <field name="auto_approve_date"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-warning="state == 'pending'"
+                       decoration-danger="state in ('reversed','cancelled')"
+                       />
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Search ── -->
+    <record id="view_reward_record_search" model="ir.ui.view">
+        <field name="name">aveenix.reward.record.search</field>
+        <field name="model">aveenix.reward.record</field>
+        <field name="arch" type="xml">
+            <search string="Reward Records">
+                <field name="name"/>
+                <field name="sale_order_id"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter name="pending" string="Pending" domain="[('state','=','pending')]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="reversed" string="Reversed" domain="[('state','=','reversed')]"/>
+                <separator/>
+                <filter name="dropship" string="Dropship" domain="[('product_type','=','dropship')]"/>
+                <filter name="standard" string="Standard" domain="[('product_type','=','standard')]"/>
+                <filter name="affiliate" string="Affiliate" domain="[('product_type','=','affiliate')]"/>
+                <group>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_order" string="Sale Order" context="{'group_by': 'sale_order_id'}"/>
+                    <filter name="group_partner" string="Recipient" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_type" string="Product Type" context="{'group_by': 'product_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Actions ── -->
+    <record id="action_reward_record_all" model="ir.actions.act_window">
+        <field name="name">All Rewards</field>
+        <field name="res_model">aveenix.reward.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_reward_record_search"/>
+    </record>
+
+    <record id="action_reward_record_pending" model="ir.actions.act_window">
+        <field name="name">Pending Rewards</field>
+        <field name="res_model">aveenix.reward.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'pending')]</field>
+        <field name="search_view_id" ref="view_reward_record_search"/>
+    </record>
+
+    <!-- ── Server Action: Bulk Approve ── -->
+    <record id="action_server_bulk_approve_rewards" model="ir.actions.server">
+        <field name="name">Approve Rewards</field>
+        <field name="model_id" ref="model_aveenix_reward_record"/>
+        <field name="binding_model_id" ref="model_aveenix_reward_record"/>
+        <field name="binding_view_types">list</field>
+        <field name="group_ids" eval="[(4, ref('aveenix_rewards.group_reward_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+for rec in records:
+    if rec.state == 'pending':
+        try:
+            rec.button_approve()
+        except Exception as e:
+            rec.message_post(body=f'Approval failed: {e}')
+        </field>
+    </record>
+
+</odoo>

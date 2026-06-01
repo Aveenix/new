@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Form ── -->
+    <record id="view_reward_redemption_form" model="ir.ui.view">
+        <field name="name">aveenix.reward.redemption.form</field>
+        <field name="model">aveenix.reward.redemption</field>
+        <field name="arch" type="xml">
+            <form string="Reward Redemption">
+                <header>
+                    <button name="action_submit" string="Submit Request" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve" type="object"
+                            class="btn-primary" invisible="state != 'submitted'"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <button name="action_mark_paid" string="Mark as Issued" type="object"
+                            class="btn-primary"
+                            invisible="state != 'approved' or mode != 'withdrawal'"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <button name="action_reject_wizard" string="Reject" type="object"
+                            invisible="state not in ('submitted','approved')"
+                            groups="aveenix_rewards.group_reward_manager"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'rejected'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Requester">
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="loyalty_card_id" readonly="1"/>
+                            <field name="available_points" readonly="1"/>
+                        </group>
+                        <group string="Redemption">
+                            <field name="mode" readonly="state != 'draft'"/>
+                            <field name="points_to_redeem" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+
+                    <!-- Gift Voucher fields -->
+                    <group string="Gift Recipient"
+                           invisible="mode != 'gift_voucher'">
+                        <field name="recipient_partner_id" readonly="state != 'draft'"/>
+                    </group>
+
+                    <!-- Withdrawal fields -->
+                    <group string="Withdrawal Details"
+                           invisible="mode != 'withdrawal'">
+                        <group string="Platform (Sending From)">
+                            <field name="payment_gateway" readonly="state != 'draft'"/>
+                            <field name="gateway_config_id"
+                                   readonly="state not in ('draft','submitted')"
+                                   invisible="not payment_gateway"
+                                   options="{'no_create': True}"
+                                   help="Select the configured and connected gateway account to send payment from."/>
+                        </group>
+                        <group string="Customer (Sending To)">
+                            <field name="gateway_account" readonly="state != 'draft'"
+                                   placeholder="Customer's PayPal email / Stripe ID / bank account"/>
+                            <field name="payout_reference"
+                                   readonly="state == 'paid'"
+                                   help="Enter transaction ID or reference after sending payment manually."/>
+                        </group>
+                    </group>
+
+                    <!-- Outcome -->
+                    <group string="Outcome" invisible="state not in ('approved','paid')">
+                        <field name="voucher_code" readonly="1"
+                               invisible="mode != 'platform_voucher'"/>
+                        <field name="approved_by" readonly="1"/>
+                        <field name="approved_date" readonly="1"/>
+                    </group>
+
+                    <group string="Rejection" invisible="state != 'rejected'">
+                        <field name="rejection_reason"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── List ── -->
+    <record id="view_reward_redemption_list" model="ir.ui.view">
+        <field name="name">aveenix.reward.redemption.list</field>
+        <field name="model">aveenix.reward.redemption</field>
+        <field name="arch" type="xml">
+            <list string="Redemption Requests"
+                  decoration-success="state in ('approved','paid')"
+                  decoration-warning="state == 'submitted'"
+                  decoration-danger="state == 'rejected'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="mode"/>
+                <field name="points_to_redeem"/>
+                <field name="payment_gateway" optional="show"/>
+                <field name="gateway_account" optional="show"/>
+                <field name="voucher_code" optional="show"/>
+                <field name="payout_reference" optional="show"/>
+                <field name="approved_date" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ('approved','paid')"
+                       decoration-warning="state == 'submitted'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Search ── -->
+    <record id="view_reward_redemption_search" model="ir.ui.view">
+        <field name="name">aveenix.reward.redemption.search</field>
+        <field name="model">aveenix.reward.redemption</field>
+        <field name="arch" type="xml">
+            <search string="Redemptions">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="submitted" string="Submitted" domain="[('state','=','submitted')]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="paid" string="Paid" domain="[('state','=','paid')]"/>
+                <filter name="rejected" string="Rejected" domain="[('state','=','rejected')]"/>
+                <separator/>
+                <filter name="voucher" string="Platform Voucher" domain="[('mode','=','platform_voucher')]"/>
+                <filter name="gift" string="Gift Voucher" domain="[('mode','=','gift_voucher')]"/>
+                <filter name="withdrawal" string="Withdrawal" domain="[('mode','=','withdrawal')]"/>
+                <group>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_mode" string="Mode" context="{'group_by': 'mode'}"/>
+                    <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Actions ── -->
+    <record id="action_reward_redemption_all" model="ir.actions.act_window">
+        <field name="name">Redemption Requests</field>
+        <field name="res_model">aveenix.reward.redemption</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_reward_redemption_search"/>
+    </record>
+
+    <record id="action_reward_redemption_pending" model="ir.actions.act_window">
+        <field name="name">Pending Withdrawals</field>
+        <field name="res_model">aveenix.reward.redemption</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state','=','submitted'),('mode','=','withdrawal')]</field>
+        <field name="search_view_id" ref="view_reward_redemption_search"/>
+    </record>
+
+</odoo>

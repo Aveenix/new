@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Coupon display fix (existing) ── -->
+    <template id="coupon_amount_display" inherit_id="website_sale_loyalty.modify_code_form">
+        <xpath expr="//strong[contains(text(),'Coupons')]" position="replace">
+            <strong class="small">
+                Coupons -
+                <t t-out="reward.description"/>
+                -
+                <t t-out="points"/>
+            </strong>
+        </xpath>
+    </template>
+
+    <!-- ── Breadcrumbs ── -->
+    <template id="portal_breadcrumbs_rewards" inherit_id="portal.portal_breadcrumbs" name="Rewards Breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name in ('rewards', 'redeem', 'redemption')"
+                t-attf-class="breadcrumb-item #{'active' if page_name == 'rewards' else ''}">
+                <a t-if="page_name != 'rewards'" href="/my/rewards">My Rewards</a>
+                <t t-else="">My Rewards</t>
+            </li>
+            <li t-if="page_name == 'redeem'" class="breadcrumb-item active">
+                Redeem Points
+            </li>
+            <li t-if="page_name == 'redemption'" class="breadcrumb-item active">
+                <t t-esc="redemption.name if redemption else 'Request'"/>
+            </li>
+        </xpath>
+    </template>
+
+    <!-- ── Portal Home: add Rewards entry ── -->
+    <template id="portal_my_home_rewards" inherit_id="portal.portal_my_home" name="Rewards Portal Entry">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/loyalty/static/img/portal-loyalty.svg'"/>
+                <t t-set="title">My Rewards</t>
+                <t t-set="text">View balance, redeem points, track requests</t>
+                <t t-set="url" t-value="'/my/rewards'"/>
+                <t t-set="placeholder_count" t-value="'reward_count'"/>
+                <t t-set="config_card" t-value="True"/>
+            </t>
+        </div>
+    </template>
+
+    <!-- ── Rewards Dashboard ── -->
+    <template id="portal_rewards_dashboard" name="My Rewards">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Rewards</t>
+            </t>
+
+            <!-- Success alert -->
+            <t t-if="request.params.get('success')">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa fa-check-circle me-2"/>
+                    Redemption request submitted successfully. We will process it shortly.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"/>
+                </div>
+            </t>
+
+            <!-- Balance Card -->
+            <div style="
+                background: rgba(var(--bs-primary-rgb), 1);
+                border-radius: 16px;
+                padding: 32px 36px;
+                margin-bottom: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 20px;
+                box-shadow: 0 4px 24px rgba(var(--bs-primary-rgb), 0.35);
+            ">
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <div style="
+                        background: rgba(255,255,255,0.15);
+                        border-radius: 12px;
+                        width: 56px;
+                        height: 56px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-shrink: 0;
+                    ">
+                        <i class="fa fa-credit-card" style="font-size:22px; color:#fff;"/>
+                    </div>
+                    <div>
+                        <div style="color:rgba(255,255,255,0.7); font-size:12px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
+                            eWallet Balance
+                        </div>
+                        <div style="color:#fff; font-size:2.6rem; font-weight:800; line-height:1; letter-spacing:-0.02em;">
+                            <t t-esc="'%.2f' % balance"/>
+                            <span style="color:rgba(255,255,255,0.6); font-size:1.1rem; font-weight:500; margin-left:6px;">pts</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="/my/rewards/redeem"
+                   class="aveenix-redeem-btn"
+                   style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: rgba(255,255,255,0.18);
+                    color: #fff;
+                    border: 1.5px solid rgba(255,255,255,0.4);
+                    border-radius: 10px;
+                    padding: 10px 24px;
+                    font-weight: 600;
+                    font-size: 14px;
+                    text-decoration: none;
+                    transition: background 0.2s, border-color 0.2s;
+                ">
+                    <i class="fa fa-exchange"/>Redeem Points
+                </a>
+                <style>
+                    .aveenix-redeem-btn:hover {
+                        background: rgba(255,255,255,0.32) !important;
+                        border-color: rgba(255,255,255,0.7) !important;
+                        color: #fff !important;
+                        text-decoration: none !important;
+                    }
+                </style>
+            </div>
+
+            <!-- Recent Transactions -->
+            <t t-if="history">
+                <div class="d-flex align-items-center mb-3 mt-2">
+                    <i class="fa fa-history text-muted me-2"/>
+                    <span class="fw-semibold text-muted text-uppercase small">Recent Transactions</span>
+                </div>
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th class="text-end">Credited</th>
+                            <th class="text-end">Used</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="history" t-as="h">
+                        <tr>
+                            <td class="text-nowrap text-muted small">
+                                <t t-esc="h.create_date and h.create_date.strftime('%d %b %Y')"/>
+                            </td>
+                            <td><t t-esc="h.description or '-'"/></td>
+                            <td class="text-end fw-semibold text-success">
+                                <t t-if="h.issued">+<t t-esc="'%.2f' % h.issued"/></t>
+                            </td>
+                            <td class="text-end fw-semibold text-danger">
+                                <t t-if="h.used">−<t t-esc="'%.2f' % h.used"/></t>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+
+            <!-- Redemption Requests -->
+            <div class="d-flex align-items-center mb-3 mt-4">
+                <i class="fa fa-list-alt text-muted me-2"/>
+                <span class="fw-semibold text-muted text-uppercase small">My Redemption Requests</span>
+            </div>
+            <div t-if="not redemptions" class="text-center py-5 text-muted">
+                <i class="fa fa-inbox fa-3x mb-3 d-block opacity-25"/>
+                No redemption requests yet.
+                <div class="mt-3">
+                    <a href="/my/rewards/redeem" class="btn btn-outline-primary btn-sm">Make your first request</a>
+                </div>
+            </div>
+            <t t-if="redemptions" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Reference #</th>
+                        <th>Type</th>
+                        <th>Gateway</th>
+                        <th class="text-end">Amount</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-end">Date</th>
+                    </tr>
+                </thead>
+                <t t-foreach="redemptions" t-as="r">
+                    <tr>
+                        <td>
+                            <a t-attf-href="/my/rewards/request/#{r.id}" class="fw-semibold">
+                                <t t-esc="r.name"/>
+                            </a>
+                        </td>
+                        <td>
+                            <t t-if="r.mode == 'platform_voucher'">
+                                <i class="fa fa-tag text-primary me-1"/>Voucher
+                            </t>
+                            <t t-elif="r.mode == 'gift_voucher'">
+                                <i class="fa fa-gift text-warning me-1"/>Gift
+                            </t>
+                            <t t-elif="r.mode == 'withdrawal'">
+                                <i class="fa fa-money text-success me-1"/>Withdrawal
+                            </t>
+                        </td>
+                        <td class="text-muted small">
+                            <t t-if="r.payment_gateway == 'paypal'">
+                                <i class="fa fa-paypal me-1"/>PayPal
+                            </t>
+                            <t t-elif="r.payment_gateway == 'stripe'">
+                                <i class="fa fa-credit-card me-1"/>Stripe
+                            </t>
+                            <t t-else="">—</t>
+                        </td>
+                        <td class="text-end fw-semibold">
+                            <t t-esc="'%.2f' % r.points_to_redeem"/> pts
+                        </td>
+                        <td class="text-center">
+                            <span t-att-class="'badge rounded-pill ' + ('text-bg-success' if r.state == 'paid' else 'text-bg-warning' if r.state in ('submitted', 'approved') else 'text-bg-danger' if r.state == 'rejected' else 'text-bg-secondary')">
+                                <t t-esc="dict(r._fields['state'].selection).get(r.state, r.state)"/>
+                            </span>
+                        </td>
+                        <td class="text-end text-muted small text-nowrap">
+                            <t t-esc="r.create_date and r.create_date.strftime('%d %b %Y')"/>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+
+        </t>
+    </template>
+
+    <!-- ── Redemption Request Form ── -->
+    <template id="portal_redeem_form" name="Redeem Points">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Redeem Points</t>
+            </t>
+
+            <div class="container mt-4" style="max-width: 640px;">
+
+                <!-- Balance -->
+                <div class="alert alert-info">
+                    <strong>Available Balance:</strong>
+                    <span class="fs-5 fw-bold ms-2"><t t-esc="'%.2f' % balance"/> pts</span>
+                </div>
+
+                <!-- Error -->
+                <t t-if="error">
+                    <div class="alert alert-danger"><t t-esc="error.replace('+', ' ')"/></div>
+                </t>
+
+                <t t-if="not balance or balance &lt;= 0">
+                    <div class="alert alert-warning">You have no reward points to redeem.</div>
+                </t>
+                <t t-else="">
+                    <form action="/my/rewards/redeem/submit" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <!-- Mode -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Redemption Type</label>
+                            <select name="mode" class="form-select" id="mode_select" required="required" onchange="aveenixToggleMode(this.value)">
+                                <option value="">-- Select --</option>
+                                <option value="platform_voucher">Platform Voucher (use at checkout)</option>
+                                <option value="gift_voucher">Gift Voucher (send to another user)</option>
+                                <option value="withdrawal">Cash Withdrawal (PayPal / Stripe)</option>
+                            </select>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Amount (points)</label>
+                            <input type="number" name="points_to_redeem" class="form-control"
+                                   min="1" t-att-max="balance" step="0.01" required="required"
+                                   placeholder="Enter amount to redeem"/>
+                            <div class="form-text">Max: <t t-esc="'%.2f' % balance"/> pts</div>
+                        </div>
+
+                        <!-- Gift Voucher: recipient -->
+                        <div class="mb-3 d-none" id="gift_section">
+                            <label class="form-label fw-semibold">Recipient Email</label>
+                            <input type="email" name="recipient_email" class="form-control"
+                                   placeholder="Enter recipient's registered email"/>
+                            <div class="form-text">Recipient must be a registered user on this platform.</div>
+                        </div>
+
+                        <!-- Withdrawal: gateway + account -->
+                        <div class="d-none" id="withdrawal_section">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Payment Gateway</label>
+                                <select name="payment_gateway" class="form-select" id="gateway_select" onchange="aveenixToggleGateway(this.value)">
+                                    <option value="">-- Select Gateway --</option>
+                                    <option value="paypal">PayPal</option>
+                                    <option value="stripe">Stripe</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="account_section">
+                                <label class="form-label fw-semibold" id="account_label">Account / Email</label>
+                                <input type="text" name="gateway_account" class="form-control" id="account_input"
+                                       placeholder="Enter your account details"/>
+                                <div class="form-text" id="account_help"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Request</button>
+                        </div>
+                    </form>
+                </t>
+
+            </div>
+
+            <script>
+                function aveenixToggleMode(mode) {
+                    document.getElementById('gift_section').classList.add('d-none');
+                    document.getElementById('withdrawal_section').classList.add('d-none');
+                    if (mode === 'gift_voucher') {
+                        document.getElementById('gift_section').classList.remove('d-none');
+                    } else if (mode === 'withdrawal') {
+                        document.getElementById('withdrawal_section').classList.remove('d-none');
+                    }
+                }
+                function aveenixToggleGateway(gateway) {
+                    var label = document.getElementById('account_label');
+                    var help = document.getElementById('account_help');
+                    var input = document.getElementById('account_input');
+                    if (gateway === 'paypal') {
+                        label.textContent = 'Your PayPal Email';
+                        input.placeholder = 'e.g. you@example.com';
+                        help.textContent = 'Enter the PayPal email address where you want to receive payment.';
+                    } else if (gateway === 'stripe') {
+                        label.textContent = 'Your Stripe Account ID';
+                        input.placeholder = 'e.g. acct_1ABC2DEF3GHI4JKL';
+                        help.textContent = 'Enter your Stripe Connected Account ID (starts with acct_). Find it in your Stripe Dashboard.';
+                    }
+                }
+            </script>
+        </t>
+    </template>
+
+    <!-- ── Redemption Detail ── -->
+    <template id="portal_redemption_detail" name="Redemption Request Detail">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title" t-value="redemption.name"/>
+            </t>
+
+            <div class="container mt-4" style="max-width: 640px;">
+
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong><t t-esc="redemption.name"/></strong>
+                        <span t-att-class="'badge ' + ('bg-success' if redemption.state == 'paid' else 'bg-warning text-dark' if redemption.state in ('submitted','approved') else 'bg-danger' if redemption.state == 'rejected' else 'bg-secondary')">
+                            <t t-esc="dict(redemption._fields['state'].selection).get(redemption.state, redemption.state)"/>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td class="text-muted" width="40%">Type</td>
+                                <td><t t-esc="dict(redemption._fields['mode'].selection).get(redemption.mode, redemption.mode)"/></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Amount</td>
+                                <td><strong><t t-esc="'%.2f' % redemption.points_to_redeem"/> pts</strong></td>
+                            </tr>
+                            <t t-if="redemption.mode == 'withdrawal'">
+                                <tr>
+                                    <td class="text-muted">Gateway</td>
+                                    <td><t t-esc="dict(redemption._fields['payment_gateway'].selection).get(redemption.payment_gateway, '-')"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Account</td>
+                                    <td><t t-esc="redemption.gateway_account or '-'"/></td>
+                                </tr>
+                            </t>
+                            <t t-if="redemption.mode == 'gift_voucher' and redemption.recipient_partner_id">
+                                <tr>
+                                    <td class="text-muted">Recipient</td>
+                                    <td><t t-esc="redemption.recipient_partner_id.name"/></td>
+                                </tr>
+                            </t>
+                            <t t-if="redemption.voucher_code">
+                                <tr>
+                                    <td class="text-muted">Voucher Code</td>
+                                    <td><strong><t t-esc="redemption.voucher_code"/></strong></td>
+                                </tr>
+                            </t>
+                            <t t-if="redemption.payout_reference">
+                                <tr>
+                                    <td class="text-muted">Payout Reference</td>
+                                    <td><t t-esc="redemption.payout_reference"/></td>
+                                </tr>
+                            </t>
+                            <t t-if="redemption.approved_date">
+                                <tr>
+                                    <td class="text-muted">Processed Date</td>
+                                    <td><t t-esc="redemption.approved_date.strftime('%d %b %Y %H:%M')"/></td>
+                                </tr>
+                            </t>
+                            <t t-if="redemption.rejection_reason">
+                                <tr>
+                                    <td class="text-muted">Rejection Reason</td>
+                                    <td class="text-danger fw-semibold"><t t-esc="redemption.rejection_reason"/></td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="text-muted">Submitted On</td>
+                                <td><t t-esc="redemption.create_date.strftime('%d %b %Y %H:%M')"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Actions for rejected requests -->
+                    <t t-if="redemption.state == 'rejected'">
+                        <div class="card-footer bg-transparent d-flex gap-2">
+                            <a t-attf-href="/my/rewards/request/#{redemption.id}/edit"
+                               class="btn btn-primary">
+                                <i class="fa fa-edit me-1"/>Edit &amp; Resubmit
+                            </a>
+                        </div>
+                    </t>
+                    <!-- Draft: show submit button -->
+                    <t t-if="redemption.state == 'draft'">
+                        <div class="card-footer bg-transparent d-flex align-items-center gap-3">
+                            <span class="text-muted small">
+                                <i class="fa fa-info-circle me-1"/>Request is in draft. Edit and submit when ready.
+                            </span>
+                            <a t-attf-href="/my/rewards/request/#{redemption.id}/edit"
+                               class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-edit me-1"/>Edit
+                            </a>
+                        </div>
+                    </t>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Edit / Resubmit Form ── -->
+    <template id="portal_redemption_edit" name="Edit Redemption Request">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Edit Request</t>
+            </t>
+
+            <div class="container mt-4" style="max-width: 640px;">
+
+                <t t-if="error">
+                    <div class="alert alert-danger"><t t-esc="error"/></div>
+                </t>
+
+                <t t-if="redemption.rejection_reason">
+                    <div class="alert alert-warning">
+                        <strong>Rejection reason:</strong> <t t-esc="redemption.rejection_reason"/>
+                    </div>
+                </t>
+
+                <div class="alert alert-info">
+                    <strong>Available Balance:</strong>
+                    <span class="fs-5 fw-bold ms-2"><t t-esc="'%.2f' % balance"/> pts</span>
+                    <span class="text-muted small ms-2">(after refund of this request)</span>
+                </div>
+
+                <form t-attf-action="/my/rewards/request/#{redemption.id}/resubmit" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Amount (points)</label>
+                        <input type="number" name="points_to_redeem" class="form-control"
+                               min="1" t-att-max="balance" step="0.01" required="required"
+                               t-att-value="redemption.points_to_redeem"/>
+                        <div class="form-text">Max: <t t-esc="'%.2f' % balance"/> pts</div>
+                    </div>
+
+                    <t t-if="redemption.mode == 'withdrawal'">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Payment Gateway</label>
+                            <select name="payment_gateway" class="form-select" id="gateway_select" onchange="aveenixToggleGateway(this.value)">
+                                <option value="paypal" t-att-selected="redemption.payment_gateway == 'paypal'">PayPal</option>
+                                <option value="stripe" t-att-selected="redemption.payment_gateway == 'stripe'">Stripe</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" id="account_label">
+                                <t t-if="redemption.payment_gateway == 'paypal'">Your PayPal Email</t>
+                                <t t-else="">Your Stripe Account ID</t>
+                            </label>
+                            <input type="text" name="gateway_account" class="form-control"
+                                   t-att-value="redemption.gateway_account or ''"
+                                   required="required"/>
+                        </div>
+                    </t>
+
+                    <t t-if="redemption.mode == 'gift_voucher'">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Recipient Email</label>
+                            <input type="email" name="recipient_email" class="form-control"
+                                   t-att-value="redemption.recipient_partner_id.email or ''"
+                                   required="required"/>
+                        </div>
+                    </t>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-paper-plane me-1"/>Submit Request
+                        </button>
+                        <a t-attf-href="/my/rewards/request/#{redemption.id}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_reward_config_form" model="ir.ui.view">
+        <field name="name">aveenix.reward.config.form</field>
+        <field name="model">aveenix.reward.config</field>
+        <field name="arch" type="xml">
+            <form string="Reward Agreement">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Default Agreement / VIP Agreement"/></h1>
+                    </div>
+                    <group>
+                        <group string="Hold &amp; Status">
+                            <field name="pending_days"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Fallback Scope (used when partner has no direct agreement)">
+                            <field name="applicable_product_type"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Distribution Rules">
+                            <field name="distribution_rule_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="participant_type"/>
+                                    <field name="partner_id"/>
+                                    <field name="percentage"/>
+                                </list>
+                            </field>
+                            <p class="text-muted">Percentages must sum to 100%.</p>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_reward_config_list" model="ir.ui.view">
+        <field name="name">aveenix.reward.config.list</field>
+        <field name="model">aveenix.reward.config</field>
+        <field name="arch" type="xml">
+            <list string="Reward Agreements">
+                <field name="name"/>
+                <field name="applicable_product_type"/>
+                <field name="pending_days"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_reward_config" model="ir.actions.act_window">
+        <field name="name">Reward Agreements</field>
+        <field name="res_model">aveenix.reward.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

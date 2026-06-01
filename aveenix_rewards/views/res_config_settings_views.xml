@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_rewards" model="ir.ui.view">
+        <field name="name">res.config.settings.rewards</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Aveenix Rewards"
+                     string="Aveenix Rewards"
+                     name="aveenix_rewards"
+                     groups="aveenix_rewards.group_reward_manager">
+                    <block title="Reward Agreements" name="reward_agreement_setting">
+                        <setting id="default_reward_agreement_setting"
+                                 string="Default Reward Agreement"
+                                 help="Applied to all customers who have no specific agreement assigned on their partner record.">
+                            <field name="reward_config_id"
+                                   domain="[('active','=',True)]"
+                                   options="{'no_create': True}"/>
+                        </setting>
+                    </block>
+                    <block title="Payout Settings" name="payout_settings">
+                        <setting id="reward_point_value_setting"
+                                 string="Point Value for Payout"
+                                 help="How much 1 reward point is worth when paid out via PayPal or Stripe. The currency used depends on the configured payment gateway.">
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <span>1 point = </span>
+                                    <field name="reward_point_value"
+                                           class="oe_inline"
+                                           style="width: 80px;"/>
+                                    <span> units of payout currency</span>
+                                </div>
+                                <div class="text-muted mt4">
+                                    Example: value 0.5 → customer with 100 points receives 50.00 USD (or whichever currency the gateway is configured with).
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_aveenix_rewards_settings" model="ir.actions.act_window">
+        <field name="name">Aveenix Rewards Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module' : 'aveenix_rewards'}</field>
+    </record>
+</odoo>

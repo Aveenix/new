@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_aveenix_rewards_root"
+              name="Aveenix Rewards"
+              sequence="80"
+              groups="aveenix_rewards.group_reward_user"/>
+
+    <!-- Rewards -->
+    <menuitem id="menu_aveenix_rewards_records"
+              name="Rewards"
+              parent="menu_aveenix_rewards_root"
+              sequence="10"/>
+
+    <menuitem id="menu_reward_record_all"
+              name="All Rewards"
+              parent="menu_aveenix_rewards_records"
+              action="action_reward_record_all"
+              sequence="10"
+              groups="aveenix_rewards.group_reward_user"/>
+
+    <menuitem id="menu_reward_record_pending"
+              name="Pending Rewards"
+              parent="menu_aveenix_rewards_records"
+              action="action_reward_record_pending"
+              sequence="20"
+              groups="aveenix_rewards.group_reward_manager"/>
+
+    <!-- Redemptions -->
+    <menuitem id="menu_aveenix_redemptions"
+              name="Redemptions"
+              parent="menu_aveenix_rewards_root"
+              sequence="20"/>
+
+    <menuitem id="menu_redemption_all"
+              name="All Requests"
+              parent="menu_aveenix_redemptions"
+              action="action_reward_redemption_all"
+              sequence="10"
+              groups="aveenix_rewards.group_reward_user"/>
+
+    <menuitem id="menu_redemption_withdrawals"
+              name="Pending Withdrawals"
+              parent="menu_aveenix_redemptions"
+              action="action_reward_redemption_pending"
+              sequence="20"
+              groups="aveenix_rewards.group_reward_manager"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_aveenix_rewards_config"
+              name="Configuration"
+              parent="menu_aveenix_rewards_root"
+              sequence="90"
+              groups="aveenix_rewards.group_reward_manager"/>
+
+    <menuitem id="menu_aveenix_rewards_settings"
+              name="Settings"
+              parent="menu_aveenix_rewards_config"
+              action="action_aveenix_rewards_settings"
+              sequence="1"
+              groups="aveenix_rewards.group_reward_manager"/>
+
+    <menuitem id="menu_reward_config"
+              name="Reward Agreements"
+              parent="menu_aveenix_rewards_config"
+              action="action_reward_config"
+              sequence="10"
+              groups="aveenix_rewards.group_reward_manager"/>
+
+    <menuitem id="menu_payment_gateway_config"
+              name="Payment Gateways"
+              parent="menu_aveenix_rewards_config"
+              action="action_payment_gateway_config"
+              sequence="20"
+              groups="aveenix_rewards.group_reward_manager"/>
+
+</odoo>

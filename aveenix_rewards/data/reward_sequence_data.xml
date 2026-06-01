@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_aveenix_reward_record" model="ir.sequence">
+        <field name="name">Aveenix Reward Record</field>
+        <field name="code">aveenix.reward.record</field>
+        <field name="prefix">RWD/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <record id="seq_aveenix_reward_redemption" model="ir.sequence">
+        <field name="name">Aveenix Reward Redemption</field>
+        <field name="code">aveenix.reward.redemption</field>
+        <field name="prefix">RED/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

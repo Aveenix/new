@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_reward_agreement" model="ir.ui.view">
+        <field name="name">res.partner.reward.agreement</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <page name="sales_purchases" position="after">
+                <page string="Reward Agreement" name="reward_agreement"
+                      groups="aveenix_rewards.group_reward_manager">
+                    <group>
+                        <field name="affiliated"/>
+                        <field name="reward_config_id"
+                               help="Assign a specific reward agreement to this customer. Leave empty to use the default agreement based on product type and date scope."/>
+                    </group>
+                    <p class="text-muted">
+                        If set, this agreement overrides all default agreements for every order placed by this customer.
+                        New customers with no agreement assigned automatically use the default agreement.
+                    </p>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
