@@ -185,10 +185,10 @@ export class AddToCompareButton extends Interaction {
 
     setup() {
         const id = this.el.dataset.productId;
+        const icon = this.el.querySelector(".fa");
         if (id && compareStore.has(id)) {
             this.el.classList.add("av-added-to-compare");
             this.el.title = "Added to Compare";
-            const icon = this.el.querySelector(".fa");
             if (icon) { icon.classList.remove("fa-plus-square-o"); icon.classList.add("fa-plus-square"); }
         }
     }

@@ -9,11 +9,21 @@
         if (dark) {
             html.setAttribute("data-theme", "dark");
             html.setAttribute("data-bs-theme", "dark");
+            html.style.setProperty("--av-product-img-bg", "#2a2a2a");
+            html.style.setProperty("--o-wsale-card-thumb-background", "#2a2a2a");
+            html.style.setProperty("--o-wsale-card-bg", "#242424");
+            html.style.setProperty("--bs-card-bg", "#242424");
+            html.style.setProperty("--bs-body-bg", "#181818");
             if (icon)  { icon.textContent  = "☀"; }
             if (label) { label.textContent = "Light"; }
         } else {
             html.removeAttribute("data-theme");
             html.removeAttribute("data-bs-theme");
+            html.style.removeProperty("--av-product-img-bg");
+            html.style.removeProperty("--o-wsale-card-thumb-background");
+            html.style.removeProperty("--o-wsale-card-bg");
+            html.style.removeProperty("--bs-card-bg");
+            html.style.removeProperty("--bs-body-bg");
             if (icon)  { icon.textContent  = "☾"; }
             if (label) { label.textContent = "Dark"; }
         }

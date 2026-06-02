@@ -347,7 +347,9 @@
                      ════════════════════════════════════════════ -->
                 <section class="av-section av-why-section oe_structure">
                     <div class="av-container">
-                        <h2 class="av-section-heading">Why Choose Aveenix?</h2>
+                        <div class="av-section-header">
+                            <h2 class="av-section-heading">Why Choose Aveenix?</h2>
+                        </div>
                         <div class="av-features-row">
                             <div class="av-feature-item">
                                 <div class="av-feature-icon-wrap">
@@ -613,8 +615,7 @@
                 t-att-data-product-id="product.id"
                 title="Add to Compare"
             >
-                <i class="fa fa-plus-square-o me-2" role="img" aria-label="Add to Compare"/>
-                <span>Add to Compare</span>
+                <i class="fa fa-plus-square-o" role="img" aria-label="Add to Compare"/>
             </a>
         </xpath>
     </template>
@@ -1300,7 +1301,7 @@
             </t>
             <t t-set="av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:3]"/>
             <div class="border-top pt-3 mt-1 av-top-rated-widget">
-                <p class="fw-bold text-uppercase small mb-2" style="letter-spacing:.5px;">Top Rated Products</p>
+                <p class="fw-bold text-uppercase small mb-2" style="letter-spacing:.5px;color:var(--av-text);">Top Rated Products</p>
                 <t t-foreach="av_top_rated" t-as="trp">
                     <a t-attf-href="/shop/product/#{trp.id}" class="d-flex align-items-center gap-2 text-decoration-none mb-3 av-top-rated-item">
                         <div class="av-top-rated-img flex-shrink-0">
@@ -1316,7 +1317,7 @@
                             </t>
                         </div>
                         <div class="av-top-rated-info" style="min-width:0;">
-                            <p class="mb-0 small fw-medium text-dark" style="line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;" t-esc="trp.name"/>
+                            <p class="mb-0 small fw-medium" style="line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--av-text);" t-esc="trp.name"/>
                             <span class="small fw-bold" style="color:var(--av-red);"
                                   t-esc="'$%.2f' % trp.list_price"/>
                         </div>
@@ -1511,31 +1512,18 @@
 
             <div id="wrap" class="av-privacy-page">
 
-                <!-- Hero — same as other pages -->
-                <section class="av-compare-hero">
-                    <div class="av-compare-hero-circles">
-                        <div class="av-compare-circle av-compare-circle-1"/>
-                        <div class="av-compare-circle av-compare-circle-2"/>
-                    </div>
-                    <div class="av-container text-center" style="position:relative; z-index:1;">
-                        <div class="av-compare-hero-icon">
-                            <i class="fa fa-shield"/>
-                        </div>
-                        <h1 class="av-compare-hero-title">Privacy Policy</h1>
-                        <p class="av-compare-hero-sub">This Privacy Policy explains how Aveenix collects, uses, stores, and protects your personal information when you use our services.</p>
-                        <p class="av-compare-hero-sub" style="font-size:13px; opacity:.75; margin-top:8px;"><i class="fa fa-calendar"/> Last updated: 20 May 2024</p>
-                    </div>
-                </section>
-
                 <div class="av-container av-privacy-body">
                     <div class="row g-4">
 
                         <!-- ── LEFT SIDEBAR ──────────────────────────── -->
-                        <div class="col-lg-3 col-md-4">
+                        <div class="col-lg-3 col-md-4 pt-4">
                             <div class="av-privacy-sidebar">
-                                <h6 class="av-privacy-sidebar-heading">Privacy Policy</h6>
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true" data-policy="privacy">
+                                    <span>Privacy Policy</span>
+                                    <i class="fa fa-minus av-privacy-sidebar-icon"/>
+                                </button>
                                 <nav class="av-privacy-nav">
-                                    <a href="#information-collect"  class="av-privacy-nav-link active"><i class="fa fa-shield"/>      Overview</a>
+                                    <a href="#information-collect"  class="av-privacy-nav-link"><i class="fa fa-shield"/>      Overview</a>
                                     <a href="#information-collect"  class="av-privacy-nav-link"><i class="fa fa-user"/>        Information We Collect</a>
                                     <a href="#how-we-use"           class="av-privacy-nav-link"><i class="fa fa-database"/>    How We Use Information</a>
                                     <a href="#information-sharing"  class="av-privacy-nav-link"><i class="fa fa-share-alt"/>   Information Sharing</a>
@@ -1549,6 +1537,112 @@
                                     <a href="#policy-updates"       class="av-privacy-nav-link"><i class="fa fa-file-text"/>   Policy Updates</a>
                                     <a href="#contact"              class="av-privacy-nav-link"><i class="fa fa-envelope"/>    Contact Us</a>
                                 </nav>
+
+                                <!-- Return Policy group -->
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle" aria-expanded="false" data-policy="return">
+                                    <span>Return Policy</span>
+                                    <i class="fa fa-plus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav is-collapsed">
+                                    <a href="#ret-cancellations" class="av-privacy-nav-link"><i class="fa fa-times-circle"/> Order Cancellations</a>
+                                    <a href="#ret-eligibility"   class="av-privacy-nav-link"><i class="fa fa-check-circle"/> Eligibility for Returns</a>
+                                    <a href="#ret-product-type"  class="av-privacy-nav-link"><i class="fa fa-cubes"/>       Returns by Product Type</a>
+                                    <a href="#ret-refund"        class="av-privacy-nav-link"><i class="fa fa-money"/>       Refund Process</a>
+                                    <a href="#ret-shipping-cost" class="av-privacy-nav-link"><i class="fa fa-truck"/>       Shipping Costs</a>
+                                    <a href="#ret-defective"     class="av-privacy-nav-link"><i class="fa fa-wrench"/>      Defective or Incorrect Items</a>
+                                    <a href="#ret-exchanges"     class="av-privacy-nav-link"><i class="fa fa-exchange"/>    Exchanges</a>
+                                    <a href="#ret-exceptional"   class="av-privacy-nav-link"><i class="fa fa-exclamation-triangle"/> Exceptional Circumstances</a>
+                                </nav>
+
+                                <!-- Security Policy group -->
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle" aria-expanded="false" data-policy="security">
+                                    <span>Security Policy</span>
+                                    <i class="fa fa-plus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav is-collapsed">
+                                    <a href="#sec-encryption"    class="av-privacy-nav-link"><i class="fa fa-lock"/>         Encryption &amp; Secure Connections</a>
+                                    <a href="#sec-certificates"  class="av-privacy-nav-link"><i class="fa fa-certificate"/>  Verified Security Certificates</a>
+                                    <a href="#sec-payment"       class="av-privacy-nav-link"><i class="fa fa-credit-card"/>  Payment Security</a>
+                                    <a href="#sec-paypal"        class="av-privacy-nav-link"><i class="fa fa-paypal"/>       Payments via PayPal</a>
+                                    <a href="#sec-stripe"        class="av-privacy-nav-link"><i class="fa fa-cc-stripe"/>    Payments via Stripe</a>
+                                    <a href="#sec-fraud"         class="av-privacy-nav-link"><i class="fa fa-shield"/>       Fraud Prevention &amp; Monitoring</a>
+                                    <a href="#sec-data-access"   class="av-privacy-nav-link"><i class="fa fa-user-secret"/>  Data Access &amp; Privacy</a>
+                                    <a href="#sec-company"       class="av-privacy-nav-link"><i class="fa fa-building"/>     Company Information</a>
+                                </nav>
+
+                                <!-- Sellers Policy group -->
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle" aria-expanded="false" data-policy="sellers">
+                                    <span>Sellers Policy</span>
+                                    <i class="fa fa-plus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav is-collapsed">
+                                    <a href="#sell-account"   class="av-privacy-nav-link"><i class="fa fa-user-plus"/>   Create Your Seller Account</a>
+                                    <a href="#sell-store"     class="av-privacy-nav-link"><i class="fa fa-shopping-bag"/> Set Up Your Store</a>
+                                    <a href="#sell-list"      class="av-privacy-nav-link"><i class="fa fa-list"/>        List Your Products</a>
+                                    <a href="#sell-manage"    class="av-privacy-nav-link"><i class="fa fa-sliders"/>     Manage Your Listings</a>
+                                    <a href="#sell-payments"  class="av-privacy-nav-link"><i class="fa fa-credit-card"/> Set Up Payments</a>
+                                    <a href="#sell-shipping"  class="av-privacy-nav-link"><i class="fa fa-truck"/>       Configure Shipping &amp; Delivery</a>
+                                    <a href="#sell-policies"  class="av-privacy-nav-link"><i class="fa fa-file-text"/>   Store Policies</a>
+                                    <a href="#sell-orders"    class="av-privacy-nav-link"><i class="fa fa-tasks"/>       Order Management &amp; Service</a>
+                                    <a href="#sell-promote"   class="av-privacy-nav-link"><i class="fa fa-bullhorn"/>    Promote Your Store</a>
+                                    <a href="#sell-performance" class="av-privacy-nav-link"><i class="fa fa-line-chart"/> Monitor &amp; Improve Performance</a>
+                                    <a href="#sell-compliant" class="av-privacy-nav-link"><i class="fa fa-gavel"/>       Stay Compliant</a>
+                                </nav>
+
+                                <!-- Shipping Policy group -->
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle" aria-expanded="false" data-policy="shipping">
+                                    <span>Shipping Policy</span>
+                                    <i class="fa fa-plus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav is-collapsed">
+                                    <a href="#ship-overview"    class="av-privacy-nav-link"><i class="fa fa-globe"/>      Shipping &amp; Delivery Overview</a>
+                                    <a href="#ship-methods"     class="av-privacy-nav-link"><i class="fa fa-truck"/>      Methods &amp; Delivery Times</a>
+                                    <a href="#ship-processing"  class="av-privacy-nav-link"><i class="fa fa-clock-o"/>    Order Processing Time</a>
+                                    <a href="#ship-tracking"    class="av-privacy-nav-link"><i class="fa fa-map-marker"/> Order Tracking</a>
+                                    <a href="#ship-rates"       class="av-privacy-nav-link"><i class="fa fa-money"/>      Shipping Rates</a>
+                                    <a href="#ship-customs"     class="av-privacy-nav-link"><i class="fa fa-plane"/>      International Shipping &amp; Customs</a>
+                                    <a href="#ship-restrictions" class="av-privacy-nav-link"><i class="fa fa-ban"/>       Shipping Restrictions</a>
+                                </nav>
+
+                                <!-- Cashback Policy group (commented out)
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle" aria-expanded="false" data-policy="cashback">
+                                    <span>Cashback Policy</span>
+                                    <i class="fa fa-plus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav is-collapsed">
+                                    <a href="#cb-program"     class="av-privacy-nav-link"><i class="fa fa-gift"/>        Aveenix Cashback Program</a>
+                                    <a href="#cb-eligibility" class="av-privacy-nav-link"><i class="fa fa-check-circle"/> Eligibility</a>
+                                    <a href="#cb-qualifying"  class="av-privacy-nav-link"><i class="fa fa-shopping-cart"/> Qualifying Purchases</a>
+                                    <a href="#cb-product-type" class="av-privacy-nav-link"><i class="fa fa-cubes"/>      Product Type Eligibility</a>
+                                    <a href="#cb-calculation" class="av-privacy-nav-link"><i class="fa fa-calculator"/> Cashback Calculation</a>
+                                    <a href="#cb-verification" class="av-privacy-nav-link"><i class="fa fa-hourglass-half"/> Verification &amp; Processing</a>
+                                    <a href="#cb-balance"     class="av-privacy-nav-link"><i class="fa fa-money"/>       Cashback Balance &amp; Use</a>
+                                    <a href="#cb-adjustments" class="av-privacy-nav-link"><i class="fa fa-refresh"/>     Adjustments, Reversals &amp; Errors</a>
+                                    <a href="#cb-fraud"       class="av-privacy-nav-link"><i class="fa fa-ban"/>        Fraud &amp; Abuse</a>
+                                    <a href="#cb-changes"     class="av-privacy-nav-link"><i class="fa fa-edit"/>       Program Changes</a>
+                                    <a href="#cb-responsibility" class="av-privacy-nav-link"><i class="fa fa-user"/>    Responsibility &amp; Account Management</a>
+                                </nav>
+                                -->
+
+                                <!-- Aveenix Cashback Program group -->
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle" aria-expanded="false" data-policy="program">
+                                    <span>Aveenix Cashback Program</span>
+                                    <i class="fa fa-plus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav is-collapsed">
+                                    <a href="#acp-program"     class="av-privacy-nav-link"><i class="fa fa-gift"/>        Aveenix Cashback Program</a>
+                                    <a href="#acp-eligibility" class="av-privacy-nav-link"><i class="fa fa-check-circle"/> Eligibility</a>
+                                    <a href="#acp-qualifying"  class="av-privacy-nav-link"><i class="fa fa-shopping-cart"/> Qualifying Purchases</a>
+                                    <a href="#acp-product-type" class="av-privacy-nav-link"><i class="fa fa-cubes"/>      Product Type Eligibility</a>
+                                    <a href="#acp-calculation" class="av-privacy-nav-link"><i class="fa fa-calculator"/> Cashback Calculation</a>
+                                    <a href="#acp-verification" class="av-privacy-nav-link"><i class="fa fa-hourglass-half"/> Verification &amp; Processing</a>
+                                    <a href="#acp-balance"     class="av-privacy-nav-link"><i class="fa fa-money"/>       Cashback Balance &amp; Use</a>
+                                    <a href="#acp-adjustments" class="av-privacy-nav-link"><i class="fa fa-refresh"/>     Adjustments, Reversals &amp; Errors</a>
+                                    <a href="#acp-fraud"       class="av-privacy-nav-link"><i class="fa fa-ban"/>        Fraud &amp; Abuse</a>
+                                    <a href="#acp-changes"     class="av-privacy-nav-link"><i class="fa fa-edit"/>       Program Changes</a>
+                                    <a href="#acp-responsibility" class="av-privacy-nav-link"><i class="fa fa-user"/>    Responsibility &amp; Account Management</a>
+                                </nav>
+
                                 <!-- Privacy note box -->
                                 <div class="av-privacy-note-box">
                                     <div class="av-privacy-note-icon">
@@ -1563,123 +1657,214 @@
                         <!-- ── RIGHT MAIN CONTENT ────────────────────── -->
                         <div class="col-lg-9 col-md-8">
 
+                            <!-- Hero banner — right column only -->
+                            <section class="av-shop-hero-inline mb-3">
+                                <div class="av-compare-hero-circles">
+                                    <div class="av-compare-circle av-compare-circle-1"/>
+                                    <div class="av-compare-circle av-compare-circle-2"/>
+                                </div>
+                                <div class="text-center" style="position:relative; z-index:1;">
+                                    <div class="av-compare-hero-icon">
+                                        <i class="fa fa-shield" id="av-policy-hero-icon"/>
+                                    </div>
+                                    <h1 class="av-compare-hero-title" id="av-policy-hero-title">Privacy Policy</h1>
+                                    <p class="av-compare-hero-sub" id="av-policy-hero-sub">This Privacy Policy explains how Aveenix collects, uses, stores, and protects your personal information when you use our services.</p>
+                                    <p class="av-compare-hero-sub" style="font-size:13px; opacity:.75; margin-top:8px;"><i class="fa fa-calendar"/> Last updated: 20 May 2024</p>
+                                </div>
+                            </section>
+
                             <!-- Policy Topics grid -->
-                            <div class="av-privacy-topics">
+                            <div class="av-privacy-topics av-policy-section" data-policy="privacy">
                                 <h2 class="av-privacy-topics-title">Policy Topics</h2>
-                                <p class="av-privacy-topics-sub">Explore the topics below to learn more about how we handle your information.</p>
+                                <p class="av-privacy-topics-sub">This Privacy Policy applies to Aveenix Express, owned and operated by Aveenix Global Ltd ("Aveenix", "we", "us", or "our"), and covers our website, related services, and any features or tools provided through the platform. By using our Services, you agree to the practices described here. Explore the topics below to learn more about how we handle your information.</p>
                                 <div class="row g-3">
-                                    <div class="col-md-6" id="information-collect">
+                                    <div class="col-12" id="information-collect">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-user"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Information We Collect</strong>
-                                                <span>Learn about the types of personal information we collect from you.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-user"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Information We Collect</strong>
+                                                    <span>Learn about the types of personal information we collect from you.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We collect personal information only where necessary to operate our Services and provide a smooth shopping experience.</p>
+                                                <p><strong>Personal Information:</strong> full name, email address, phone number, billing and shipping address, and payment-related information (processed securely via third-party payment providers).</p>
+                                                <p><strong>Account Information:</strong> login credentials, order history, rewards or cashback balance, and saved preferences.</p>
+                                                <p><strong>Transaction Information:</strong> orders placed through Aveenix checkout, affiliate click tracking (non-payment data only), and refunds or cancellations.</p>
+                                                <p><strong>Automatically Collected:</strong> IP address, device type and browser information, pages visited and interaction data, and cookies or similar tracking technologies.</p>
+                                                <p><strong>From Third Parties:</strong> limited information from affiliate partners, payment processors (confirmation only), and analytics providers (aggregated, non-identifying data).</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="how-we-use">
+                                    <div class="col-12" id="how-we-use">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-database"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>How We Use Information</strong>
-                                                <span>Understand how we use your personal information to provide our services.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-database"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>How We Use Information</strong>
+                                                    <span>Understand how we use your personal information to provide our services.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We use your information for the following purposes:</p>
+                                                <p><strong>Order Processing &amp; Fulfilment:</strong> to process orders, confirm payments, arrange delivery, and manage refunds for products sold directly through Aveenix.</p>
+                                                <p><strong>Customer Support:</strong> to respond to enquiries, resolve issues, and provide assistance.</p>
+                                                <p><strong>Platform Operation &amp; Improvement:</strong> to maintain, improve, and optimise our website and Services.</p>
+                                                <p><strong>Personalisation (Optional):</strong> to customise content, product displays, or communications based on your interactions.</p>
+                                                <p><strong>Marketing Communications:</strong> to send promotional messages or updates only where you have consented, with opt-out options available at all times.</p>
+                                                <p><strong>Legal &amp; Security Purposes:</strong> to prevent fraud, enforce platform policies, and comply with legal obligations.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="information-sharing">
+                                    <div class="col-12" id="information-sharing">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-share-alt"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Information Sharing</strong>
-                                                <span>We do not sell your personal data. See when and why we share it.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-share-alt"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Information Sharing</strong>
+                                                    <span>We do not sell your personal data. See when and why we share it.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We do not sell your personal information. We may share limited data only where necessary with:</p>
+                                                <p><strong>Service Providers</strong> such as payment processors, hosting providers, analytics tools, or customer support platforms.</p>
+                                                <p><strong>Affiliate Partners</strong> when you click an affiliate link or complete a purchase on a third-party website, limited tracking data may be shared to confirm the transaction.</p>
+                                                <p><strong>Suppliers &amp; Fulfilment Partners</strong> where required to deliver products sold directly through Aveenix.</p>
+                                                <p><strong>Legal or Regulatory Authorities</strong> where required by law or to protect our legal rights.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="cookies">
+                                    <div class="col-12" id="cookies">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-circle-o"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Cookies &amp; Tracking</strong>
-                                                <span>How we use cookies and similar technologies to enhance your experience.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-circle-o"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Cookies &amp; Tracking</strong>
+                                                    <span>How we use cookies and similar technologies to enhance your experience.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We use cookies and similar technologies to enable core website functionality, analyse website performance, and improve user experience.</p>
+                                                <p>You can manage or disable cookies through your browser settings. Please note that disabling cookies may affect certain website features.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="data-security">
+                                    <div class="col-12" id="data-security">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-lock"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Data Security</strong>
-                                                <span>The security measures we use to protect your information.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-lock"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Data Security</strong>
+                                                    <span>The security measures we use to protect your information.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We take reasonable and appropriate steps to protect your personal information, including secure hosting environments, encrypted communications, and trusted third-party payment gateways.</p>
+                                                <p>However, no system is completely secure, and we cannot guarantee absolute security of data transmitted online.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="your-rights">
+                                    <div class="col-12" id="your-rights">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-user-circle"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Your Rights &amp; Choices</strong>
-                                                <span>Your rights to access, update, delete, or control your personal data.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-user-circle"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Your Rights &amp; Choices</strong>
+                                                    <span>Your rights to access, update, delete, or control your personal data.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Depending on your location, you may have the right to access your personal information, correct or update inaccurate data, request deletion of your data (subject to legal obligations), and withdraw consent for marketing communications.</p>
+                                                <p>Requests can be made via our Contact Us page.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="data-retention">
+                                    <div class="col-12" id="data-retention">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-clock-o"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Data Retention</strong>
-                                                <span>How long we keep your information and the criteria we use.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-clock-o"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Data Retention</strong>
+                                                    <span>How long we keep your information and the criteria we use.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We retain personal information only for as long as necessary to provide our Services, comply with legal, accounting, or regulatory requirements, and resolve disputes or enforce agreements.</p>
+                                                <p>When data is no longer required, it is securely deleted or anonymised.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="childrens-privacy">
+                                    <div class="col-12" id="childrens-privacy">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-child"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Children's Privacy</strong>
-                                                <span>Our commitment to protecting the privacy of children online.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-child"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Children's Privacy</strong>
+                                                    <span>Our commitment to protecting the privacy of children online.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Aveenix Express is not intended for use by children under 18. We do not knowingly collect personal information from minors. If such data is identified, it will be deleted promptly.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="international">
+                                    <div class="col-12" id="international">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-globe"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>International Transfers</strong>
-                                                <span>How your information may be transferred outside your country.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-globe"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>International Transfers</strong>
+                                                    <span>How your information may be transferred outside your country.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Your information may be processed or stored outside your country of residence. Where this occurs, we take reasonable steps to ensure appropriate data protection safeguards are in place.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="third-party">
+                                    <div class="col-12" id="third-party">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-link"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Third-Party Links</strong>
-                                                <span>Our website may contain links to other sites. Learn more.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-link"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Third-Party Links</strong>
+                                                    <span>Our website may contain links to other sites. Learn more.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Some products on Aveenix Express link to third-party websites. Purchases made on third-party websites are governed by their own privacy policies.</p>
+                                                <p>Aveenix does not control how third parties collect or use your data. We encourage you to review their privacy practices before completing a purchase.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="policy-updates">
+                                    <div class="col-12" id="policy-updates">
                                         <div class="av-privacy-topic-card">
-                                            <div class="av-privacy-topic-icon"><i class="fa fa-file-text"/></div>
-                                            <div class="av-privacy-topic-body">
-                                                <strong>Policy Updates</strong>
-                                                <span>We may update this policy from time to time. See what's changed.</span>
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-file-text"/></div>
+                                                <div class="av-privacy-topic-body">
+                                                    <strong>Policy Updates</strong>
+                                                    <span>We may update this policy from time to time. See what's changed.</span>
+                                                </div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. Continued use of our Services constitutes acceptance of the updated policy.</p>
                                             </div>
-                                            <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" id="contact">
-                                        <a href="/contactus" class="av-privacy-topic-card">
+                                    <div class="col-12" id="contact">
+                                        <a href="/contactus" class="av-privacy-topic-card av-privacy-topic-card--link">
                                             <div class="av-privacy-topic-icon"><i class="fa fa-envelope"/></div>
                                             <div class="av-privacy-topic-body">
                                                 <strong>Contact Us</strong>
@@ -1687,6 +1872,766 @@
                                             </div>
                                             <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
                                         </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ RETURN POLICY ============ -->
+                            <div class="av-privacy-topics av-policy-section" data-policy="return" hidden="hidden">
+                                <h2 class="av-privacy-topics-title">Return Policy</h2>
+                                <p class="av-privacy-topics-sub">At Aveenix Express, your satisfaction matters. This Returns Policy explains how cancellations, returns, refunds, and exchanges work across different product types available on our platform.</p>
+                                <div class="row g-3">
+                                    <div class="col-12" id="ret-cancellations">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-times-circle"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Order Cancellations</strong><span>Pre- and post-shipment cancellation rules.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Pre-Shipment:</strong> orders may be cancelled before shipment. To cancel or change an order, please contact us within 12 hours of placing it.</p>
+                                                <p><strong>Post-Shipment:</strong> once an order has entered packaging or shipping, cancellations are no longer possible. You may instead request a return after delivery (subject to eligibility).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-eligibility">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-check-circle"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Eligibility for Returns</strong><span>Conditions and non-returnable items.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>General Conditions:</strong> return requests must be made within 15 days of delivery. Items must be unused, undamaged, and in original packaging. Proof of purchase is required.</p>
+                                                <p><strong>Non-Returnable Items:</strong> digital products or downloads, personalized or custom-made items, perishable goods, and items marked "Final Sale" (where clearly stated).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-product-type">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-cubes"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Returns by Product Type</strong><span>How returns differ per product type.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Affiliate Products:</strong> purchased on third-party websites. Returns and refunds must follow the affiliate seller's return policy. Aveenix does not process refunds for affiliate purchases; return instructions are provided by the affiliate seller directly.</p>
+                                                <p><strong>Dropshipping Products:</strong> fulfilled by third-party suppliers. To initiate a return, contact the seller via your Aveenix account; if unresolved, escalate to Aveenix Support. Refunds are issued after the supplier receives and inspects the item. Processing may take up to 15 days after return confirmation.</p>
+                                                <p><strong>Aveenix-Branded Products:</strong> sold and fulfilled directly by Aveenix. Returns can be initiated through your Aveenix account or customer support. Refunds are processed within 15 days after inspection, to the original payment method or store credit.</p>
+                                                <p><strong>Multi-Vendor Products:</strong> fulfilled by independent third-party vendors. Each vendor may have its own return policy. Returns must be initiated through the vendor via your Aveenix account; Aveenix support is available if vendor resolution fails. Refunds are issued after vendor confirmation and inspection.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-refund">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-money"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Refund Process</strong><span>Review, timing, and refund method.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Review &amp; Approval:</strong> return requests are reviewed before approval instructions are issued.</p>
+                                                <p><strong>Processing Time:</strong> refunds are typically processed within 15 days of item inspection.</p>
+                                                <p><strong>Refund Method:</strong> refunds are issued to the original payment method, or store credit (where applicable).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-shipping-cost">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-truck"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Shipping Costs</strong><span>Who pays for return shipping.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Customers are responsible for return shipping unless the item is defective, the wrong item was sent, or the error was caused by the seller or Aveenix.</p>
+                                                <p>In eligible cases, a prepaid return label may be provided.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-defective">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-wrench"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Defective or Incorrect Items</strong><span>What to do if your item is wrong.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>If you receive a defective or incorrect item, contact us immediately via your Aveenix account. We will arrange a replacement, or a full refund (including return shipping where applicable).</p>
+                                                <p>Resolution depends on product type: affiliate products follow the affiliate seller's return process; dropshipping products are supplier-managed with Aveenix support; Aveenix-branded products are fully handled by Aveenix; multi-vendor products are vendor-managed with Aveenix escalation support.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-exchanges">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-exchange"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Exchanges</strong><span>How exchanges work.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Exchanges are subject to product availability. Please contact us before returning any item. Do not ship items back without authorization. Exchange shipping costs may apply.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ret-exceptional">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-exclamation-triangle"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Exceptional Circumstances</strong><span>Incorrect address and delays.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Incorrect Address:</strong> orders not delivered due to incorrect address details provided by the customer are not eligible for refund.</p>
+                                                <p><strong>Delays Beyond Control:</strong> delays caused by customs, carrier disruptions, or natural events are handled case-by-case. Refund requests may be submitted 15 days after the 45-day guaranteed delivery window.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ SECURITY POLICY ============ -->
+                            <div class="av-privacy-topics av-policy-section" data-policy="security" hidden="hidden">
+                                <h2 class="av-privacy-topics-title">Security Policy</h2>
+                                <p class="av-privacy-topics-sub">At Aveenix Express, protecting your personal information and transaction data is a top priority. We implement strong technical and organisational security measures to ensure a safe and secure shopping experience.</p>
+                                <div class="row g-3">
+                                    <div class="col-12" id="sec-encryption">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-lock"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Encryption &amp; Secure Connections</strong><span>SSL/TLS encryption and HTTPS.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>All data transmitted between your browser and our servers is encrypted using Secure Socket Layer (SSL) / TLS encryption.</p>
+                                                <p>This encryption ensures your personal and payment information remains unreadable to unauthorised third parties during transmission. Our website operates exclusively over HTTPS for secure communication.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-certificates">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-certificate"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Verified Security Certificates</strong><span>Trusted certificate authorities and PCI-DSS.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Our SSL certificates are issued by trusted certificate authorities. Payment transactions are handled only by PCI-DSS compliant providers, ensuring industry-standard security.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-payment">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-credit-card"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Payment Security</strong><span>Accepted methods and card handling.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Aveenix Express never stores your credit card details. All payments are securely processed by trusted third-party payment providers.</p>
+                                                <p><strong>Accepted Payment Methods:</strong> PayPal, Stripe, major credit and debit cards (Visa, MasterCard, American Express, Discover), and internet banking and other supported electronic payment methods (where available).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-paypal">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-paypal"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Payments via PayPal</strong><span>How PayPal payments work.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>When you select PayPal, you are redirected to PayPal's secure environment and payment details are entered directly on PayPal's platform. Aveenix never accesses or stores your card or bank information. You may pay using PayPal balance, credit card, debit card, or bank account (e-check).</p>
+                                                <p>How it works: review your cart and proceed to checkout; select PayPal as your payment method; log in to PayPal or create an account; complete payment securely; you are redirected back to Aveenix with order confirmation.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-stripe">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-cc-stripe"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Payments via Stripe</strong><span>How Stripe payments work.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Stripe provides secure, encrypted payment processing directly on our website. Card information is encrypted before transmission; payments are processed according to PCI-DSS Level 1 compliance; Aveenix does not store or process raw card data.</p>
+                                                <p>How it works: review your cart and proceed to checkout; select Stripe as your payment method; enter card details securely; payment is processed through Stripe; you receive instant order confirmation.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-fraud">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-shield"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Fraud Prevention &amp; Monitoring</strong><span>How we detect suspicious activity.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Transactions are monitored for suspicious activity. Orders may be reviewed or delayed for verification if unusual behaviour is detected. Accounts involved in fraudulent activity may be suspended or terminated.</p>
+                                                <p>Both PayPal and Stripe offer industry-leading fraud prevention, encrypted transactions, traceable payment records, and buyer and seller protection mechanisms. You can always review transaction status directly through your PayPal or Stripe account.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-data-access">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-user-secret"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Data Access &amp; Privacy</strong><span>Who can access customer data.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Access to customer data is restricted to authorised personnel only, used strictly for order processing, support, and legal compliance, and governed by our Privacy Policy and Terms of Service.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sec-company">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-building"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Company Information</strong><span>Legal entity and payment options.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Legal Entity:</strong> AVEENIX LTD. <strong>NZBN:</strong> 9429051284299. <strong>GST Number:</strong> 139-002-016. <strong>Incorporation Date:</strong> 27 April 2023.</p>
+                                                <p><strong>Payment Options:</strong> Credit Card · Internet Banking · PayPal · Stripe.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ SELLERS POLICY ============ -->
+                            <div class="av-privacy-topics av-policy-section" data-policy="sellers" hidden="hidden">
+                                <h2 class="av-privacy-topics-title">Sellers Policy</h2>
+                                <p class="av-privacy-topics-sub">Welcome to Aveenix Express. We provide sellers with a flexible platform to reach customers, manage products, and grow their online business with confidence. This guide outlines the steps to get started and the standards expected of all sellers on the Aveenix platform.</p>
+                                <div class="row g-3">
+                                    <div class="col-12" id="sell-account">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-user-plus"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Create Your Seller Account</strong><span>Sign up and business information.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Sign Up:</strong> register for a seller account by visiting the Seller Registration page and completing the application form.</p>
+                                                <p><strong>Business Information:</strong> you'll be asked to provide your business or trading name, contact details, and tax or registration information (where applicable). All seller applications are reviewed to ensure platform quality and compliance.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-store">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-shopping-bag"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Set Up Your Store</strong><span>Branding and business details.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Store Branding:</strong> choose a unique store name, upload your logo, and customise your store profile to reflect your brand.</p>
+                                                <p><strong>Business Details:</strong> set up business hours, shipping information, returns and refund policy, and customer support contact details.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-list">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-list"/></div>
+                                                <div class="av-privacy-topic-body"><strong>List Your Products</strong><span>Listings and listing types.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Product Listings:</strong> create clear, accurate listings that include high-quality images, detailed product descriptions, correct pricing and availability, and variants (size, colour, etc.) where applicable.</p>
+                                                <p><strong>Listing Types:</strong> depending on the product category and seller setup, listings may include Buy Now (fixed-price products) and auction-style listings (where enabled).</p>
+                                                <p><strong>Shipping &amp; Extras:</strong> set shipping fees clearly, include handling times, and add optional promotions where supported.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-manage">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-sliders"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Manage Your Listings</strong><span>Seller dashboard and mobile access.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Seller Dashboard:</strong> use the Seller Dashboard to edit and update listings, track inventory, receive order notifications, and monitor performance.</p>
+                                                <p><strong>Mobile Access:</strong> where available, mobile tools allow you to manage your store on the go.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-payments">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-credit-card"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Set Up Payments</strong><span>Payment integration and compliance.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Payment Integration:</strong> configure supported payment methods, which may include credit and debit cards, PayPal, and other payment gateways supported by Aveenix.</p>
+                                                <p><strong>Security &amp; Compliance:</strong> all payment methods must comply with Aveenix's security standards and applicable regulations.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-shipping">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-truck"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Configure Shipping &amp; Delivery</strong><span>Options and shipping policy.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Shipping Options:</strong> define domestic and international shipping methods, delivery timeframes, and shipping rates.</p>
+                                                <p><strong>Shipping Policy:</strong> clearly outline processing times, estimated delivery windows, and responsibility for shipping costs.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-policies">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-file-text"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Store Policies</strong><span>Returns, refunds, and privacy.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Returns &amp; Refunds:</strong> sellers must publish a return and refund policy that aligns with Aveenix guidelines and meets applicable consumer protection laws.</p>
+                                                <p><strong>Privacy Policy:</strong> explain how customer data is collected, used, and protected in line with Aveenix standards and legal requirements.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-orders">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-tasks"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Order Management &amp; Customer Service</strong><span>Fulfilment and support.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Order Fulfilment:</strong> process orders promptly, update order statuses accurately, and provide tracking information where applicable.</p>
+                                                <p><strong>Customer Support:</strong> respond to customer enquiries professionally via Aveenix's messaging tools. Timely communication is essential to maintaining a strong seller reputation.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-promote">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-bullhorn"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Promote Your Store</strong><span>Marketing and advertising tools.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Marketing Tools:</strong> use Aveenix's built-in tools (where available) to run promotions, highlight products, and engage customers.</p>
+                                                <p><strong>Advertising Opportunities:</strong> optional advertising tools may be available to increase product visibility and reach.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-performance">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-line-chart"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Monitor &amp; Improve Performance</strong><span>Analytics, feedback, and reviews.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Analytics &amp; Insights:</strong> track sales performance, customer behaviour, and conversion trends.</p>
+                                                <p><strong>Feedback &amp; Reviews:</strong> customer reviews help build trust. Use feedback to improve listings, service quality, and fulfilment processes.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="sell-compliant">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-gavel"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Stay Compliant</strong><span>Legal and platform compliance.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Sellers must comply with all applicable e-commerce, tax, and consumer laws, and follow Aveenix's platform rules and best practices. Failure to comply may result in account restrictions or removal from the platform.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ SHIPPING POLICY ============ -->
+                            <div class="av-privacy-topics av-policy-section" data-policy="shipping" hidden="hidden">
+                                <h2 class="av-privacy-topics-title">Shipping Policy</h2>
+                                <p class="av-privacy-topics-sub">Aveenix Express partners with a range of suppliers and sellers worldwide. Shipping options, delivery times, and costs vary depending on the product type and shipping origin.</p>
+                                <div class="row g-3">
+                                    <div class="col-12" id="ship-overview">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-globe"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Shipping &amp; Delivery Overview</strong><span>What this policy covers.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>This policy explains how shipping works for Affiliate Products, Dropshipping Products, Aveenix-Branded Products, and Multivendor Products.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ship-methods">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-truck"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Shipping Methods &amp; Delivery Times</strong><span>Times by product type.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Affiliate Products:</strong> sold and fulfilled by third-party retailers (such as Amazon). Shipping methods, delivery times, costs, and tracking are determined and provided by the affiliate seller. All shipping, delivery, and returns are subject to the affiliate seller's policies.</p>
+                                                <p><strong>Dropshipping Products:</strong> free shipping on select products (depending on supplier); standard shipping estimated 10–15 business days; expedited shipping estimated 5–10 business days (additional charges may apply); international shipping available to most countries. Times may vary by supplier location, customs processing, and destination.</p>
+                                                <p><strong>Aveenix-Branded Products:</strong> free shipping on select products or promotions; standard shipping estimated 5–7 business days; expedited shipping estimated 2–3 business days (additional charges apply); international shipping available to selected regions. Exact times and costs shown at checkout.</p>
+                                                <p><strong>Multivendor Products:</strong> shipping methods set by each individual vendor; standard shipping estimated 7–14 business days; expedited shipping where supported by the vendor (additional charges may apply); international shipping availability depends on the vendor.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ship-processing">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-clock-o"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Order Processing Time</strong><span>How long before orders ship.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Orders are typically processed within 1–2 business days. During peak periods, processing may take up to 3 business days.</p>
+                                                <p>Processing times vary by product type: affiliate products managed by the affiliate retailer; dropshipping products processed by the supplier; branded products processed by Aveenix; multivendor products processed by the individual seller. Once your order ships, you'll receive confirmation with tracking details where available.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ship-tracking">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-map-marker"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Order Tracking</strong><span>Where to view tracking.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Tracking details are provided once an order is shipped. Tracking availability depends on the product type and carrier. You can view tracking updates via your Aveenix account (where applicable) or the seller or supplier's tracking link.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ship-rates">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-money"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Shipping Rates</strong><span>How costs are calculated.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Shipping costs are calculated based on product type, weight and size, shipping destination, and selected shipping method. Any applicable shipping charges are displayed before checkout. Free shipping may apply to select products or promotions.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ship-customs">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-plane"/></div>
+                                                <div class="av-privacy-topic-body"><strong>International Shipping &amp; Customs</strong><span>Duties and import fees.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>For international orders, customs duties, taxes, and import fees may apply. These charges are not included in the product or shipping price. The recipient is responsible for any customs fees imposed by their country. By placing an international order, you acknowledge and accept potential customs charges.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="ship-restrictions">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-ban"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Shipping Restrictions</strong><span>Where we can and can't ship.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>We ship to many international destinations, but some locations may be restricted. Certain suppliers or vendors may not ship to specific countries. If shipping is unavailable to your location, you'll be notified before checkout or contacted directly.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ CASHBACK POLICY (commented out) ============
+                            <div class="av-privacy-topics av-policy-section" data-policy="cashback" hidden="hidden">
+                                <h2 class="av-privacy-topics-title">Cashback Policy</h2>
+                                <p class="av-privacy-topics-sub">Welcome to Aveenix. By participating in the Cashback Program, you agree to the terms outlined below. Please read them carefully.</p>
+                                <div class="row g-3">
+                                    <div class="col-12" id="cb-program">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-gift"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Aveenix Cashback Program</strong><span>How the program rewards you.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>The Aveenix Cashback Program rewards eligible customers by sharing a portion of commissions earned on qualifying purchases. This policy explains how cashback is earned, tracked, and managed on the Aveenix platform.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-eligibility">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-check-circle"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Eligibility</strong><span>Who can participate.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>To participate you must be a registered Aveenix user, logged in at the time of purchase or tracked click (where applicable), and your account must be in good standing. Cashback is not available to accounts involved in fraudulent, abusive, or manipulative activity. Cashback is not guaranteed and is awarded only when qualifying conditions are met.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-qualifying">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-shopping-cart"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Qualifying Purchases</strong><span>When a purchase qualifies.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>A purchase qualifies for cashback only if the purchase results in a successful and verified sale, the order is not cancelled, returned, or refunded, and the transaction is completed through a valid Aveenix tracking mechanism. Cashback eligibility may vary by product, supplier, or promotion and will be determined at Aveenix's discretion.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-product-type">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-cubes"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Product Type Eligibility</strong><span>Affiliate, branded, exclusions.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Affiliate Products:</strong> cashback may apply to purchases made through Aveenix affiliate links, funded from a portion of the commission Aveenix receives, and issued only after the affiliate provider confirms the commission.</p>
+                                                <p><strong>Aveenix-Sold Products (Branded / Dropship):</strong> cashback may apply where explicitly stated, calculated only after payment is confirmed and return periods have passed.</p>
+                                                <p><strong>Exclusions:</strong> gift cards, coupons, or heavily discounted promotional items may be excluded. Certain brands or suppliers may restrict cashback eligibility.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-calculation">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-calculator"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Cashback Calculation</strong><span>How amounts are worked out.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Cashback amounts are calculated based on a percentage of commission earned, not the product price. The cashback rate may vary depending on retailer or supplier, product category, and promotional terms in effect at the time of purchase.</p>
+                                                <p>Aveenix reserves the right to adjust cashback rates at any time. Current rates, where applicable, will be shown on the website or user dashboard.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-verification">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-hourglass-half"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Cashback Verification &amp; Processing</strong><span>Pending status and timing.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Cashback enters a pending status after a qualifying transaction. Verification typically occurs within 30–60 days, depending on affiliate confirmation and refund and return windows. If a transaction is reversed or rejected, associated cashback will be cancelled.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-balance">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-money"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Cashback Balance &amp; Use</strong><span>Go-live scope at launch.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>At launch, cashback is credited to your Aveenix rewards balance. Cashback is not redeemable at checkout, cannot be withdrawn as cash, and has no cash value outside the Aveenix platform.</p>
+                                                <p>Future redemption or withdrawal features may be introduced later and will be governed by updated terms.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-adjustments">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-refresh"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Adjustments, Reversals &amp; Errors</strong><span>When cashback changes.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Aveenix reserves the right to adjust cashback balances for cancelled, refunded, or disputed transactions, reverse cashback awarded in error, and decline cashback where tracking data is incomplete or invalid. Any cashback discrepancies must be reported within 30 days of the transaction date.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-fraud">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-ban"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Fraud &amp; Abuse</strong><span>What leads to forfeiture.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Accounts may be suspended or terminated if involved in false or self-generated transactions, multiple account abuse, manipulation of tracking systems, or breach of affiliate or platform terms. In such cases, all cashback balances may be forfeited.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-changes">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-edit"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Program Changes</strong><span>How changes are communicated.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Aveenix may modify, suspend, or terminate the Cashback Program at any time. Where reasonably possible, material changes will be communicated via website updates, account notifications, and email notices. Continued use of the platform constitutes acceptance of updated terms.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cb-responsibility">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-user"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Responsibility &amp; Account Management</strong><span>Your responsibilities.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>You are responsible for maintaining accurate account information, monitoring your cashback balance, and ensuring compliance with this policy. Failure to report issues within the stated timeframe may result in forfeiture of claims.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            ============ -->
+
+                            <!-- ============ AVEENIX CASHBACK PROGRAM ============ -->
+                            <div class="av-privacy-topics av-policy-section" data-policy="program" hidden="hidden">
+                                <h2 class="av-privacy-topics-title">Aveenix Cashback Program</h2>
+                                <p class="av-privacy-topics-sub">Welcome to Aveenix. By participating in the Cashback Program, you agree to the terms outlined below. Please read them carefully.</p>
+                                <div class="row g-3">
+                                    <div class="col-12" id="acp-program">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-gift"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Aveenix Cashback Program</strong><span>How the program rewards you.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>The Aveenix Cashback Program rewards eligible customers by sharing a portion of commissions earned on qualifying purchases. This policy explains how cashback is earned, tracked, and managed on the Aveenix platform.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-eligibility">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-check-circle"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Eligibility</strong><span>Who can participate.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>To participate you must be a registered Aveenix user, logged in at the time of purchase or tracked click (where applicable), and your account must be in good standing. Cashback is not available to accounts involved in fraudulent, abusive, or manipulative activity. Cashback is not guaranteed and is awarded only when qualifying conditions are met.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-qualifying">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-shopping-cart"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Qualifying Purchases</strong><span>When a purchase qualifies.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>A purchase qualifies for cashback only if the purchase results in a successful and verified sale, the order is not cancelled, returned, or refunded, and the transaction is completed through a valid Aveenix tracking mechanism. Cashback eligibility may vary by product, supplier, or promotion and will be determined at Aveenix's discretion.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-product-type">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-cubes"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Product Type Eligibility</strong><span>Affiliate, branded, exclusions.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p><strong>Affiliate Products:</strong> cashback may apply to purchases made through Aveenix affiliate links, funded from a portion of the commission Aveenix receives, and issued only after the affiliate provider confirms the commission.</p>
+                                                <p><strong>Aveenix-Sold Products (Branded / Dropship):</strong> cashback may apply where explicitly stated, calculated only after payment is confirmed and return periods have passed.</p>
+                                                <p><strong>Exclusions:</strong> gift cards, coupons, or heavily discounted promotional items may be excluded. Certain brands or suppliers may restrict cashback eligibility.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-calculation">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-calculator"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Cashback Calculation</strong><span>How amounts are worked out.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Cashback amounts are calculated based on a percentage of commission earned, not the product price. The cashback rate may vary depending on retailer or supplier, product category, and promotional terms in effect at the time of purchase.</p>
+                                                <p>Aveenix reserves the right to adjust cashback rates at any time. Current rates, where applicable, will be shown on the website or user dashboard.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-verification">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-hourglass-half"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Cashback Verification &amp; Processing</strong><span>Pending status and timing.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Cashback enters a pending status after a qualifying transaction. Verification typically occurs within 30–60 days, depending on affiliate confirmation and refund and return windows. If a transaction is reversed or rejected, associated cashback will be cancelled.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-balance">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-money"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Cashback Balance &amp; Use</strong><span>Go-live scope at launch.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>At launch, cashback is credited to your Aveenix rewards balance. Cashback is not redeemable at checkout, cannot be withdrawn as cash, and has no cash value outside the Aveenix platform.</p>
+                                                <p>Future redemption or withdrawal features may be introduced later and will be governed by updated terms.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-adjustments">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-refresh"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Adjustments, Reversals &amp; Errors</strong><span>When cashback changes.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Aveenix reserves the right to adjust cashback balances for cancelled, refunded, or disputed transactions, reverse cashback awarded in error, and decline cashback where tracking data is incomplete or invalid. Any cashback discrepancies must be reported within 30 days of the transaction date.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-fraud">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-ban"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Fraud &amp; Abuse</strong><span>What leads to forfeiture.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Accounts may be suspended or terminated if involved in false or self-generated transactions, multiple account abuse, manipulation of tracking systems, or breach of affiliate or platform terms. In such cases, all cashback balances may be forfeited.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-changes">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-edit"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Program Changes</strong><span>How changes are communicated.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>Aveenix may modify, suspend, or terminate the Cashback Program at any time. Where reasonably possible, material changes will be communicated via website updates, account notifications, and email notices. Continued use of the platform constitutes acceptance of updated terms.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="acp-responsibility">
+                                        <div class="av-privacy-topic-card">
+                                            <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                                <div class="av-privacy-topic-icon"><i class="fa fa-user"/></div>
+                                                <div class="av-privacy-topic-body"><strong>Responsibility &amp; Account Management</strong><span>Your responsibilities.</span></div>
+                                                <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                            </button>
+                                            <div class="av-privacy-topic-detail">
+                                                <p>You are responsible for maintaining accurate account information, monitoring your cashback balance, and ensuring compliance with this policy. Failure to report issues within the stated timeframe may result in forfeiture of claims.</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1722,6 +2667,56 @@
                             });
                         }
                         window.addEventListener('scroll', onScroll, {passive: true});
+
+                        // Accordion sidebar: open one policy at a time, show only its section
+                        var policyToggles = document.querySelectorAll('.av-privacy-sidebar-toggle');
+                        var policySections = document.querySelectorAll('.av-policy-section');
+                        var heroIcon  = document.getElementById('av-policy-hero-icon');
+                        var heroTitle = document.getElementById('av-policy-hero-title');
+                        var heroSub   = document.getElementById('av-policy-hero-sub');
+                        var policyHero = {
+                            privacy:  {icon: 'fa-shield',       title: 'Privacy Policy',  sub: 'This Privacy Policy explains how Aveenix collects, uses, stores, and protects your personal information when you use our services.'},
+                            'return': {icon: 'fa-undo',         title: 'Return Policy',   sub: 'How cancellations, returns, refunds, and exchanges work across different product types available on our platform.'},
+                            security: {icon: 'fa-lock',         title: 'Security Policy', sub: 'How we protect your data and secure every transaction with industry-standard encryption and trusted payment gateways.'},
+                            sellers:  {icon: 'fa-shopping-bag', title: 'Sellers Policy',  sub: 'A flexible platform to reach customers, manage products, and grow your online business with confidence.'},
+                            shipping: {icon: 'fa-truck',        title: 'Shipping Policy', sub: 'How shipping works, including delivery options, processing times, international shipping, customs, and order tracking.'},
+                            cashback: {icon: 'fa-gift',         title: 'Cashback Policy', sub: 'Earn rewards on every purchase. Learn how cashback is earned, tracked, and managed on the Aveenix platform.'},
+                            program:  {icon: 'fa-gift',         title: 'Aveenix Cashback Program', sub: 'Welcome to Aveenix. By participating in the Cashback Program, you agree to the terms outlined below. Please read them carefully.'}
+                        };
+                        function activatePolicy(key) {
+                            policyToggles.forEach(function(t) {
+                                var on = t.getAttribute('data-policy') === key;
+                                t.classList.toggle('is-open', on);
+                                t.setAttribute('aria-expanded', on ? 'true' : 'false');
+                                var nav = t.nextElementSibling;
+                                if (nav &amp;&amp; nav.classList.contains('av-privacy-nav')) {
+                                    nav.classList.toggle('is-collapsed', !on);
+                                }
+                            });
+                            policySections.forEach(function(s) {
+                                s.hidden = s.getAttribute('data-policy') !== key;
+                            });
+                            var h = policyHero[key];
+                            if (h &amp;&amp; heroIcon &amp;&amp; heroTitle &amp;&amp; heroSub) {
+                                heroIcon.className = 'fa ' + h.icon;
+                                heroTitle.textContent = h.title;
+                                heroSub.textContent = h.sub;
+                            }
+                        }
+                        policyToggles.forEach(function(t) {
+                            t.addEventListener('click', function() {
+                                activatePolicy(t.getAttribute('data-policy'));
+                            });
+                        });
+
+                        // Expand/collapse privacy topic cards
+                        document.querySelectorAll('.av-privacy-topic-head').forEach(function(head) {
+                            head.addEventListener('click', function() {
+                                var card = head.closest('.av-privacy-topic-card');
+                                var open = card.classList.toggle('is-open');
+                                head.setAttribute('aria-expanded', open ? 'true' : 'false');
+                            });
+                        });
                     });
                 </script>
             </div><!-- /wrap -->
@@ -1732,8 +2727,8 @@
          BANNER: Shop Page (/shop)
          ========================================================= -->
     <template id="av_shop_hero" inherit_id="website_sale.products" name="Aveenix: Shop Hero Banner">
-        <xpath expr="//div[@id='o_wsale_container']" position="before">
-            <section class="av-compare-hero">
+        <xpath expr="//div[@id='products_grid']/header[@id='o_wsale_products_header']" position="before">
+            <section class="av-shop-hero-inline">
                 <div class="av-compare-hero-circles">
                     <div class="av-compare-circle av-compare-circle-1"/>
                     <div class="av-compare-circle av-compare-circle-2"/>
@@ -1774,7 +2769,288 @@
             </section>
         </xpath>
         <xpath expr="//div[hasclass('oe_website_terms_conditions')]" position="attributes">
-            <attribute name="style">padding: 48px 0 80px;</attribute>
+            <attribute name="class">container-fluid oe_website_terms_conditions av-privacy-page</attribute>
+            <attribute name="style">padding: 0;</attribute>
+        </xpath>
+        <!-- Replace Odoo's rich-text terms body with the Aveenix collapsible layout -->
+        <xpath expr="//div[@id='o_terms_conditions']" position="replace">
+            <div id="o_terms_conditions" class="av-container av-privacy-body">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-lg-3 col-md-4 pt-4">
+                        <div class="av-privacy-sidebar">
+                            <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true" data-policy="terms">
+                                <span>Terms &amp; Conditions</span>
+                                <i class="fa fa-minus av-privacy-sidebar-icon"/>
+                            </button>
+                            <nav class="av-privacy-nav">
+                                <a href="#tc-intro"        class="av-privacy-nav-link active"><i class="fa fa-info-circle"/> Introduction</a>
+                                <a href="#tc-use"          class="av-privacy-nav-link"><i class="fa fa-check"/>        Use of Services</a>
+                                <a href="#tc-accounts"     class="av-privacy-nav-link"><i class="fa fa-user-circle"/>  Accounts &amp; Registration</a>
+                                <a href="#tc-products"     class="av-privacy-nav-link"><i class="fa fa-cubes"/>       Products &amp; Transactions</a>
+                                <a href="#tc-payments"     class="av-privacy-nav-link"><i class="fa fa-credit-card"/> Payments &amp; Fees</a>
+                                <a href="#tc-returns"      class="av-privacy-nav-link"><i class="fa fa-undo"/>        Returns, Refunds &amp; Shipping</a>
+                                <a href="#tc-ip"           class="av-privacy-nav-link"><i class="fa fa-copyright"/>  Intellectual Property</a>
+                                <a href="#tc-user-content" class="av-privacy-nav-link"><i class="fa fa-comments"/>    User Content</a>
+                                <a href="#tc-prohibited"   class="av-privacy-nav-link"><i class="fa fa-ban"/>         Prohibited Activities</a>
+                                <a href="#tc-third-party"  class="av-privacy-nav-link"><i class="fa fa-link"/>        Third-Party Services &amp; Links</a>
+                                <a href="#tc-liability"    class="av-privacy-nav-link"><i class="fa fa-balance-scale"/> Limitation of Liability</a>
+                                <a href="#tc-indemnity"    class="av-privacy-nav-link"><i class="fa fa-shield"/>      Indemnification</a>
+                                <a href="#tc-force"        class="av-privacy-nav-link"><i class="fa fa-bolt"/>        Force Majeure</a>
+                                <a href="#tc-termination"  class="av-privacy-nav-link"><i class="fa fa-times-circle"/> Termination</a>
+                                <a href="#tc-law"          class="av-privacy-nav-link"><i class="fa fa-gavel"/>       Governing Law &amp; Disputes</a>
+                                <a href="#tc-changes"      class="av-privacy-nav-link"><i class="fa fa-edit"/>        Changes to These Terms</a>
+                                <a href="#tc-contact"      class="av-privacy-nav-link"><i class="fa fa-envelope"/>    Contact Us</a>
+                            </nav>
+                            <div class="av-privacy-note-box">
+                                <div class="av-privacy-note-icon"><i class="fa fa-file-text"/></div>
+                                <strong class="av-privacy-note-title">Please read carefully.</strong>
+                                <p class="av-privacy-note-text">By accessing or using our Services, you agree to be bound by these Terms.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Main content -->
+                    <div class="col-lg-9 col-md-8">
+                        <div class="av-privacy-topics av-policy-section" data-policy="terms">
+                            <h2 class="av-privacy-topics-title">Terms &amp; Conditions</h2>
+                            <p class="av-privacy-topics-sub">These Terms of Service ("Terms") govern your access to and use of the Aveenix Express website, mobile applications, and any related software or services (collectively, the "Services"), operated by Aveenix Global Ltd. By accessing or using our Services, you agree to be bound by these Terms. If you do not agree, you must not use the Services.</p>
+                            <div class="row g-3">
+                                <div class="col-12" id="tc-intro">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-info-circle"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Introduction</strong><span>What these Terms cover.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>These Terms of Service ("Terms") govern your access to and use of the Aveenix Express website, mobile applications, and any related software or services (collectively, the "Services"), operated by Aveenix Global Ltd.</p>
+                                            <p>By accessing or using our Services, you agree to be bound by these Terms. If you do not agree, you must not use the Services.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-use">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-check"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Use of Services</strong><span>Lawful use only.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>You may use the Services only for lawful purposes and in accordance with these Terms. You agree not to use the Services in any way that violates applicable local, national, or international laws or regulations.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-accounts">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-user-circle"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Accounts &amp; Registration</strong><span>Your account responsibilities.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>Some features require account registration. By creating an account, you agree to provide accurate, complete, and current information, maintain the confidentiality of your login credentials, and accept responsibility for all activity conducted under your account.</p>
+                                            <p>You must notify Aveenix immediately of any unauthorised use or security breach.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-products">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-cubes"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Products &amp; Transactions</strong><span>Product models supported.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p><strong>Affiliate Products:</strong> sold and fulfilled by third-party retailers. Purchases are completed on the affiliate partner's platform. Returns, refunds, shipping, and warranties are governed by the affiliate partner's policies.</p>
+                                            <p><strong>Dropshipping Products:</strong> fulfilled by third-party suppliers. Shipping times and returns may vary by supplier.</p>
+                                            <p><strong>Aveenix-Branded Products:</strong> sold and fulfilled directly by Aveenix or authorised partners.</p>
+                                            <p><strong>Multivendor Products:</strong> sold by independent vendors on the Aveenix platform. Each vendor may have their own shipping and return policies, disclosed at checkout. Aveenix is not the seller of record for affiliate products.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-payments">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-credit-card"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Payments &amp; Fees</strong><span>Prices, taxes, and charges.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>By placing an order, you agree to pay all applicable prices, taxes, shipping charges, and fees displayed at checkout. Payments are processed by third-party providers such as Stripe and PayPal. Aveenix does not store your payment details.</p>
+                                            <p>Additional charges may apply depending on product type, vendor policies, and shipping destination.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-returns">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-undo"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Returns, Refunds &amp; Shipping</strong><span>Governed by our policies.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>Returns, refunds, and shipping are governed by our published policies: the Returns (RMA) Policy, Shipping Policy, and Buyer Protection Policy. Affiliate products are subject to the policies of the affiliate retailer.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-ip">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-copyright"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Intellectual Property</strong><span>Ownership of content.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>All content on the Services — including text, images, software, logos, videos, and design — is owned by Aveenix or its licensors and protected by intellectual property laws.</p>
+                                            <p>You may not copy, reproduce, distribute, modify, or exploit any content without prior written consent, except as necessary for normal site usage.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-user-content">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-comments"/></div>
+                                            <div class="av-privacy-topic-body"><strong>User Content</strong><span>Reviews, comments, feedback.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>If you submit content (e.g. reviews, comments, feedback), you retain ownership of that content but grant Aveenix a non-exclusive, royalty-free, worldwide licence to use, display, modify, and distribute it in connection with the Services.</p>
+                                            <p>You warrant that your content is lawful and accurate, does not infringe third-party rights, and is not defamatory, abusive, or misleading.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-prohibited">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-ban"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Prohibited Activities</strong><span>What you agree not to do.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>You agree not to engage in fraudulent, deceptive, or unlawful activity; impersonate any person or entity; upload malicious code or harmful content; infringe intellectual property rights; interfere with the operation or security of the Services; or harvest or misuse user data without consent.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-third-party">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-link"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Third-Party Services &amp; Links</strong><span>External sites and risk.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>The Services may include links to third-party websites or services. Aveenix is not responsible for third-party content, policies, or practices. Your use of third-party services is at your own risk and subject to their terms.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-liability">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-balance-scale"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Limitation of Liability</strong><span>Limits on Aveenix liability.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>To the maximum extent permitted by law, Aveenix shall not be liable for indirect, incidental, consequential, or special damages arising from your use of the Services.</p>
+                                            <p>Aveenix is not responsible for affiliate product quality or delivery, supplier or vendor performance, or delays caused by third parties.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-indemnity">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-shield"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Indemnification</strong><span>Holding Aveenix harmless.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>You agree to indemnify and hold Aveenix harmless from any claims, losses, damages, or expenses arising from your breach of these Terms or misuse of the Services.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-force">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-bolt"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Force Majeure</strong><span>Events beyond our control.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>Aveenix will not be liable for failure or delay caused by events beyond our reasonable control, including natural disasters, pandemics, labour disputes, system failures, or government actions.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-termination">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-times-circle"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Termination</strong><span>When access can be ended.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>Aveenix may suspend or terminate your access to the Services at any time for violation of these Terms or for any lawful reason. Termination does not affect accrued rights or obligations.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-law">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-gavel"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Governing Law &amp; Dispute Resolution</strong><span>New Zealand law.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>These Terms are governed by the laws of New Zealand, unless otherwise required by law. Any disputes shall be resolved through good-faith negotiation, and where necessary, through binding arbitration or courts of competent jurisdiction.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-changes">
+                                    <div class="av-privacy-topic-card">
+                                        <button type="button" class="av-privacy-topic-head" aria-expanded="false">
+                                            <div class="av-privacy-topic-icon"><i class="fa fa-edit"/></div>
+                                            <div class="av-privacy-topic-body"><strong>Changes to These Terms</strong><span>How updates happen.</span></div>
+                                            <i class="fa fa-plus av-privacy-topic-toggle"/>
+                                        </button>
+                                        <div class="av-privacy-topic-detail">
+                                            <p>We may update these Terms from time to time. Updated versions will be posted on this page. Continued use of the Services constitutes acceptance of the revised Terms.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="tc-contact">
+                                    <a href="/contactus" class="av-privacy-topic-card av-privacy-topic-card--link">
+                                        <div class="av-privacy-topic-icon"><i class="fa fa-envelope"/></div>
+                                        <div class="av-privacy-topic-body"><strong>Contact Us</strong><span>Questions about these Terms?</span></div>
+                                        <i class="fa fa-arrow-right av-privacy-topic-arrow"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Sidebar group toggle (+/-)
+                        document.querySelectorAll('.av-privacy-sidebar-toggle').forEach(function(t) {
+                            t.addEventListener('click', function() {
+                                var open = t.classList.toggle('is-open');
+                                t.setAttribute('aria-expanded', open ? 'true' : 'false');
+                                var nav = t.nextElementSibling;
+                                if (nav &amp;&amp; nav.classList.contains('av-privacy-nav')) {
+                                    nav.classList.toggle('is-collapsed', !open);
+                                }
+                            });
+                        });
+                        // Topic card expand/collapse
+                        document.querySelectorAll('.av-privacy-topic-head').forEach(function(head) {
+                            head.addEventListener('click', function() {
+                                var card = head.closest('.av-privacy-topic-card');
+                                var open = card.classList.toggle('is-open');
+                                head.setAttribute('aria-expanded', open ? 'true' : 'false');
+                            });
+                        });
+                    });
+                </script>
+            </div>
         </xpath>
     </template>
 

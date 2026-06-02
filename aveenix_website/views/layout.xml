@@ -80,7 +80,7 @@
                     </div>
                     <div class="av-topbar-center" id="av-topbar-date"></div>
                     <div class="av-topbar-right">
-                        <a href="/my/account" class="av-topbar-link">
+                        <a href="/my" class="av-topbar-link">
                             <i class="fa fa-user-circle"/> My Account
                         </a>
                         <span class="av-topbar-sep">|</span>
@@ -215,7 +215,7 @@
                         </a> -->
                         <a href="/compare" class="av-header-action av-compare-btn" id="av-compare-header-btn">
                             <span style="position:relative; display:inline-block;">
-                                <i class="fa fa-balance-scale"/>
+                                <i class="fa fa-plus-square-o"/>
                                 <span class="av-compare-badge" id="av-compare-count" style="display:none;">0</span>
                             </span>
                             <span>Compare</span>
@@ -316,7 +316,7 @@
                 <div class="av-container">
                     <div class="av-promo-content">
                         <p class="av-promo-text av-promo-text-desktop">
-                            Get <span class="av-promo-highlight">$20 OFF</span> your first order!
+                            Get $20 OFF your first order!
                         </p>
                         <form class="av-promo-form" action="#" method="post">
                             <input type="email" name="email" class="av-promo-input"
@@ -526,7 +526,7 @@
                                 Contact Us
                             </a>
                         </div>
-                        <p class="av-copyright">&#169; <t t-esc="datetime.datetime.now().year"/> AVEENIX. All rights reserved.</p>
+                        <p class="av-copyright">&#169; <t t-esc="datetime.datetime.now().year"/> AVEENIX. All Rights Reserved.</p>
                         <div class="av-footer-legal" style="gap: 16px;">
                             <a href="/privacy">
                                 <i class="fa fa-shield av-legal-icon"/>
@@ -1215,6 +1215,36 @@
                     } catch(e) {}
                 })();
             </script>
+        </xpath>
+        <!-- Dark mode product card fix — injected at end of body, after all asset CSS -->
+        <xpath expr="//body" position="inside">
+            <style>
+                [data-theme="dark"] .oe_product_cart,
+                [data-theme="dark"] .oe_product_cart::before,
+                [data-theme="dark"] .oe_product_image,
+                [data-theme="dark"] .oe_product_image *,
+                [data-theme="dark"] .oe_product_image_link,
+                [data-theme="dark"] .oe_product_image_img_wrapper,
+                [data-theme="dark"] .oe_product_image_img_wrapper_primary,
+                [data-theme="dark"] .oe_product_image_img_wrapper_secondary,
+                [data-theme="dark"] .oe_product_image span,
+                [data-theme="dark"] .oe_product_image a {
+                    background: #2a2a2a !important;
+                    background-color: #2a2a2a !important;
+                    --o-wsale-card-thumb-background: #2a2a2a !important;
+                    --o-wsale-card-bg: #242424 !important;
+                    --o-wsale-card-pseudobg-color: #242424 !important;
+                }
+                [data-theme="dark"] .oe_product_cart {
+                    background: #242424 !important;
+                    background-color: #242424 !important;
+                    border-color: #333 !important;
+                }
+                [data-theme="dark"] .oe_product_cart::before {
+                    background: #242424 !important;
+                    background-color: #242424 !important;
+                }
+            </style>
         </xpath>
     </template>
 

@@ -271,6 +271,7 @@ body.modal-open {
 
 .av-topbar-utility-inner {
     width: 100%;
+    max-width: 1500px;
     margin: 0 auto;
     padding: 6px 24px;
     display: flex;
@@ -420,6 +421,7 @@ body.modal-open {
 
 .av-topbar-inner {
     width: 100%;
+    max-width: 1500px;
     margin: 0 auto;
     padding: 12px 24px;
     display: flex;
@@ -696,7 +698,7 @@ body.modal-open {
 }
 .av-mobile-shop-btn { display: none; }
 .av-cat-nav .av-cat-nav-inner {
-    max-width: 1920px;
+    max-width: 1500px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
@@ -1116,6 +1118,8 @@ body.modal-open {
     font-weight: 700;
     color: var(--av-dark);
     margin: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .av-tabs {
@@ -1547,7 +1551,7 @@ body.modal-open {
 .av-promo-text {
     font-size: 22px;
     font-weight: 700;
-    color: var(--av-white);
+    color: #fff !important;
     margin: 0;
 }
 
@@ -1557,6 +1561,8 @@ body.modal-open {
     display: flex;
     border-radius: 6px;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .av-promo-input {
@@ -1565,16 +1571,16 @@ body.modal-open {
     border: none;
     outline: none;
     font-size: 14px;
-    background: #2a2a2a;
-    color: var(--av-white);
+    background: transparent;
+    color: #fff;
     border-radius: 6px 0 0 6px;
 }
 
-.av-promo-input::placeholder { color: #888; }
+.av-promo-input::placeholder { color: rgba(255,255,255,0.65); }
 
 .av-promo-submit {
-    background: #ffcc00;
-    color: #000000;
+    background: #fff;
+    color: #111 !important;
     border: none;
     padding: 12px 24px;
     font-size: 14px;
@@ -1582,9 +1588,10 @@ body.modal-open {
     cursor: pointer;
     border-radius: 0 6px 6px 0;
     transition: background .2s;
+    white-space: nowrap;
 }
 
-.av-promo-submit:hover { background: #e6a200; }
+.av-promo-submit:hover { background: #e8e8e8; }
 
 /* Footer main */
 .av-footer-main { padding: 30px 0 20px; border-top: 1px solid #eee; }
@@ -1819,6 +1826,11 @@ body.modal-open {
     --av-dark:   #f0f0f0;
     --av-dark-2: #c8c8c8;
     --av-gray:   #aaa;
+    --av-product-img-bg: #2a2a2a;
+    --av-placeholder-filter: invert(0.88) opacity(0.35);
+    --o-wsale-card-bg: #242424;
+    --o-wsale-card-thumb-background: #2a2a2a;
+    --o-wsale-card-pseudobg-color: #2a2a2a;
 
     /* Bootstrap 5 CSS variables — override so .text-muted, .text-secondary,
        .bg-light etc. render properly on dark backgrounds */
@@ -1952,14 +1964,14 @@ body.modal-open {
     border-bottom-color: #2a2a2a;
 }
 
-[data-theme="dark"] .av-promo-text { color: #fff; }
+[data-theme="dark"] .av-promo-text { color: #fff !important; }
 
 [data-theme="dark"] .av-promo-input {
-    background: #1e1e1e;
+    background: transparent;
     color: #fff;
 }
 
-[data-theme="dark"] .av-promo-input::placeholder { color: #999; }
+[data-theme="dark"] .av-promo-input::placeholder { color: rgba(255,255,255,0.55); }
 
 /* Footer headings — CUSTOMER SERVICE, INFORMATION, etc. */
 [data-theme="dark"] .av-footer-heading {
@@ -3123,6 +3135,18 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
     line-height: 1.6;
 }
 
+/* Shop hero inside products_grid col (right column only) */
+.av-shop-hero-inline {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 8%, #fff), color-mix(in srgb, var(--av-red) 4%, #fff));
+    padding: 40px 24px 32px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+.av-shop-hero-inline .av-compare-hero-circles { position: absolute; inset: 0; pointer-events: none; }
+
 /* Body container */
 .av-compare-body { padding: 32px 0 64px; }
 
@@ -3408,13 +3432,13 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
     border: 1px solid var(--av-border);
     border-radius: 6px;
     padding: 5px 12px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--av-gray);
     background: transparent;
     cursor: pointer;
     text-decoration: none !important;
-    transition: border-color .2s, color .2s;
+    transition: border-color .2s, color .2s, background .2s;
 }
 .av-add-to-compare:hover,
 .av-add-to-fav:hover,
@@ -3428,8 +3452,17 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 .av-add-to-wish.av-added-to-wish {
     border-color: var(--av-red) !important;
     color: var(--av-red) !important;
-    background: transparent !important;
+    background: color-mix(in srgb, var(--av-red) 10%, transparent) !important;
 }
+.btn.av-add-to-compare .fa {
+    color: var(--av-gray) !important;
+    transition: color .2s;
+}
+.btn.av-add-to-compare:hover .fa,
+.btn.av-add-to-compare.av-added-to-compare .fa {
+    color: var(--av-red) !important;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -3441,6 +3474,11 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 @media (max-width: 480px) {
     .av-compare-stats { grid-template-columns: 1fr 1fr; }
     .av-compare-cards { grid-template-columns: 1fr; }
+}
+
+/* Dark mode — shop inline hero */
+[data-theme="dark"] .av-shop-hero-inline {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 15%, #111), color-mix(in srgb, var(--av-red) 8%, #1a1a1a));
 }
 
 /* Dark mode — compare page */
@@ -3691,12 +3729,15 @@ a.btn-primary[href*="/shop/checkout"]:hover {
 /* Product image placeholder area — the white box around product image on shop cards */
 [data-theme="dark"] .oe_product .oe_product_image,
 [data-theme="dark"] .oe_product .oe_product_image_link,
-[data-theme="dark"] .oe_product img,
 [data-theme="dark"] .o_wsale_product_grid_wrapper,
-[data-theme="dark"] .o_wsale_product_grid_wrapper .card-img-top,
-[data-theme="dark"] .oe_product_cart img {
-    background: #f5f5f5;
+[data-theme="dark"] .o_wsale_product_grid_wrapper .card-img-top {
+    background: #181818 !important;
 }
+[data-theme="dark"] .oe_product img,
+[data-theme="dark"] .oe_product_cart img {
+    background: #2a2a2a;
+}
+
 
 /* Attributes list / color swatches in filters */
 [data-theme="dark"] .css_attribute_color .list-group-item,
@@ -4259,7 +4300,7 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
 /* Promo Bar with Dynamic Selected Color */
 .av-promo-bar {
     background-color: var(--av-red) !important;
-    color: var(--av-white) !important;
+    color: #fff !important;
     transition: background-color 0.3s ease;
 }
 
@@ -4416,9 +4457,15 @@ html[data-theme="dark"] .av-footer-bottom a:hover {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background: #fbfbfb !important;
+        background: var(--av-product-img-bg, #fbfbfb) !important;
         position: relative !important;
         overflow: hidden !important;
+    }
+    #products_grid .oe_product_image_img_wrapper {
+        background: var(--av-product-img-bg, #fbfbfb) !important;
+    }
+    #products_grid .oe_product_image img[src*="placeholder"] {
+        filter: var(--av-placeholder-filter, none);
     }
     #products_grid .oe_product_image img {
         width: 100% !important;
@@ -4491,6 +4538,15 @@ html[data-theme="dark"] .av-footer-bottom a:hover {
         background-color: var(--av-red-dark) !important;
         border-color: var(--av-red-dark) !important;
     }
+}
+
+[data-theme="dark"] #products_grid .oe_product_cart {
+    background: #242424 !important;
+    border-color: #333 !important;
+}
+[data-theme="dark"] #products_grid .o_wsale_product_information {
+    background: #242424 !important;
+    border-top-color: #333 !important;
 }
 
 /* =============================================================
@@ -6197,9 +6253,9 @@ a.mt-2.mt-lg-0.text-center:hover {
    PRIVACY POLICY PAGE  (/privacy)
    ============================================================= */
 
-.av-privacy-body {
+/* .av-privacy-body {
     padding: 48px 0 80px;
-}
+} */
 
 /* ── Sidebar ─────────────────────────────────────────────────── */
 .av-privacy-sidebar {
@@ -6216,10 +6272,46 @@ a.mt-2.mt-lg-0.text-center:hover {
     margin-bottom: 16px;
 }
 
+/* clickable toggle variant */
+.av-privacy-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.av-privacy-sidebar-icon {
+    color: var(--av-gray);
+    font-size: 12px;
+    transition: color .18s;
+}
+.av-privacy-sidebar-toggle:hover .av-privacy-sidebar-icon { color: var(--av-red); }
+
 .av-privacy-nav {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    overflow: hidden;
+    max-height: 1000px;
+    margin-bottom: 8px;
+    transition: max-height .3s ease, opacity .2s ease, margin .3s ease;
+}
+.av-privacy-nav.is-collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+}
+
+/* minus when open, plus when collapsed (override FA glyph from class) */
+.av-privacy-sidebar-toggle .av-privacy-sidebar-icon:before {
+    content: "\f067"; /* fa-plus */
+}
+.av-privacy-sidebar-toggle.is-open .av-privacy-sidebar-icon:before {
+    content: "\f068"; /* fa-minus */
 }
 
 .av-privacy-nav-link {
@@ -6385,17 +6477,21 @@ a.mt-2.mt-lg-0.text-center:hover {
 }
 
 .av-privacy-topic-card {
+    background: #fff;
+    border: 1.5px solid var(--av-border, #e8ecf0);
+    border-radius: 12px;
+    color: var(--av-text);
+    transition: border-color .18s, box-shadow .18s;
+    overflow: hidden;
+}
+
+/* link-style card (Contact Us) keeps the old flex-row layout */
+.av-privacy-topic-card--link {
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 18px 16px;
-    background: #fff;
-    border: 1.5px solid var(--av-border, #e8ecf0);
-    border-radius: 12px;
     text-decoration: none;
-    color: var(--av-text);
-    transition: border-color .18s, box-shadow .18s;
-    height: 100%;
 }
 
 .av-privacy-topic-card:hover {
@@ -6404,6 +6500,54 @@ a.mt-2.mt-lg-0.text-center:hover {
     text-decoration: none;
     color: var(--av-text);
 }
+
+/* clickable header row */
+.av-privacy-topic-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 18px 16px;
+    background: transparent;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+}
+
+/* +/- toggle icon */
+.av-privacy-topic-toggle {
+    color: var(--av-gray);
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: color .18s;
+}
+
+.av-privacy-topic-card:hover .av-privacy-topic-toggle { color: var(--av-red); }
+.av-privacy-topic-card.is-open .av-privacy-topic-toggle { color: var(--av-red); }
+
+/* swap plus -> minus when open */
+.av-privacy-topic-card.is-open .av-privacy-topic-toggle:before {
+    content: "\f068"; /* fa-minus */
+}
+
+/* collapsible detail — max-height animation hides the full block */
+.av-privacy-topic-detail {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .3s ease;
+}
+.av-privacy-topic-card.is-open .av-privacy-topic-detail {
+    max-height: 1500px;
+}
+.av-privacy-topic-detail p {
+    margin: 0 16px 12px 72px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--av-gray);
+}
+.av-privacy-topic-detail p:first-child { margin-top: 4px; }
+.av-privacy-topic-detail p:last-child  { margin-bottom: 18px; }
 
 .av-privacy-topic-icon {
     width: 42px;
@@ -6585,6 +6729,8 @@ a.mt-2.mt-lg-0.text-center:hover {
 
 /* ── Dark mode ───────────────────────────────────────────────── */
 [data-theme="dark"] .av-privacy-sidebar-heading { color: #e0e0e0; }
+[data-theme="dark"] .av-privacy-sidebar-icon { color: #777; }
+[data-theme="dark"] .av-privacy-sidebar-toggle:hover .av-privacy-sidebar-icon { color: var(--av-red); }
 
 [data-theme="dark"] .av-privacy-nav-link { color: #bbb; }
 [data-theme="dark"] .av-privacy-nav-link:hover,
@@ -6630,6 +6776,10 @@ a.mt-2.mt-lg-0.text-center:hover {
 [data-theme="dark"] .av-privacy-topic-body span   { color: #777; }
 [data-theme="dark"] .av-privacy-topic-arrow        { color: #555; }
 [data-theme="dark"] .av-privacy-topic-card:hover .av-privacy-topic-arrow { color: var(--av-red); }
+[data-theme="dark"] .av-privacy-topic-toggle       { color: #555; }
+[data-theme="dark"] .av-privacy-topic-card:hover .av-privacy-topic-toggle,
+[data-theme="dark"] .av-privacy-topic-card.is-open .av-privacy-topic-toggle { color: var(--av-red); }
+[data-theme="dark"] .av-privacy-topic-detail p     { color: #888; }
 
 [data-theme="dark"] .av-privacy-cta {
     background: color-mix(in srgb, var(--av-red) 12%, #1a1e2e);
