@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data noupdate="1">
 
     <!-- ═══════════════════════════════════════════════════════════
          PRODUCT BRANDS
@@ -427,4 +428,218 @@
         <field name="type">consu</field>
     </record>
 
+    <!-- ═══════════════════════════════════════════════════════════
+         PRODUCT ATTRIBUTES (shared across variant products)
+         ═══════════════════════════════════════════════════════════ -->
+
+    <record id="attr_color" model="product.attribute">
+        <field name="name">Color</field>
+        <field name="create_variant">always</field>
+    </record>
+    <record id="attr_storage" model="product.attribute">
+        <field name="name">Storage</field>
+        <field name="create_variant">always</field>
+    </record>
+    <record id="attr_size" model="product.attribute">
+        <field name="name">Size</field>
+        <field name="create_variant">always</field>
+    </record>
+
+    <!-- Color values -->
+    <record id="attr_color_midnight_black" model="product.attribute.value">
+        <field name="name">Midnight Black</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_silver" model="product.attribute.value">
+        <field name="name">Silver</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_starlight" model="product.attribute.value">
+        <field name="name">Starlight</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_space_gray" model="product.attribute.value">
+        <field name="name">Space Gray</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_phantom_blue" model="product.attribute.value">
+        <field name="name">Phantom Blue</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_cosmic_black" model="product.attribute.value">
+        <field name="name">Cosmic Black</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_cream" model="product.attribute.value">
+        <field name="name">Cream</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+    <record id="attr_color_sage" model="product.attribute.value">
+        <field name="name">Sage</field>
+        <field name="attribute_id" ref="attr_color"/>
+    </record>
+
+    <!-- Storage values -->
+    <record id="attr_storage_128gb" model="product.attribute.value">
+        <field name="name">128GB</field>
+        <field name="attribute_id" ref="attr_storage"/>
+    </record>
+    <record id="attr_storage_256gb" model="product.attribute.value">
+        <field name="name">256GB</field>
+        <field name="attribute_id" ref="attr_storage"/>
+    </record>
+    <record id="attr_storage_512gb" model="product.attribute.value">
+        <field name="name">512GB</field>
+        <field name="attribute_id" ref="attr_storage"/>
+    </record>
+    <record id="attr_storage_1tb" model="product.attribute.value">
+        <field name="name">1TB</field>
+        <field name="attribute_id" ref="attr_storage"/>
+    </record>
+
+    <!-- Size values -->
+    <record id="attr_size_42mm" model="product.attribute.value">
+        <field name="name">42mm</field>
+        <field name="attribute_id" ref="attr_size"/>
+    </record>
+    <record id="attr_size_46mm" model="product.attribute.value">
+        <field name="name">46mm</field>
+        <field name="attribute_id" ref="attr_size"/>
+    </record>
+    <record id="attr_size_s" model="product.attribute.value">
+        <field name="name">Small</field>
+        <field name="attribute_id" ref="attr_size"/>
+    </record>
+    <record id="attr_size_m" model="product.attribute.value">
+        <field name="name">Medium</field>
+        <field name="attribute_id" ref="attr_size"/>
+    </record>
+    <record id="attr_size_l" model="product.attribute.value">
+        <field name="name">Large</field>
+        <field name="attribute_id" ref="attr_size"/>
+    </record>
+    <record id="attr_size_xl" model="product.attribute.value">
+        <field name="name">XL</field>
+        <field name="attribute_id" ref="attr_size"/>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         VARIANT PRODUCTS
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- 1. Apple iPhone 16 Pro — Color + Storage variants -->
+    <record id="product_iphone_16_pro" model="product.template">
+        <field name="name">Apple iPhone 16 Pro</field>
+        <field name="list_price">1099.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Apple iPhone 16 Pro with A18 Pro chip, titanium design, 48MP camera system with 5x optical zoom, and the new Camera Control button. Available in four finishes and two storage sizes.</field>
+        <field name="description_ecommerce">&lt;p&gt;Meet the &lt;strong&gt;Apple iPhone 16 Pro&lt;/strong&gt;. Powered by the A18 Pro chip, forged in titanium, and packed with a pro camera system that redefines mobile photography.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;A18 Pro chip&lt;/strong&gt; — fastest iPhone ever&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Titanium design&lt;/strong&gt; — strong and lightweight&lt;/li&gt;&lt;li&gt;&lt;strong&gt;48MP Pro camera&lt;/strong&gt; with 5x optical zoom&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Camera Control&lt;/strong&gt; button for instant capture&lt;/li&gt;&lt;li&gt;Choose your &lt;strong&gt;colour and storage&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;</field>
+        <field name="website_description">&lt;section class="container py-4"&gt;&lt;h3&gt;Product Overview&lt;/h3&gt;&lt;p&gt;The &lt;strong&gt;Apple iPhone 16 Pro&lt;/strong&gt; raises the bar with the A18 Pro chip, a stunning aerospace-grade titanium build, and an advanced Pro camera system. The new Camera Control button gives you instant access to the camera from anywhere. Choose your perfect colour and storage combination.&lt;/p&gt;&lt;h4&gt;Key Features&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;A18 Pro chip&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Titanium&lt;/strong&gt; build&lt;/li&gt;&lt;li&gt;&lt;strong&gt;48MP Pro camera&lt;/strong&gt; + 5x zoom&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Camera Control&lt;/strong&gt; button&lt;/li&gt;&lt;li&gt;USB-C with USB 3 speeds&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;Specifications&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Display:&lt;/strong&gt; 6.3&amp;quot; Super Retina XDR&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Chip:&lt;/strong&gt; Apple A18 Pro&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Camera:&lt;/strong&gt; 48MP Pro system&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage:&lt;/strong&gt; 128GB / 256GB&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Colours:&lt;/strong&gt; Black Titanium, White Titanium, Natural Titanium, Desert Titanium&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;What's in the Box&lt;/h4&gt;&lt;p&gt;1 x iPhone 16 Pro, 1 x USB-C Cable, 1 x SIM Tool, 1 x Documentation.&lt;/p&gt;&lt;/section&gt;</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_mobile'))]"/>
+        <field name="product_brand_id" ref="brand_apple"/>
+        <field name="type">consu</field>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_color'), 'value_ids': [(4, ref('attr_color_midnight_black')), (4, ref('attr_color_silver')), (4, ref('attr_color_starlight'))]}),
+            (0, 0, {'attribute_id': ref('attr_storage'), 'value_ids': [(4, ref('attr_storage_128gb')), (4, ref('attr_storage_256gb'))]})
+        ]"/>
+    </record>
+
+    <!-- 2. Samsung Galaxy S25 Ultra — Color + Storage variants -->
+    <record id="product_samsung_s25_ultra" model="product.template">
+        <field name="name">Samsung Galaxy S25 Ultra 512GB</field>
+        <field name="list_price">1299.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Samsung Galaxy S25 Ultra with Snapdragon 8 Elite, 200MP camera, built-in S Pen, 5000mAh battery, and Galaxy AI. Choose your preferred colour and storage.</field>
+        <field name="description_ecommerce">&lt;p&gt;The &lt;strong&gt;Samsung Galaxy S25 Ultra&lt;/strong&gt; combines flagship Snapdragon 8 Elite performance with a pro-grade 200MP camera and the ever-ready S Pen. Galaxy AI makes everyday tasks effortless.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Snapdragon 8 Elite&lt;/strong&gt; chipset&lt;/li&gt;&lt;li&gt;&lt;strong&gt;200MP camera&lt;/strong&gt; system&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Built-in S Pen&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;5000mAh battery&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;Multiple &lt;strong&gt;colour options&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;</field>
+        <field name="website_description">&lt;section class="container py-4"&gt;&lt;h3&gt;Product Overview&lt;/h3&gt;&lt;p&gt;The &lt;strong&gt;Samsung Galaxy S25 Ultra&lt;/strong&gt; is built for those who demand the best. Snapdragon 8 Elite powers everything, the 200MP camera captures every detail, and the built-in S Pen turns your phone into a creative tool. Galaxy AI features make daily life smarter and faster.&lt;/p&gt;&lt;h4&gt;Key Features&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Snapdragon 8 Elite&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;200MP&lt;/strong&gt; main camera&lt;/li&gt;&lt;li&gt;&lt;strong&gt;S Pen&lt;/strong&gt; built in&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Galaxy AI&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;5000mAh&lt;/strong&gt; battery&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;Specifications&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Display:&lt;/strong&gt; 6.9&amp;quot; QHD+ AMOLED&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage:&lt;/strong&gt; 512GB / 1TB&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Battery:&lt;/strong&gt; 5000mAh&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Network:&lt;/strong&gt; 5G&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;What's in the Box&lt;/h4&gt;&lt;p&gt;1 x Galaxy S25 Ultra, 1 x USB-C Cable, 1 x S Pen, 1 x SIM Tool, 1 x Quick Guide.&lt;/p&gt;&lt;/section&gt;</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_mobile'))]"/>
+        <field name="product_brand_id" ref="brand_samsung"/>
+        <field name="type">consu</field>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_color'), 'value_ids': [(4, ref('attr_color_phantom_blue')), (4, ref('attr_color_cosmic_black')), (4, ref('attr_color_silver'))]}),
+            (0, 0, {'attribute_id': ref('attr_storage'), 'value_ids': [(4, ref('attr_storage_512gb')), (4, ref('attr_storage_1tb'))]})
+        ]"/>
+    </record>
+
+    <!-- 3. Apple MacBook Pro 14" M4 — Color + Storage variants -->
+    <record id="product_macbook_pro_m4" model="product.template">
+        <field name="name">Apple MacBook Pro 14" M4</field>
+        <field name="list_price">1599.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Apple MacBook Pro 14-inch with M4 chip, up to 24GB unified memory, Liquid Retina XDR display, and up to 24 hours battery. Available in Space Gray, Silver, and Space Black with multiple storage options.</field>
+        <field name="description_ecommerce">&lt;p&gt;The &lt;strong&gt;Apple MacBook Pro 14&amp;quot; M4&lt;/strong&gt; is built for serious work. The M4 chip handles demanding creative and professional tasks with ease, while the stunning Liquid Retina XDR display brings everything to life.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Apple M4 chip&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Liquid Retina XDR&lt;/strong&gt; display&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Up to 24 hours&lt;/strong&gt; battery&lt;/li&gt;&lt;li&gt;Choose &lt;strong&gt;colour and storage&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;Thunderbolt 4 &amp;amp; MagSafe 3&lt;/li&gt;&lt;/ul&gt;</field>
+        <field name="website_description">&lt;section class="container py-4"&gt;&lt;h3&gt;Product Overview&lt;/h3&gt;&lt;p&gt;The &lt;strong&gt;Apple MacBook Pro 14&amp;quot; M4&lt;/strong&gt; redefines what a pro laptop can do. The M4 chip delivers exceptional CPU and GPU performance, the Liquid Retina XDR display is breathtaking, and up to 24 hours of battery keeps you going. Choose your ideal colour and storage.&lt;/p&gt;&lt;h4&gt;Key Features&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Apple M4 chip&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;14&amp;quot; Liquid Retina XDR&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Up to 24 hours battery&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;MagSafe 3&lt;/strong&gt; charging&lt;/li&gt;&lt;li&gt;Three Thunderbolt 4 ports&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;Specifications&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Chip:&lt;/strong&gt; Apple M4&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Memory:&lt;/strong&gt; 16GB unified&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage:&lt;/strong&gt; 512GB / 1TB&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Battery:&lt;/strong&gt; Up to 24 hours&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;What's in the Box&lt;/h4&gt;&lt;p&gt;1 x MacBook Pro, 1 x USB-C Charge Cable, 1 x 70W Power Adapter.&lt;/p&gt;&lt;/section&gt;</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_laptops'))]"/>
+        <field name="product_brand_id" ref="brand_apple"/>
+        <field name="type">consu</field>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_color'), 'value_ids': [(4, ref('attr_color_space_gray')), (4, ref('attr_color_silver'))]}),
+            (0, 0, {'attribute_id': ref('attr_storage'), 'value_ids': [(4, ref('attr_storage_512gb')), (4, ref('attr_storage_1tb'))]})
+        ]"/>
+    </record>
+
+    <!-- 4. Apple Watch Series 10 — Size + Color variants -->
+    <record id="brand_apple_watch" model="product.brand">
+        <field name="name">Apple Watch</field>
+        <field name="description">Apple's flagship smartwatch lineup.</field>
+    </record>
+    <record id="cat_wearables" model="product.public.category">
+        <field name="name">Wearables</field>
+        <field name="website_description">&lt;p&gt;Smartwatches and wearable technology from top brands.&lt;/p&gt;</field>
+    </record>
+    <record id="product_apple_watch_series10" model="product.template">
+        <field name="name">Apple Watch Series 10</field>
+        <field name="list_price">399.00</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Apple Watch Series 10 with the largest and thinnest Apple Watch display ever, advanced health sensors, and the new S10 chip. Available in 42mm and 46mm with multiple aluminium colour options.</field>
+        <field name="description_ecommerce">&lt;p&gt;The &lt;strong&gt;Apple Watch Series 10&lt;/strong&gt; is the thinnest Apple Watch ever with the largest display. Advanced health features, fast charging, and a refined design make it the ultimate everyday companion.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Largest, thinnest &lt;strong&gt;Apple Watch display&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;S10 chip&lt;/strong&gt; for speed&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Advanced health sensors&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Fast charging&lt;/strong&gt; — 80% in 30 min&lt;/li&gt;&lt;li&gt;Choose &lt;strong&gt;42mm or 46mm&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;</field>
+        <field name="website_description">&lt;section class="container py-4"&gt;&lt;h3&gt;Product Overview&lt;/h3&gt;&lt;p&gt;The &lt;strong&gt;Apple Watch Series 10&lt;/strong&gt; features the largest and thinnest design in Apple Watch history. The always-on Retina display is stunning, the S10 chip keeps everything snappy, and advanced health sensors track your heart, sleep, and activity. Fast charging gets you to 80% in just 30 minutes.&lt;/p&gt;&lt;h4&gt;Key Features&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Largest Apple Watch display&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;S10 chip&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Advanced health&lt;/strong&gt; sensors&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Fast charge&lt;/strong&gt; 80% in 30 min&lt;/li&gt;&lt;li&gt;WR50 water resistance&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;Specifications&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Sizes:&lt;/strong&gt; 42mm / 46mm&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Colours:&lt;/strong&gt; Midnight, Starlight, Silver&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Chip:&lt;/strong&gt; Apple S10&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Battery:&lt;/strong&gt; Up to 18 hours&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;What's in the Box&lt;/h4&gt;&lt;p&gt;1 x Apple Watch, 1 x Magnetic Charging Cable, 1 x Sport Band, 1 x Documentation.&lt;/p&gt;&lt;/section&gt;</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_wearables'))]"/>
+        <field name="product_brand_id" ref="brand_apple_watch"/>
+        <field name="type">consu</field>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_size'), 'value_ids': [(4, ref('attr_size_42mm')), (4, ref('attr_size_46mm'))]}),
+            (0, 0, {'attribute_id': ref('attr_color'), 'value_ids': [(4, ref('attr_color_midnight_black')), (4, ref('attr_color_starlight')), (4, ref('attr_color_silver'))]})
+        ]"/>
+    </record>
+
+    <!-- 5. Sony WF-1000XM5 Earbuds — Color variants -->
+    <record id="product_sony_wf1000xm5" model="product.template">
+        <field name="name">Sony WF-1000XM5 Wireless Earbuds</field>
+        <field name="list_price">279.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Sony WF-1000XM5 with industry-leading noise cancellation, 8-hour battery (24 hours with case), and crystal-clear call quality. Available in Black and Silver.</field>
+        <field name="description_ecommerce">&lt;p&gt;The &lt;strong&gt;Sony WF-1000XM5&lt;/strong&gt; earbuds pack the world's best noise cancellation into Sony's smallest and lightest flagship earbuds yet. Rich sound, smart features, and all-day battery.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Industry-leading ANC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;8-hour battery&lt;/strong&gt; (24h with case)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Speak-to-Chat&lt;/strong&gt; auto-pause&lt;/li&gt;&lt;li&gt;&lt;strong&gt;LDAC&lt;/strong&gt; Hi-Res audio&lt;/li&gt;&lt;li&gt;Available in &lt;strong&gt;Black or Silver&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;</field>
+        <field name="website_description">&lt;section class="container py-4"&gt;&lt;h3&gt;Product Overview&lt;/h3&gt;&lt;p&gt;The &lt;strong&gt;Sony WF-1000XM5&lt;/strong&gt; are Sony's best-ever true wireless earbuds. Industry-leading noise cancellation shuts out the world, LDAC delivers Hi-Res audio, and the compact design fits comfortably for all-day wear. 8 hours per charge with up to 24 hours total from the case.&lt;/p&gt;&lt;h4&gt;Key Features&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Industry-leading ANC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;LDAC Hi-Res audio&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;8h + 24h&lt;/strong&gt; battery&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Multipoint&lt;/strong&gt; connection&lt;/li&gt;&lt;li&gt;IPX4 water resistant&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;Specifications&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Battery:&lt;/strong&gt; 8h earbuds / 24h total&lt;/li&gt;&lt;li&gt;&lt;strong&gt;ANC:&lt;/strong&gt; Industry-leading&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Codecs:&lt;/strong&gt; LDAC, AAC, SBC&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Colours:&lt;/strong&gt; Black, Silver&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;What's in the Box&lt;/h4&gt;&lt;p&gt;1 x WF-1000XM5 Earbuds, 1 x Charging Case, 1 x USB-C Cable, 3 x Ear Tips.&lt;/p&gt;&lt;/section&gt;</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_headphones'))]"/>
+        <field name="product_brand_id" ref="brand_sony"/>
+        <field name="type">consu</field>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_color'), 'value_ids': [(4, ref('attr_color_midnight_black')), (4, ref('attr_color_silver'))]})
+        ]"/>
+    </record>
+
+    <!-- 6. Razer Huntsman V3 Pro Keyboard — Size variants -->
+    <record id="product_razer_huntsman_v3" model="product.template">
+        <field name="name">Razer Huntsman V3 Pro Analog Keyboard</field>
+        <field name="list_price">249.99</field>
+        <field name="sale_ok">True</field>
+        <field name="is_published">True</field>
+        <field name="description_sale">Razer Huntsman V3 Pro with analog optical switches offering 0.1mm actuation, Chroma RGB, and programmable multi-function roller. Available in full-size and TKL.</field>
+        <field name="description_ecommerce">&lt;p&gt;The &lt;strong&gt;Razer Huntsman V3 Pro&lt;/strong&gt; is the world's most advanced gaming keyboard. Analog optical switches with 0.1mm actuation precision give you a competitive edge no mechanical keyboard can match.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Analog optical switches&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;0.1mm&lt;/strong&gt; actuation precision&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Chroma RGB&lt;/strong&gt; per-key lighting&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Multi-function roller&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;Available in &lt;strong&gt;Full-size or TKL&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;</field>
+        <field name="website_description">&lt;section class="container py-4"&gt;&lt;h3&gt;Product Overview&lt;/h3&gt;&lt;p&gt;The &lt;strong&gt;Razer Huntsman V3 Pro&lt;/strong&gt; changes the game with analog optical switches. Precise 0.1mm actuation, adjustable actuation points, and dual-stage actuation give you control no other keyboard offers. Choose full-size for media keys or TKL for a tighter setup.&lt;/p&gt;&lt;h4&gt;Key Features&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Analog optical switches&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;0.1mm actuation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Chroma RGB&lt;/strong&gt; per-key&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Multi-function roller&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;Full-size or TKL&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;Specifications&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Switches:&lt;/strong&gt; Razer Analog Optical&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Actuation:&lt;/strong&gt; 0.1–4.0mm adjustable&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Lighting:&lt;/strong&gt; Razer Chroma RGB&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Connection:&lt;/strong&gt; USB&lt;/li&gt;&lt;/ul&gt;&lt;h4&gt;What's in the Box&lt;/h4&gt;&lt;p&gt;1 x Huntsman V3 Pro, 1 x USB Cable, 1 x Keycap Puller, 1 x Manual.&lt;/p&gt;&lt;/section&gt;</field>
+        <field name="public_categ_ids" eval="[(4, ref('cat_gaming'))]"/>
+        <field name="product_brand_id" ref="brand_razer"/>
+        <field name="type">consu</field>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_size'), 'value_ids': [(4, ref('attr_size_l')), (4, ref('attr_size_m'))]})
+        ]"/>
+    </record>
+
+</data>
 </odoo>

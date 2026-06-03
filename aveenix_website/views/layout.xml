@@ -213,13 +213,6 @@
                             <i class="fa fa-shopping-bag"/>
                             <span>Shop</span>
                         </a> -->
-                        <a href="/compare" class="av-header-action av-compare-btn" id="av-compare-header-btn">
-                            <span style="position:relative; display:inline-block;">
-                                <i class="fa fa-plus-square-o"/>
-                                <span class="av-compare-badge" id="av-compare-count" style="display:none;">0</span>
-                            </span>
-                            <span>Compare</span>
-                        </a>
                         <a href="/favourites" class="av-header-action">
                             <span style="position:relative; display:inline-block;">
                                 <i class="fa fa-heart"/>
@@ -233,6 +226,13 @@
                                 <span class="av-compare-badge" id="av-wish-count" style="display:none;">0</span>
                             </span>
                             <span>Wishlist</span>
+                        </a>
+                        <a href="/compare" class="av-header-action av-compare-btn" id="av-compare-header-btn">
+                            <span style="position:relative; display:inline-block;">
+                                <i class="fa fa-plus-square-o"/>
+                                <span class="av-compare-badge" id="av-compare-count" style="display:none;">0</span>
+                            </span>
+                            <span>Compare</span>
                         </a>
                         <t t-if="request.env.user._is_public()">
                             <a href="/web/login" class="av-header-action">

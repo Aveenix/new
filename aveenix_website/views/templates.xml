@@ -563,14 +563,7 @@
                 data-action="o_wishlist"
                 title="Add to favourites"
             >
-                <i class="fa fa-heart-o me-2 me-lg-0" role="img" aria-label="Add to favourites"/>
-                <t t-set="_span_classes" t-valuef="d-inline"/>
-                <t
-                    t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
-                    t-set="_span_classes"
-                    t-value="_span_classes + ' d-lg-none'"
-                />
-                <span t-att-class="_span_classes">Add to favourites</span>
+                <i class="fa fa-heart-o" role="img" aria-label="Add to favourites"/>
             </a>
             <a
                 t-if="product_variant"
@@ -581,14 +574,7 @@
                 data-action="av_add_to_wishlist"
                 title="Add to wishlist"
             >
-                <i class="fa fa-star-o me-2 me-lg-0" role="img" aria-label="Add to wishlist"/>
-                <t t-set="_span_classes" t-valuef="d-inline"/>
-                <t
-                    t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
-                    t-set="_span_classes"
-                    t-value="_span_classes + ' d-lg-none'"
-                />
-                <span t-att-class="_span_classes">Add to wishlist</span>
+                <i class="fa fa-star-o" role="img" aria-label="Add to wishlist"/>
             </a>
             <script><![CDATA[
                 (function(){
@@ -1478,6 +1464,122 @@
                     <p class="av-compare-hero-sub">Sign in to your Aveenix account to manage orders, track shipments, and access exclusive deals.</p>
                 </div>
             </section>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         SIDEBAR: Product Detail Page (/shop/product/...)
+         ========================================================= -->
+    <template id="av_product_detail_sidebar" inherit_id="website_sale.product" name="Aveenix: Product Detail Sidebar">
+        <xpath expr="//section[@id='product_detail']" position="before">
+            <aside id="av_product_sidebar" class="d-none d-lg-block">
+                <div class="av-product-sidebar-rail">
+
+                    <!-- Browse Categories -->
+                    <t t-set="_av_cats" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False)])"/>
+                    <t t-if="_av_cats">
+                        <div class="av-product-sidebar-section mb-3">
+                            <p class="av-product-sidebar-title">Browse Categories</p>
+                            <div class="d-flex flex-column gap-1">
+                                <t t-foreach="_av_cats" t-as="_cat">
+                                    <a t-attf-href="/shop?categ=#{_cat.id}"
+                                       t-attf-class="av-product-sidebar-link #{category and category.id == _cat.id and 'active' or ''}">
+                                        <t t-out="_cat.name"/>
+                                    </a>
+                                    <t t-if="category and (category.id == _cat.id or category.parent_id.id == _cat.id)">
+                                        <t t-foreach="_cat.child_id" t-as="_subcat">
+                                            <a t-attf-href="/shop?categ=#{_subcat.id}"
+                                               t-attf-class="av-product-sidebar-link av-product-sidebar-link-sub #{category and category.id == _subcat.id and 'active' or ''}">
+                                                <t t-out="_subcat.name"/>
+                                            </a>
+                                        </t>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- Related Products -->
+                    <t t-set="_av_related" t-value="request.env['product.template'].sudo().search(
+                        [('sale_ok','=',True),('website_published','=',True),('id','!=',product.id)]
+                        + ([('public_categ_ids','child_of',category.id)] if category else []),
+                        limit=4
+                    )"/>
+                    <t t-if="_av_related">
+                        <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                            <p class="av-product-sidebar-title">Related Products</p>
+                            <t t-foreach="_av_related" t-as="_rp">
+                                <a t-attf-href="/shop/product/#{_rp.id}" class="av-product-sidebar-related d-flex align-items-center gap-2 text-decoration-none mb-3">
+                                    <div class="flex-shrink-0">
+                                        <t t-if="_rp.image_128">
+                                            <img t-attf-src="/web/image/product.template/#{_rp.id}/image_128"
+                                                 t-att-alt="_rp.name"
+                                                 style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
+                                                <i class="fa fa-image text-muted"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div style="min-width:0;">
+                                        <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_rp.name"/>
+                                        <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _rp.list_price"/>
+                                    </div>
+                                </a>
+                            </t>
+                        </div>
+                    </t>
+
+                    <!-- Top Rated Products -->
+                    <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('id','!=',product.id)], limit=50)"/>
+                    <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:3]"/>
+                    <t t-if="_av_top_rated">
+                        <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                            <p class="av-product-sidebar-title">Top Rated Products</p>
+                            <t t-foreach="_av_top_rated" t-as="_trp">
+                                <a t-attf-href="/shop/product/#{_trp.id}" class="av-product-sidebar-related d-flex align-items-center gap-2 text-decoration-none mb-3">
+                                    <div class="flex-shrink-0">
+                                        <t t-if="_trp.image_128">
+                                            <img t-attf-src="/web/image/product.template/#{_trp.id}/image_128"
+                                                 t-att-alt="_trp.name"
+                                                 style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
+                                                <i class="fa fa-image text-muted"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div style="min-width:0;">
+                                        <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_trp.name"/>
+                                        <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _trp.list_price"/>
+                                    </div>
+                                </a>
+                            </t>
+                        </div>
+                    </t>
+
+                    <!-- Trust Badges -->
+                    <div class="av-product-sidebar-section border-top pt-3">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa fa-truck av-product-sidebar-badge-icon"/>
+                                <span class="small text-muted">Free shipping over $50</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa fa-rotate-left av-product-sidebar-badge-icon"/>
+                                <span class="small text-muted">30-day returns</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa fa-lock av-product-sidebar-badge-icon"/>
+                                <span class="small text-muted">Secure checkout</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </aside>
         </xpath>
     </template>
 
@@ -2717,6 +2819,22 @@
                                 head.setAttribute('aria-expanded', open ? 'true' : 'false');
                             });
                         });
+
+                        // Nav link click → expand matching card + scroll to it
+                        document.querySelectorAll('.av-privacy-nav-link').forEach(function(link) {
+                            link.addEventListener('click', function() {
+                                var href = link.getAttribute('href');
+                                if (!href || href.charAt(0) !== '#') return;
+                                var target = document.getElementById(href.slice(1));
+                                if (!target) return;
+                                var card = target.querySelector('.av-privacy-topic-card');
+                                var head = target.querySelector('.av-privacy-topic-head');
+                                if (card &amp;&amp; !card.classList.contains('is-open')) {
+                                    card.classList.add('is-open');
+                                    if (head) head.setAttribute('aria-expanded', 'true');
+                                }
+                            });
+                        });
                     });
                 </script>
             </div><!-- /wrap -->
@@ -2748,35 +2866,18 @@
          BANNER: Terms & Conditions Page (/terms)
          ========================================================= -->
     <template id="av_terms_hero" inherit_id="account.account_terms_conditions_page" name="Aveenix: Terms Hero Banner">
-        <xpath expr="//div[hasclass('oe_structure')]" position="before">
-            <style>
-                /* Remove gap before hero on /terms */
-                main > .container.mt-3 { margin-top: 0 !important; padding-top: 0 !important; }
-                .oe_structure:empty { display: none; }
-            </style>
-            <section class="av-compare-hero">
-                <div class="av-compare-hero-circles">
-                    <div class="av-compare-circle av-compare-circle-1"/>
-                    <div class="av-compare-circle av-compare-circle-2"/>
-                </div>
-                <div class="av-container text-center" style="position:relative; z-index:1;">
-                    <div class="av-compare-hero-icon">
-                        <i class="fa fa-file-text"/>
-                    </div>
-                    <h1 class="av-compare-hero-title">Terms &amp; Conditions</h1>
-                    <p class="av-compare-hero-sub">Please read these terms and conditions carefully before using our services.</p>
-                </div>
-            </section>
-        </xpath>
+        <!-- Remove the empty oe_structure dropzone that renders as a visible line -->
+        <xpath expr="//div[@id='oe_structure_terms_conditions']" position="replace"/>
         <xpath expr="//div[hasclass('oe_website_terms_conditions')]" position="attributes">
-            <attribute name="class">container-fluid oe_website_terms_conditions av-privacy-page</attribute>
+            <attribute name="class">oe_website_terms_conditions av-privacy-page</attribute>
             <attribute name="style">padding: 0;</attribute>
         </xpath>
         <!-- Replace Odoo's rich-text terms body with the Aveenix collapsible layout -->
         <xpath expr="//div[@id='o_terms_conditions']" position="replace">
-            <div id="o_terms_conditions" class="av-container av-privacy-body">
-                <div class="row">
-                    <!-- Sidebar -->
+            <div id="o_terms_conditions" class="av-privacy-body">
+                <div class="av-container">
+                <div class="row g-4">
+                    <!-- Sidebar (left) -->
                     <div class="col-lg-3 col-md-4 pt-4">
                         <div class="av-privacy-sidebar">
                             <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true" data-policy="terms">
@@ -2809,8 +2910,22 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Main content -->
+                    <!-- Main content (right) -->
                     <div class="col-lg-9 col-md-8">
+                        <!-- Inline hero — matches privacy page style -->
+                        <section class="av-shop-hero-inline mb-3">
+                            <div class="av-compare-hero-circles">
+                                <div class="av-compare-circle av-compare-circle-1"/>
+                                <div class="av-compare-circle av-compare-circle-2"/>
+                            </div>
+                            <div class="text-center" style="position:relative; z-index:1;">
+                                <div class="av-compare-hero-icon">
+                                    <i class="fa fa-file-text"/>
+                                </div>
+                                <h1 class="av-compare-hero-title">Terms &amp; Conditions</h1>
+                                <p class="av-compare-hero-sub">Please read these terms and conditions carefully before using our services.</p>
+                            </div>
+                        </section>
                         <div class="av-privacy-topics av-policy-section" data-policy="terms">
                             <h2 class="av-privacy-topics-title">Terms &amp; Conditions</h2>
                             <p class="av-privacy-topics-sub">These Terms of Service ("Terms") govern your access to and use of the Aveenix Express website, mobile applications, and any related software or services (collectively, the "Services"), operated by Aveenix Global Ltd. By accessing or using our Services, you agree to be bound by these Terms. If you do not agree, you must not use the Services.</p>
@@ -3026,7 +3141,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div><!-- /row -->
+                </div><!-- /av-container -->
                 <script type="text/javascript">
                     document.addEventListener('DOMContentLoaded', function() {
                         // Sidebar group toggle (+/-)
@@ -3046,6 +3162,22 @@
                                 var card = head.closest('.av-privacy-topic-card');
                                 var open = card.classList.toggle('is-open');
                                 head.setAttribute('aria-expanded', open ? 'true' : 'false');
+                            });
+                        });
+
+                        // Nav link click → expand matching card + scroll to it
+                        document.querySelectorAll('.av-privacy-nav-link').forEach(function(link) {
+                            link.addEventListener('click', function(e) {
+                                var href = link.getAttribute('href');
+                                if (!href || href.charAt(0) !== '#') return;
+                                var target = document.getElementById(href.slice(1));
+                                if (!target) return;
+                                var card = target.querySelector('.av-privacy-topic-card');
+                                var head = target.querySelector('.av-privacy-topic-head');
+                                if (card &amp;&amp; !card.classList.contains('is-open')) {
+                                    card.classList.add('is-open');
+                                    if (head) head.setAttribute('aria-expanded', 'true');
+                                }
                             });
                         });
                     });
@@ -3261,6 +3393,11 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- Hide Odoo's native compare button — replaced by av-add-to-compare -->
+    <template id="av_hide_native_compare" inherit_id="website_sale_comparison.product_add_to_compare" name="Aveenix: Hide Native Compare">
+        <xpath expr="//button[@data-action='o_comparelist']" position="replace"/>
     </template>
 
 </odoo>

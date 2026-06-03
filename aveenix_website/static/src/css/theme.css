@@ -58,86 +58,8 @@ body.modal-open {
 }
 
 /* =============================================================
-   TERMS & CONDITIONS PAGE
+   TERMS & CONDITIONS PAGE  — layout now uses privacy-style cards
    ============================================================= */
-.oe_website_terms_conditions {
-    padding: 48px 0 64px;
-}
-
-#o_terms_conditions {
-    background: var(--av-white);
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.07);
-    padding: 48px 56px;
-    border-top: 4px solid var(--av-red);
-}
-
-#o_terms_conditions h1 {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--av-dark);
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid var(--av-border);
-}
-
-#o_terms_conditions > div > p {
-    color: #555;
-    font-size: 14px;
-    line-height: 1.7;
-    margin-bottom: 8px;
-}
-
-#o_terms_conditions ol {
-    list-style: none;
-    padding: 0;
-    margin-top: 24px;
-    counter-reset: tc-counter;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-#o_terms_conditions ol li {
-    counter-increment: tc-counter;
-    position: relative;
-    padding: 16px 20px 16px 64px;
-    background: #fafafa;
-    border-radius: 8px;
-    border-left: 3px solid var(--av-red);
-    font-size: 14px;
-    line-height: 1.75;
-    color: #444;
-}
-
-#o_terms_conditions ol li::before {
-    content: counter(tc-counter);
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
-    background: var(--av-red);
-    color: #fff;
-    border-radius: 50%;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-[data-theme="dark"] #o_terms_conditions {
-    background: var(--av-dark-card);
-    border-color: var(--av-red);
-}
-[data-theme="dark"] #o_terms_conditions ol li {
-    background: rgba(255,255,255,.04);
-    color: #ccc;
-}
 
 /* ── Shop sidebar: no scrollbar, full height ── */
 #products_grid_before {
@@ -6248,6 +6170,32 @@ a.mt-2.mt-lg-0.text-center:hover {
    TERMS & CONDITIONS PAGE  (/terms)
    ============================================================= */
 
+/* Remove Odoo's default container padding/margin on terms page */
+.oe_website_terms_conditions {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Hide empty oe_structure divider that renders as a line */
+.oe_website_terms_conditions .oe_structure:empty,
+.oe_website_terms_conditions .oe_structure:not(:has(*)) {
+    display: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Remove any border/hr Odoo injects before terms body */
+.oe_website_terms_conditions > *:first-child {
+    border-top: none !important;
+}
+
+/* Match the portal page container to website layout */
+.oe_website_terms_conditions.av-privacy-page main,
+.oe_website_terms_conditions.av-privacy-page .o_portal_wrap {
+    padding-top: 0 !important;
+}
 
 /* =============================================================
    PRIVACY POLICY PAGE  (/privacy)
@@ -6818,4 +6766,160 @@ a.mt-2.mt-lg-0.text-center:hover {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+/* =============================================================
+   PRODUCT DETAIL PAGE — Sidebar
+   ============================================================= */
+
+/* Product detail page: sidebar layout — mirrors shop page */
+@media (min-width: 992px) {
+    #wrap.o_wsale_product_page {
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        column-gap: 0.5rem;
+        align-items: start;
+        max-width: 1500px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Sidebar: col 1, top of page, span all rows */
+    #wrap.o_wsale_product_page #av_product_sidebar {
+        grid-column: 1;
+        grid-row: 1 / 999;
+        position: sticky;
+        top: 80px;
+        overflow: visible;
+        align-self: start;
+        padding-top: 1.5rem;
+        padding-right: 0.5rem;
+    }
+    #wrap.o_wsale_product_page #av_product_sidebar::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    /* EVERYTHING else (hero, detail, overview, specs) → col 2 */
+    #wrap.o_wsale_product_page > *:not(#av_product_sidebar) {
+        grid-column: 2;
+        min-width: 0;
+    }
+
+    /* Kill container-lg max-width inside grid */
+    #wrap.o_wsale_product_page section#product_detail.container-lg,
+    #wrap.o_wsale_product_page section#product_detail.container-fluid {
+        max-width: none !important;
+        width: 100% !important;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Specs section container full width in col */
+    #wrap.o_wsale_product_page #product_full_spec .container {
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Rounded hero banner in product detail page */
+    #wrap.o_wsale_product_page .av-compare-hero {
+        border-radius: 16px;
+        /* margin-top: 1rem; */
+    }
+}
+
+@media (max-width: 991px) {
+    #av_product_sidebar { display: none !important; }
+    #wrap.o_wsale_product_page { display: block; }
+}
+
+.av-product-sidebar-rail {
+    width: 210px;
+    padding: 0 12px 0 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--av-border) transparent;
+}
+.av-product-sidebar-rail::-webkit-scrollbar { width: 4px; }
+.av-product-sidebar-rail::-webkit-scrollbar-track { background: transparent; }
+.av-product-sidebar-rail::-webkit-scrollbar-thumb { background: var(--av-border); border-radius: 2px; }
+
+
+.av-product-sidebar-inner {
+    padding: 0 16px 16px 8px;
+}
+
+.av-product-sidebar-title {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--av-gray);
+    margin-bottom: 8px;
+}
+
+.av-product-sidebar-link {
+    font-size: .85rem;
+    color: var(--av-text);
+    text-decoration: none;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: background .15s, color .15s;
+    display: block;
+}
+.av-product-sidebar-link:hover {
+    background: var(--av-light);
+    color: var(--av-red);
+}
+.av-product-sidebar-link.active {
+    color: var(--av-red);
+    font-weight: 600;
+    background: color-mix(in srgb, var(--av-red) 8%, transparent);
+}
+.av-product-sidebar-link-sub {
+    padding-left: 16px;
+    font-size: .8rem;
+    opacity: .85;
+}
+
+.av-product-sidebar-related-name {
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--av-text);
+}
+.av-product-sidebar-related:hover .av-product-sidebar-related-name {
+    color: var(--av-red);
+}
+
+.av-product-sidebar-badge-icon {
+    color: var(--av-red);
+    font-size: 14px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* dark mode */
+[data-theme="dark"] .av-product-sidebar-link {
+    color: #ccc;
+}
+[data-theme="dark"] .av-product-sidebar-link:hover {
+    background: rgba(255,255,255,.06);
+    color: var(--av-red);
+}
+[data-theme="dark"] .av-product-sidebar-link.active {
+    color: var(--av-red);
+    background: color-mix(in srgb, var(--av-red) 12%, transparent);
+}
+[data-theme="dark"] .av-product-sidebar-related-name {
+    color: #ccc;
+}
+[data-theme="dark"] .av-product-sidebar-title {
+    color: #888;
 }
