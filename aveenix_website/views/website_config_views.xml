@@ -40,6 +40,8 @@
                        widget="many2many_tags"
                        string="Available In Countries"
                        help="Leave empty to show everywhere. Select countries to restrict to those locations."/>
+                <field name="is_sponsored"/>
+                <field name="sponsor_rank" invisible="not is_sponsored"/>
             </xpath>
         </field>
     </record>

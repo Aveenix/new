@@ -79,8 +79,8 @@ body.modal-open {
     display: none !important;
     width: 0 !important;
 }
-/* Top rated: constrain images */
-#products_grid_before img,
+/* Top rated: constrain images (but NOT the sponsored ad slider image) */
+#products_grid_before img:not(.av-ad-img),
 .av-top-rated-img img {
     width: 56px !important;
     height: 56px !important;
@@ -1451,7 +1451,7 @@ body.modal-open {
     min-height: 56px;
     display: flex;
     align-items: center;
-    padding: 12px 0;
+    padding: 8px 0;
 }
 
 .av-container {
@@ -1489,7 +1489,7 @@ body.modal-open {
 
 .av-promo-input {
     width: 280px;
-    padding: 12px 18px;
+    padding: 8px 18px;
     border: none;
     outline: none;
     font-size: 14px;
@@ -1504,7 +1504,7 @@ body.modal-open {
     background: #fff;
     color: #111 !important;
     border: none;
-    padding: 12px 24px;
+    padding: 8px 24px;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -2547,9 +2547,15 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary th {
 .av-notif-hero {
     background: linear-gradient(135deg, var(--av-red) 0%, var(--av-red-dark) 100%);
     color: #fff;
-    padding: 56px 0 48px;
+    padding: 0;
+    height: var(--av-shop-hero-h, 320px);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
 }
 .av-notif-hero-circles { position: absolute; inset: 0; pointer-events: none; }
 .av-notif-circle {
@@ -2995,11 +3001,16 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 /* Hero */
 .av-compare-hero {
     background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 8%, #fff), color-mix(in srgb, var(--av-red) 4%, #fff));
-    padding: 60px 0 48px;
-    min-height: 260px;
+    padding: 0;
+    height: var(--av-shop-hero-h, 320px);
     position: relative;
     overflow: hidden;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
 }
 .av-full-bleed {
     width: 100vw;
@@ -3066,6 +3077,12 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
     position: relative;
     overflow: hidden;
     text-align: center;
+    /* Fixed height so the sidebar ad slider (same value) lines up exactly */
+    height: var(--av-shop-hero-h, 320px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 .av-shop-hero-inline .av-compare-hero-circles { position: absolute; inset: 0; pointer-events: none; }
 
@@ -3849,7 +3866,7 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     .av-btn-sell                { padding: 10px 28px; font-size: 14px; }
 
     /* promo bar */
-    .av-promo-bar               { padding: 16px 0; }
+    .av-promo-bar               { height: auto; min-height: 0; padding: 16px 0; }
     .av-promo-content           { flex-direction: column; align-items: stretch; gap: 12px; padding: 0; }
     .av-promo-text              { font-size: 16px; text-align: center; }
     .av-promo-input             { width: 0; box-sizing: border-box; flex: 1; min-width: 0; }
@@ -4660,10 +4677,16 @@ button.btn-primary:hover {
    ============================================================= */
 .av-wish-hero {
     background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 8%, white), color-mix(in srgb, var(--av-red) 4%, white));
-    padding: 60px 0 48px;
+    padding: 0;
+    height: var(--av-shop-hero-h, 320px);
     position: relative;
     overflow: hidden;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
 }
 
 .av-wish-hero-circles { position: absolute; inset: 0; pointer-events: none; }
@@ -4914,10 +4937,16 @@ button.btn-primary:hover {
 
 .av-fav-hero {
     background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 8%, #fff), color-mix(in srgb, var(--av-red) 4%, #fff));
-    padding: 60px 0 48px;
+    padding: 0;
+    height: var(--av-shop-hero-h, 320px);
     position: relative;
     overflow: hidden;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
 }
 
 .av-fav-hero-circles { position: absolute; inset: 0; pointer-events: none; }
@@ -5369,11 +5398,13 @@ a.mt-2.mt-lg-0.text-center:hover {
 /* Hero */
 .av-contact-hero {
     position: relative;
-    min-height: 320px;
+    height: var(--av-shop-hero-h, 320px);
     display: flex;
     align-items: center;
     justify-content: center;
     background: url('/aveenix_website/static/src/img/contact-us.jpg') center/cover no-repeat;
+    border-radius: 12px;
+    overflow: hidden;
 }
 .av-contact-hero-overlay {
     position: absolute;
@@ -5680,7 +5711,7 @@ a.mt-2.mt-lg-0.text-center:hover {
 /* ══════════════════════════════════════════════════════════════
    ABOUT US PAGE
    ══════════════════════════════════════════════════════════════ */
-.av-about-body { padding: 48px 0 80px; }
+.av-about-body { padding: 0 25px 80px; }
 .av-about-section {
     background: #fff;
     border: 1px solid var(--av-border);
@@ -5868,6 +5899,11 @@ a.mt-2.mt-lg-0.text-center:hover {
 .av-about-contact-card a:hover { text-decoration: underline; }
 .av-about-contact-card small { font-size: 12px; color: #aaa; }
 .av-about-contact-card-cta { border-color: var(--av-red); }
+.av-contact-cta-full {
+    width: 100%;
+    padding: 32px 24px;
+    background: color-mix(in srgb, var(--av-red) 5%, #fff);
+}
 .av-about-cta-btn {
     margin-top: 4px;
     padding: 8px 18px;
@@ -6067,6 +6103,7 @@ a.mt-2.mt-lg-0.text-center:hover {
     min-width: 280px;
     max-width: 280px;
     width: 280px;
+    padding-top: 0px !important;
 }
 
 /* Brand / Category filter — 2-column scrollable list */
@@ -6206,6 +6243,23 @@ a.mt-2.mt-lg-0.text-center:hover {
 } */
 
 /* ── Sidebar ─────────────────────────────────────────────────── */
+/* Match shop page sidebar width (#products_grid_before = 280px) */
+@media (min-width: 992px) {
+    .av-privacy-body .row > .col-lg-3,
+    .av-about-body .row > .col-lg-3 {
+        flex: 0 0 280px;
+        max-width: 280px;
+        width: 280px;
+    }
+    .av-privacy-body .row > .col-lg-9,
+    .av-about-body .row > .col-lg-9 {
+        flex: 1;
+        max-width: none;
+        width: auto;
+        min-width: 0;
+    }
+}
+
 .av-privacy-sidebar {
     position: sticky;
     top: 100px;
@@ -6487,6 +6541,13 @@ a.mt-2.mt-lg-0.text-center:hover {
 }
 .av-privacy-topic-card.is-open .av-privacy-topic-detail {
     max-height: 1500px;
+}
+
+/* Mobile: sidebar hidden → show ALL policy groups (subsections stay collapsed by default) */
+@media (max-width: 767px) {
+    .av-privacy-page .av-policy-section[hidden] {
+        display: block !important;
+    }
 }
 .av-privacy-topic-detail p {
     margin: 0 16px 12px 72px;
@@ -6776,7 +6837,7 @@ a.mt-2.mt-lg-0.text-center:hover {
 @media (min-width: 992px) {
     #wrap.o_wsale_product_page {
         display: grid;
-        grid-template-columns: 240px minmax(0, 1fr);
+        grid-template-columns: 280px minmax(0, 1fr);
         column-gap: 0.5rem;
         align-items: start;
         max-width: 1500px;
@@ -6786,7 +6847,19 @@ a.mt-2.mt-lg-0.text-center:hover {
         padding-right: 1rem;
     }
 
-    /* Sidebar: col 1, top of page, span all rows */
+    /* Ad slider: col 1, row 1 — shares the row with the banner so it auto-matches its height */
+    #wrap.o_wsale_product_page > #av_product_ad_slider {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: stretch;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+        /* padding-top: 0.5rem; */
+        padding-right: 0.5rem;
+    }
+
+    /* Sidebar: col 1. Starts row 2 when a slider exists, else row 1; spans down. */
     #wrap.o_wsale_product_page #av_product_sidebar {
         grid-column: 1;
         grid-row: 1 / 999;
@@ -6797,13 +6870,16 @@ a.mt-2.mt-lg-0.text-center:hover {
         padding-top: 1.5rem;
         padding-right: 0.5rem;
     }
+    #wrap.o_wsale_product_page:has(> #av_product_ad_slider) #av_product_sidebar {
+        grid-row: 2 / 999;
+    }
     #wrap.o_wsale_product_page #av_product_sidebar::-webkit-scrollbar {
         width: 0;
         height: 0;
     }
 
     /* EVERYTHING else (hero, detail, overview, specs) → col 2 */
-    #wrap.o_wsale_product_page > *:not(#av_product_sidebar) {
+    #wrap.o_wsale_product_page > *:not(#av_product_sidebar):not(#av_product_ad_slider) {
         grid-column: 2;
         min-width: 0;
     }
@@ -6824,20 +6900,230 @@ a.mt-2.mt-lg-0.text-center:hover {
         padding-right: 0;
     }
 
-    /* Rounded hero banner in product detail page */
     #wrap.o_wsale_product_page .av-compare-hero {
-        border-radius: 16px;
+        border-radius: 0;
         /* margin-top: 1rem; */
     }
 }
 
 @media (max-width: 991px) {
     #av_product_sidebar { display: none !important; }
+    #av_product_ad_slider { display: none !important; }
     #wrap.o_wsale_product_page { display: block; }
 }
 
+/* Cart & Checkout: same 280px Browse-Categories sidebar */
+@media (min-width: 992px) {
+    /* Checkout wraps #wrap in a flex-column <main>, which shrinks it below
+       1500px. Force the flex item to take the full available width. */
+    .o_website_sale_checkout main:has(> #wrap > #av_cart_sidebar) {
+        align-items: stretch;
+    }
+
+    /* Grid the direct parent of the cart sidebar (whatever wraps it) */
+    #wrap:has(> #av_cart_sidebar) {
+        display: grid !important;
+        grid-template-columns: 280px minmax(0, 1fr);
+        column-gap: 0.5rem;
+        align-items: start;
+        width: 100%;
+        max-width: 1500px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    /* oe_website_sale.container fills col2, matching banner's inner padding
+       (.av-container uses 24px) so its content lines up with the banner. */
+    #wrap:has(> #av_cart_sidebar) > .oe_website_sale.container {
+        max-width: none !important;
+        width: 100% !important;
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    /* Row 1: banner (col2) + ad slider (col1, same height).
+       Row 2: cart content (col2) + browse sidebar (col1). */
+    :has(> #av_cart_sidebar) > .av-compare-hero {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    :has(> #av_cart_sidebar) > #av_cart_ad_slider {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: start;
+        min-width: 0;
+        /* padding-top: 0.5rem; */
+        position: relative;
+    }
+    /* (Card size handled by the shared .av-ad-carousel rule = 242 x 320) */
+    /* Sidebar spans all rows by default (beside banner + content) */
+    :has(> #av_cart_sidebar) > #av_cart_sidebar {
+        grid-column: 1;
+        grid-row: 1 / 999;
+        position: sticky;
+        top: 80px;
+        align-self: start;
+        padding-top: 1.5rem;
+    }
+    /* When an ad slider exists, it takes row 1 and the sidebar starts at row 2 */
+    :has(> #av_cart_ad_slider) > #av_cart_sidebar {
+        grid-row: 2 / 999;
+    }
+    :has(> #av_cart_sidebar) > .oe_website_sale {
+        grid-column: 2;
+        grid-row: 2;
+        min-width: 0;
+    }
+    /* Sponsored ad carousel fills its grid cell (height matches the banner row) */
+    #av_cart_ad_slider .carousel-inner,
+    #av_cart_ad_slider .carousel-item,
+    #av_cart_ad_slider .carousel-item.active,
+    #av_cart_ad_slider .av-ad-card {
+        height: 100% !important;
+    }
+    #av_cart_ad_slider .av-ad-card {
+        display: flex !important;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    /* Ensure the inner row fills col2 (d-flex column shrinks it otherwise).
+       Keep the native offset-xxl-1 so content + summary fill all 12 cols
+       (removing it left an empty column on the right). */
+    :has(> #av_cart_sidebar) > .oe_website_sale > .row {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    /* No left/right padding on the content + summary columns */
+    :has(> #av_cart_sidebar) .oe_cart,
+    :has(> #av_cart_sidebar) .o_wsale_shorter_cart_summary {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+@media (max-width: 991px) {
+    #av_cart_sidebar { display: none !important; }
+    #av_cart_ad_slider { display: none !important; }
+}
+
+/* Hide sidebar (nav + ad slider) on small mobile for info pages (About, Contact, Privacy, Terms)
+   and let the content column fill the full width. Tablet (>=768px) keeps the 2-column layout. */
+@media (max-width: 767px) {
+    .av-about-page .row > .col-lg-3,
+    .av-contact-page .row > .col-lg-3,
+    .av-privacy-page .row > .col-lg-3 {
+        display: none !important;
+    }
+    .av-about-page .row > .col-lg-9,
+    .av-contact-page .row > .col-lg-9,
+    .av-privacy-page .row > .col-lg-9 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
+
+/* ── Sponsored ad card (inside the carousel) ──────────────────── */
+.av-ad-carousel { border-radius: 12px; overflow: hidden; background: var(--av-white); border: 1px solid var(--av-border); box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+/* ONE uniform card size for EVERY page (shop, product detail, cart/checkout/…).
+   Fixed 242 x 320, centered in whatever column it sits in. */
+.av-ad-sidebar-slot .av-ad-carousel,
+#av_product_ad_slider .av-ad-carousel,
+#av_cart_ad_slider .av-ad-carousel {
+    position: relative;
+    width: 242px !important;
+    max-width: 100% !important;
+    height: var(--av-ad-card-h, var(--av-shop-hero-h, 320px)) !important;
+    /* margin-left: 9px !important; */
+    margin-right: auto !important;
+}
+.av-ad-sidebar-slot .carousel-inner,
+#av_product_ad_slider .carousel-inner,
+#av_cart_ad_slider .carousel-inner { height: 100% !important; width: 100%; overflow: hidden; position: relative; }
+.av-ad-sidebar-slot .carousel-item,
+.av-ad-sidebar-slot .carousel-item.active,
+#av_product_ad_slider .carousel-item,
+#av_product_ad_slider .carousel-item.active,
+#av_cart_ad_slider .carousel-item,
+#av_cart_ad_slider .carousel-item.active { height: 100% !important; width: 100%; }
+.av-ad-sidebar-slot .av-ad-card,
+#av_product_ad_slider .av-ad-card,
+#av_cart_ad_slider .av-ad-card { height: 100% !important; display: flex !important; flex-direction: column; overflow: hidden !important; width: 100%; }
+/* Image area takes all remaining space; broken/placeholder imgs can't inflate it.
+   Uniform across ALL pages: framed look (contain + padding) like the shop card. */
+.av-ad-sidebar-slot .av-ad-img-wrap,
+#av_product_ad_slider .av-ad-img-wrap,
+#av_cart_ad_slider .av-ad-img-wrap { flex: 1 1 0 !important; min-height: 0 !important; overflow: hidden; padding: 16px !important; background: var(--av-light, #f5f5f5); }
+.av-ad-sidebar-slot .av-ad-img,
+#av_product_ad_slider .av-ad-img,
+#av_cart_ad_slider .av-ad-img { max-height: 100% !important; max-width: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; }
+.av-ad-sidebar-slot .av-ad-info,
+#av_product_ad_slider .av-ad-info,
+#av_cart_ad_slider .av-ad-info { flex: 0 0 auto !important; }
+.av-ad-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none !important;
+    position: relative;
+    color: var(--av-dark);
+}
+.av-ad-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    z-index: 2;
+    background: var(--av-red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+.av-ad-img-wrap {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--av-light, #f5f5f5);
+    min-height: 0;
+    overflow: hidden;
+    padding: 14px;
+}
+.av-ad-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.av-ad-info {
+    flex: 0 0 auto;
+    padding: 10px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-top: 1px solid var(--av-border);
+}
+.av-ad-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.av-ad-price { font-size: 15px; font-weight: 700; color: var(--av-red); }
+.av-ad-cta { font-size: 12px; font-weight: 600; color: var(--av-dark); display: inline-flex; align-items: center; gap: 6px; }
+.av-ad-card:hover .av-ad-cta { color: var(--av-red); }
+.av-ad-card:hover .av-ad-cta i { transform: translateX(3px); transition: transform .2s; }
+[data-theme="dark"] .av-ad-carousel { background: #242424; border-color: #333; }
+[data-theme="dark"] .av-ad-card { color: #e0e0e0; }
+[data-theme="dark"] .av-ad-img-wrap { background: #1e1e1e; }
+[data-theme="dark"] .av-ad-info { border-top-color: #333; }
+
 .av-product-sidebar-rail {
-    width: 210px;
+    width: 280px;
     padding: 0 12px 0 4px;
     scrollbar-width: thin;
     scrollbar-color: var(--av-border) transparent;

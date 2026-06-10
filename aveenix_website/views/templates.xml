@@ -850,13 +850,60 @@
 
             <div id="wrap" class="av-contact-page">
 
-                <!-- Hero Banner -->
-                <section class="av-compare-hero">
+                <div class="av-container av-about-body">
+                    <div class="row g-4">
+
+                        <!-- ── LEFT SIDEBAR ──────────────────────────── -->
+                        <div class="col-lg-3 col-md-4">
+                            <div class="av-privacy-sidebar">
+                                <!-- Sponsored ad slider (above sidebar) -->
+                                <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
+                                    [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                    order='sponsor_rank desc', limit=6)"/>
+                                <t t-if="not _av_sponsored">
+                                    <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                                        [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                    <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+                                </t>
+                                <t t-if="_av_sponsored">
+                                    <div class="av-ad-sidebar-slot mb-3">
+                                        <t t-set="_av_carousel_id" t-value="'av_ad_carousel_contact'"/>
+                                        <t t-call="aveenix_website.av_sponsored_slider"/>
+                                    </div>
+                                </t>
+
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true">
+                                    <span>Contact Us</span>
+                                    <i class="fa fa-minus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav">
+                                    <a href="#location"   class="av-privacy-nav-link"><i class="fa fa-map-marker"/> Location</a>
+                                    <a href="#message-us" class="av-privacy-nav-link"><i class="fa fa-comments"/>   Contact Us</a>
+                                    <a href="#send"       class="av-privacy-nav-link"><i class="fa fa-envelope"/>   Send A Message</a>
+                                    <a href="#touch"      class="av-privacy-nav-link"><i class="fa fa-envelope-o"/> Get in Touch</a>
+                                </nav>
+
+                                <!-- Contact note box -->
+                                <div class="av-privacy-note-box">
+                                    <div class="av-privacy-note-icon">
+                                        <i class="fa fa-clock-o"/>
+                                    </div>
+                                    <strong class="av-privacy-note-title">Business Hours</strong>
+                                    <p class="av-privacy-note-text">Monday – Sunday: 06:00 – 18:00. Public Holidays – Closed.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── RIGHT MAIN CONTENT ────────────────────── -->
+                        <div class="col-lg-9 col-md-8">
+
+                <!-- Hero banner — right column only -->
+                <section class="av-shop-hero-inline mb-3">
                     <div class="av-compare-hero-circles">
                         <div class="av-compare-circle av-compare-circle-1"/>
                         <div class="av-compare-circle av-compare-circle-2"/>
                     </div>
-                    <div class="av-container text-center" style="position:relative; z-index:1;">
+                    <div class="text-center" style="position:relative; z-index:1;">
                         <div class="av-compare-hero-icon">
                             <i class="fa fa-envelope"/>
                         </div>
@@ -867,11 +914,11 @@
 
                 <!-- Info + Form Row -->
                 <section class="av-contact-body">
-                    <div class="av-container">
+                    <div>
                         <div class="av-contact-row">
 
                             <!-- Left: Location Info -->
-                            <div class="av-contact-info">
+                            <div class="av-contact-info" id="location">
                                 <h2 class="av-contact-info-title">Location</h2>
                                 <h3 class="av-contact-brand">Aveenix Express</h3>
                                 <h4 class="av-contact-sub">Regional Delivery Centers</h4>
@@ -883,7 +930,7 @@
                             </div>
 
                             <!-- Right: Contact Us text -->
-                            <div class="av-contact-right">
+                            <div class="av-contact-right" id="message-us">
                                 <h2 class="av-contact-right-title">Contact us</h2>
                                 <p>Got questions or need assistance? We're here to help! At Aveenix, your satisfaction is our top priority. Whether you have inquiries about your order, need help navigating our website, or simply want to connect, our dedicated support team is ready to assist you.</p>
                                 <p>Reach out through the contact form below for a swift and helpful response. Enjoy a seamless shopping experience with Aveenix, where we're committed to making your online journey exceptional. Shop with confidence knowing we're just a message away!</p>
@@ -894,7 +941,7 @@
                 </section>
 
                 <!-- Image + Form Split -->
-                <section class="av-contact-split">
+                <section class="av-contact-split" id="send">
                     <div class="av-contact-split-inner">
 
                         <!-- Left: Photo -->
@@ -943,6 +990,44 @@
                     </div>
                 </section>
 
+                <!-- Get in Touch -->
+                <section class="av-about-section av-about-contact-section" id="touch">
+                    <h2 class="av-about-section-title"><i class="fa fa-envelope-o"/> Get in Touch</h2>
+                    <p>Ready to transform your business with Aveenix? We'd love to hear from you and discuss how our platform can help you achieve your goals.</p>
+                    <div class="av-about-contact-cards">
+                        <div class="av-about-contact-card">
+                            <div class="av-about-contact-icon"><i class="fa fa-envelope"/></div>
+                            <strong>Email Support</strong>
+                            <span>Quick response time</span>
+                            <a href="#">Send us an email</a>
+                            <small>Within 24 hours</small>
+                        </div>
+                        <div class="av-about-contact-card">
+                            <div class="av-about-contact-icon"><i class="fa fa-phone"/></div>
+                            <strong>Phone Support</strong>
+                            <span>Speak with our team</span>
+                            <a href="#">Call us directly</a>
+                            <small>Mon-Fri 9AM-6PM EST</small>
+                        </div>
+                        <div class="av-about-contact-card">
+                            <div class="av-about-contact-icon"><i class="fa fa-comments"/></div>
+                            <strong>Live Chat</strong>
+                            <span>Chat with support</span>
+                            <a href="#">Available on our platform</a>
+                            <small>Real-time assistance</small>
+                        </div>
+                        <div class="av-about-contact-card av-about-contact-card-cta">
+                            <div class="av-about-contact-icon"><i class="fa fa-arrow-right"/></div>
+                            <strong>Learn More</strong>
+                            <span>Discover our platform</span>
+                            <a href="/about" class="av-about-cta-btn">About Aveenix</a>
+                        </div>
+                    </div>
+                </section>
+
+                        </div><!-- /.col-lg-9 -->
+                    </div><!-- /.row -->
+                </div><!-- /.av-container -->
             </div><!-- /#wrap -->
         </t>
     </template>
@@ -1136,6 +1221,157 @@
     </template>
 
     <!-- =========================================================
+         REUSABLE: Sponsored Products carousel
+         Caller must set `_av_sponsored` (recordset) and `_av_carousel_id` (unique str).
+         ========================================================= -->
+    <template id="av_sponsored_slider" name="Aveenix: Sponsored Slider">
+        <t t-if="_av_sponsored">
+            <div t-att-id="_av_carousel_id" class="carousel slide av-ad-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+                <div class="carousel-indicators">
+                    <t t-foreach="range(len(_av_sponsored))" t-as="_i">
+                        <button type="button" t-att-data-bs-target="'#' + _av_carousel_id" t-att-data-bs-slide-to="str(_i)"
+                                t-attf-class="#{'active' if _i == 0 else ''}" t-att-aria-current="'true' if _i == 0 else None"
+                                t-attf-aria-label="Slide #{_i + 1}"/>
+                    </t>
+                </div>
+                <div class="carousel-inner">
+                    <t t-foreach="_av_sponsored" t-as="_sp">
+                        <div t-attf-class="carousel-item #{'active' if _sp_index == 0 else ''}">
+                            <a t-attf-href="/shop/product/#{_sp.id}" class="av-ad-card">
+                                <span class="av-ad-badge">Sponsored</span>
+                                <span class="av-ad-img-wrap">
+                                    <img t-attf-src="/web/image/product.template/#{_sp.id}/image_512"
+                                         class="av-ad-img" t-att-alt="_sp.name"/>
+                                </span>
+                                <span class="av-ad-info">
+                                    <span class="av-ad-name" t-esc="_sp.name"/>
+                                    <span class="av-ad-price">
+                                        <span t-esc="_sp.list_price" t-options="{'widget': 'monetary', 'display_currency': _sp.currency_id}"/>
+                                    </span>
+                                    <span class="av-ad-cta">Shop now <i class="fa fa-arrow-right"/></span>
+                                </span>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+                <button class="carousel-control-prev" type="button" t-att-data-bs-target="'#' + _av_carousel_id" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" t-att-data-bs-target="'#' + _av_carousel_id" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"/>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </t>
+    </template>
+
+    <!-- =========================================================
+         SIDEBAR: Cart & Checkout (Browse Categories + Top Rated)
+         ========================================================= -->
+    <template id="av_cart_checkout_sidebar" inherit_id="website_sale.checkout_layout" name="Aveenix: Cart/Checkout Sidebar">
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="before">
+            <t t-if="request.httprequest.path == '/shop/cart' or request.httprequest.path == '/shop/checkout' or request.httprequest.path == '/shop/payment' or request.httprequest.path.startswith('/shop/address')">
+                <!-- Sponsored Products slider: left column, row 1 (beside banner, same height).
+                     Amazon-style: ranked by cart-category relevance + sponsor_rank, bestseller fallback. -->
+                <t t-set="_av_order" t-value="website_sale_order or request.website.sale_get_order()"/>
+                <t t-set="_av_cart_categs" t-value="_av_order.order_line.product_id.product_tmpl_id.public_categ_ids if _av_order else request.env['product.public.category']"/>
+                <t t-set="_av_cart_tmpl_ids" t-value="_av_order.order_line.product_id.product_tmpl_id.ids if _av_order else []"/>
+                <t t-set="_av_base_domain" t-value="[('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)]"/>
+                <!-- 1) sponsored products in the customer's cart categories -->
+                <t t-set="_av_relevant" t-value="request.env['product.template'].sudo().search(
+                    _av_base_domain + ([('public_categ_ids','in',_av_cart_categs.ids)] if _av_cart_categs else [('id','=',0)]) + [('id','not in',_av_cart_tmpl_ids)],
+                    order='sponsor_rank desc', limit=6) if _av_cart_categs else request.env['product.template']"/>
+                <!-- 2) any other sponsored products to fill -->
+                <t t-set="_av_more" t-value="request.env['product.template'].sudo().search(
+                    _av_base_domain + [('id','not in', _av_relevant.ids + _av_cart_tmpl_ids)],
+                    order='sponsor_rank desc', limit=6)"/>
+                <t t-set="_av_sponsored" t-value="(_av_relevant + _av_more)[:6]"/>
+                <!-- 3) fallback: bestsellers if nothing is sponsored yet (sales_count is
+                     computed/not stored, so fetch a pool and sort in Python) -->
+                <t t-if="not _av_sponsored">
+                    <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                        [('sale_ok','=',True),('website_published','=',True),('id','not in',_av_cart_tmpl_ids)], limit=50)"/>
+                    <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+                </t>
+                <t t-if="_av_sponsored">
+                    <aside id="av_cart_ad_slider" class="d-none d-lg-block">
+                        <t t-set="_av_carousel_id" t-value="'av_ad_carousel_cart'"/>
+                        <t t-call="aveenix_website.av_sponsored_slider"/>
+                    </aside>
+                </t>
+                <aside id="av_cart_sidebar" class="d-none d-lg-block">
+                    <div class="av-product-sidebar-rail">
+
+                        <!-- Browse Categories -->
+                        <t t-set="_av_cats" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False)])"/>
+                        <t t-if="_av_cats">
+                            <div class="av-product-sidebar-section mb-3">
+                                <p class="av-product-sidebar-title">Browse Categories</p>
+                                <div class="d-flex flex-column gap-1">
+                                    <t t-foreach="_av_cats" t-as="_cat">
+                                        <a t-attf-href="/shop?categ=#{_cat.id}" class="av-product-sidebar-link">
+                                            <t t-out="_cat.name"/>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Top Rated Products -->
+                        <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                        <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
+                        <t t-if="_av_top_rated">
+                            <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                                <p class="av-product-sidebar-title">Top Rated Products</p>
+                                <t t-foreach="_av_top_rated" t-as="_trp">
+                                    <a t-attf-href="/shop/product/#{_trp.id}" class="av-product-sidebar-related d-flex align-items-center gap-2 text-decoration-none mb-3">
+                                        <div class="flex-shrink-0">
+                                            <t t-if="_trp.image_128">
+                                                <img t-attf-src="/web/image/product.template/#{_trp.id}/image_128"
+                                                     t-att-alt="_trp.name"
+                                                     style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
+                                            </t>
+                                            <t t-else="">
+                                                <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
+                                                    <i class="fa fa-image text-muted"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <div style="min-width:0;">
+                                            <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_trp.name"/>
+                                            <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _trp.list_price"/>
+                                        </div>
+                                    </a>
+                                </t>
+                            </div>
+                        </t>
+
+                        <!-- Trust Badges -->
+                        <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                            <div class="d-flex flex-column gap-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-truck av-product-sidebar-badge-icon"/>
+                                    <span class="small text-muted">Free shipping over $50</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-rotate-left av-product-sidebar-badge-icon"/>
+                                    <span class="small text-muted">30-day returns</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-lock av-product-sidebar-badge-icon"/>
+                                    <span class="small text-muted">Secure checkout</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </aside>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
          BANNER: My Account Page (/my/account)
          ========================================================= -->
     <template id="av_account_hero" inherit_id="portal.portal_my_details" name="Aveenix: My Account Hero Banner">
@@ -1164,6 +1400,30 @@
         <!-- Always show sidebar so our custom filters are visible -->
         <xpath expr="//t[@t-set='hasLeftColumn']" position="attributes">
             <attribute name="t-value">True</attribute>
+        </xpath>
+
+        <!-- Sponsored Products slider at the top of the shop sidebar -->
+        <xpath expr="//div[hasclass('o_wsale_products_grid_before_rail')]/div[1]" position="before">
+            <t t-set="_av_ctx_categs" t-value="category.search([('id','child_of',category.id)]) if category else request.env['product.public.category']"/>
+            <t t-set="_av_relevant" t-value="request.env['product.template'].sudo().search(
+                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)]
+                + ([('public_categ_ids','in',_av_ctx_categs.ids)] if _av_ctx_categs else []),
+                order='sponsor_rank desc', limit=6) if _av_ctx_categs else request.env['product.template']"/>
+            <t t-set="_av_more" t-value="request.env['product.template'].sudo().search(
+                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True),('id','not in', _av_relevant.ids)],
+                order='sponsor_rank desc', limit=6)"/>
+            <t t-set="_av_sponsored" t-value="(_av_relevant + _av_more)[:6]"/>
+            <t t-if="not _av_sponsored">
+                <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                    [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+            </t>
+            <t t-if="_av_sponsored">
+                <div class="av-ad-sidebar-slot mb-3">
+                    <t t-set="_av_carousel_id" t-value="'av_ad_carousel_shop'"/>
+                    <t t-call="aveenix_website.av_sponsored_slider"/>
+                </div>
+            </t>
         </xpath>
 
         <!-- Always show the mobile Filters button for our custom filters -->
@@ -1472,6 +1732,28 @@
          ========================================================= -->
     <template id="av_product_detail_sidebar" inherit_id="website_sale.product" name="Aveenix: Product Detail Sidebar">
         <xpath expr="//section[@id='product_detail']" position="before">
+            <!-- Sponsored slider: own grid item (col1, row1) so it auto-matches the banner height -->
+            <t t-set="_av_excl" t-value="[product.id] if product else []"/>
+            <t t-set="_av_ctx_categs" t-value="product.public_categ_ids if product else request.env['product.public.category']"/>
+            <t t-set="_av_relevant" t-value="request.env['product.template'].sudo().search(
+                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True),('id','not in',_av_excl)]
+                + ([('public_categ_ids','in',_av_ctx_categs.ids)] if _av_ctx_categs else []),
+                order='sponsor_rank desc', limit=6) if _av_ctx_categs else request.env['product.template']"/>
+            <t t-set="_av_more" t-value="request.env['product.template'].sudo().search(
+                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True),('id','not in', _av_relevant.ids + _av_excl)],
+                order='sponsor_rank desc', limit=6)"/>
+            <t t-set="_av_sponsored" t-value="(_av_relevant + _av_more)[:6]"/>
+            <t t-if="not _av_sponsored">
+                <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                    [('sale_ok','=',True),('website_published','=',True),('id','not in',_av_excl)], limit=50)"/>
+                <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+            </t>
+            <t t-if="_av_sponsored">
+                <aside id="av_product_ad_slider" class="d-none d-lg-block">
+                    <t t-set="_av_carousel_id" t-value="'av_ad_carousel_pdp'"/>
+                    <t t-call="aveenix_website.av_sponsored_slider"/>
+                </aside>
+            </t>
             <aside id="av_product_sidebar" class="d-none d-lg-block">
                 <div class="av-product-sidebar-rail">
 
@@ -1561,7 +1843,7 @@
                     </t>
 
                     <!-- Trust Badges -->
-                    <div class="av-product-sidebar-section border-top pt-3">
+                    <div class="av-product-sidebar-section border-top pt-3 mb-3">
                         <div class="d-flex flex-column gap-2">
                             <div class="d-flex align-items-center gap-2">
                                 <i class="fa fa-truck av-product-sidebar-badge-icon"/>
@@ -1618,8 +1900,24 @@
                     <div class="row g-4">
 
                         <!-- ── LEFT SIDEBAR ──────────────────────────── -->
-                        <div class="col-lg-3 col-md-4 pt-4">
+                        <div class="col-lg-3 col-md-4">
                             <div class="av-privacy-sidebar">
+                                <!-- Sponsored ad slider (above sidebar) -->
+                                <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
+                                    [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                    order='sponsor_rank desc', limit=6)"/>
+                                <t t-if="not _av_sponsored">
+                                    <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                                        [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                    <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+                                </t>
+                                <t t-if="_av_sponsored">
+                                    <div class="av-ad-sidebar-slot mb-3">
+                                        <t t-set="_av_carousel_id" t-value="'av_ad_carousel_privacy'"/>
+                                        <t t-call="aveenix_website.av_sponsored_slider"/>
+                                    </div>
+                                </t>
+
                                 <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true" data-policy="privacy">
                                     <span>Privacy Policy</span>
                                     <i class="fa fa-minus av-privacy-sidebar-icon"/>
@@ -2878,8 +3176,24 @@
                 <div class="av-container">
                 <div class="row g-4">
                     <!-- Sidebar (left) -->
-                    <div class="col-lg-3 col-md-4 pt-4">
+                    <div class="col-lg-3 col-md-4">
                         <div class="av-privacy-sidebar">
+                            <!-- Sponsored ad slider (above sidebar) -->
+                            <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
+                                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                order='sponsor_rank desc', limit=6)"/>
+                            <t t-if="not _av_sponsored">
+                                <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                                    [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+                            </t>
+                            <t t-if="_av_sponsored">
+                                <div class="av-ad-sidebar-slot mb-3">
+                                    <t t-set="_av_carousel_id" t-value="'av_ad_carousel_terms'"/>
+                                    <t t-call="aveenix_website.av_sponsored_slider"/>
+                                </div>
+                            </t>
+
                             <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true" data-policy="terms">
                                 <span>Terms &amp; Conditions</span>
                                 <i class="fa fa-minus av-privacy-sidebar-icon"/>
@@ -2903,6 +3217,7 @@
                                 <a href="#tc-changes"      class="av-privacy-nav-link"><i class="fa fa-edit"/>        Changes to These Terms</a>
                                 <a href="#tc-contact"      class="av-privacy-nav-link"><i class="fa fa-envelope"/>    Contact Us</a>
                             </nav>
+
                             <div class="av-privacy-note-box">
                                 <div class="av-privacy-note-icon"><i class="fa fa-file-text"/></div>
                                 <strong class="av-privacy-note-title">Please read carefully.</strong>
@@ -3193,20 +3508,69 @@
         <t t-call="website.layout">
             <div id="wrap" class="av-about-page">
 
-                <!-- Hero Banner -->
-                <section class="av-compare-hero">
-                    <div class="av-compare-hero-circles">
-                        <div class="av-compare-circle av-compare-circle-1"/>
-                        <div class="av-compare-circle av-compare-circle-2"/>
-                    </div>
-                    <div class="av-container text-center" style="position:relative;z-index:1;">
-                        <div class="av-compare-hero-icon"><i class="fa fa-building"/></div>
-                        <h1 class="av-compare-hero-title">About Aveenix</h1>
-                        <p class="av-compare-hero-sub">Shop Smarter. Earn More. Give Back.</p>
-                    </div>
-                </section>
-
                 <div class="av-container av-about-body">
+                    <div class="row g-4">
+
+                        <!-- ── LEFT SIDEBAR ──────────────────────────── -->
+                        <div class="col-lg-3 col-md-4">
+                            <div class="av-privacy-sidebar">
+                                <!-- Sponsored ad slider (above sidebar) -->
+                                <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
+                                    [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                    order='sponsor_rank desc', limit=6)"/>
+                                <t t-if="not _av_sponsored">
+                                    <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                                        [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                    <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+                                </t>
+                                <t t-if="_av_sponsored">
+                                    <div class="av-ad-sidebar-slot mb-3">
+                                        <t t-set="_av_carousel_id" t-value="'av_ad_carousel_about'"/>
+                                        <t t-call="aveenix_website.av_sponsored_slider"/>
+                                    </div>
+                                </t>
+
+                                <button type="button" class="av-privacy-sidebar-heading av-privacy-sidebar-toggle is-open" aria-expanded="true">
+                                    <span>About Aveenix</span>
+                                    <i class="fa fa-minus av-privacy-sidebar-icon"/>
+                                </button>
+                                <nav class="av-privacy-nav">
+                                    <a href="#story"        class="av-privacy-nav-link"><i class="fa fa-book"/>             Our Story</a>
+                                    <a href="#achievements" class="av-privacy-nav-link"><i class="fa fa-trophy"/>           Key Achievements</a>
+                                    <a href="#mission"      class="av-privacy-nav-link"><i class="fa fa-heart-o"/>          Mission &amp; Values</a>
+                                    <a href="#giving"       class="av-privacy-nav-link"><i class="fa fa-heart"/>            Giving Back</a>
+                                    <a href="#awards"       class="av-privacy-nav-link"><i class="fa fa-certificate"/>      Awards &amp; Certifications</a>
+                                    <a href="#journey"      class="av-privacy-nav-link"><i class="fa fa-map-o"/>           Our Journey</a>
+                                    <a href="#why"          class="av-privacy-nav-link"><i class="fa fa-check-square-o"/>  Why Choose Aveenix</a>
+                                    <a href="#contact"      class="av-privacy-nav-link"><i class="fa fa-envelope"/>        Get in Touch</a>
+                                </nav>
+
+                                <!-- About note box -->
+                                <div class="av-privacy-note-box">
+                                    <div class="av-privacy-note-icon">
+                                        <i class="fa fa-heart"/>
+                                    </div>
+                                    <strong class="av-privacy-note-title">Shop Smarter. Earn More. Give Back.</strong>
+                                    <p class="av-privacy-note-text">When we share the value we create, everyone wins — customers, sellers, and communities alike.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── RIGHT MAIN CONTENT ────────────────────── -->
+                        <div class="col-lg-9 col-md-8">
+
+                    <!-- Hero banner — right column only -->
+                    <section class="av-shop-hero-inline mb-3">
+                        <div class="av-compare-hero-circles">
+                            <div class="av-compare-circle av-compare-circle-1"/>
+                            <div class="av-compare-circle av-compare-circle-2"/>
+                        </div>
+                        <div class="text-center" style="position:relative; z-index:1;">
+                            <div class="av-compare-hero-icon"><i class="fa fa-building"/></div>
+                            <h1 class="av-compare-hero-title">About Aveenix</h1>
+                            <p class="av-compare-hero-sub">Shop Smarter. Earn More. Give Back.</p>
+                        </div>
+                    </section>
 
                     <!-- Our Story -->
                     <section class="av-about-section" id="story">
@@ -3390,6 +3754,8 @@
                         </div>
                     </section>
 
+                        </div><!-- /.col-lg-9 -->
+                    </div><!-- /.row -->
                 </div>
             </div>
         </t>
