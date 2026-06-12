@@ -459,6 +459,9 @@
                     </div>
                 </section>
 
+                <t t-set="_av_carousel_id" t-value="'av_ad_carousel_compare'"/>
+                <t t-call="aveenix_website.av_full_sidebar"/>
+
                 <div class="av-container av-compare-body">
 
                     <!-- Breadcrumb -->
@@ -665,6 +668,9 @@
                     </div>
                 </section>
 
+                <t t-set="_av_carousel_id" t-value="'av_ad_carousel_fav'"/>
+                <t t-call="aveenix_website.av_full_sidebar"/>
+
                 <div class="av-container av-fav-body">
 
                     <!-- Breadcrumb row -->
@@ -764,6 +770,9 @@
                         <p class="av-wish-hero-sub">Save items for later and track price changes. Create lists for different occasions and monitor price drops.</p>
                     </div>
                 </section>
+
+                <t t-set="_av_carousel_id" t-value="'av_ad_carousel_wish'"/>
+                <t t-call="aveenix_website.av_full_sidebar"/>
 
                 <div class="av-container av-wish-body">
 
@@ -1058,6 +1067,9 @@
                     </div>
                 </section>
 
+                <t t-set="_av_carousel_id" t-value="'av_ad_carousel_notif'"/>
+                <t t-call="aveenix_website.av_full_sidebar"/>
+
                 <div class="av-container av-notif-body">
 
                     <!-- Breadcrumb -->
@@ -1145,6 +1157,93 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- =========================================================
+         REUSABLE: full left sidebar (ad slider + browse + top rated + badges).
+         Caller sets `_av_carousel_id` (unique) before t-call.
+         ========================================================= -->
+    <template id="av_full_sidebar" name="Aveenix: Full Sidebar">
+        <aside class="av-cart-aside d-none d-lg-block">
+            <!-- Sponsored ad slider -->
+            <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
+                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                order='sponsor_rank desc', limit=6)"/>
+            <t t-if="not _av_sponsored">
+                <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                    [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+            </t>
+            <t t-if="_av_sponsored">
+                <div class="av-ad-sidebar-slot mb-3">
+                    <t t-call="aveenix_website.av_sponsored_slider"/>
+                </div>
+            </t>
+
+            <div class="av-product-sidebar-rail">
+                <!-- Browse Categories -->
+                <t t-set="_av_cats" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False)])"/>
+                <t t-if="_av_cats">
+                    <div class="av-product-sidebar-section mb-3">
+                        <p class="av-product-sidebar-title">Browse Categories</p>
+                        <div class="d-flex flex-column gap-1">
+                            <t t-foreach="_av_cats" t-as="_cat">
+                                <a t-attf-href="/shop?categ=#{_cat.id}" class="av-product-sidebar-link">
+                                    <t t-out="_cat.name"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- Top Rated Products -->
+                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
+                <t t-if="_av_top_rated">
+                    <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                        <p class="av-product-sidebar-title">Top Rated Products</p>
+                        <t t-foreach="_av_top_rated" t-as="_trp">
+                            <a t-attf-href="/shop/product/#{_trp.id}" class="av-product-sidebar-related d-flex align-items-center gap-2 text-decoration-none mb-3">
+                                <div class="flex-shrink-0">
+                                    <t t-if="_trp.image_128">
+                                        <img t-attf-src="/web/image/product.template/#{_trp.id}/image_128"
+                                             t-att-alt="_trp.name"
+                                             style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
+                                            <i class="fa fa-image text-muted"/>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div style="min-width:0;">
+                                    <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_trp.name"/>
+                                    <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _trp.list_price"/>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Trust Badges -->
+                <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-truck av-product-sidebar-badge-icon"/>
+                            <span class="small text-muted">Free shipping over $50</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-rotate-left av-product-sidebar-badge-icon"/>
+                            <span class="small text-muted">30-day returns</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-lock av-product-sidebar-badge-icon"/>
+                            <span class="small text-muted">Secure checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </template>
 
     <!-- =========================================================
@@ -1274,7 +1373,7 @@
             <t t-if="request.httprequest.path == '/shop/cart' or request.httprequest.path == '/shop/checkout' or request.httprequest.path == '/shop/payment' or request.httprequest.path.startswith('/shop/address')">
                 <!-- Sponsored Products slider: left column, row 1 (beside banner, same height).
                      Amazon-style: ranked by cart-category relevance + sponsor_rank, bestseller fallback. -->
-                <t t-set="_av_order" t-value="website_sale_order or request.website.sale_get_order()"/>
+                <t t-set="_av_order" t-value="website_sale_order"/>
                 <t t-set="_av_cart_categs" t-value="_av_order.order_line.product_id.product_tmpl_id.public_categ_ids if _av_order else request.env['product.public.category']"/>
                 <t t-set="_av_cart_tmpl_ids" t-value="_av_order.order_line.product_id.product_tmpl_id.ids if _av_order else []"/>
                 <t t-set="_av_base_domain" t-value="[('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)]"/>

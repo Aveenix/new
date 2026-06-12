@@ -620,7 +620,7 @@ body.modal-open {
 }
 .av-mobile-shop-btn { display: none; }
 .av-cat-nav .av-cat-nav-inner {
-    max-width: 1500px;
+    max-width: 1535px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
@@ -663,7 +663,9 @@ body.modal-open {
     border: 1px solid var(--av-border);
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,.12);
-    min-width: 240px;
+    width: 300px;
+    min-width: 242px;
+    /* max-width: 242px; */
     overflow: hidden;
 }
 .av-cat-dropdown.av-cat-open {
@@ -3010,7 +3012,7 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: 12px !important;
 }
 .av-full-bleed {
     width: 100vw;
@@ -6104,6 +6106,7 @@ a.mt-2.mt-lg-0.text-center:hover {
     max-width: 280px;
     width: 280px;
     padding-top: 0px !important;
+    padding-right: 0px;
 }
 
 /* Brand / Category filter — 2-column scrollable list */
@@ -6198,10 +6201,14 @@ a.mt-2.mt-lg-0.text-center:hover {
     font-size: .9rem;
 }
 
-/* Tighten sidebar scrollable areas */
-#products_grid_before .o_wsale_products_grid_before_rail {
-    padding-right: .5rem;
+.o_wsale_products_grid_before_rail {
+    padding-right: 0px;
 }
+
+/* Tighten sidebar scrollable areas */
+/* #products_grid_before .o_wsale_products_grid_before_rail {
+    padding-right: .5rem;
+} */
 
 /* =============================================================
    TERMS & CONDITIONS PAGE  (/terms)
@@ -7009,6 +7016,58 @@ a.mt-2.mt-lg-0.text-center:hover {
     #av_cart_ad_slider { display: none !important; }
 }
 
+/* ── Left sidebar on Compare / Favourites / Wishlist / Notifications ── */
+@media (min-width: 992px) {
+    .av-compare-page#wrap,
+    .av-favourites-page#wrap,
+    .av-wishlist-page#wrap,
+    .av-notif-page#wrap {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        column-gap: 0.5rem;
+        align-items: start;
+        max-width: 1500px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    /* Banner (hero): right column, row 1 */
+    .av-compare-page > section,
+    .av-favourites-page > section,
+    .av-wishlist-page > section,
+    .av-notif-page > section {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    /* Sidebar: left column, spans all rows (beside banner + body) */
+    .av-compare-page > .av-cart-aside,
+    .av-favourites-page > .av-cart-aside,
+    .av-wishlist-page > .av-cart-aside,
+    .av-notif-page > .av-cart-aside {
+        grid-column: 1;
+        grid-row: 1 / 999;
+        position: sticky;
+        top: 80px;
+        align-self: start;
+        /* padding-top: 1.5rem; */
+        padding-right: 0.5rem;
+    }
+    /* Body: right column, row 2 (below the banner) */
+    .av-compare-page > .av-compare-body,
+    .av-favourites-page > .av-fav-body,
+    .av-wishlist-page > .av-wish-body,
+    .av-notif-page > .av-notif-body {
+        grid-column: 2;
+        grid-row: 2;
+        min-width: 0;
+        max-width: none !important;
+    }
+}
+@media (max-width: 991px) {
+    .av-cart-aside { display: none !important; }
+}
+
 /* Hide sidebar (nav + ad slider) on small mobile for info pages (About, Contact, Privacy, Terms)
    and let the content column fill the full width. Tablet (>=768px) keeps the 2-column layout. */
 @media (max-width: 767px) {
@@ -7035,12 +7094,24 @@ a.mt-2.mt-lg-0.text-center:hover {
 #av_product_ad_slider .av-ad-carousel,
 #av_cart_ad_slider .av-ad-carousel {
     position: relative;
-    width: 242px !important;
+    width: 268px !important;
     max-width: 100% !important;
     height: var(--av-ad-card-h, var(--av-shop-hero-h, 320px)) !important;
-    /* margin-left: 9px !important; */
     margin-right: auto !important;
 }
+
+/* ONE uniform card for EVERY page (shop, product detail, cart/checkout/…).
+   Full sidebar width so it lines up with the list/content below it. */
+/* .av-ad-sidebar-slot .av-ad-carousel,
+#av_product_ad_slider .av-ad-carousel,
+#av_cart_ad_slider .av-ad-carousel {
+    position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: var(--av-ad-card-h, var(--av-shop-hero-h, 320px)) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+} */
 .av-ad-sidebar-slot .carousel-inner,
 #av_product_ad_slider .carousel-inner,
 #av_cart_ad_slider .carousel-inner { height: 100% !important; width: 100%; overflow: hidden; position: relative; }
