@@ -601,7 +601,7 @@ body.modal-open {
 .av-all-categories {
     background: transparent;
     color: inherit;
-    padding: 0 20px;
+    padding: 0 20px 0 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -620,7 +620,7 @@ body.modal-open {
 }
 .av-mobile-shop-btn { display: none; }
 .av-cat-nav .av-cat-nav-inner {
-    max-width: 1535px;
+    max-width: 1500px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
@@ -657,15 +657,19 @@ body.modal-open {
     display: none;
     position: absolute;
     top: 100%;
-    left: 0;
+    /* Align to the privacy/terms sidebar nav box (256px wide, offset 12px
+       from the column edge). nav-inner padding already gives +24px, so left
+       12px lands it at the same x as the sidebar nav. All fixed px, so it
+       holds at every zoom level. */
+    left: 25px;
     z-index: 1000;
     background: var(--av-white);
     border: 1px solid var(--av-border);
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,.12);
-    width: 300px;
-    min-width: 242px;
-    /* max-width: 242px; */
+    width: 256px;
+    min-width: 256px;
+    max-width: 256px;
     overflow: hidden;
 }
 .av-cat-dropdown.av-cat-open {
@@ -6750,7 +6754,9 @@ a.mt-2.mt-lg-0.text-center:hover {
 
 [data-theme="dark"] .av-privacy-nav-link { color: #bbb; }
 [data-theme="dark"] .av-privacy-nav-link:hover,
-[data-theme="dark"] .av-privacy-nav-link.active {
+[data-theme="dark"] .av-privacy-nav-link.active,
+[data-theme="dark"] .av-product-sidebar-link:hover,
+[data-theme="dark"] .av-product-sidebar-link.active {
     background: color-mix(in srgb, var(--av-red) 20%, #1e1e1e);
     color: #fff;
 }
@@ -7221,19 +7227,19 @@ a.mt-2.mt-lg-0.text-center:hover {
     font-size: .85rem;
     color: var(--av-text);
     text-decoration: none;
-    padding: 4px 6px;
-    border-radius: 4px;
+    padding: 9px 14px;
+    border-radius: 8px;
     transition: background .15s, color .15s;
     display: block;
 }
-.av-product-sidebar-link:hover {
-    background: var(--av-light);
+.av-product-sidebar-link:hover,
+.av-product-sidebar-link.active {
+    background: color-mix(in srgb, var(--av-red) 10%, #fff);
     color: var(--av-red);
+    text-decoration: none;
 }
 .av-product-sidebar-link.active {
-    color: var(--av-red);
     font-weight: 600;
-    background: color-mix(in srgb, var(--av-red) 8%, transparent);
 }
 .av-product-sidebar-link-sub {
     padding-left: 16px;

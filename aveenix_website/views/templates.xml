@@ -863,7 +863,7 @@
                     <div class="row g-4">
 
                         <!-- ── LEFT SIDEBAR ──────────────────────────── -->
-                        <div class="col-lg-3 col-md-4">
+                        <div class="col-lg-3 col-md-4" style="padding-right: 8px; padding-left: 5px;">
                             <div class="av-privacy-sidebar">
                                 <!-- Sponsored ad slider (above sidebar) -->
                                 <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
@@ -1999,7 +1999,7 @@
                     <div class="row g-4">
 
                         <!-- ── LEFT SIDEBAR ──────────────────────────── -->
-                        <div class="col-lg-3 col-md-4">
+                        <div class="col-lg-3 col-md-4" style="padding-right: 8px; padding-left: 5px;">
                             <div class="av-privacy-sidebar">
                                 <!-- Sponsored ad slider (above sidebar) -->
                                 <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
@@ -3275,7 +3275,7 @@
                 <div class="av-container">
                 <div class="row g-4">
                     <!-- Sidebar (left) -->
-                    <div class="col-lg-3 col-md-4">
+                    <div class="col-lg-3 col-md-4" style="padding-right: 8px; padding-left: 5px;">
                         <div class="av-privacy-sidebar">
                             <!-- Sponsored ad slider (above sidebar) -->
                             <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
@@ -3298,7 +3298,7 @@
                                 <i class="fa fa-minus av-privacy-sidebar-icon"/>
                             </button>
                             <nav class="av-privacy-nav">
-                                <a href="#tc-intro"        class="av-privacy-nav-link active"><i class="fa fa-info-circle"/> Introduction</a>
+                                <a href="#tc-intro"        class="av-privacy-nav-link"><i class="fa fa-info-circle"/> Introduction</a>
                                 <a href="#tc-use"          class="av-privacy-nav-link"><i class="fa fa-check"/>        Use of Services</a>
                                 <a href="#tc-accounts"     class="av-privacy-nav-link"><i class="fa fa-user-circle"/>  Accounts &amp; Registration</a>
                                 <a href="#tc-products"     class="av-privacy-nav-link"><i class="fa fa-cubes"/>       Products &amp; Transactions</a>
@@ -3611,7 +3611,7 @@
                     <div class="row g-4">
 
                         <!-- ── LEFT SIDEBAR ──────────────────────────── -->
-                        <div class="col-lg-3 col-md-4">
+                        <div class="col-lg-3 col-md-4" style="padding-right: 8px; padding-left: 5px;">
                             <div class="av-privacy-sidebar">
                                 <!-- Sponsored ad slider (above sidebar) -->
                                 <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
