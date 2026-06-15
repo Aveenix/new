@@ -661,15 +661,15 @@ body.modal-open {
        from the column edge). nav-inner padding already gives +24px, so left
        12px lands it at the same x as the sidebar nav. All fixed px, so it
        holds at every zoom level. */
-    left: 25px;
+    left: 17px;
     z-index: 1000;
     background: var(--av-white);
     border: 1px solid var(--av-border);
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,.12);
-    width: 256px;
-    min-width: 256px;
-    max-width: 256px;
+    width: 268px;
+    min-width: 268px;
+    max-width: 268px;
     overflow: hidden;
 }
 .av-cat-dropdown.av-cat-open {
@@ -6206,7 +6206,8 @@ a.mt-2.mt-lg-0.text-center:hover {
 }
 
 .o_wsale_products_grid_before_rail {
-    padding-right: 0px;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
 }
 
 /* Tighten sidebar scrollable areas */
@@ -6880,7 +6881,7 @@ a.mt-2.mt-lg-0.text-center:hover {
         top: 80px;
         overflow: visible;
         align-self: start;
-        padding-top: 1.5rem;
+        /* padding-top: 1.5rem; */
         padding-right: 0.5rem;
     }
     #wrap.o_wsale_product_page:has(> #av_product_ad_slider) #av_product_sidebar {
@@ -6978,7 +6979,7 @@ a.mt-2.mt-lg-0.text-center:hover {
         position: sticky;
         top: 80px;
         align-self: start;
-        padding-top: 1.5rem;
+        /* padding-top: 1.5rem; */
     }
     /* When an ad slider exists, it takes row 1 and the sidebar starts at row 2 */
     :has(> #av_cart_ad_slider) > #av_cart_sidebar {
@@ -7201,7 +7202,7 @@ a.mt-2.mt-lg-0.text-center:hover {
 
 .av-product-sidebar-rail {
     width: 280px;
-    padding: 0 12px 0 4px;
+    padding: 1.5rem 12px 0 4px;
     scrollbar-width: thin;
     scrollbar-color: var(--av-border) transparent;
 }

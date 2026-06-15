@@ -1175,7 +1175,7 @@
                 <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
             </t>
             <t t-if="_av_sponsored">
-                <div class="av-ad-sidebar-slot mb-3">
+                <div class="av-ad-sidebar-slot">
                     <t t-call="aveenix_website.av_sponsored_slider"/>
                 </div>
             </t>
@@ -1518,7 +1518,7 @@
                 <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
             </t>
             <t t-if="_av_sponsored">
-                <div class="av-ad-sidebar-slot mb-3">
+                <div class="av-ad-sidebar-slot">
                     <t t-set="_av_carousel_id" t-value="'av_ad_carousel_shop'"/>
                     <t t-call="aveenix_website.av_sponsored_slider"/>
                 </div>
