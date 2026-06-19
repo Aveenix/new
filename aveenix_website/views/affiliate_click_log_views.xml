@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_affiliate_click_log_list" model="ir.ui.view">
+        <field name="name">affiliate.click.log.list</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="arch" type="xml">
+            <list string="Affiliate Click Logs" create="false">
+                <field name="timestamp"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="session_id" optional="show"/>
+                <field name="referrer_url" optional="hide"/>
+                <field name="affiliate_url" widget="url" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_affiliate_click_log_form" model="ir.ui.view">
+        <field name="name">affiliate.click.log.form</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="arch" type="xml">
+            <form string="Affiliate Click" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="timestamp"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="session_id"/>
+                            <field name="referrer_url"/>
+                            <field name="affiliate_url" widget="url"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_affiliate_click_log_search" model="ir.ui.view">
+        <field name="name">affiliate.click.log.search</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="arch" type="xml">
+            <search string="Affiliate Clicks">
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="session_id"/>
+                <filter name="logged_in" string="Logged-in Users" domain="[('user_id','!=',False)]"/>
+                <filter name="anonymous" string="Anonymous" domain="[('user_id','=',False)]"/>
+                <group>
+                    <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_date" string="Click Date" context="{'group_by': 'timestamp:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_affiliate_click_log_pivot" model="ir.ui.view">
+        <field name="name">affiliate.click.log.pivot</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Clicks per Product" sample="1">
+                <field name="product_id" type="row"/>
+                <field name="timestamp" interval="day" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_affiliate_click_log_graph" model="ir.ui.view">
+        <field name="name">affiliate.click.log.graph</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="arch" type="xml">
+            <graph string="Clicks per Product" type="bar" sample="1">
+                <field name="product_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_affiliate_click_log" model="ir.actions.act_window">
+        <field name="name">Affiliate Click Logs</field>
+        <field name="res_model">affiliate.click.log</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_affiliate_click_log_search"/>
+        <field name="context">{'search_default_group_product': 1}</field>
+    </record>
+
+    <menuitem id="menu_affiliate_click_log"
+              name="Affiliate Clicks"
+              parent="website.menu_reporting"
+              action="action_affiliate_click_log"
+              sequence="40"
+              groups="base.group_system,website.group_website_designer"/>
+
+</odoo>

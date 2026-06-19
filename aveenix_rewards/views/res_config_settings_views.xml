@@ -37,6 +37,13 @@
                             </div>
                         </setting>
                     </block>
+                    <block title="Affiliate Settings" name="affiliate_settings">
+                        <setting id="affiliate_amazon_tag_setting"
+                                 string="Amazon Affiliate Tag"
+                                 help="Amazon Associates tracking tag appended to affiliate links on redirect (e.g. aveenixxx-20).">
+                            <field name="affiliate_amazon_tag" placeholder="aveenixxx-20"/>
+                        </setting>
+                    </block>
                 </app>
             </xpath>
         </field>

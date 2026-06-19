@@ -23,3 +23,23 @@ class ProductTemplate(models.Model):
         default=0,
         help='Higher value = shown first in the sponsored ad slider. Paid placement lever.',
     )
+
+    affiliate_url = fields.Char(
+        string='Affiliate URL',
+        help='External retailer link for affiliate products. Buyers clicking '
+             '"Buy on Retailer" are redirected here (click is tracked).',
+    )
+    affiliate_click_count = fields.Integer(
+        string='Affiliate Clicks',
+        compute='_compute_affiliate_click_count',
+    )
+
+    def _compute_affiliate_click_count(self):
+        data = self.env['affiliate.click.log']._read_group(
+            [('product_id', 'in', self.ids)],
+            groupby=['product_id'],
+            aggregates=['__count'],
+        )
+        counts = {product.id: count for product, count in data}
+        for rec in self:
+            rec.affiliate_click_count = counts.get(rec.id, 0)

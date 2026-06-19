@@ -46,4 +46,30 @@
         </field>
     </record>
 
+    <!-- reCAPTCHA v2 keys in Website Settings -->
+    <record id="res_config_settings_aveenix_recaptcha" model="ir.ui.view">
+        <field name="name">res.config.settings.aveenix.recaptcha</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='website_info_settings']" position="after">
+                <block title="reCAPTCHA v2 (Aveenix Forms)" name="aveenix_recaptcha_block">
+                    <setting string="reCAPTCHA v2 Keys"
+                             help="Protect the contact form with Google reCAPTCHA v2 ('I'm not a robot' checkbox).">
+                        <div class="content-group mt16">
+                            <div class="row mb8">
+                                <label class="col-lg-4 o_light_label" for="aveenix_recaptcha_v2_site_key"/>
+                                <field name="aveenix_recaptcha_v2_site_key" placeholder="6Lc... (site key)"/>
+                            </div>
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="aveenix_recaptcha_v2_secret_key"/>
+                                <field name="aveenix_recaptcha_v2_secret_key" password="True" placeholder="6Lc... (secret key)"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

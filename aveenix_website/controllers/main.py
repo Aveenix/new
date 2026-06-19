@@ -1,8 +1,22 @@
+from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
+
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 _LOCATION_SESSION_KEY = 'av_user_country_id'
+
+
+def _apply_affiliate_tag(url, tag):
+    """Append/replace the Amazon Associates `tag` query param on an affiliate URL."""
+    if not tag:
+        return url
+    parts = urlsplit(url)
+    query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    query['tag'] = tag
+    return urlunsplit((
+        parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment,
+    ))
 
 
 class AveenixWebsite(WebsiteSale):
@@ -299,3 +313,19 @@ class AveenixWebsite(WebsiteSale):
             'wish_ids':    user.av_wish_product_ids.ids,
         }
 
+    @http.route('/aveenix/affiliate/<int:product_id>', type='http', auth='public', website=True, sitemap=False)
+    def affiliate_redirect(self, product_id, **kw):
+        product = request.env['product.template'].sudo().browse(product_id)
+        if not product.exists() or not product.affiliate_url:
+            return request.redirect('/shop')
+        tag = request.env.company.sudo().affiliate_amazon_tag
+        target_url = _apply_affiliate_tag(product.affiliate_url, tag)
+        user = request.env.user
+        request.env['affiliate.click.log'].sudo().create({
+            'product_id': product.id,
+            'user_id': user.id if not user._is_public() else False,
+            'session_id': request.session.sid,
+            'referrer_url': (request.httprequest.referrer or '')[:2000],
+            'affiliate_url': target_url,
+        })
+        return request.redirect(target_url, local=False)

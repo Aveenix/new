@@ -22,3 +22,8 @@ class ResCompany(models.Model):
              'e.g. 1.0 means 1 point = 1 unit of payout currency. '
              '0.5 means 1 point = 0.50 currency units.',
     )
+    affiliate_amazon_tag = fields.Char(
+        string='Amazon Affiliate Tag',
+        help='Amazon Associates tracking tag (e.g. "aveenixxx-20"). Appended '
+             'as the "tag" query parameter to affiliate links on redirect.',
+    )

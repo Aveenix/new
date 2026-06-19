@@ -7287,3 +7287,18 @@ a.mt-2.mt-lg-0.text-center:hover {
 [data-theme="dark"] .av-product-sidebar-title {
     color: #888;
 }
+
+/* ── Affiliate "Buy on Retailer" button ────────────────────── */
+.av-affiliate-cta {
+    width: 100%;
+}
+.av-affiliate-btn {
+    min-width: 240px;
+    padding: 0.65rem 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border-radius: 6px;
+}
+.av-affiliate-btn .fa {
+    font-size: 0.95rem;
+}

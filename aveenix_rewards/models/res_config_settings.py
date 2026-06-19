@@ -16,3 +16,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         digits=(16, 4),
     )
+    affiliate_amazon_tag = fields.Char(
+        related='company_id.affiliate_amazon_tag',
+        string='Amazon Affiliate Tag',
+        readonly=False,
+    )

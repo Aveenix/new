@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Show affiliate URL inside the Aveenix Rewards tab (from aveenix_rewards). -->
+    <record id="view_product_template_affiliate_rewards_tab" model="ir.ui.view">
+        <field name="name">product.template.affiliate.rewards.tab</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="aveenix_rewards.view_product_template_rewards_tab"/>
+        <field name="arch" type="xml">
+            <field name="reward_pool_perc" position="after">
+                <field name="affiliate_url"
+                       invisible="aveenix_product_type != 'affiliate'"
+                       widget="url"
+                       placeholder="https://retailer.com/product/..."/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Affiliate clicks smart button on the product form. -->
+    <record id="view_product_template_affiliate_form" model="ir.ui.view">
+        <field name="name">product.template.affiliate.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="action"
+                        name="%(action_affiliate_click_log)d"
+                        class="oe_stat_button" icon="fa-mouse-pointer"
+                        invisible="aveenix_product_type != 'affiliate'"
+                        context="{'search_default_product_id': id, 'default_product_id': id}">
+                    <field name="affiliate_click_count" widget="statinfo" string="Aff. Clicks"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

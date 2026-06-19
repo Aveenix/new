@@ -990,6 +990,14 @@
                                     <textarea name="description" placeholder="Your message...*" class="av-contact-textarea s_website_form_input form-control" rows="5" required=""></textarea>
                                 </div>
                                 <div id="s_website_form_result"/>
+                                <!-- reCAPTCHA v2 ("I'm not a robot") -->
+                                <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+                                <t t-if="_av_recaptcha_site_key">
+                                    <div class="av-contact-captcha d-flex justify-content-center mb-3">
+                                        <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
+                                    </div>
+                                    <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+                                </t>
                                 <div class="text-center">
                                     <button type="submit" class="av-contact-submit s_website_form_send">Free Consultancy</button>
                                 </div>
@@ -1157,6 +1165,51 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- =========================================================
+         reCAPTCHA v2 on the login form
+         ========================================================= -->
+    <template id="av_login_recaptcha" inherit_id="web.login" name="Aveenix: Login reCAPTCHA v2">
+        <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
+            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+            <t t-if="_av_recaptcha_site_key">
+                <div class="av-login-captcha d-flex justify-content-center mb-3">
+                    <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
+                </div>
+                <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         reCAPTCHA v2 on the signup form
+         ========================================================= -->
+    <template id="av_signup_recaptcha" inherit_id="auth_signup.signup" name="Aveenix: Signup reCAPTCHA v2">
+        <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
+            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+            <t t-if="_av_recaptcha_site_key">
+                <div class="av-signup-captcha d-flex justify-content-center mb-3">
+                    <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
+                </div>
+                <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         reCAPTCHA v2 on the reset-password form
+         ========================================================= -->
+    <template id="av_reset_password_recaptcha" inherit_id="auth_signup.reset_password" name="Aveenix: Reset Password reCAPTCHA v2">
+        <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
+            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+            <t t-if="_av_recaptcha_site_key">
+                <div class="av-reset-captcha d-flex justify-content-center mb-3">
+                    <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
+                </div>
+                <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+            </t>
+        </xpath>
     </template>
 
     <!-- =========================================================
@@ -3863,6 +3916,31 @@
     <!-- Hide Odoo's native compare button — replaced by av-add-to-compare -->
     <template id="av_hide_native_compare" inherit_id="website_sale_comparison.product_add_to_compare" name="Aveenix: Hide Native Compare">
         <xpath expr="//button[@data-action='o_comparelist']" position="replace"/>
+    </template>
+
+    <!-- =========================================================
+         AFFILIATE: redirect button on product detail page.
+         For affiliate products, hide the standard cart CTA and show a
+         "Buy on Retailer" button that goes through the tracked redirect.
+         ========================================================= -->
+    <template id="av_product_affiliate_button" inherit_id="website_sale.product" name="Aveenix: Affiliate Buy Button">
+        <!-- Insert the affiliate buy button at the top of the CTA section. -->
+        <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="before">
+            <t t-set="_av_is_affiliate"
+               t-value="product.affiliate_url and product.aveenix_product_type == 'affiliate'"/>
+            <div t-if="_av_is_affiliate" class="av-affiliate-cta mb-4">
+                <a t-att-href="'/aveenix/affiliate/%s' % product.id"
+                   target="_blank" rel="nofollow noopener sponsored"
+                   class="btn btn-primary av-affiliate-btn d-inline-flex align-items-center justify-content-center gap-2">
+                    <i class="fa fa-external-link"/>
+                    <span>Buy on Retailer</span>
+                </a>
+            </div>
+        </xpath>
+        <!-- Hide the standard Add-to-Cart CTA for affiliate products. -->
+        <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="attributes">
+            <attribute name="t-if">not (product.affiliate_url and product.aveenix_product_type == 'affiliate')</attribute>
+        </xpath>
     </template>
 
 </odoo>
