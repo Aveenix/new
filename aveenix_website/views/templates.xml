@@ -992,7 +992,7 @@
                                 <t t-set="_av_sales_teams" t-value="request.env['crm.team'].sudo().search([])"/>
                                 <div class="s_website_form_field s_website_form_required" data-type="many2one" data-name="team_id" style="margin-bottom: 14px;">
                                     <select name="team_id" class="av-contact-input s_website_form_input form-control" required="required">
-                                        <option value="">Select a department*</option>
+                                        <option value="">Subject*</option>
                                         <t t-foreach="_av_sales_teams" t-as="_team">
                                             <option t-att-value="_team.id" t-out="_team.name"/>
                                         </t>
@@ -1199,6 +1199,15 @@
          ========================================================= -->
     <template id="av_signup_recaptcha" inherit_id="auth_signup.signup" name="Aveenix: Signup reCAPTCHA v2">
         <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
+            <!-- Required Terms &amp; Conditions acceptance -->
+            <div class="form-check mb-3 av-signup-terms">
+                <input type="checkbox" class="form-check-input" name="terms_condition"
+                       id="terms_condition" required="required"/>
+                <label for="terms_condition" class="form-check-label">
+                    I agree to the
+                    <a t-attf-href="/terms?{{ keep_query() }}" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+                </label>
+            </div>
             <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key') if request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_enabled') == 'True' else False"/>
             <t t-if="_av_recaptcha_site_key">
                 <div class="av-signup-captcha d-flex justify-content-center mb-3">

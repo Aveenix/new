@@ -40,18 +40,27 @@ class AveenixAuthSignup(AuthSignupHome):
                 return request.render('web.login', values)
         return super().web_login(*args, **kw)
 
+    _TERMS_ERROR = 'You must accept the Terms & Conditions to create an account.'
+
+    def _av_render_signup_error(self, error_msg):
+        qcontext = self.get_auth_signup_qcontext()
+        qcontext['error'] = error_msg
+        response = request.render('auth_signup.signup', qcontext)
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+        return response
+
     @http.route()
     def web_auth_signup(self, *args, **kw):
-        """Validate reCAPTCHA v2 on the signup POST before creating the account."""
+        """Validate Terms acceptance + reCAPTCHA v2 before creating the account."""
         if request.httprequest.method == 'POST':
+            # Terms & Conditions must be accepted (checkbox sends a value only
+            # when ticked).
+            if not request.params.get('terms_condition'):
+                return self._av_render_signup_error(_(self._TERMS_ERROR))
             token = request.params.get('g-recaptcha-response')
             if not request.env['ir.http']._verify_recaptcha_v2(token):
-                qcontext = self.get_auth_signup_qcontext()
-                qcontext['error'] = _(self._CAPTCHA_ERROR)
-                response = request.render('auth_signup.signup', qcontext)
-                response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-                response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
-                return response
+                return self._av_render_signup_error(_(self._CAPTCHA_ERROR))
         return super().web_auth_signup(*args, **kw)
 
     @http.route()
