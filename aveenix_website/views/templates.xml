@@ -856,6 +856,9 @@
     <template id="contact_us_page" name="Aveenix Contact Us">
         <t t-call="website.layout">
             <t t-set="pageName" t-value="'contactus'"/>
+            <t t-set="additional_title">Aveenix Express Contact: Customer Support &amp; Help Center</t>
+            <t t-set="website_meta_description">Need assistance with an order or have a question? Contact Aveenix Express for friendly customer support and reliable help. Our team is here to assist with inquiries and platform support.</t>
+            <t t-set="website_meta_keywords">Customer Support, Contact Us, Help Center, Get in Touch, Support Team, Customer Service, Online Support, Customer Inquiry</t>
 
             <div id="wrap" class="av-contact-page">
 
@@ -986,12 +989,21 @@
                                         <input type="text" name="partner_name" placeholder="Website" class="av-contact-input s_website_form_input form-control"/>
                                     </div>
                                 </div>
+                                <t t-set="_av_sales_teams" t-value="request.env['crm.team'].sudo().search([])"/>
+                                <div class="s_website_form_field s_website_form_required" data-type="many2one" data-name="team_id" style="margin-bottom: 14px;">
+                                    <select name="team_id" class="av-contact-input s_website_form_input form-control" required="required">
+                                        <option value="">Select a department*</option>
+                                        <t t-foreach="_av_sales_teams" t-as="_team">
+                                            <option t-att-value="_team.id" t-out="_team.name"/>
+                                        </t>
+                                    </select>
+                                </div>
                                 <div class="s_website_form_field s_website_form_required" data-type="text" data-name="description">
                                     <textarea name="description" placeholder="Your message...*" class="av-contact-textarea s_website_form_input form-control" rows="5" required=""></textarea>
                                 </div>
                                 <div id="s_website_form_result"/>
                                 <!-- reCAPTCHA v2 ("I'm not a robot") -->
-                                <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+                                <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key') if request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_enabled') == 'True' else False"/>
                                 <t t-if="_av_recaptcha_site_key">
                                     <div class="av-contact-captcha d-flex justify-content-center mb-3">
                                         <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
@@ -1172,7 +1184,7 @@
          ========================================================= -->
     <template id="av_login_recaptcha" inherit_id="web.login" name="Aveenix: Login reCAPTCHA v2">
         <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
-            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key') if request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_enabled') == 'True' else False"/>
             <t t-if="_av_recaptcha_site_key">
                 <div class="av-login-captcha d-flex justify-content-center mb-3">
                     <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
@@ -1187,7 +1199,7 @@
          ========================================================= -->
     <template id="av_signup_recaptcha" inherit_id="auth_signup.signup" name="Aveenix: Signup reCAPTCHA v2">
         <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
-            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key') if request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_enabled') == 'True' else False"/>
             <t t-if="_av_recaptcha_site_key">
                 <div class="av-signup-captcha d-flex justify-content-center mb-3">
                     <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
@@ -1202,7 +1214,7 @@
          ========================================================= -->
     <template id="av_reset_password_recaptcha" inherit_id="auth_signup.reset_password" name="Aveenix: Reset Password reCAPTCHA v2">
         <xpath expr="//div[hasclass('oe_login_buttons')]" position="before">
-            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key')"/>
+            <t t-set="_av_recaptcha_site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key') if request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_enabled') == 'True' else False"/>
             <t t-if="_av_recaptcha_site_key">
                 <div class="av-reset-captcha d-flex justify-content-center mb-3">
                     <div class="g-recaptcha" t-att-data-sitekey="_av_recaptcha_site_key"/>
@@ -2044,7 +2056,9 @@
     <template id="privacy_policy_page" name="Aveenix Privacy Policy">
         <t t-call="website.layout">
             <t t-set="pageName" t-value="'privacy'"/>
-            <t t-set="additional_title">Privacy Policy</t>
+            <t t-set="additional_title">Aveenix Privacy Policy: Data Protection &amp; User Privacy</t>
+            <t t-set="website_meta_description">This Privacy Policy explains how Aveenix Express collects, uses, stores, and protects your personal information. We are committed to safeguarding your privacy and handling your data responsibly.</t>
+            <t t-set="website_meta_keywords">Privacy Policy, Data Protection, User Privacy, Personal Information, Data Security, Cookie Policy, Data Usage, Third-Party Sharing, User Rights, Returns Management, E-commerce Returns, Product Returns Process, Return Policy, Refund Process, Exchange Policy, Defective Product Return, Website Security, Online Security, Secure Transactions, Customer Data Security, Payment Security, Fraud Prevention, Encryption Technology, Cybersecurity Measures, Secure Shopping Experience, Sell Online, Become a Seller, E-commerce Sellers, Online Marketplace, Seller Dashboard, Product Listings, Order Management, Shipping Setup, Vendor Support, Shipping Policy, International Shipping, Shipping Rates, Order Tracking, Delivery Times, Customs Clearance, Free Shipping, Expedited Shipping, Cashback Program, Cashback Rewards, Earn Rewards Online, E-commerce Cashback, Affiliate Cashback</t>
 
             <div id="wrap" class="av-privacy-page">
 
@@ -3316,6 +3330,12 @@
          BANNER: Terms & Conditions Page (/terms)
          ========================================================= -->
     <template id="av_terms_hero" inherit_id="account.account_terms_conditions_page" name="Aveenix: Terms Hero Banner">
+        <!-- SEO meta -->
+        <xpath expr="//div[hasclass('oe_website_terms_conditions')]" position="before">
+            <t t-set="additional_title">Aveenix Express Terms &amp; Conditions: User Agreement &amp; Legal Details</t>
+            <t t-set="website_meta_description">Read our Terms and Conditions for user agreement, privacy terms, and legal details. Understand our e-commerce policies, site usage, and purchase terms.</t>
+            <t t-set="website_meta_keywords">Terms and Conditions, User Agreement, Privacy Terms, Website Terms, E-commerce Terms, Legal Terms, Usage Policy, Purchase Terms, Site Policies</t>
+        </xpath>
         <!-- Remove the empty oe_structure dropzone that renders as a visible line -->
         <xpath expr="//div[@id='oe_structure_terms_conditions']" position="replace"/>
         <xpath expr="//div[hasclass('oe_website_terms_conditions')]" position="attributes">
@@ -3658,6 +3678,9 @@
          ========================================================= -->
     <template id="about_us_page" name="Aveenix About Us">
         <t t-call="website.layout">
+            <t t-set="additional_title">About Aveenix Express: Best Ecommerce Platform for Secure, User-Friendly Shopping</t>
+            <t t-set="website_meta_description">Welcome to Aveenix Express — a modern e-commerce platform built for secure, user-friendly shopping. Discover trusted local and international brands, enjoy a seamless experience, and earn cashback rewards as you shop smarter.</t>
+            <t t-set="website_meta_keywords">Online Shopping Platform, Best E-commerce Websites, Secure Online Shopping, User-Friendly E-commerce, Cashback Rewards Shopping, Local and International Brands, Seamless Shopping Experience, Innovative E-commerce Technology, Responsive Customer Support, Effortless Shopping Journey</t>
             <div id="wrap" class="av-about-page">
 
                 <div class="av-container av-about-body">
@@ -3928,12 +3951,22 @@
         <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="before">
             <t t-set="_av_is_affiliate"
                t-value="product.affiliate_url and product.aveenix_product_type == 'affiliate'"/>
-            <div t-if="_av_is_affiliate" class="av-affiliate-cta mb-4">
+            <t t-set="_av_is_guest" t-value="request.env.user._is_public()"/>
+            <!-- Buy on Retailer is shown only to logged-in users -->
+            <div t-if="_av_is_affiliate and not _av_is_guest" class="av-affiliate-cta mb-4">
                 <a t-att-href="'/aveenix/affiliate/%s' % product.id"
                    target="_blank" rel="nofollow noopener sponsored"
                    class="btn btn-primary av-affiliate-btn d-inline-flex align-items-center justify-content-center gap-2">
                     <i class="fa fa-external-link"/>
                     <span>Buy on Retailer</span>
+                </a>
+            </div>
+            <!-- Guests: prompt to sign in instead of the Buy button -->
+            <div t-if="_av_is_affiliate and _av_is_guest" class="av-affiliate-cta mb-4">
+                <a t-attf-href="/web/login?redirect=#{request.httprequest.path}"
+                   class="btn btn-primary av-affiliate-btn d-inline-flex align-items-center justify-content-center gap-2">
+                    <i class="fa fa-user"/>
+                    <span>Sign in to Buy</span>
                 </a>
             </div>
         </xpath>

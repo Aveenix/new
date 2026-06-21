@@ -217,13 +217,42 @@ class AveenixWebsite(WebsiteSale):
     def location_set(self, country_code=None, **kwargs):
         if not country_code:
             request.session.pop(_LOCATION_SESSION_KEY, None)
+            # Drop cached pricelist so it recomputes for the cleared location.
+            request.session.pop('website_sale_current_pl', None)
             return {'ok': True}
         country = request.env['res.country'].sudo().search(
             [('code', '=', country_code.upper())], limit=1
         )
         if country:
             request.session[_LOCATION_SESSION_KEY] = country.id
+            # Invalidate cached pricelist so the country-matched one is picked.
+            request.session.pop('website_sale_current_pl', None)
+            self._av_apply_country_pricelist(country)
         return {'ok': bool(country)}
+
+    def _av_apply_country_pricelist(self, country):
+        """Force-select the website pricelist whose currency matches `country`.
+
+        The stock website logic keeps the partner's default pricelist whenever it
+        stays globally available, so a country-specific pricelist is never
+        auto-applied. We pick, among the available website pricelists, the one
+        whose currency equals the detected country's currency and pin it on the
+        session + current cart. Fully dynamic: the country's `currency_id` drives
+        the choice, so each country resolves to its own currency's pricelist.
+        """
+        if not country.currency_id:
+            return
+        website = request.env['website'].get_current_website()
+        available = website.sudo().get_pricelist_available(show_visible=True)
+        match = available.filtered(
+            lambda pl: pl.currency_id == country.currency_id
+        )[:1]
+        if not match:
+            return
+        request.session['website_sale_current_pl'] = match.id
+        cart = request.cart
+        if cart and not request.env.cr.readonly:
+            cart.sudo().write({'pricelist_id': match.id})
 
     @http.route('/aveenix/location/get', type='jsonrpc', auth='public', website=True, readonly=True)
     def location_get(self, **kwargs):
@@ -318,6 +347,10 @@ class AveenixWebsite(WebsiteSale):
         product = request.env['product.template'].sudo().browse(product_id)
         if not product.exists() or not product.affiliate_url:
             return request.redirect('/shop')
+        # Affiliate links are only exposed to logged-in users (the Buy button is
+        # hidden for guests); block direct hits from public users as a backstop.
+        if request.env.user._is_public():
+            return request.redirect('/web/login')
         tag = request.env.company.sudo().affiliate_amazon_tag
         target_url = _apply_affiliate_tag(product.affiliate_url, tag)
         user = request.env.user

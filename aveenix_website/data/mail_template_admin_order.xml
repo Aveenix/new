@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Internal notification to admin/staff when a website order is placed -->
+        <record id="mail_template_admin_new_order" model="mail.template">
+            <field name="name">Aveenix: New Order (Admin Notification)</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">New Order Received: {{ object.name }} — {{ format_amount(object.amount_total, object.currency_id) }}</field>
+            <field name="email_from">{{ (object.company_id.email or user.email_formatted) }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <div style="margin:0;padding:0;background:#f6f7f9;">
+                    <div style="max-width:600px;margin:0 auto;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#222;">
+                        <div style="background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e6e6e6;">
+                            <div style="background:#111;color:#fff;padding:18px 24px;">
+                                <h2 style="margin:0;font-size:18px;">🛒 New Order Received</h2>
+                            </div>
+                            <div style="padding:24px;">
+                                <p style="margin:0 0 16px;font-size:15px;">
+                                    A new order has been placed on the website.
+                                </p>
+                                <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;">
+                                    <tr>
+                                        <td style="padding:6px 0;color:#666;">Order</td>
+                                        <td style="padding:6px 0;font-weight:bold;text-align:right;" t-out="object.name"/>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:6px 0;color:#666;">Customer</td>
+                                        <td style="padding:6px 0;text-align:right;" t-out="object.partner_id.name or ''"/>
+                                    </tr>
+                                    <tr t-if="object.partner_id.email">
+                                        <td style="padding:6px 0;color:#666;">Email</td>
+                                        <td style="padding:6px 0;text-align:right;" t-out="object.partner_id.email"/>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:6px 0;color:#666;">Date</td>
+                                        <td style="padding:6px 0;text-align:right;" t-out="format_datetime(object.date_order, dt_format='short') or ''"/>
+                                    </tr>
+                                    <tr style="border-top:1px solid #eee;">
+                                        <td style="padding:10px 0 0;color:#666;font-weight:bold;">Total</td>
+                                        <td style="padding:10px 0 0;text-align:right;font-weight:bold;font-size:16px;color:#111;"
+                                            t-out="format_amount(object.amount_total, object.currency_id)"/>
+                                    </tr>
+                                </table>
+
+                                <p style="margin:0 0 8px;font-weight:bold;font-size:14px;">Items</p>
+                                <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+                                    <thead>
+                                        <tr style="border-bottom:1px solid #eee;color:#888;text-align:left;">
+                                            <th style="padding:6px 0;">Product</th>
+                                            <th style="padding:6px 0;text-align:center;">Qty</th>
+                                            <th style="padding:6px 0;text-align:right;">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="object.order_line.filtered(lambda l: not l.display_type)" t-as="line"
+                                            style="border-bottom:1px solid #f3f3f3;">
+                                            <td style="padding:8px 0;" t-out="line.product_id.display_name or line.name"/>
+                                            <td style="padding:8px 0;text-align:center;" t-out="line.product_uom_qty"/>
+                                            <td style="padding:8px 0;text-align:right;"
+                                                t-out="format_amount(line.price_subtotal, object.currency_id)"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="text-align:center;">
+                                    <a t-att-href="'/odoo/sales/%s' % object.id"
+                                       style="display:inline-block;background:#111;color:#fff;text-decoration:none;padding:11px 26px;border-radius:8px;font-weight:bold;font-size:14px;">
+                                        View Order
+                                    </a>
+                                </div>
+                            </div>
+                            <div style="padding:14px 24px;background:#fafafa;border-top:1px solid #eee;color:#999;font-size:12px;text-align:center;">
+                                Internal notification — Aveenix
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

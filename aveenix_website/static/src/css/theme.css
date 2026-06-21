@@ -3060,7 +3060,7 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 }
 
 .av-compare-hero-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 800;
     color: var(--av-dark);
     margin-bottom: 12px;
@@ -3565,9 +3565,9 @@ a.btn-primary[href*="/shop/checkout"]:hover {
 .oe_website_sale .btn-primary:disabled,
 #wrap .btn-primary.disabled,
 .oe_website_sale .btn-primary.disabled {
-    background-color: var(--av-yellow) !important;
-    border-color: var(--av-yellow) !important;
-    color: #1a1a1a !important;
+    background-color: var(--av-red) !important;
+    border-color: var(--av-red) !important;
+    color: #fff !important;
     opacity: .55;
 }
 
@@ -4572,6 +4572,9 @@ a[name="website_sale_main_button"],
 .js_add_suggested_products.btn-primary,
 #payment_method .btn-primary,
 .o_payment_submit_button.btn-primary,
+.o_payment_submit_button,
+button[name="o_payment_submit_button"],
+#o_payment_form button[type="submit"],
 #add_to_cart,
 .o_we_buy_now {
     --bs-btn-bg: var(--av-red) !important;
@@ -4596,6 +4599,9 @@ a[name="website_sale_main_button"]:hover,
 a[name="website_sale_main_button"]:focus,
 #payment_method .btn-primary:hover,
 .o_payment_submit_button.btn-primary:hover,
+.o_payment_submit_button:hover,
+button[name="o_payment_submit_button"]:hover,
+#o_payment_form button[type="submit"]:hover,
 #add_to_cart:hover,
 .o_we_buy_now:hover {
     background-color: var(--av-red-dark) !important;
@@ -4662,10 +4668,9 @@ a[name="website_sale_main_button"]:focus,
 }
 
 /* ── Product Detail Add to Cart hover effect (matches homepage) ── */
-.js_check_product #add_to_cart:hover,
-.js_check_product .btn-primary:hover,
+/* Generic btn-primary hover — excludes the premium Buy/Add-to-Cart buttons,
+   which have their own gradient hover defined later. */
 #product_details .btn-primary:hover,
-.av-add-to-cart:hover,
 .btn-primary:hover,
 a.btn-primary:hover,
 button.btn-primary:hover {
@@ -5545,6 +5550,32 @@ a.mt-2.mt-lg-0.text-center:hover {
     transition: border-color .2s;
     background: #fafafa;
 }
+/* Sales-team select in the contact form — matches the text inputs exactly.
+   High-specificity to override Bootstrap's select.form-control rules. */
+.av-contact-form select.av-contact-input.form-control,
+select.av-contact-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* identical box-model to .av-contact-input, just extra right room for the arrow */
+    padding: 10px 40px 10px 14px !important;
+    line-height: 1.5;
+    height: auto !important;
+    font-size: .9rem;
+    /* keep base fill colour, add the dropdown chevron on top */
+    background-color: #fafafa;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 14px 9px;
+    cursor: pointer;
+}
+select.av-contact-input:focus { background-color: #fff; }
+/* Muted placeholder; real options use normal text colour */
+select.av-contact-input:invalid { color: var(--av-gray, #999); }
+select.av-contact-input option { color: var(--av-text); }
+select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
+
 .av-contact-input:focus,
 .av-contact-textarea:focus {
     border-color: var(--av-red);
@@ -7292,13 +7323,186 @@ a.mt-2.mt-lg-0.text-center:hover {
 .av-affiliate-cta {
     width: 100%;
 }
-.av-affiliate-btn {
-    min-width: 240px;
-    padding: 0.65rem 1.5rem;
-    font-size: 1.05rem;
+/* =============================================================
+   PREMIUM BUTTONS — unified Buy / Add to Cart (affiliate + native + cards)
+   ============================================================= */
+.av-affiliate-btn,
+#product_detail #add_to_cart,
+#product_detail #buy_now,
+.av-add-to-cart {
+    --av-btn-grad-a: var(--av-red);
+    --av-btn-grad-b: color-mix(in srgb, var(--av-red) 80%, #000);
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px 28px;
+    border: none !important;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
-    border-radius: 6px;
+    letter-spacing: .01em;
+    line-height: 1.2;
+    text-decoration: none !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--av-btn-grad-a), var(--av-btn-grad-b)) !important;
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.10),
+        0 6px 16px -4px color-mix(in srgb, var(--av-red) 55%, transparent);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
 }
-.av-affiliate-btn .fa {
-    font-size: 0.95rem;
+
+/* PDP buttons should fill the available width like a premium store CTA */
+#product_detail #add_to_cart,
+#product_detail #buy_now,
+.av-affiliate-btn {
+    min-width: 180px;
 }
+
+/* Sheen sweep on hover */
+.av-affiliate-btn::after,
+#product_detail #add_to_cart::after,
+#product_detail #buy_now::after,
+.av-add-to-cart::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent);
+    transform: skewX(-18deg);
+    transition: left .55s ease;
+    pointer-events: none;
+}
+
+.av-affiliate-btn:hover,
+#product_detail #add_to_cart:hover,
+#product_detail #buy_now:hover,
+.av-add-to-cart:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+    filter: brightness(1.04);
+    box-shadow:
+        0 2px 4px rgba(0,0,0,.12),
+        0 12px 26px -6px color-mix(in srgb, var(--av-red) 65%, transparent);
+}
+.av-affiliate-btn:hover::after,
+#product_detail #add_to_cart:hover::after,
+#product_detail #buy_now:hover::after,
+.av-add-to-cart:hover::after {
+    left: 130%;
+}
+
+.av-affiliate-btn:active,
+#product_detail #add_to_cart:active,
+#product_detail #buy_now:active,
+.av-add-to-cart:active {
+    transform: translateY(0);
+    filter: brightness(.98);
+}
+
+.av-affiliate-btn:focus-visible,
+#product_detail #add_to_cart:focus-visible,
+#product_detail #buy_now:focus-visible,
+.av-add-to-cart:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--av-red) 60%, #fff);
+    outline-offset: 2px;
+}
+
+.av-affiliate-btn .fa,
+#product_detail #add_to_cart .fa,
+.av-add-to-cart .fa { font-size: .95em; }
+
+/* Affiliate "Buy on Retailer" gets a subtle distinguishing accent: a thin
+   gold ring so users can tell external-retailer from on-site add-to-cart. */
+.av-affiliate-btn {
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--av-yellow, #f4b400) 55%, transparent) inset,
+        0 1px 2px rgba(0,0,0,.10),
+        0 6px 16px -4px color-mix(in srgb, var(--av-red) 55%, transparent);
+}
+
+/* On product cards keep them full-width and a touch more compact */
+.av-add-to-cart {
+    width: 100%;
+    padding: 11px 18px;
+    border-radius: 9px;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+[data-theme="dark"] .av-affiliate-btn,
+[data-theme="dark"] #product_detail #add_to_cart,
+[data-theme="dark"] #product_detail #buy_now,
+[data-theme="dark"] .av-add-to-cart {
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.4),
+        0 6px 18px -4px color-mix(in srgb, var(--av-red) 50%, transparent);
+}
+
+/* ── Cart login gate modal ──────────────────────────────────────── */
+.av-login-gate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    background: rgba(0, 0, 0, .5);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.av-login-gate-overlay.is-open { display: flex; }
+.av-login-gate-box {
+    position: relative;
+    background: var(--av-white, #fff);
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+    width: 100%;
+    max-width: 420px;
+    padding: 36px 32px 32px;
+    text-align: center;
+}
+.av-login-gate-close {
+    position: absolute;
+    top: 12px; right: 16px;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--av-gray, #888);
+    cursor: pointer;
+}
+.av-login-gate-close:hover { color: var(--av-red); }
+.av-login-gate-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--av-red) 12%, #fff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    color: var(--av-red);
+}
+.av-login-gate-title { font-size: 22px; font-weight: 700; margin: 0 0 8px; color: var(--av-dark, #1a1a1a); }
+.av-login-gate-sub { font-size: 14px; color: var(--av-gray, #666); margin: 0 0 24px; line-height: 1.5; }
+.av-login-gate-actions { display: flex; gap: 12px; }
+.av-login-gate-btn {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: all .15s;
+    cursor: pointer;
+}
+.av-login-gate-btn-primary { background: var(--av-red); color: #fff !important; }
+.av-login-gate-btn-primary:hover { background: var(--av-red-dark, #b71c1c); }
+.av-login-gate-btn-outline { background: transparent; color: var(--av-red) !important; border: 1px solid var(--av-red); }
+.av-login-gate-btn-outline:hover { background: color-mix(in srgb, var(--av-red) 10%, #fff); }
+[data-theme="dark"] .av-login-gate-box { background: #242424; }
+[data-theme="dark"] .av-login-gate-title { color: #e0e0e0; }
+[data-theme="dark"] .av-login-gate-sub { color: #aaa; }

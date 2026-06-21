@@ -22,6 +22,9 @@ class IrHttp(models.AbstractModel):
         working until keys are set.
         """
         get_param = request.env['ir.config_parameter'].sudo().get_param
+        # Master toggle: when the feature is off, skip validation entirely.
+        if get_param('aveenix_website.recaptcha_v2_enabled') != 'True':
+            return True
         secret = get_param('aveenix_website.recaptcha_v2_secret_key')
         if not secret:
             # Not configured yet — don't block submissions.

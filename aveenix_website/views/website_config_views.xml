@@ -53,9 +53,20 @@
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='website_info_settings']" position="after">
+                <block title="Order Notifications (Aveenix)" name="aveenix_order_notify_block">
+                    <setting string="Order Notification Email"
+                             help="Comma-separated admin email address(es) that receive a separate internal notification when a website order is placed. Leave empty to disable.">
+                        <field name="aveenix_order_admin_cc" placeholder="admin@aveenix.com, sales@aveenix.com"/>
+                    </setting>
+                </block>
                 <block title="reCAPTCHA v2 (Aveenix Forms)" name="aveenix_recaptcha_block">
+                    <setting string="Enable Website Captcha" type="boolean"
+                             help="Show and validate reCAPTCHA v2 on contact, login, signup and reset-password forms. Turn off to disable captcha site-wide.">
+                        <field name="aveenix_recaptcha_v2_enabled"/>
+                    </setting>
                     <setting string="reCAPTCHA v2 Keys"
-                             help="Protect the contact form with Google reCAPTCHA v2 ('I'm not a robot' checkbox).">
+                             invisible="not aveenix_recaptcha_v2_enabled"
+                             help="Get free keys at https://www.google.com/recaptcha/admin (reCAPTCHA v2 'I'm not a robot' checkbox).">
                         <div class="content-group mt16">
                             <div class="row mb8">
                                 <label class="col-lg-4 o_light_label" for="aveenix_recaptcha_v2_site_key"/>

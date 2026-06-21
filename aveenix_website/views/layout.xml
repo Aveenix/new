@@ -9,10 +9,11 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
             <!-- ── Top utility bar ─────────────────────────────── -->
-            <div class="av-topbar-utility">
+            <t t-set="tb_countries" t-value="request.env['res.country'].sudo().search([], order='name asc')"/>
+            <t t-set="tb_loc_country" t-value="request.env['res.country'].sudo().browse(request.session.get('av_user_country_id')) if request.session.get('av_user_country_id') else None"/>
+            <t t-set="tb_user_country" t-value="tb_loc_country or request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
+            <div class="av-topbar-utility" t-att-data-av-country="tb_user_country.code or 'US'">
                 <div class="av-topbar-utility-inner">
-                    <t t-set="tb_countries" t-value="request.env['res.country'].sudo().search([], order='name asc')"/>
-                    <t t-set="tb_user_country" t-value="request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
                     <t t-set="tb_langs" t-value="request.website.language_ids.sorted('name')"/>
                     <t t-set="tb_cur_lang" t-value="request.env['res.lang'].sudo().search([('code','=',request.env.lang)], limit=1)"/>
                     <t t-set="tb_lang_redirect" t-value="'/' + '/'.join(p for p in request.httprequest.path.split('/') if p and p != tb_cur_lang.url_code) or '/'" />
@@ -380,7 +381,8 @@
                             <div class="av-footer-collapse av-footer-settings-body">
                                 <!-- Country -->
                                 <t t-set="av_countries" t-value="request.env['res.country'].sudo().search([], order='name asc', limit=100)"/>
-                                <t t-set="av_user_country" t-value="request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
+                                <t t-set="av_loc_country" t-value="request.env['res.country'].sudo().browse(request.session.get('av_user_country_id')) if request.session.get('av_user_country_id') else None"/>
+                                <t t-set="av_user_country" t-value="av_loc_country or request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
                                 <div class="av-settings-row av-settings-row-select" id="av-country-row" style="cursor:pointer;">
                                     <i class="fa fa-globe av-settings-icon"/>
                                     <span class="av-settings-label">Country</span>
@@ -741,6 +743,15 @@
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({jsonrpc:'2.0',method:'call',id:1,params:{country_code: countryCode}})
+                        }).then(function(r){ return r.json(); }).then(function(d) {
+                            // Reload once so the header country + pricelist reflect the
+                            // detected location, but only when it actually changed.
+                            var tbEl = document.querySelector('.av-topbar-utility');
+                            var shown = (tbEl &amp;&amp; tbEl.getAttribute('data-av-country') || '').toUpperCase();
+                            var res = d &amp;&amp; d.result;
+                            if(res &amp;&amp; res.ok &amp;&amp; countryCode &amp;&amp; countryCode.toUpperCase() !== shown) {
+                                window.location.reload();
+                            }
                         }).catch(function(){});
                     }
 
