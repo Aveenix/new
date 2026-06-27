@@ -5,6 +5,16 @@ from odoo.tools import email_split
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _action_confirm(self):
+        """Drop affiliate lines before confirming so the real sale order,
+        invoice and delivery only ever contain purchasable items. Affiliate
+        items are a redirect reminder in the cart, not something we sell."""
+        for order in self:
+            aff_lines = order.order_line.filtered('is_affiliate')
+            if aff_lines:
+                aff_lines.unlink()
+        return super()._action_confirm()
+
     def _av_admin_notify_partners(self):
         """Resolve the configured admin notification email(s) into partners."""
         raw = self.env['ir.config_parameter'].sudo().get_param(

@@ -683,16 +683,58 @@ body.modal-open {
 .av-cat-dropdown-list li a {
     display: flex;
     align-items: center;
-    padding: 10px 20px;
+    gap: 12px;
+    padding: 8px 16px;
     font-size: 14px;
+    font-weight: 500;
     color: var(--av-text) !important;
     text-decoration: none !important;
-    transition: background .15s, color .15s;
+    transition: background .18s ease, color .18s ease;
+}
+/* Uniform premium icon chip — every category looks consistent whether it has
+   an AI image or falls back to the tag glyph. */
+.av-cat-dd-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--av-light, #f4f5f7);
+    border: 1px solid var(--av-border);
+    overflow: hidden;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.av-cat-dd-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    image-rendering: auto;
+}
+.av-cat-dd-icon i {
+    font-size: 15px;
+    color: var(--av-gray, #888);
+    transition: color .18s ease;
+}
+.av-cat-dd-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .av-cat-dropdown-list li a:hover {
     background: var(--av-light);
     color: var(--av-red) !important;
 }
+.av-cat-dropdown-list li a:hover .av-cat-dd-icon {
+    background: color-mix(in srgb, var(--av-red) 10%, #fff);
+    border-color: color-mix(in srgb, var(--av-red) 30%, var(--av-border));
+    transform: scale(1.05);
+}
+.av-cat-dropdown-list li a:hover .av-cat-dd-icon i { color: var(--av-red); }
 .av-cat-dropdown-footer {
     border-top: 1px solid var(--av-border);
     padding: 12px 20px;
@@ -7259,14 +7301,14 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     font-size: .85rem;
     color: var(--av-text);
     text-decoration: none;
-    padding: 9px 14px;
+    padding: 3px 4px;
     border-radius: 8px;
     transition: background .15s, color .15s;
     display: block;
 }
 .av-product-sidebar-link:hover,
 .av-product-sidebar-link.active {
-    background: color-mix(in srgb, var(--av-red) 10%, #fff);
+    /* background: color-mix(in srgb, var(--av-red) 10%, #fff); */
     color: var(--av-red);
     text-decoration: none;
 }
@@ -7327,6 +7369,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
    PREMIUM BUTTONS — unified Buy / Add to Cart (affiliate + native + cards)
    ============================================================= */
 .av-affiliate-btn,
+.av-affiliate-save-btn,
 #product_detail #add_to_cart,
 #product_detail #buy_now,
 .av-add-to-cart {
@@ -7364,6 +7407,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 
 /* Sheen sweep on hover */
 .av-affiliate-btn::after,
+.av-affiliate-save-btn::after,
 #product_detail #add_to_cart::after,
 #product_detail #buy_now::after,
 .av-add-to-cart::after {
@@ -7380,6 +7424,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 }
 
 .av-affiliate-btn:hover,
+.av-affiliate-save-btn:hover,
 #product_detail #add_to_cart:hover,
 #product_detail #buy_now:hover,
 .av-add-to-cart:hover {
@@ -7391,6 +7436,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
         0 12px 26px -6px color-mix(in srgb, var(--av-red) 65%, transparent);
 }
 .av-affiliate-btn:hover::after,
+.av-affiliate-save-btn:hover::after,
 #product_detail #add_to_cart:hover::after,
 #product_detail #buy_now:hover::after,
 .av-add-to-cart:hover::after {
@@ -7398,6 +7444,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 }
 
 .av-affiliate-btn:active,
+.av-affiliate-save-btn:active,
 #product_detail #add_to_cart:active,
 #product_detail #buy_now:active,
 .av-add-to-cart:active {
@@ -7406,6 +7453,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 }
 
 .av-affiliate-btn:focus-visible,
+.av-affiliate-save-btn:focus-visible,
 #product_detail #add_to_cart:focus-visible,
 #product_detail #buy_now:focus-visible,
 .av-add-to-cart:focus-visible {
@@ -7414,17 +7462,9 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 }
 
 .av-affiliate-btn .fa,
+.av-affiliate-save-btn .fa,
 #product_detail #add_to_cart .fa,
 .av-add-to-cart .fa { font-size: .95em; }
-
-/* Affiliate "Buy on Retailer" gets a subtle distinguishing accent: a thin
-   gold ring so users can tell external-retailer from on-site add-to-cart. */
-.av-affiliate-btn {
-    box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--av-yellow, #f4b400) 55%, transparent) inset,
-        0 1px 2px rgba(0,0,0,.10),
-        0 6px 16px -4px color-mix(in srgb, var(--av-red) 55%, transparent);
-}
 
 /* On product cards keep them full-width and a touch more compact */
 .av-add-to-cart {
@@ -7435,7 +7475,29 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     margin-top: auto;
 }
 
+/* Affiliate PDP button: lock size/font so the "Add to cart" → "Saved!" text
+   swap never changes the button's height or font. */
+.av-affiliate-save-btn {
+    width: 100%;
+    min-height: 48px;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    white-space: nowrap;
+}
+.av-affiliate-save-btn .fa { font-size: .95em !important; }
+/* "In Cart" locked state — same size, muted/non-interactive */
+.av-affiliate-incart,
+.av-affiliate-save-btn.disabled {
+    cursor: default !important;
+    pointer-events: none;
+    filter: saturate(.85) brightness(.96);
+    opacity: .9;
+}
+.av-affiliate-incart::after,
+.av-affiliate-save-btn.disabled::after { display: none !important; }
+
 [data-theme="dark"] .av-affiliate-btn,
+[data-theme="dark"] .av-affiliate-save-btn,
 [data-theme="dark"] #product_detail #add_to_cart,
 [data-theme="dark"] #product_detail #buy_now,
 [data-theme="dark"] .av-add-to-cart {
@@ -7506,3 +7568,391 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 [data-theme="dark"] .av-login-gate-box { background: #242424; }
 [data-theme="dark"] .av-login-gate-title { color: #e0e0e0; }
 [data-theme="dark"] .av-login-gate-sub { color: #aaa; }
+
+/* ─────────────────────────────────────────────────────────────
+   Premium product description (Amazon-style) — applies to the
+   website product detail description (description_ecommerce).
+   ───────────────────────────────────────────────────────────── */
+/* Full-width description section pulled below images/cart (Amazon-style) */
+.av-pdp-description {
+    border-top: 1px solid #ececec;
+    margin-top: 32px;
+    padding: 32px 0 8px;
+}
+.av-pdp-description .av-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+.av-pdp-description-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 20px;
+}
+[data-theme="dark"] .av-pdp-description       { border-top-color: #2a2a2a; }
+[data-theme="dark"] .av-pdp-description-title { color: #f0f0f0; }
+[data-theme="dark"] .av-pdp-description-body  { color: #bbb; }
+
+.o_wsale_product_page #product_full_description [itemprop="description"],
+.o_wsale_product_page div[itemprop="description"],
+.av-pdp-description-body,
+.o_wsale_product_page [data-oe-field="description_ecommerce"] {
+    max-width: 860px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* Constrain + center description images, give them a card look */
+.o_wsale_product_page [itemprop="description"] img,
+.av-pdp-description-body img,
+.o_wsale_product_page [data-oe-field="description_ecommerce"] img {
+    display: block;
+    max-width: 480px;
+    width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Readable paragraphs + headings */
+.o_wsale_product_page [itemprop="description"] p,
+.av-pdp-description-body p,
+.o_wsale_product_page [data-oe-field="description_ecommerce"] p {
+    margin-bottom: 1rem;
+}
+.o_wsale_product_page [itemprop="description"] h1,
+.o_wsale_product_page [itemprop="description"] h2,
+.o_wsale_product_page [itemprop="description"] h3,
+.av-pdp-description-body h1,
+.av-pdp-description-body h2,
+.av-pdp-description-body h3,
+.o_wsale_product_page [data-oe-field="description_ecommerce"] h2,
+.o_wsale_product_page [data-oe-field="description_ecommerce"] h3 {
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+    line-height: 1.3;
+}
+
+/* Tables (product specs) → clean bordered look */
+.o_wsale_product_page [itemprop="description"] table,
+.av-pdp-description-body table,
+.o_wsale_product_page [data-oe-field="description_ecommerce"] table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 14px;
+}
+.o_wsale_product_page [itemprop="description"] table td,
+.o_wsale_product_page [itemprop="description"] table th,
+.av-pdp-description-body table td,
+.av-pdp-description-body table th {
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    text-align: left;
+}
+.o_wsale_product_page [itemprop="description"] table tr:nth-child(even),
+.av-pdp-description-body table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Hide any stray empty paragraphs from scraped content */
+.o_wsale_product_page [itemprop="description"] p:empty,
+.av-pdp-description-body p:empty {
+    display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   AFFILIATE in cart / checkout — clearly separate partner items
+   from purchasable items so the buyer always knows what's charged.
+   ───────────────────────────────────────────────────────────── */
+
+/* PDP affiliate note (under the Add-to-Cart area) */
+/* ═══════════════════════════════════════════════════════════════
+   AFFILIATE SAVED ITEMS — cart page section above Order Summary
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Section wrapper */
+.av-aff-section {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 24px;
+}
+
+/* Header — plain, matches "Order summary" heading style */
+.av-aff-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+.av-aff-section-title-block {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.av-aff-section-icon { display: none; }
+.av-aff-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+}
+.av-aff-section-subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    font-weight: 400;
+}
+
+/* Item list */
+.av-aff-list {
+    padding: 0 16px;
+}
+
+/* Individual item row */
+.av-aff-item {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #f2f2f2;
+    border-radius: 4px;
+    transition: background .18s, box-shadow .18s, transform .18s;
+}
+.av-aff-item:hover {
+    background: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    transform: translateY(-1px);
+    z-index: 1;
+    position: relative;
+}
+.av-aff-item:last-child { border-bottom: none; }
+
+/* Product image */
+.av-aff-item-img-link { display: block; flex-shrink: 0; overflow: hidden; border-radius: 4px; }
+.av-aff-item-img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    background: #f8f9fa;
+    display: block;
+    padding: 4px;
+    transition: transform .3s;
+}
+.av-aff-item:hover .av-aff-item-img { transform: scale(1.05); }
+
+/* Product info */
+.av-aff-item-body { min-width: 0; }
+.av-aff-item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212529;
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+.av-aff-item-name:hover { color: var(--av-red); text-decoration: none; }
+.av-aff-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.av-aff-item-badge {
+    font-size: 11px;
+    font-weight: 500;
+    color: #198754;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.av-aff-item-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212529;
+}
+
+/* Actions column */
+.av-aff-item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.av-aff-buy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    /* Premium gradient using the site's dynamic colour, matching other CTAs */
+    background: linear-gradient(135deg, var(--av-red), color-mix(in srgb, var(--av-red) 80%, #000)) !important;
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.10),
+        0 5px 14px -4px color-mix(in srgb, var(--av-red) 55%, transparent);
+    text-decoration: none !important;
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.av-aff-buy-btn:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+    filter: brightness(1.04);
+    box-shadow:
+        0 2px 4px rgba(0,0,0,.12),
+        0 10px 22px -6px color-mix(in srgb, var(--av-red) 65%, transparent);
+}
+.av-aff-buy-btn:active { transform: translateY(0); filter: brightness(.98); }
+.av-aff-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #adb5bd;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color .15s;
+}
+.av-aff-remove-btn:hover { color: var(--av-red); }
+
+/* Responsive — stack on small screens */
+@media (max-width: 576px) {
+    .av-aff-item {
+        grid-template-columns: 60px 1fr;
+        grid-template-rows: auto auto;
+    }
+    .av-aff-item-actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 16px;
+    }
+    .av-aff-item-img { width: 60px; height: 60px; }
+}
+
+/* Dark mode */
+[data-theme="dark"] .av-aff-section {
+    background: #1e1e1e;
+    border-color: #3a3a3a;
+}
+[data-theme="dark"] .av-aff-section-header { border-bottom-color: #3a3a3a; }
+[data-theme="dark"] .av-aff-section-title { color: #f0f0f0; }
+[data-theme="dark"] .av-aff-section-subtitle { color: #888; }
+[data-theme="dark"] .av-aff-list { border-top: none; }
+[data-theme="dark"] .av-aff-item { border-bottom-color: #2a2a2a; }
+[data-theme="dark"] .av-aff-item:hover { background: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+[data-theme="dark"] .av-aff-item-img { border-color: #333; background: #2a2a2a; }
+[data-theme="dark"] .av-aff-item-name { color: #f0f0f0; }
+[data-theme="dark"] .av-aff-item-price { color: #f0f0f0; }
+[data-theme="dark"] .av-aff-buy-btn {
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.4),
+        0 5px 16px -4px color-mix(in srgb, var(--av-red) 50%, transparent);
+}
+[data-theme="dark"] .av-aff-remove-btn { color: #555; }
+
+/* ── Browse Categories: 2-column grid + vertical scroll ──────────── */
+.av-cat-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 10px;
+    align-content: start;
+}
+.av-cat-grid-2col.av-cat-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--av-border) transparent;
+}
+.av-cat-grid-2col.av-cat-scroll::-webkit-scrollbar { width: 6px; }
+.av-cat-grid-2col.av-cat-scroll::-webkit-scrollbar-track { background: transparent; }
+.av-cat-grid-2col.av-cat-scroll::-webkit-scrollbar-thumb {
+    background: var(--av-border);
+    border-radius: 3px;
+}
+.av-cat-grid-2col.av-cat-scroll::-webkit-scrollbar-thumb:hover { background: var(--av-gray, #999); }
+/* keep links tidy inside the grid cells */
+.av-cat-grid-2col .av-product-sidebar-link {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Category dropdown icon chip — dark mode */
+[data-theme="dark"] .av-cat-dd-icon {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+}
+[data-theme="dark"] .av-cat-dd-icon i { color: #aaa; }
+[data-theme="dark"] .av-cat-dropdown-list li a:hover .av-cat-dd-icon {
+    background: color-mix(in srgb, var(--av-red) 22%, #1e1e1e);
+}
+
+/* Affiliate PDP action buttons (heart/star/compare) — match the In Cart /
+   Add to cart button height as square icon buttons, like non-affiliate pages. */
+#o_wsale_cta_wrapper .o_add_wishlist,
+#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"],
+#o_wsale_cta_wrapper .av-add-to-compare {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0 !important;
+    border-radius: 10px;
+    border: 1px solid var(--av-border) !important;
+    background: transparent !important;
+    color: var(--av-red, #888) !important;
+    transition: border-color .18s ease, color .18s ease, background .18s ease, transform .18s ease;
+}
+#o_wsale_cta_wrapper .o_add_wishlist .fa,
+#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"] .fa,
+#o_wsale_cta_wrapper .av-add-to-compare .fa {
+    font-size: 18px;
+    margin: 0;
+    color: var(--av-red, #888) !important;
+}
+/* keep the heart outline (not the native filled/red state) until hover/active */
+#o_wsale_cta_wrapper .o_add_wishlist:not(:hover):not(.o_in_wishlist) .fa {
+    color: var(--av-red, #888) !important;
+}
+#o_wsale_cta_wrapper .o_add_wishlist:hover,
+#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"]:hover,
+#o_wsale_cta_wrapper .av-add-to-compare:hover {
+    border-color: var(--av-red) !important;
+    color: var(--av-red) !important;
+    background: color-mix(in srgb, var(--av-red) 10%, #fff) !important;
+    transform: translateY(-2px);
+}
+#o_wsale_cta_wrapper .o_add_wishlist:hover .fa,
+#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"]:hover .fa,
+#o_wsale_cta_wrapper .av-add-to-compare:hover .fa { color: var(--av-red) !important; }
+/* hide the inline text label some native wishlist buttons add */
+#o_wsale_cta_wrapper .o_add_wishlist .o_label { display: none !important; }

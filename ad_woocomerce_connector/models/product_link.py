@@ -1,9 +1,66 @@
+import html
 import logging
+import re
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+
+
+def wc_unescape(value):
+    """Decode HTML entities WooCommerce returns in names (&amp; &#038; ...)."""
+    if not value:
+        return value
+    return html.unescape(value)
+
+
+def clean_wc_description(html: str) -> str:
+    """Strip junk from a scraped WooCommerce/Amazon product description:
+    <script>/<style> blocks, leaked Amazon tracking JS, and noise lines like
+    'Best Sellers Rank', 'ASIN', 'Product summary shift+alt+...'.
+    Returns tidy HTML safe to show on the website.
+    """
+    if not html:
+        return ""
+    text = html
+
+    # 0) Amazon A+ ships each image twice: a real <img> plus a lazy placeholder
+    #    (<img src="...grey-pixel.gif" data-src="..." class="a-lazy-loaded">).
+    #    The real img already shows, so drop the placeholder to avoid duplicates
+    #    / empty grey boxes.
+    text = re.sub(
+        r'(?is)<img\b(?=[^>]*\b(?:data-src|grey-pixel|a-lazy-loaded)\b)[^>]*?/?>',
+        "", text,
+    )
+
+    # 1) Remove script/style/noscript blocks entirely.
+    text = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", "", text)
+
+    # 2) Remove leaked inline JS blobs (Amazon click-tracking) that arrive as
+    #    plain text, e.g. "var dpAcrHasRegistered... });".
+    text = re.sub(r"(?is)\bvar\s+dpAcr[^<]*?\}\)\s*;?", "", text)
+    text = re.sub(r"(?is)(P\.when|ue\.count|execute\(function)[^<]*?\}\)\s*;?", "", text)
+
+    # 3) Drop known Amazon noise lines/labels.
+    noise_patterns = [
+        r"(?im)^\s*Best Sellers Rank.*$",
+        r"(?im)^\s*Customer Reviews?:.*$",
+        r"(?im)^\s*ASIN\s*[:：].*$",
+        r"(?im)^\s*Date First Available.*$",
+        r"(?im)^\s*Department\s*[:：].*$",
+        r"(?im)^\s*Product Warranty.*$",
+        r"(?im)^\s*Product summary.*$",
+        r"(?im)^\s*shift\s*\+\s*alt\s*\+\s*\w+\s*$",
+        r"(?im)click here",
+    ]
+    for pat in noise_patterns:
+        text = re.sub(pat, "", text)
+
+    # 4) Collapse excess blank lines / spaces.
+    text = re.sub(r"(?:\s*<br\s*/?>\s*){3,}", "<br/><br/>", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
 
 PRODUCT_STATUS = [
     ("draft", "Draft"),
@@ -141,6 +198,30 @@ class WooProduct(models.Model):
                 return val if val not in (None, False) else default
         return default
 
+    @staticmethod
+    def _collect_image_urls(record: dict, dropship: bool = False) -> list:
+        """Return the product image URL(s).
+
+        Affiliate/simple products store the URL in the 'fifu_image_url' meta key
+        (may itself be a comma/newline separated list). Dropship products (CJ)
+        don't use FIFU — their images live in the WC native 'images' array, so
+        for those we read 'images[*].src'.
+        """
+        urls = []
+        value = WooProduct._get_meta(record, "fifu_image_url")
+        if value:
+            for part in str(value).replace("\n", ",").split(","):
+                u = part.strip()
+                if u.startswith("http") and u not in urls:
+                    urls.append(u)
+        # Dropship (or any product) with no FIFU URL -> fall back to native images.
+        if dropship or not urls:
+            for img in record.get("images") or []:
+                src = (img.get("src") or "").strip() if isinstance(img, dict) else ""
+                if src.startswith("http") and src not in urls:
+                    urls.append(src)
+        return urls
+
     def _sync_one(self, backend, record: dict, force: bool = False):
         from datetime import datetime
         ext_id = str(record["id"])
@@ -159,7 +240,7 @@ class WooProduct(models.Model):
             )
             return None, "skipped"
 
-        name = (record.get("name") or "").strip() or "WooCommerce Product %s" % ext_id
+        name = wc_unescape((record.get("name") or "").strip()) or "WooCommerce Product %s" % ext_id
         product_type = backend.default_product_type or "consu"
 
         regular_price_raw = record.get("regular_price") or record.get("price") or ""
@@ -192,12 +273,16 @@ class WooProduct(models.Model):
         # Dropshipping: SKU starting with "CJ" (e.g. CJ supplier products).
         is_dropship = bool(sku) and sku.upper().startswith("CJ")
 
-        cat_ids = self._resolve_categories(backend, record.get("categories", []))
-        tag_ids = self._resolve_tags(backend, record.get("tags", []))
+        wc_cat_records = record.get("categories", [])
+        wc_tag_records = record.get("tags", [])
+        cat_ids = self._resolve_categories(backend, wc_cat_records)
+        tag_ids = self._resolve_tags(backend, wc_tag_records)
+        public_categ_ids = self._resolve_public_categories(backend, wc_cat_records)
+        internal_categ = self._resolve_internal_category(backend, wc_cat_records)
+        product_tag_ids = self._resolve_product_tags(backend, wc_tag_records)
 
-        images = ",".join(
-            img.get("src", "") for img in record.get("images", []) if img.get("src")
-        )
+        image_list = self._collect_image_urls(record, dropship=is_dropship)
+        images = ",".join(image_list)
 
         vals = {
             "wc_product_name": name,
@@ -224,7 +309,21 @@ class WooProduct(models.Model):
             "list_price": list_price,
             "weight": weight,
         }
-        has_affiliate_url_field = "affiliate_url" in self.env["product.template"]._fields
+        Tmpl = self.env["product.template"]
+        # Link both the internal product category and the eCommerce category.
+        if internal_categ:
+            tmpl_vals["categ_id"] = internal_categ.id
+        if public_categ_ids and "public_categ_ids" in Tmpl._fields:
+            tmpl_vals["public_categ_ids"] = [(6, 0, public_categ_ids)]
+        if product_tag_ids and "product_tag_ids" in Tmpl._fields:
+            tmpl_vals["product_tag_ids"] = [(6, 0, product_tag_ids)]
+        if "external_image_urls" in Tmpl._fields:
+            tmpl_vals["external_image_urls"] = images
+        # WC native description -> website product description (cleaned).
+        wc_description = clean_wc_description(record.get("description") or "")
+        if "description_ecommerce" in Tmpl._fields:
+            tmpl_vals["description_ecommerce"] = wc_description
+        has_affiliate_url_field = "affiliate_url" in Tmpl._fields
         if is_affiliate:
             tmpl_vals["aveenix_product_type"] = "affiliate"
             if has_affiliate_url_field:
@@ -266,7 +365,8 @@ class WooProduct(models.Model):
 
         if not odoo_product:
             categ_id = (
-                backend.default_category_id.id
+                internal_categ.id if internal_categ
+                else backend.default_category_id.id
                 if backend.default_category_id
                 else self.env.ref("product.product_category_goods").id
             )
@@ -283,15 +383,26 @@ class WooProduct(models.Model):
                 "purchase_ok": True,
             })
 
+        tmpl_extra = {}
         if is_affiliate:
-            aff_vals = {"aveenix_product_type": "affiliate"}
+            tmpl_extra["aveenix_product_type"] = "affiliate"
             if has_affiliate_url_field:
-                aff_vals["affiliate_url"] = affiliate_url
-            odoo_product.product_tmpl_id.with_context(syncing_from_wc=True).write(aff_vals)
+                tmpl_extra["affiliate_url"] = affiliate_url
         elif is_dropship:
-            odoo_product.product_tmpl_id.with_context(syncing_from_wc=True).write({
-                "aveenix_product_type": "dropship",
-            })
+            tmpl_extra["aveenix_product_type"] = "dropship"
+        if "external_image_urls" in Tmpl._fields:
+            tmpl_extra["external_image_urls"] = images
+        if "description_ecommerce" in Tmpl._fields:
+            tmpl_extra["description_ecommerce"] = wc_description
+        if internal_categ:
+            tmpl_extra["categ_id"] = internal_categ.id
+        if public_categ_ids and "public_categ_ids" in Tmpl._fields:
+            tmpl_extra["public_categ_ids"] = [(6, 0, public_categ_ids)]
+        if product_tag_ids and "product_tag_ids" in Tmpl._fields:
+            tmpl_extra["product_tag_ids"] = [(6, 0, product_tag_ids)]
+        if tmpl_extra:
+            odoo_product.product_tmpl_id.with_context(
+                syncing_from_wc=True).write(tmpl_extra)
 
         vals["product_id"] = odoo_product.id
         binding = self.with_context(syncing_from_wc=True).create(vals)
@@ -312,6 +423,29 @@ class WooProduct(models.Model):
                 ids.append(wc_cat.id)
         return ids
 
+    def _resolve_public_categories(self, backend, cat_list: list) -> list:
+        """Return product.public.category ids for a product's WC categories."""
+        ids = []
+        for cat in cat_list:
+            wc_cat = self.env["wc.category.link"].search([
+                ("backend_id", "=", backend.id),
+                ("external_id", "=", str(cat.get("id", ""))),
+            ], limit=1)
+            if wc_cat and wc_cat.public_categ_id:
+                ids.append(wc_cat.public_categ_id.id)
+        return ids
+
+    def _resolve_internal_category(self, backend, cat_list: list):
+        """Return the first matching internal product.category (for categ_id)."""
+        for cat in cat_list:
+            wc_cat = self.env["wc.category.link"].search([
+                ("backend_id", "=", backend.id),
+                ("external_id", "=", str(cat.get("id", ""))),
+            ], limit=1)
+            if wc_cat and wc_cat.category_id:
+                return wc_cat.category_id
+        return False
+
     def _resolve_tags(self, backend, tag_list: list) -> list:
         ids = []
         for tag in tag_list:
@@ -321,6 +455,18 @@ class WooProduct(models.Model):
             ], limit=1)
             if wc_tag:
                 ids.append(wc_tag.id)
+        return ids
+
+    def _resolve_product_tags(self, backend, tag_list: list) -> list:
+        """Return native product.tag ids for a product's WC tags."""
+        ids = []
+        for tag in tag_list:
+            wc_tag = self.env["wc.tag"].search([
+                ("backend_id", "=", backend.id),
+                ("external_id", "=", str(tag.get("id", ""))),
+            ], limit=1)
+            if wc_tag and wc_tag.product_tag_id:
+                ids.append(wc_tag.product_tag_id.id)
         return ids
 
     def _is_up_to_date(self, binding, remote_record: dict) -> bool:
@@ -427,7 +573,7 @@ class WooProduct(models.Model):
             if product:
                 return product
 
-        item_name = (item.get("name") or "").strip() or "WooCommerce Product"
+        item_name = wc_unescape((item.get("name") or "").strip()) or "WooCommerce Product"
         _logger.warning(
             "Creating fallback Odoo product for WooCommerce item '%s' (ext_id=%s, sku=%s)",
             item_name, ext_id, sku,
@@ -577,16 +723,15 @@ class WooProductTemplate(models.Model):
             ("external_id", "=", ext_id),
         ], limit=1)
 
-        name = (record.get("name") or "").strip() or "WooCommerce Variable Product %s" % ext_id
-        images = ",".join(
-            img.get("src", "") for img in record.get("images", []) if img.get("src")
-        )
-        cat_ids = self.env["wc.product.link"]._resolve_categories(
-            backend, record.get("categories", [])
-        )
-        tag_ids = self.env["wc.product.link"]._resolve_tags(
-            backend, record.get("tags", [])
-        )
+        name = wc_unescape((record.get("name") or "").strip()) or "WooCommerce Variable Product %s" % ext_id
+        WcProduct = self.env["wc.product.link"]
+        wc_cat_records = record.get("categories", [])
+        wc_tag_records = record.get("tags", [])
+        cat_ids = WcProduct._resolve_categories(backend, wc_cat_records)
+        tag_ids = WcProduct._resolve_tags(backend, wc_tag_records)
+        public_categ_ids = WcProduct._resolve_public_categories(backend, wc_cat_records)
+        internal_categ = WcProduct._resolve_internal_category(backend, wc_cat_records)
+        product_tag_ids = WcProduct._resolve_product_tags(backend, wc_tag_records)
 
         regular_price_raw = record.get("regular_price") or record.get("price") or ""
         try:
@@ -596,6 +741,9 @@ class WooProductTemplate(models.Model):
 
         sku = (record.get("sku") or "").strip()
         is_dropship = bool(sku) and sku.upper().startswith("CJ")
+        images = ",".join(WcProduct._collect_image_urls(record, dropship=is_dropship))
+        wc_description = clean_wc_description(record.get("description") or "")
+        has_desc_field = "description_ecommerce" in self.env["product.template"]._fields
 
         vals = {
             "wc_product_name": name,
@@ -617,6 +765,16 @@ class WooProductTemplate(models.Model):
             tmpl_write = {"name": name, "list_price": list_price}
             if is_dropship:
                 tmpl_write["aveenix_product_type"] = "dropship"
+            if "external_image_urls" in self.env["product.template"]._fields:
+                tmpl_write["external_image_urls"] = images
+            if has_desc_field:
+                tmpl_write["description_ecommerce"] = wc_description
+            if internal_categ:
+                tmpl_write["categ_id"] = internal_categ.id
+            if public_categ_ids and "public_categ_ids" in self.env["product.template"]._fields:
+                tmpl_write["public_categ_ids"] = [(6, 0, public_categ_ids)]
+            if product_tag_ids and "product_tag_ids" in self.env["product.template"]._fields:
+                tmpl_write["product_tag_ids"] = [(6, 0, product_tag_ids)]
             existing.template_id.with_context(syncing_from_wc=True).write(tmpl_write)
             existing.with_context(syncing_from_wc=True).write(vals)
             self._sync_variations(backend, existing, record, force, results)
@@ -651,7 +809,8 @@ class WooProductTemplate(models.Model):
             })
         else:
             categ_id = (
-                backend.default_category_id.id
+                internal_categ.id if internal_categ
+                else backend.default_category_id.id
                 if backend.default_category_id
                 else self.env.ref("product.product_category_goods").id
             )
@@ -666,10 +825,21 @@ class WooProductTemplate(models.Model):
                 "default_code": tmpl_sku or False,
             })
 
+        tmpl_extra = {}
         if is_dropship:
-            odoo_tmpl.with_context(syncing_from_wc=True).write({
-                "aveenix_product_type": "dropship",
-            })
+            tmpl_extra["aveenix_product_type"] = "dropship"
+        if "external_image_urls" in self.env["product.template"]._fields:
+            tmpl_extra["external_image_urls"] = images
+        if has_desc_field:
+            tmpl_extra["description_ecommerce"] = wc_description
+        if internal_categ:
+            tmpl_extra["categ_id"] = internal_categ.id
+        if public_categ_ids and "public_categ_ids" in self.env["product.template"]._fields:
+            tmpl_extra["public_categ_ids"] = [(6, 0, public_categ_ids)]
+        if product_tag_ids and "product_tag_ids" in self.env["product.template"]._fields:
+            tmpl_extra["product_tag_ids"] = [(6, 0, product_tag_ids)]
+        if tmpl_extra:
+            odoo_tmpl.with_context(syncing_from_wc=True).write(tmpl_extra)
 
         vals["template_id"] = odoo_tmpl.id
         vals["name"] = name
@@ -700,7 +870,7 @@ class WooProductTemplate(models.Model):
             return
 
         wc_product_model = self.env["wc.product.link"]
-        parent_name = record.get("name") or ""
+        parent_name = wc_unescape(record.get("name") or "")
 
         for var in var_records:
             var_ext_id = str(var.get("id", ""))

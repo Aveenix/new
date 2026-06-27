@@ -12,6 +12,16 @@
                        invisible="aveenix_product_type != 'affiliate'"
                        widget="url"
                        placeholder="https://retailer.com/product/..."/>
+                <field name="external_image_urls"
+                       placeholder="https://cdn.example.com/img1.jpg, https://...jpg"/>
+                <div invisible="not external_image_urls">
+                    <field name="external_image_fetch_state" readonly="1"/>
+                    <button type="object" name="action_fetch_external_image_now"
+                            string="Download Image Now" class="btn-link"
+                            icon="fa-download"/>
+                </div>
+                <field name="external_image_preview"
+                       invisible="not external_image_urls"/>
             </field>
         </field>
     </record>

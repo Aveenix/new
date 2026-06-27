@@ -3,6 +3,7 @@ from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.cart import Cart
 
 _LOCATION_SESSION_KEY = 'av_user_country_id'
 
@@ -342,6 +343,52 @@ class AveenixWebsite(WebsiteSale):
             'wish_ids':    user.av_wish_product_ids.ids,
         }
 
+    # ── Affiliate cart ────────────────────────────────────────────
+
+    @http.route('/aveenix/affiliate/cart/add', type='jsonrpc', auth='public', website=True)
+    def affiliate_cart_add(self, product_id=None, **kw):
+        """Save an affiliate product to the visitor's affiliate cart (not the Odoo cart)."""
+        if not product_id:
+            return {'ok': False, 'error': 'missing product_id'}
+        product = request.env['product.template'].sudo().browse(int(product_id))
+        if not product.exists() or product.aveenix_product_type != 'affiliate':
+            return {'ok': False, 'error': 'invalid product'}
+        user = request.env.user
+        # sudo() required: public users have no model access; we gate on session id.
+        line = request.env['affiliate.cart.line'].sudo()._get_or_create(
+            product, request.session.sid, user
+        )
+        return {'ok': True, 'line_id': line.id}
+
+    @http.route('/aveenix/affiliate/cart/remove', type='jsonrpc', auth='public', website=True)
+    def affiliate_cart_remove(self, line_id=None, **kw):
+        """Remove a line from the visitor's affiliate cart."""
+        if not line_id:
+            return {'ok': False}
+        user = request.env.user
+        # sudo() required: public users have no model access.
+        lines = request.env['affiliate.cart.line'].sudo()._for_session(
+            request.session.sid, user
+        )
+        line = lines.filtered(lambda l: l.id == int(line_id))
+        if line:
+            line.unlink()
+        return {'ok': True}
+
+    @http.route('/aveenix/affiliate/cart', type='http', auth='public', website=True, sitemap=False)
+    def affiliate_cart_page(self, **kw):
+        """Render the cart page with affiliate lines injected into the template context."""
+        user = request.env.user
+        # sudo() required: public users have no model access.
+        affiliate_lines = request.env['affiliate.cart.line'].sudo()._for_session(
+            request.session.sid, user
+        )
+        # Delegate to the standard cart controller but with extra context.
+        response = super().cart(**kw)
+        if hasattr(response, 'qcontext'):
+            response.qcontext['affiliate_cart_lines'] = affiliate_lines
+        return response
+
     @http.route('/aveenix/affiliate/<int:product_id>', type='http', auth='public', website=True, sitemap=False)
     def affiliate_redirect(self, product_id, **kw):
         product = request.env['product.template'].sudo().browse(product_id)
@@ -362,3 +409,99 @@ class AveenixWebsite(WebsiteSale):
             'affiliate_url': target_url,
         })
         return request.redirect(target_url, local=False)
+
+    @http.route('/aveenix/product_image/<int:product_id>', type='http',
+                auth='public', website=True, sitemap=False)
+    def product_external_image(self, product_id, index=0, **kw):
+        """Redirect to a product's external image URL (by index). Lets an
+        <img src> point here and land on the external CDN image."""
+        product = request.env['product.template'].sudo().browse(product_id)
+        urls = product.exists() and product._get_external_image_list() or []
+        try:
+            idx = int(index)
+        except (TypeError, ValueError):
+            idx = 0
+        if urls and 0 <= idx < len(urls):
+            return request.redirect(urls[idx], local=False)
+        # Fallback to Odoo's own image (or its placeholder).
+        return request.redirect('/web/image/product.template/%s/image_512' % product_id)
+
+    @http.route('/aveenix/product_images', type='jsonrpc', auth='public',
+                website=True, readonly=True)
+    def product_external_images(self, ids=None, **kw):
+        """Return {product_id: [external image urls]} for the given templates."""
+        if not ids:
+            return {}
+        try:
+            id_list = [int(i) for i in ids]
+        except (TypeError, ValueError):
+            return {}
+        products = request.env['product.template'].sudo().browse(id_list).exists()
+        return {
+            str(p.id): p._get_external_image_list()
+            for p in products if p.external_image_urls
+        }
+
+    @http.route('/aveenix/variant_images', type='jsonrpc', auth='public',
+                website=True, readonly=True)
+    def variant_external_images(self, ids=None, **kw):
+        """Return {product.product id: [external image urls]} by resolving each
+        variant to its template. Used where the page renders product.product
+        images (e.g. the cart line / order summary)."""
+        if not ids:
+            return {}
+        try:
+            id_list = [int(i) for i in ids]
+        except (TypeError, ValueError):
+            return {}
+        variants = request.env['product.product'].sudo().browse(id_list).exists()
+        return {
+            str(v.id): v.product_tmpl_id._get_external_image_list()
+            for v in variants if v.product_tmpl_id.external_image_urls
+        }
+
+
+class AveenixCart(Cart):
+
+    def add_to_cart(self, product_template_id, product_id, **kwargs):
+        tmpl = request.env['product.template'].sudo().browse(product_template_id).exists()
+        if tmpl and tmpl.aveenix_product_type == 'affiliate':
+            user = request.env.user
+            request.env['affiliate.cart.line'].sudo()._get_or_create(
+                tmpl, request.session.sid, user
+            )
+            order_sudo = request.cart
+            return {
+                'cart_quantity': order_sudo.cart_quantity if order_sudo else 0,
+                'notification_info': {'warning': ''},
+                'quantity': 0,
+                'tracking_info': [],
+            }
+        return super().add_to_cart(product_template_id, product_id, **kwargs)
+
+    def _affiliate_lines(self):
+        # sudo() required: public users have no model access; scoped by session.
+        user = request.env.user
+        return request.env['affiliate.cart.line'].sudo()._for_session(
+            request.session.sid, user
+        )
+
+    def _cart_values(self, **post):
+        values = super()._cart_values(**post)
+        values['affiliate_cart_lines'] = self._affiliate_lines()
+        return values
+
+    def _prepare_checkout_page_values(self, order_sudo, **kwargs):
+        values = super()._prepare_checkout_page_values(order_sudo, **kwargs)
+        values['affiliate_cart_lines'] = self._affiliate_lines()
+        return values
+
+    def _prepare_address_form_values(self, *args, **kwargs):
+        values = super()._prepare_address_form_values(*args, **kwargs)
+        values['affiliate_cart_lines'] = self._affiliate_lines()
+        return values
+
+    def _get_shop_payment_values(self, order, **kwargs):
+        values = super()._get_shop_payment_values(order, **kwargs)
+        values['affiliate_cart_lines'] = self._affiliate_lines()
+        return values

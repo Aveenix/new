@@ -1,4 +1,8 @@
-from odoo import fields, models
+import logging
+
+from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -24,6 +28,63 @@ class ProductTemplate(models.Model):
         help='Higher value = shown first in the sponsored ad slider. Paid placement lever.',
     )
 
+    external_image_urls = fields.Text(
+        string='External Image URLs',
+        help='Comma-separated external image URLs pulled from WooCommerce '
+             '(meta_data / images). Rendered directly on the website for '
+             'products whose images are hosted externally (e.g. Amazon CDN).',
+    )
+
+    external_image_fetched_url = fields.Char(
+        string='Fetched Image URL',
+        help='The external URL that was last downloaded into the native image '
+             'field. When external_image_urls changes, this differs from the '
+             'first URL and the image cron re-downloads it.',
+        copy=False,
+    )
+    external_image_fetch_state = fields.Selection(
+        [('pending', 'Pending'), ('done', 'Done'), ('error', 'Error')],
+        string='Image Fetch State',
+        index=True,
+        copy=False,
+        help='Tracks the background download of the external image into the '
+             'native product image field.',
+    )
+
+    external_image_preview = fields.Html(
+        string='External Images',
+        compute='_compute_external_image_preview',
+        sanitize=False,
+        help='Inline preview of all external image URLs (backend only).',
+    )
+
+    def _get_external_image_list(self):
+        """Return external image URLs as a clean list (for website rendering)."""
+        self.ensure_one()
+        if not self.external_image_urls:
+            return []
+        img_list = [u.strip() for u in self.external_image_urls.split(',') if u.strip()]
+        print("img listtttttttttt", img_list)
+        # 4/0
+        return img_list
+
+    def _compute_external_image_preview(self):
+        from markupsafe import Markup
+        for rec in self:
+            urls = rec._get_external_image_list()
+            if not urls:
+                rec.external_image_preview = False
+                continue
+            html = Markup("<div style='display:flex;flex-wrap:wrap;gap:8px;'>")
+            for u in urls:
+                html += Markup(
+                    "<a href='%s' target='_blank'>"
+                    "<img src='%s' style='width:120px;height:120px;object-fit:cover;"
+                    "border:1px solid #dee2e6;border-radius:6px;'/></a>"
+                ) % (u, u)
+            html += Markup("</div>")
+            rec.external_image_preview = html
+
     affiliate_url = fields.Char(
         string='Affiliate URL',
         help='External retailer link for affiliate products. Buyers clicking '
@@ -43,3 +104,97 @@ class ProductTemplate(models.Model):
         counts = {product.id: count for product, count in data}
         for rec in self:
             rec.affiliate_click_count = counts.get(rec.id, 0)
+
+    # ── External image → native image (background download) ──────────────
+
+    def _first_external_image_url(self):
+        self.ensure_one()
+        urls = self._get_external_image_list()
+        return urls[0] if urls else False
+
+    def write(self, vals):
+        res = super().write(vals)
+        # When the external URL list changes, flag the product so the image
+        # cron re-downloads only the ones that actually changed (delta only —
+        # the daily product pull does NOT re-download all 20k images).
+        if 'external_image_urls' in vals:
+            to_flag = self.filtered(
+                lambda p: p._first_external_image_url()
+                and p._first_external_image_url() != p.external_image_fetched_url
+            )
+            if to_flag:
+                # Avoid recursion: write the state directly via super.
+                super(ProductTemplate, to_flag).write(
+                    {'external_image_fetch_state': 'pending'}
+                )
+        return res
+
+    def _download_external_image(self, timeout=10):
+        """Download this product's first external image into image_1920.
+        Returns True on success. Never raises — flags 'error' instead."""
+        self.ensure_one()
+        import base64
+        import requests
+        url = self._first_external_image_url()
+        if not url:
+            self.external_image_fetch_state = False
+            return False
+        try:
+            resp = requests.get(url, timeout=timeout, stream=True)
+            resp.raise_for_status()
+            content = resp.content
+            if not content:
+                raise ValueError('empty image body')
+            self.write({
+                'image_1920': base64.b64encode(content),
+                'external_image_fetched_url': url,
+                'external_image_fetch_state': 'done',
+            })
+            return True
+        except Exception as exc:  # noqa: BLE001 — must never break the cron
+            _logger.warning(
+                '[AffiliateImg] failed to fetch %s for product %s: %s',
+                url, self.id, exc,
+            )
+            self.external_image_fetch_state = 'error'
+            return False
+
+    @api.model
+    def cron_fetch_external_images(self, batch_size=50, timeout=10):
+        """Background cron: download external images into the native image
+        field for products flagged 'pending'. Batched + commit-per-product so
+        a slow/dead URL never blocks the catalog pull or the whole run."""
+        products = self.search(
+            [('external_image_fetch_state', '=', 'pending'),
+             ('external_image_urls', '!=', False)],
+            limit=batch_size,
+        )
+        if not products:
+            _logger.info('[AffiliateImg] nothing pending.')
+            return
+        _logger.info('[AffiliateImg] downloading %s images...', len(products))
+        done = 0
+        for product in products:
+            product._download_external_image(timeout=timeout)
+            self.env.cr.commit()  # persist + release row, resumable
+            done += 1
+        _logger.info('[AffiliateImg] processed %s products this run.', done)
+        # Re-trigger immediately if more remain (self-resuming).
+        remaining = self.search_count(
+            [('external_image_fetch_state', '=', 'pending'),
+             ('external_image_urls', '!=', False)]
+        )
+        if remaining:
+            cron = self.env.ref(
+                'aveenix_website.cron_fetch_external_images',
+                raise_if_not_found=False,
+            )
+            if cron:
+                cron._trigger()
+
+    def action_fetch_external_image_now(self):
+        """Manual button: download the external image for selected products."""
+        for product in self:
+            if product.external_image_urls:
+                product._download_external_image()
+        return True

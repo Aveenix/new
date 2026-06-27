@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_public_category_form_inherit_aveenix" model="ir.ui.view">
+        <field name="name">product.public.category.form.inherit.aveenix</field>
+        <field name="model">product.public.category</field>
+        <field name="inherit_id" ref="website_sale.product_public_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='image_1920']" position="after">
+                <field name="av_ai_icon" widget="image" string="AI Icon"
+                       options="{'size': [64, 64]}"
+                       help="Auto-generated 64×64 icon via Pollinations AI. Use Action > Generate AI Icon to create."/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

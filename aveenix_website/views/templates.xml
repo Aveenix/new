@@ -1260,7 +1260,7 @@
                 <t t-if="_av_cats">
                     <div class="av-product-sidebar-section mb-3">
                         <p class="av-product-sidebar-title">Browse Categories</p>
-                        <div class="d-flex flex-column gap-1">
+                        <div class="av-cat-grid-2col av-cat-scroll">
                             <t t-foreach="_av_cats" t-as="_cat">
                                 <a t-attf-href="/shop?categ=#{_cat.id}" class="av-product-sidebar-link">
                                     <t t-out="_cat.name"/>
@@ -1481,7 +1481,7 @@
                         <t t-if="_av_cats">
                             <div class="av-product-sidebar-section mb-3">
                                 <p class="av-product-sidebar-title">Browse Categories</p>
-                                <div class="d-flex flex-column gap-1">
+                                <div class="av-cat-grid-2col av-cat-scroll">
                                     <t t-foreach="_av_cats" t-as="_cat">
                                         <a t-attf-href="/shop?categ=#{_cat.id}" class="av-product-sidebar-link">
                                             <t t-out="_cat.name"/>
@@ -1935,7 +1935,7 @@
                     <t t-if="_av_cats">
                         <div class="av-product-sidebar-section mb-3">
                             <p class="av-product-sidebar-title">Browse Categories</p>
-                            <div class="d-flex flex-column gap-1">
+                            <div class="av-cat-grid-2col av-cat-scroll">
                                 <t t-foreach="_av_cats" t-as="_cat">
                                     <a t-attf-href="/shop?categ=#{_cat.id}"
                                        t-attf-class="av-product-sidebar-link #{category and category.id == _cat.id and 'active' or ''}">
@@ -2056,6 +2056,37 @@
                     <p class="av-compare-hero-sub">View product details, specifications, and pricing. Add to cart or compare with similar items.</p>
                 </div>
             </section>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         PRODUCT DESCRIPTION → full-width below images/cart
+         (Amazon-style). Core renders description_ecommerce inside the
+         narrow right column, leaving empty space under the image and
+         making the text run too long. Pull it out and render it
+         full-width after the product detail section.
+         ========================================================= -->
+    <!-- 1. Hide the in-column description so it stops stretching the right rail.
+         (It lives in website_sale.product_title, a separate template.) -->
+    <template id="av_product_title_hide_desc" inherit_id="website_sale.product_title"
+              name="Aveenix: Hide In-column Description">
+        <xpath expr="//div[@t-field='product.description_ecommerce']" position="attributes">
+            <attribute name="t-attf-class">d-none</attribute>
+        </xpath>
+    </template>
+
+    <!-- 2. Re-render the description full-width, centered, below the detail block. -->
+    <template id="av_product_description_fullwidth" inherit_id="website_sale.product"
+              name="Aveenix: Full-width Product Description">
+        <xpath expr="//section[@id='product_detail']" position="after">
+            <t t-if="product.description_ecommerce">
+                <section class="av-pdp-description">
+                    <div class="av-container">
+                        <h2 class="av-pdp-description-title">Product description</h2>
+                        <div class="av-pdp-description-body" t-field="product.description_ecommerce"/>
+                    </div>
+                </section>
+            </t>
         </xpath>
     </template>
 
@@ -3951,37 +3982,188 @@
     </template>
 
     <!-- =========================================================
-         AFFILIATE: redirect button on product detail page.
-         For affiliate products, hide the standard cart CTA and show a
-         "Buy on Retailer" button that goes through the tracked redirect.
+         EXTERNAL IMAGES: product detail gallery for products whose
+         images are hosted externally (WooCommerce meta_data / Amazon CDN).
+         Replaces the (blank) native image carousel with the external URLs.
          ========================================================= -->
-    <template id="av_product_affiliate_button" inherit_id="website_sale.product" name="Aveenix: Affiliate Buy Button">
-        <!-- Insert the affiliate buy button at the top of the CTA section. -->
-        <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="before">
-            <t t-set="_av_is_affiliate"
-               t-value="product.affiliate_url and product.aveenix_product_type == 'affiliate'"/>
-            <t t-set="_av_is_guest" t-value="request.env.user._is_public()"/>
-            <!-- Buy on Retailer is shown only to logged-in users -->
-            <div t-if="_av_is_affiliate and not _av_is_guest" class="av-affiliate-cta mb-4">
-                <a t-att-href="'/aveenix/affiliate/%s' % product.id"
-                   target="_blank" rel="nofollow noopener sponsored"
-                   class="btn btn-primary av-affiliate-btn d-inline-flex align-items-center justify-content-center gap-2">
-                    <i class="fa fa-external-link"/>
-                    <span>Buy on Retailer</span>
-                </a>
-            </div>
-            <!-- Guests: prompt to sign in instead of the Buy button -->
-            <div t-if="_av_is_affiliate and _av_is_guest" class="av-affiliate-cta mb-4">
-                <a t-attf-href="/web/login?redirect=#{request.httprequest.path}"
-                   class="btn btn-primary av-affiliate-btn d-inline-flex align-items-center justify-content-center gap-2">
-                    <i class="fa fa-user"/>
-                    <span>Sign in to Buy</span>
-                </a>
+    <template id="av_shop_product_images_external"
+              inherit_id="website_sale.shop_product_images"
+              name="Aveenix: External Product Images">
+        <xpath expr="//t[@t-call='website_sale.shop_product_#{website.product_page_image_layout}']" position="before">
+            <t t-set="_av_ext_imgs" t-value="product._get_external_image_list() if 'external_image_urls' in product._fields else []"/>
+        </xpath>
+        <xpath expr="//t[@t-call='website_sale.shop_product_#{website.product_page_image_layout}']" position="attributes">
+            <attribute name="t-if">not _av_ext_imgs</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website_sale.shop_product_#{website.product_page_image_layout}']" position="after">
+            <!-- Native-style carousel for external (URL) images, so affiliate
+                 products get the same carousel + indicators as normal ones. -->
+            <div t-if="_av_ext_imgs"
+                 id="o-carousel-product"
+                 t-attf-class="#{len(_av_ext_imgs) > 1 and 'o_carousel_not_single'} o_carousel_product_left_indicators d-flex carousel slide mb-3 overflow-hidden">
+                <div t-if="len(_av_ext_imgs) &gt; 1" class="o_carousel_product_indicators">
+                    <ol class="carousel-indicators position-static pt-2 pt-lg-0 mx-auto my-0 d-flex d-lg-block pe-lg-2">
+                        <li t-foreach="_av_ext_imgs" t-as="_u" t-key="_u_index"
+                            t-attf-class="align-top position-relative {{'active' if _u_first else ''}}"
+                            data-bs-target="#o-carousel-product"
+                            t-att-data-bs-slide-to="str(_u_index)">
+                            <img t-att-src="_u" t-att-alt="product.name"
+                                 class="object-fit-cover w-100 h-100"/>
+                        </li>
+                    </ol>
+                </div>
+                <div class="o_carousel_product_outer carousel-outer position-relative d-flex align-items-center w-100 overflow-hidden">
+                    <div class="carousel-inner h-100">
+                        <div t-foreach="_av_ext_imgs" t-as="_u" t-key="_u_index"
+                             t-attf-class="carousel-item h-100 w-100 text-center#{' active' if _u_first else ''}">
+                            <div class="d-flex align-items-center justify-content-center h-100">
+                                <img t-att-src="_u" t-att-alt="product.name"
+                                     class="product_detail_img w-100 h-100"
+                                     style="object-fit:contain;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <t t-if="len(_av_ext_imgs) &gt; 1">
+                        <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
+                            <i class="oi oi-chevron-left oe_unmovable border bg-white text-900" role="img" aria-label="Previous" title="Previous"/>
+                        </a>
+                        <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
+                            <i class="oi oi-chevron-right oe_unmovable border bg-white text-900" role="img" aria-label="Next" title="Next"/>
+                        </a>
+                    </t>
+                </div>
             </div>
         </xpath>
-        <!-- Hide the standard Add-to-Cart CTA for affiliate products. -->
-        <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="attributes">
-            <attribute name="t-if">not (product.affiliate_url and product.aveenix_product_type == 'affiliate')</attribute>
+    </template>
+
+    <!-- =========================================================
+         AFFILIATE: product detail page CTA override.
+         For affiliate products: replace the entire CTA section with a
+         "Buy from Our Trusted Partners" button and hide the qty spinner.
+         Inherits website_sale.product so we can wrap the t-call at
+         the template level (cta_wrapper itself can't be xpath'd by
+         child div id because it's resolved via t-call at render time).
+         ========================================================= -->
+    <template id="av_product_affiliate_button" inherit_id="website_sale.product"
+              name="Aveenix: Affiliate CTA Override">
+        <xpath expr="//div[hasclass('o_wsale_product_details_content_section_cta')]" position="replace">
+            <t t-set="_av_is_affiliate" t-value="product.aveenix_product_type == 'affiliate'"/>
+            <div class="o_wsale_product_details_content_section o_wsale_product_details_content_section_cta mb-4">
+                <t t-if="_av_is_affiliate">
+                    <t t-set="_av_in_cart" t-value="request.env['affiliate.cart.line'].sudo().search_count(
+                        [('product_id', '=', product.id), ('user_id', '=', request.env.user.id)]
+                        if not request.env.user._is_public() else
+                        [('product_id', '=', product.id), ('session_id', '=', request.session.sid), ('user_id', '=', False)]
+                    )"/>
+                    <t t-set="_av_pvariant" t-value="product.product_variant_id"/>
+                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center gap-2 w-100">
+                        <div id="add_to_cart_wrap" class="d-flex flex-grow-1 flex-wrap align-items-center gap-2">
+                            <t t-if="_av_in_cart">
+                                <a class="btn btn-primary av-affiliate-save-btn flex-grow-1 disabled">
+                                    <i class="fa fa-check me-2"/>In Cart
+                                </a>
+                            </t>
+                            <t t-else="">
+                                <a href="#"
+                                   class="btn btn-primary av-affiliate-save-btn flex-grow-1"
+                                   t-att-data-product-id="product.id"
+                                   t-att-data-product-name="product.name">
+                                    <i class="fa fa-shopping-cart me-2"/>Add to cart
+                                </a>
+                            </t>
+                        </div>
+                        <!-- Favourite (heart) -->
+                        <a t-if="_av_pvariant"
+                           class="btn btn-outline-primary o_add_wishlist o_add_wishlist_dyn"
+                           t-att-data-product-template-id="product.id"
+                           t-att-data-product-product-id="_av_pvariant.id"
+                           data-action="o_wishlist" title="Add to favourites">
+                            <i class="fa fa-heart-o" role="img" aria-label="Add to favourites"/>
+                        </a>
+                        <!-- Wishlist (star) — only the data-action handler binds
+                             (NOT .av-add-to-wish too, which would double-toggle). -->
+                        <a t-if="_av_pvariant"
+                           class="btn btn-outline-primary"
+                           t-att-data-product-template-id="product.id"
+                           t-att-data-product-product-id="_av_pvariant.id"
+                           data-action="av_add_to_wishlist" title="Add to wishlist">
+                            <i class="fa fa-star-o" role="img" aria-label="Add to wishlist"/>
+                        </a>
+                        <!-- Compare -->
+                        <a t-if="_av_pvariant"
+                           class="btn btn-outline-primary av-add-to-compare" href="#"
+                           data-action="av_add_to_compare"
+                           t-att-data-product-id="product.id" title="Add to Compare">
+                            <i class="fa fa-plus-square-o" role="img" aria-label="Add to Compare"/>
+                        </a>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-call="website_sale.cta_wrapper"/>
+                    <t t-if="is_view_active('website_sale.product_terms_and_conditions')"
+                       t-call="website_sale.product_terms_and_conditions"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         CART PAGE — affiliate saved-items section, rendered server-side.
+         affiliate_cart_lines is injected into context by AveenixCart._cart_values().
+         Placed above the two-column row (order summary + total card) via
+         checkout_layout xpath so it spans full width.
+         ========================================================= -->
+    <template id="av_cart_affiliate_section" inherit_id="website_sale.checkout_layout"
+              name="Aveenix: Affiliate Cart Section">
+        <xpath expr="//div[contains(@t-attf-class,'oe_clear_stucture')]" position="before">
+            <t t-if="affiliate_cart_lines">
+                <div class="mb-3 px-0">
+                    <div class="av-aff-section">
+                        <div class="av-aff-section-header">
+                            <span class="av-aff-section-title">Buy from Our Trusted Partner</span>
+                            <span class="av-aff-section-subtitle">
+                                <t t-out="len(affiliate_cart_lines)"/> item<t t-if="len(affiliate_cart_lines) != 1">s</t>
+                            </span>
+                        </div>
+                        <div class="av-aff-list">
+                            <t t-foreach="affiliate_cart_lines" t-as="aff_line">
+                                <div class="av-aff-item" t-att-data-line-id="aff_line.id">
+                                    <a t-att-href="aff_line.product_id.website_url" class="av-aff-item-img-link">
+                                        <img t-att-src="'/web/image/product.template/%s/image_512' % aff_line.product_id.id"
+                                             t-att-alt="aff_line.product_id.name"
+                                             class="av-aff-item-img"/>
+                                    </a>
+                                    <div class="av-aff-item-body">
+                                        <a t-att-href="aff_line.product_id.website_url"
+                                           class="av-aff-item-name"
+                                           t-out="aff_line.product_id.name"/>
+                                        <div class="av-aff-item-meta">
+                                            <!-- <span class="av-aff-item-badge">
+                                                <i class="fa fa-check-circle"/> Available on partner site
+                                            </span> -->
+                                            <span class="av-aff-item-price"
+                                                  t-out="aff_line.affiliate_display_price"
+                                                  t-options="{'widget': 'monetary', 'display_currency': aff_line.currency_id}"/>
+                                        </div>
+                                    </div>
+                                    <div class="av-aff-item-actions">
+                                        <a t-att-href="'/aveenix/affiliate/%s' % aff_line.product_id.id"
+                                           target="_blank" rel="nofollow noopener sponsored"
+                                           class="av-aff-buy-btn">
+                                            <i class="fa fa-external-link"/>Buy on Partner Site
+                                        </a>
+                                        <button type="button"
+                                                class="av-aff-remove-btn"
+                                                t-att-data-line-id="aff_line.id">
+                                            <i class="fa fa-times"/> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </xpath>
     </template>
 

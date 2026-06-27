@@ -5,4 +5,7 @@ from . import affiliate_click_log
 from . import res_config_settings
 from . import ir_http
 from . import sale_order
+from . import sale_order_line
 from . import crm_lead
+from . import affiliate_cart_line
+from . import product_public_category

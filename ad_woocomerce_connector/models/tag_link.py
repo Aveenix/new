@@ -1,3 +1,4 @@
+import html
 import logging
 
 from odoo import api, fields, models
@@ -17,6 +18,12 @@ class WooProductTag(models.Model):
     product_count = fields.Integer(
         string="Product Count",
         help="Number of products with this tag in WooCommerce.",
+    )
+    product_tag_id = fields.Many2one(
+        comodel_name="product.tag",
+        string="Odoo Product Tag",
+        ondelete="set null",
+        help="Linked native Odoo product tag created from this WooCommerce tag.",
     )
 
     _sql_constraints = [
@@ -50,11 +57,19 @@ class WooProductTag(models.Model):
             ("external_id", "=", ext_id),
         ], limit=1)
 
+        tag_name = html.unescape(record.get("name") or "") or "Unnamed Tag"
+
+        # Mirror to a native Odoo product.tag.
+        product_tag = self.env["product.tag"].search([("name", "=", tag_name)], limit=1)
+        if not product_tag:
+            product_tag = self.env["product.tag"].create({"name": tag_name})
+
         vals = {
-            "name": record.get("name") or "Unnamed Tag",
+            "name": tag_name,
             "slug": record.get("slug", ""),
             "description": record.get("description", ""),
             "product_count": record.get("count", 0),
+            "product_tag_id": product_tag.id,
             "backend_id": backend.id,
             "external_id": ext_id,
             "sync_date": fields.Datetime.now(),

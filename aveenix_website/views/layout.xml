@@ -282,9 +282,16 @@
                         <ul class="av-cat-dropdown-list">
                             <t t-foreach="av_all_cats" t-as="c">
                                 <li>
-                                    <a t-attf-href="/shop?category=#{c.id}">
-                                        <i class="fa fa-tag me-2"/>
-                                        <t t-esc="c.sudo().name"/>
+                                    <a t-attf-href="/shop?category=#{c.id}" class="av-cat-dd-link">
+                                        <span class="av-cat-dd-icon">
+                                            <t t-if="c.av_ai_icon">
+                                                <img t-att-src="image_data_uri(c.av_ai_icon)" t-att-alt="c.sudo().name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-tag"/>
+                                            </t>
+                                        </span>
+                                        <span class="av-cat-dd-name"><t t-esc="c.sudo().name"/></span>
                                     </a>
                                 </li>
                             </t>

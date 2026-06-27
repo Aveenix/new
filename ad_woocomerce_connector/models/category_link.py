@@ -1,8 +1,17 @@
+import html
 import logging
 
 from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
+
+
+def wc_unescape(value):
+    """Decode HTML entities (&amp; &#038; &quot; ...) that WooCommerce returns
+    in names so they don't show literally in Odoo."""
+    if not value:
+        return value
+    return html.unescape(value)
 
 class WooProductCategory(models.Model):
 
@@ -28,6 +37,12 @@ class WooProductCategory(models.Model):
         comodel_name="wc.category.link",
         string="Parent WooCommerce Category",
         ondelete="set null",
+    )
+    public_categ_id = fields.Many2one(
+        comodel_name="product.public.category",
+        string="eCommerce Category",
+        ondelete="set null",
+        help="Linked website/eCommerce category created from this WooCommerce category.",
     )
 
     _sql_constraints = [
@@ -60,10 +75,18 @@ class WooProductCategory(models.Model):
                 _logger.exception("Failed syncing WooCommerce category %s: %s", ext_id, exc)
                 results["failed"] += 1
                 results["errors"].append("Category %s: %s" % (ext_id, exc))
+
+        _logger.info(
+            "[WC Category] Pull complete — created=%d updated=%d skipped=%d failed=%d",
+            results["created"], results["updated"], results["skipped"], results["failed"],
+        )
         return results
 
     def _sync_one(self, backend, record: dict, force: bool = False):
         ext_id = str(record["id"])
+        name = wc_unescape(record.get("name")) or "Unnamed Category"
+        _logger.info("[WC Category] Syncing WC category id=%s name=%r (force=%s)\nResponse JSON: %s", ext_id, name, force, record)
+
         existing = self.search([
             ("backend_id", "=", backend.id),
             ("external_id", "=", ext_id),
@@ -76,9 +99,13 @@ class WooProductCategory(models.Model):
                 ("backend_id", "=", backend.id),
                 ("external_id", "=", parent_ext),
             ], limit=1)
+            if parent_woo:
+                _logger.info("[WC Category] Parent resolved: WC id=%s → %r", parent_ext, parent_woo.name)
+            else:
+                _logger.warning("[WC Category] Parent WC id=%s not found in Odoo for category %s", parent_ext, ext_id)
 
         vals = {
-            "name": record.get("name") or "Unnamed Category",
+            "name": name,
             "wc_slug": record.get("slug", ""),
             "wc_description": record.get("description", ""),
             "wc_count": record.get("count", 0),
@@ -90,10 +117,18 @@ class WooProductCategory(models.Model):
             vals["parent_id"] = parent_woo.category_id.id
             vals["wc_parent_id"] = parent_woo.id
 
+        # Mirror into an eCommerce (website) category too.
+        public_categ = self._sync_public_category(record, vals["name"], parent_woo)
+        if public_categ:
+            vals["public_categ_id"] = public_categ.id
+            _logger.info("[WC Category] eCommerce category: id=%s name=%r", public_categ.id, public_categ.name)
+
         if existing:
             if not force:
+                _logger.info("[WC Category] Skipped (already synced, force=False): WC id=%s name=%r", ext_id, name)
                 return existing, "skipped"
             existing.with_context(syncing_from_wc=True).write(vals)
+            _logger.info("[WC Category] Updated: WC id=%s name=%r → Odoo category id=%s", ext_id, name, existing.category_id.id)
             return existing, "updated"
         else:
             cat_vals = {"name": vals["name"]}
@@ -102,7 +137,28 @@ class WooProductCategory(models.Model):
             category = self.env["product.category"].create(cat_vals)
             vals["category_id"] = category.id
             binding = self.with_context(syncing_from_wc=True).create(vals)
+            _logger.info("[WC Category] Created: WC id=%s name=%r → Odoo category id=%s binding id=%s", ext_id, name, category.id, binding.id)
             return binding, "created"
+
+    def _sync_public_category(self, record, name, parent_woo):
+        """Create/find the matching product.public.category (eCommerce),
+        mirroring the WooCommerce parent hierarchy."""
+        PublicCateg = self.env["product.public.category"]
+        parent_public = parent_woo.public_categ_id if parent_woo else False
+
+        domain = [
+            ("name", "=", name),
+            ("parent_id", "=", parent_public.id if parent_public else False),
+        ]
+        public_categ = PublicCateg.search(domain, limit=1)
+        if not public_categ:
+            public_categ = PublicCateg.create({
+                "name": name,
+                "parent_id": parent_public.id if parent_public else False,
+            })
+        elif parent_public and public_categ.parent_id != parent_public:
+            public_categ.write({"parent_id": parent_public.id})
+        return public_categ
 
     def push_to_store(self):
         from ..components.exporter import WooCategoryExporter
