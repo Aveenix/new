@@ -43,11 +43,12 @@
                 <field name="is_sponsored"/>
                 <field name="sponsor_rank" invisible="not is_sponsored"/>
             </xpath>
-            <xpath expr="//page[@name='sales']" position="inside">
-                <group string="Shipping &amp; Delivery (Product Page Tab)">
-                    <field name="av_shipping_info" nolabel="1"
-                           placeholder="Add shipping &amp; delivery content shown in the product page tab..."/>
-                </group>
+            <xpath expr="//page[@name='sales']" position="after">
+                <page string="Shipping &amp; Delivery" name="av_shipping_delivery">
+                    <group>
+                        <field name="av_shipping_info" nolabel="1" placeholder="Add shipping &amp; delivery content shown in the product page tab..."/>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
