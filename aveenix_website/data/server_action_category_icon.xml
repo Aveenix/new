@@ -8,4 +8,12 @@
         <field name="state">code</field>
         <field name="code">records.action_generate_ai_icon()</field>
     </record>
+    <record id="action_generate_ai_image_category" model="ir.actions.server">
+        <field name="name">Generate AI Main Image</field>
+        <field name="model_id" ref="website_sale.model_product_public_category"/>
+        <field name="binding_model_id" ref="website_sale.model_product_public_category"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_generate_ai_image()</field>
+    </record>
 </odoo>

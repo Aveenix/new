@@ -37,7 +37,67 @@ class AveenixWebsite(WebsiteSale):
 
     @http.route('/', type='http', auth='public', website=True)
     def homepage(self, **kwargs):
-        return request.render('aveenix_website.homepage', {})
+        Category = request.env['product.public.category'].sudo()
+        categories = Category.search([('parent_id', '=', False)])
+
+        # New Arrivals: newest categories first.
+        cats_new = categories.sorted(key=lambda c: c.create_date or c.id, reverse=True)
+
+        # Best Sellers: categories ranked by the total sales of their products.
+        # Aggregate sales_count per category in one batch (no per-record query).
+        sales_by_cat = {}
+        if categories:
+            products = request.env['product.template'].sudo().search([
+                ('public_categ_ids', 'in', categories.ids),
+                ('sale_ok', '=', True),
+            ])
+            # Map each product's sales onto every (top-level) category it belongs to.
+            top_ids = set(categories.ids)
+            for prod in products:
+                for cat in prod.public_categ_ids:
+                    # Walk up to the top-level ancestor we list on the homepage.
+                    node = cat
+                    while node and node.id not in top_ids and node.parent_id:
+                        node = node.parent_id
+                    if node and node.id in top_ids:
+                        sales_by_cat[node.id] = sales_by_cat.get(node.id, 0) + prod.sales_count
+        cats_best = categories.sorted(
+            key=lambda c: sales_by_cat.get(c.id, 0), reverse=True
+        )
+
+        # ── Homepage product rows ────────────────────────────────────
+        country_id = request.session.get(_LOCATION_SESSION_KEY)
+        pub_products = request.env['product.template'].sudo().search([
+            ('sale_ok', '=', True), ('website_published', '=', True),
+        ])
+        if country_id:
+            pub_products = pub_products.filtered(
+                lambda p: not p.available_country_ids
+                or country_id in p.available_country_ids.ids
+            )
+
+        row_limit = 6  # product grid is 6 columns on desktop = one row
+        # Trending: sponsored first, then best-selling.
+        trending = pub_products.sorted(
+            key=lambda p: (p.is_sponsored, p.sales_count), reverse=True
+        )[:row_limit]
+        # Best Sellers: highest sales_count.
+        best_sellers = pub_products.sorted(
+            key=lambda p: p.sales_count, reverse=True
+        )[:row_limit]
+        # New Arrivals: newest products first.
+        new_arrivals = pub_products.sorted(
+            key=lambda p: p.create_date or p.id, reverse=True
+        )[:row_limit]
+
+        # Homepage grid is 7 columns — show a single row.
+        return request.render('aveenix_website.homepage', {
+            'categories_best': cats_best[:7],
+            'categories_new': cats_new[:7],
+            'trending_products': trending,
+            'best_seller_products': best_sellers,
+            'new_arrival_products': new_arrivals,
+        })
 
     @http.route('/aveenix/home/products', type='jsonrpc', auth='public', website=True, readonly=True)
     def home_products(self, limit=6, **kwargs):
@@ -91,58 +151,95 @@ class AveenixWebsite(WebsiteSale):
             'all_categs': all_categs,
             'selected_categ': categ_id,
         })
+
+        # The catalog has 33k+ tags; never hand the full set to the template.
+        # Keep only the currently-selected tags + the first 5 others. The sidebar
+        # search box loads more on demand via /aveenix/shop/tags/search.
+        full_tags = values.get('all_tags')
+        if full_tags:
+            selected_ids = values.get('tags') or []
+            selected = full_tags.filtered(lambda t: t.id in selected_ids)
+            rest = (full_tags - selected)[:5]
+            extra['all_tags'] = selected + rest
+
         return extra
 
     def _shop_lookup_products(self, options, post, search, website):
         fuzzy_search_term, product_count, search_result = super()._shop_lookup_products(
             options, post, search, website
         )
-        country_id = request.session.get(_LOCATION_SESSION_KEY)
-        if country_id:
-            # Keep products where available_country_ids is empty OR contains user country
-            filtered = search_result.filtered(
-                lambda p: not p.available_country_ids or country_id in p.available_country_ids.ids
-            )
-            product_count = len(filtered)
-            search_result = filtered
 
-        # Category filter (query-param based, independent of URL path category)
+        if not search_result:
+            return fuzzy_search_term, product_count, search_result
+
+        # Resolve all active filters once before touching records.
+        country_id = request.session.get(_LOCATION_SESSION_KEY)
+
         categ_id = post.get('categ')
         try:
             categ_id = int(categ_id) if categ_id else 0
         except (TypeError, ValueError):
             categ_id = 0
+        child_categ_ids = set()
         if categ_id:
-            child_ids = set(
+            child_categ_ids = set(
                 request.env['product.public.category'].sudo()
                 .search([('id', 'child_of', categ_id)]).ids
             )
-            search_result = search_result.filtered(
-                lambda p: bool(set(p.public_categ_ids.ids) & child_ids)
-            )
-            product_count = len(search_result)
 
-        # Brand filter
         brand_id = post.get('brand')
         try:
             brand_id = int(brand_id) if brand_id else 0
         except (TypeError, ValueError):
             brand_id = 0
+
+        stock = post.get('stock', '')
+
+        # No custom filters active — skip prefetch entirely.
+        if not country_id and not child_categ_ids and not brand_id and not stock:
+            return fuzzy_search_term, product_count, search_result
+
+        # Prefetch only the fields actually needed in one batch query each,
+        # instead of the ORM lazy-loading them one record at a time (N queries).
+        fields_to_prefetch = []
+        if country_id:
+            fields_to_prefetch.append('available_country_ids')
+        if child_categ_ids:
+            fields_to_prefetch.append('public_categ_ids')
+        if brand_id:
+            fields_to_prefetch.append('product_brand_id')
+        if stock == 'instock':
+            fields_to_prefetch.append('virtual_available')
+        elif stock == 'onsale':
+            fields_to_prefetch.extend(['compare_list_price', 'list_price'])
+
+        search_result.read(fields_to_prefetch)
+
+        # Apply filters — all field data already in cache, no further DB hits.
+        if country_id:
+            search_result = search_result.filtered(
+                lambda p: not p.available_country_ids
+                or country_id in p.available_country_ids.ids
+            )
+
+        if child_categ_ids:
+            search_result = search_result.filtered(
+                lambda p: bool(set(p.public_categ_ids.ids) & child_categ_ids)
+            )
+
         if brand_id:
             search_result = search_result.filtered(
-                lambda p: p.product_brand_id and p.product_brand_id.id == brand_id
+                lambda p: p.product_brand_id.id == brand_id
             )
-            product_count = len(search_result)
 
-        # Stock filter
-        stock = post.get('stock', '')
         if stock == 'instock':
             search_result = search_result.filtered(lambda p: p.virtual_available > 0)
-            product_count = len(search_result)
         elif stock == 'onsale':
-            search_result = search_result.filtered(lambda p: p.compare_list_price and p.compare_list_price > p.list_price)
-            product_count = len(search_result)
+            search_result = search_result.filtered(
+                lambda p: p.compare_list_price and p.compare_list_price > p.list_price
+            )
 
+        product_count = len(search_result)
         return fuzzy_search_term, product_count, search_result
 
     @http.route('/compare', type='http', auth='public', website=True)
@@ -197,13 +294,24 @@ class AveenixWebsite(WebsiteSale):
             ('website_published', '=', True),
             ('public_categ_ids', '!=', False),
         ])
+        # Products are usually assigned to child categories (e.g. "Rings" under
+        # "Jewelry & Watches"), so we credit each product to the TOP-LEVEL
+        # ancestor of every category it belongs to. This way a top-level category
+        # shows an accurate count even when all its products live in sub-categories.
         count_map = {}
         for tmpl in published_templates:
+            top_ancestors = set()
             for cat in tmpl.public_categ_ids:
-                count_map[cat.id] = count_map.get(cat.id, 0) + 1
+                node = cat
+                while node.parent_id:
+                    node = node.parent_id
+                top_ancestors.add(node.id)
+            for top_id in top_ancestors:
+                count_map[top_id] = count_map.get(top_id, 0) + 1
+        # Show every top-level category (directory style); counts come from the
+        # ancestor walk above (0 when the subtree has no published products yet).
         categories = request.env['product.public.category'].sudo().search(
-            [('id', 'in', list(count_map.keys())), ('parent_id', '=', False)],
-            order='name asc',
+            [('parent_id', '=', False)], order='name asc',
         )
         return request.render('aveenix_website.categories_page', {
             'categories': categories,
@@ -279,6 +387,42 @@ class AveenixWebsite(WebsiteSale):
     def about_us_page(self, **kwargs):
         return request.render('aveenix_website.about_us_page', {})
 
+    # ── Product review submit (logged-in users only) ──────────────
+    @http.route('/shop/product/<int:product_template_id>/review',
+                type='http', auth='public', website=True, methods=['POST'],
+                csrf=True)
+    def aveenix_submit_review(self, product_template_id, rating=None, comment=None, **kwargs):
+        product = request.env['product.template'].sudo().browse(product_template_id)
+        if not product.exists() or not product.website_published:
+            return request.redirect('/shop')
+
+        redirect_url = product.website_url + '#av-reviews'
+
+        # Logged-in gate: only authenticated, non-public users may review.
+        if request.env.user._is_public():
+            return request.redirect('/web/login?redirect=%s' % redirect_url)
+
+        try:
+            rating_value = float(rating or 0)
+        except (TypeError, ValueError):
+            rating_value = 0.0
+        comment = (comment or '').strip()
+        if rating_value < 1 or rating_value > 5 or not comment:
+            return request.redirect(redirect_url)
+
+        # message_post creates the linked rating.rating because product.template
+        # inherits the rating.mixin; this also feeds rating_avg / rating_count.
+        # sudo(): public-model access is restricted, but we already enforced the
+        # logged-in check above and post as the real user's partner.
+        product.sudo().message_post(
+            body=comment,
+            author_id=request.env.user.partner_id.id,
+            rating_value=rating_value,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+        )
+        return request.redirect(redirect_url)
+
     # ── User list sync endpoints ──────────────────────────────────
 
     _LIST_FIELD = {
@@ -341,6 +485,49 @@ class AveenixWebsite(WebsiteSale):
             'compare_ids': user.av_compare_product_ids.ids,
             'fav_ids':     user.av_fav_product_ids.ids,
             'wish_ids':    user.av_wish_product_ids.ids,
+        }
+
+    # ── Shop tag filter search ────────────────────────────────────
+
+    @http.route('/aveenix/shop/tags/search', type='jsonrpc', auth='public', website=True)
+    def aveenix_shop_tags_search(self, query='', limit=20, selected=None, **kw):
+        """Search customer-visible product tags for the shop sidebar filter.
+
+        Returns a small list of matching tags so the sidebar never has to render
+        the full (33k+) tag set. `selected` are tag ids currently applied via the
+        URL — they're returned too so their checked state survives a search.
+        """
+        Tag = request.env['product.tag'].sudo()
+        base_domain = [
+            ('visible_to_customers', '=', True),
+            '|',
+            ('product_template_ids.is_published', '=', True),
+            ('product_ids.is_published', '=', True),
+        ]
+        try:
+            limit = max(1, min(int(limit), 50))
+        except (TypeError, ValueError):
+            limit = 20
+
+        domain = list(base_domain)
+        query = (query or '').strip()
+        if query:
+            domain.append(('name', 'ilike', query))
+
+        tags = Tag.search_fetch(domain, ['name'], limit=limit, order='name')
+
+        # Always include the currently-selected tags so their checkboxes stay
+        # checked even if they fall outside the search results.
+        selected_ids = [int(s) for s in (selected or []) if str(s).isdigit()]
+        if selected_ids:
+            missing = [i for i in selected_ids if i not in tags.ids]
+            if missing:
+                tags |= Tag.search_fetch(
+                    [('id', 'in', missing)] + base_domain, ['name'])
+
+        return {
+            'tags': [{'id': t.id, 'name': t.name} for t in tags],
+            'selected': selected_ids,
         }
 
     # ── Affiliate cart ────────────────────────────────────────────

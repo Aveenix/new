@@ -20,17 +20,19 @@
 #############################################################################
 
 import base64
+import io
 import logging
 import random
 
 import requests as http_requests
+from PIL import Image
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-POLLINATIONS_URL = "https://image.pollinations.ai/prompt/{prompt}?width=64&height=64&seed={seed}&nologo=true"
+POLLINATIONS_URL = "https://image.pollinations.ai/prompt/{prompt}?width={width}&height={height}&seed={seed}&nologo=true"
 
 
 class ProductPublicCategory(models.Model):
@@ -42,24 +44,42 @@ class ProductPublicCategory(models.Model):
         attachment=True,
     )
 
+    def _make_white_transparent(self, image_bytes, threshold=240):
+        img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
+        data = img.getdata()
+        new_data = []
+        for r, g, b, a in data:
+            if r >= threshold and g >= threshold and b >= threshold:
+                new_data.append((r, g, b, 0))
+            else:
+                new_data.append((r, g, b, a))
+        img.putdata(new_data)
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        return buf.getvalue()
+
+    def _fetch_pollinations_image(self, prompt_text, width, height):
+        prompt = http_requests.utils.quote(prompt_text)
+        url = POLLINATIONS_URL.format(prompt=prompt, width=width, height=height, seed=random.randint(1, 999999))
+        _logger.info("Pollinations request: %s", url)
+        try:
+            response = http_requests.get(url, timeout=60)
+        except Exception as exc:
+            raise UserError(_("Network error: %s") % exc)
+        if response.status_code != 200:
+            raise UserError(_("Pollinations returned status %s.") % response.status_code)
+        if "image" not in response.headers.get("Content-Type", ""):
+            raise UserError(_("Unexpected response type from Pollinations."))
+        return response.content
+
     def action_generate_ai_icon(self):
         for category in self:
-            prompt = http_requests.utils.quote(
-                f"{category.name} product category icon, flat minimal colorful design, white background"
+            image_b64 = self._fetch_pollinations_image(
+                f"single line art icon representing {category.name}, minimal outline style, black lines only, transparent background, no fill, no color, no text, no shadow, centered, white background",
+                width=128, height=128,
             )
-            url = POLLINATIONS_URL.format(prompt=prompt, seed=random.randint(1, 999999))
-            _logger.info("Generating AI icon for category '%s' from %s", category.name, url)
-            try:
-                response = http_requests.get(url, timeout=60)
-            except Exception as exc:
-                raise UserError(_("Network error while generating icon for '%s': %s") % (category.name, exc))
-            if response.status_code != 200:
-                raise UserError(_("Pollinations returned status %s for '%s'.") % (response.status_code, category.name))
-            content_type = response.headers.get("Content-Type", "")
-            if "image" not in content_type:
-                raise UserError(_("Unexpected response type '%s' for '%s'.") % (content_type, category.name))
             # sudo() required: server action runs as admin to write binary field on category
-            category.sudo().av_ai_icon = base64.b64encode(response.content)
+            category.sudo().av_ai_icon = base64.b64encode(self._make_white_transparent(image_b64))
             _logger.info("AI icon saved for category '%s'.", category.name)
         return {
             'type': 'ir.actions.client',
@@ -67,6 +87,25 @@ class ProductPublicCategory(models.Model):
             'params': {
                 'title': _('Done'),
                 'message': _('AI icon generated for %d category(s).') % len(self),
+                'type': 'success',
+            },
+        }
+
+    def action_generate_ai_image(self):
+        for category in self:
+            image_b64 = self._fetch_pollinations_image(
+                f"{category.name} product category banner, vibrant professional ecommerce photography, clean background",
+                width=1920, height=1080,
+            )
+            # sudo() required: server action runs as admin to write image_1920 on category
+            category.sudo().image_1920 = base64.b64encode(image_b64)
+            _logger.info("AI main image saved for category '%s'.", category.name)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Done'),
+                'message': _('AI image generated for %d category(s).') % len(self),
                 'type': 'success',
             },
         }

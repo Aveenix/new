@@ -86,6 +86,32 @@ export class AffiliateRemoveButton extends Interaction {
     }
 }
 
+// ── Affiliate product page: hide native qty + Add-to-cart + Buy-now ─────────
+// The native CTA wrapper is rendered for EVERY product so the heart / star /
+// compare buttons are identical everywhere. For affiliate products we show our
+// own .av-affiliate-buy button instead, so the native purchase controls must be
+// hidden. Done in JS so it never depends on CSS :has() support or class merges.
+export class AffiliateHideNativeCta extends Interaction {
+    static selector = ".av-affiliate-buy";
+
+    start() {
+        const section = this.el.closest(
+            ".o_wsale_product_details_content_section_cta"
+        );
+        if (!section) {
+            return;
+        }
+        section
+            .querySelectorAll(
+                ".css_quantity, #add_to_cart, #buy_now, .o_we_buy_now"
+            )
+            .forEach((node) => {
+                node.style.setProperty("display", "none", "important");
+            });
+    }
+}
+
 registry.category("public.interactions")
     .add("aveenix_website.AffiliateSaveButton", AffiliateSaveButton)
-    .add("aveenix_website.AffiliateRemoveButton", AffiliateRemoveButton);
+    .add("aveenix_website.AffiliateRemoveButton", AffiliateRemoveButton)
+    .add("aveenix_website.AffiliateHideNativeCta", AffiliateHideNativeCta);

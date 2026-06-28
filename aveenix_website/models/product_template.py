@@ -17,6 +17,13 @@ class ProductTemplate(models.Model):
         help='Leave empty = available everywhere. Set countries to restrict visibility on website.',
     )
 
+    av_shipping_info = fields.Html(
+        string='Shipping & Delivery Info',
+        sanitize=False,
+        help='Rich content shown in the "Shipping and Delivery" tab on the '
+             'product page. Leave empty to hide the tab.',
+    )
+
     is_sponsored = fields.Boolean(
         string='Sponsored Ad',
         default=False,
@@ -64,8 +71,6 @@ class ProductTemplate(models.Model):
         if not self.external_image_urls:
             return []
         img_list = [u.strip() for u in self.external_image_urls.split(',') if u.strip()]
-        print("img listtttttttttt", img_list)
-        # 4/0
         return img_list
 
     def _compute_external_image_preview(self):
@@ -130,34 +135,85 @@ class ProductTemplate(models.Model):
         return res
 
     def _download_external_image(self, timeout=10):
-        """Download this product's first external image into image_1920.
-        Returns True on success. Never raises — flags 'error' instead."""
+        """Download all external image URLs for this product.
+
+        - First URL → product.template.image_1920 (main image).
+        - Remaining URLs → product.image records (eCommerce media gallery).
+        - URLs already present as product.image records are skipped.
+        - Never raises — flags 'error' on complete failure.
+        """
         self.ensure_one()
         import base64
         import requests
-        url = self._first_external_image_url()
-        if not url:
+
+        urls = self._get_external_image_list()
+        if not urls:
             self.external_image_fetch_state = False
             return False
-        try:
-            resp = requests.get(url, timeout=timeout, stream=True)
-            resp.raise_for_status()
-            content = resp.content
-            if not content:
-                raise ValueError('empty image body')
-            self.write({
-                'image_1920': base64.b64encode(content),
-                'external_image_fetched_url': url,
-                'external_image_fetch_state': 'done',
-            })
-            return True
-        except Exception as exc:  # noqa: BLE001 — must never break the cron
-            _logger.warning(
-                '[AffiliateImg] failed to fetch %s for product %s: %s',
-                url, self.id, exc,
-            )
+
+        # Collect URLs already stored as eCommerce media to avoid duplicates.
+        existing_names = set(
+            self.env['product.image'].search([
+                ('product_tmpl_id', '=', self.id),
+            ]).mapped('name')
+        )
+
+        any_success = False
+
+        for idx, url in enumerate(urls):
+            img_name = 'Image %d' % (idx + 1)
+            try:
+                resp = requests.get(url, timeout=timeout, stream=True)
+                resp.raise_for_status()
+                content = resp.content
+                if not content:
+                    raise ValueError('empty response body')
+                encoded = base64.b64encode(content)
+
+                if idx == 0:
+                    # First image → main product image.
+                    self.write({
+                        'image_1920': encoded,
+                        'external_image_fetched_url': url,
+                    })
+                    _logger.info(
+                        '[AffiliateImg] main image saved for product %s: %s',
+                        self.id, url,
+                    )
+                else:
+                    # Extra images → eCommerce media gallery (skip if already present).
+                    if img_name not in existing_names:
+                        self.env['product.image'].create({
+                            'name': img_name,
+                            'product_tmpl_id': self.id,
+                            'image_1920': encoded,
+                            'sequence': idx * 10,
+                        })
+                        existing_names.add(img_name)
+                        _logger.info(
+                            '[AffiliateImg] extra image %d saved for product %s: %s',
+                            idx + 1, self.id, url,
+                        )
+                    else:
+                        _logger.info(
+                            '[AffiliateImg] skipping duplicate %s for product %s',
+                            img_name, self.id,
+                        )
+
+                any_success = True
+
+            except Exception as exc:  # noqa: BLE001 — must never break the cron
+                _logger.warning(
+                    '[AffiliateImg] failed to fetch image %d (%s) for product %s: %s',
+                    idx + 1, url, self.id, exc,
+                )
+
+        if any_success:
+            self.external_image_fetch_state = 'done'
+        else:
             self.external_image_fetch_state = 'error'
-            return False
+
+        return any_success
 
     @api.model
     def cron_fetch_external_images(self, batch_size=50, timeout=10):

@@ -52,6 +52,7 @@
                 <group>
                     <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                     <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_month" string="Click Month" context="{'group_by': 'timestamp:month'}"/>
                     <filter name="group_date" string="Click Date" context="{'group_by': 'timestamp:day'}"/>
                 </group>
             </search>
@@ -64,7 +65,7 @@
         <field name="arch" type="xml">
             <pivot string="Clicks per Product" sample="1">
                 <field name="product_id" type="row"/>
-                <field name="timestamp" interval="day" type="col"/>
+                <field name="timestamp" interval="month" type="col"/>
             </pivot>
         </field>
     </record>
@@ -73,7 +74,8 @@
         <field name="name">affiliate.click.log.graph</field>
         <field name="model">affiliate.click.log</field>
         <field name="arch" type="xml">
-            <graph string="Clicks per Product" type="bar" sample="1">
+            <graph string="Clicks per Month" type="bar" sample="1">
+                <field name="timestamp" interval="month"/>
                 <field name="product_id"/>
             </graph>
         </field>

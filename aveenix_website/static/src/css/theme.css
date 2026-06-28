@@ -235,6 +235,12 @@ body.modal-open {
     user-select: none;
 }
 
+/* dropdown-toggle class is required by the website builder (DisableSnippetsPlugin
+   looks for .dropdown-toggle); suppress Bootstrap's auto-caret since we render our
+   own chevron. */
+.av-topbar-link.dropdown-toggle::after,
+.av-user-menu-toggle.dropdown-toggle::after { display: none; }
+
 .av-topbar-link {
     display: inline-flex;
     align-items: center;
@@ -684,7 +690,7 @@ body.modal-open {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 8px 16px;
+    padding: 5px 16px;
     font-size: 14px;
     font-weight: 500;
     color: var(--av-text) !important;
@@ -695,23 +701,18 @@ body.modal-open {
    an AI image or falls back to the tag glyph. */
 .av-cat-dd-icon {
     flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    background: var(--av-light, #f4f5f7);
-    border: 1px solid var(--av-border);
-    overflow: hidden;
-    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+    transition: transform .18s ease;
 }
 .av-cat-dd-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     display: block;
-    image-rendering: auto;
 }
 .av-cat-dd-icon i {
     font-size: 15px;
@@ -730,9 +731,7 @@ body.modal-open {
     color: var(--av-red) !important;
 }
 .av-cat-dropdown-list li a:hover .av-cat-dd-icon {
-    background: color-mix(in srgb, var(--av-red) 10%, #fff);
-    border-color: color-mix(in srgb, var(--av-red) 30%, var(--av-border));
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 .av-cat-dropdown-list li a:hover .av-cat-dd-icon i { color: var(--av-red); }
 .av-cat-dropdown-footer {
@@ -1136,6 +1135,10 @@ body.modal-open {
     grid-template-columns: repeat(7, 1fr);
     gap: 14px;
 }
+
+/* Shop-by-Category tab panels: only the active grid is shown */
+.av-cat-panel { display: none; }
+.av-cat-panel.active { display: grid; }
 
 .av-cat-card {
     display: flex;
@@ -4681,6 +4684,36 @@ button[name="o_payment_submit_button"]:hover,
     color: #fff !important;
 }
 
+/* ── eWallet / claim-reward row: white background ── */
+.oe_website_sale_gift_card .alert,
+.oe_website_sale_gift_card form[name="claim_reward"] .alert,
+.oe_website_sale_gift_card form[name="claim_reward"] [class*="border"] {
+    background-color: #fff !important;
+    border-color: rgba(0,0,0,0.12) !important;
+    color: #1a1a1a !important;
+}
+.oe_website_sale_gift_card .alert strong,
+.oe_website_sale_gift_card .alert small,
+.oe_website_sale_gift_card form[name="claim_reward"] strong,
+.oe_website_sale_gift_card form[name="claim_reward"] small {
+    color: #1a1a1a !important;
+}
+
+/* Dark mode: eWallet / claim-reward row matches the dark cart */
+[data-theme="dark"] .oe_website_sale_gift_card .alert,
+[data-theme="dark"] .oe_website_sale_gift_card form[name="claim_reward"] .alert,
+[data-theme="dark"] .oe_website_sale_gift_card form[name="claim_reward"] [class*="border"] {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+[data-theme="dark"] .oe_website_sale_gift_card .alert strong,
+[data-theme="dark"] .oe_website_sale_gift_card .alert small,
+[data-theme="dark"] .oe_website_sale_gift_card form[name="claim_reward"] strong,
+[data-theme="dark"] .oe_website_sale_gift_card form[name="claim_reward"] small {
+    color: #e0e0e0 !important;
+}
+
 /* ── Coupon / discount code Apply button ── */
 .oe_website_sale form[name="coupon_code"] .btn,
 .o_website_sale_checkout form[name="coupon_code"] .btn {
@@ -6187,6 +6220,52 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 }
 
 /* Brand / Category filter — 2-column scrollable list */
+/* ── Searchable Tags filter ─────────────────────────────────── */
+.av-tags-filter {
+    width: 100%;
+}
+.av-tags-search-wrap {
+    position: relative;
+    margin-bottom: 8px;
+}
+.av-tags-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #999;
+    pointer-events: none;
+}
+.av-tags-search {
+    padding-left: 30px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+}
+.av-tags-search:focus {
+    border-color: var(--av-red, #cc0000) !important;
+    box-shadow: 0 0 0 .15rem color-mix(in srgb, var(--av-red, #cc0000) 20%, transparent) !important;
+}
+.av-tags-list {
+    max-height: 180px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #bbb transparent;
+    padding-right: 4px;
+}
+.av-tags-list::-webkit-scrollbar {
+    width: 4px;
+}
+.av-tags-list::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+}
+.av-tags-list .av-tag-item .form-check-label {
+    font-size: 13px;
+    cursor: pointer;
+}
+
 .av-filter-scroll {
     max-height: 180px !important;
     overflow-y: auto !important;
@@ -6209,6 +6288,52 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     background: #bbb !important;
     border-radius: 2px !important;
 }
+
+/* ── Category tree (expandable accordion) ─────────────────────── */
+.av-cat-tree {
+    display: block !important;       /* override the 2-col grid */
+    grid-template-columns: none !important;
+    max-height: 320px !important;
+}
+.av-cat-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.av-cat-parent { padding: 2px 0; }
+.av-cat-toggle {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    color: #888;
+    font-size: 10px;
+    cursor: pointer;
+    transition: color .15s;
+}
+.av-cat-toggle:hover { color: var(--av-red); }
+.av-cat-toggle-spacer { flex: 0 0 18px; width: 18px; }
+
+.av-cat-item { padding: 3px 0; }
+
+/* Children: collapsed by default, indented; expanded when parent .is-open */
+.av-cat-children {
+    display: none;
+    padding-left: 24px;
+    border-left: 1px solid #eee;
+    margin-left: 8px;
+}
+.av-cat-children.is-open { display: block; }
+.av-cat-child .av-cat-item { color: #666; }
+
+[data-theme="dark"] .av-cat-children { border-left-color: #2a2a2a; }
+[data-theme="dark"] .av-cat-toggle { color: #999; }
+[data-theme="dark"] .av-cat-child .av-cat-item { color: #aaa; }
 
 /* Mobile offcanvas: 2-column grid for brand/category lists */
 .av-filter-scroll-mobile {
@@ -7370,6 +7495,15 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
    ============================================================= */
 .av-affiliate-btn,
 .av-affiliate-save-btn,
+/* Affiliate products hide the native CTA via .d-none on #add_to_cart_wrap.
+   The premium-button rule below uses a 2-ID selector and would otherwise win
+   the !important fight against .d-none, forcing the button visible again.
+   This override (3 IDs) keeps the hidden state for affiliate products. */
+#product_detail #add_to_cart_wrap.d-none #add_to_cart,
+#product_detail #add_to_cart_wrap.d-none #buy_now {
+    display: none !important;
+}
+
 #product_detail #add_to_cart,
 #product_detail #buy_now,
 .av-add-to-cart {
@@ -7576,8 +7710,9 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 /* Full-width description section pulled below images/cart (Amazon-style) */
 .av-pdp-description {
     border-top: 1px solid #ececec;
-    margin-top: 32px;
-    padding: 32px 0 8px;
+    /* margin-top: 32px; */
+    /* padding: 32px 0 8px; */
+    padding-bottom: 8px;
 }
 .av-pdp-description .av-container {
     max-width: 1200px;
@@ -7664,6 +7799,111 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 .av-pdp-description-body p:empty {
     display: none;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   PRODUCT PAGE TABS — Description / Reviews / Shipping
+   ───────────────────────────────────────────────────────────── */
+.av-pdp-tabs { border-top: 1px solid #ececec; padding: 32px 0 8px; }
+.av-pdp-tabs .av-container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+.av-tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 0 0 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.av-tab-link {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 4px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #888;
+    cursor: pointer;
+    transition: color .15s, border-color .15s;
+}
+.av-tab-link:hover { color: #1a1a1a; }
+.av-tab-link.active { color: #1a1a1a; border-bottom-color: var(--av-red); }
+
+.av-tab-panel { display: none; }
+.av-tab-panel.active { display: block; }
+
+/* Reviews layout */
+.av-reviews-heading { font-size: 17px; font-weight: 700; color: #1a1a1a; margin: 0 0 18px; }
+.av-reviews-empty { font-size: 15px; }
+
+.av-review-item { padding: 16px 0; border-bottom: 1px solid #eee; }
+.av-review-stars { color: var(--av-accent, #FFB300); font-size: 14px; margin-bottom: 4px; }
+.av-review-author { font-size: 14px; color: #1a1a1a; }
+.av-review-author .av-review-date { color: #999; font-weight: 400; margin-left: 8px; font-size: 12px; }
+.av-review-text { font-size: 14px; color: #444; margin-top: 6px; line-height: 1.6; }
+
+/* Write a review form */
+.av-review-field { margin-bottom: 20px; }
+.av-review-field label { display: block; font-size: 14px; color: #1a1a1a; margin-bottom: 8px; }
+.av-req { color: var(--av-red); }
+
+.av-star-input { display: inline-flex; gap: 6px; font-size: 18px; cursor: pointer; }
+.av-star-input .av-star { color: #ccc; transition: color .1s; }
+.av-star-input .av-star.is-on { color: var(--av-accent, #FFB300); }
+
+.av-review-textarea,
+.av-review-input {
+    width: 100%;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #1a1a1a;
+    background: #fff;
+    outline: none;
+}
+.av-review-textarea:focus,
+.av-review-input:focus { border-color: var(--av-red); }
+.av-review-input[readonly] { background: #f7f7f7; color: #666; }
+
+.av-review-submit {
+    background: var(--av-red);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 32px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background .15s;
+}
+.av-review-submit:hover { background: var(--av-red-dark, #a30000); }
+.av-review-login-note { font-size: 15px; color: #555; }
+.av-review-login-note a { color: var(--av-red); font-weight: 600; }
+
+@media (max-width: 767px) {
+    .av-tabs-nav { gap: 20px; flex-wrap: wrap; }
+    .av-tab-link { font-size: 13px; }
+}
+
+/* Dark mode */
+[data-theme="dark"] .av-pdp-tabs { border-top-color: #2a2a2a; }
+[data-theme="dark"] .av-tabs-nav { border-bottom-color: #2a2a2a; }
+[data-theme="dark"] .av-tab-link { color: #888; }
+[data-theme="dark"] .av-tab-link:hover,
+[data-theme="dark"] .av-tab-link.active { color: #f0f0f0; }
+[data-theme="dark"] .av-reviews-heading { color: #f0f0f0; }
+[data-theme="dark"] .av-review-item { border-bottom-color: #2a2a2a; }
+[data-theme="dark"] .av-review-author { color: #e0e0e0; }
+[data-theme="dark"] .av-review-text { color: #bbb; }
+[data-theme="dark"] .av-review-field label { color: #e0e0e0; }
+[data-theme="dark"] .av-review-textarea,
+[data-theme="dark"] .av-review-input { background: #1a1a1a; border-color: #333; color: #e0e0e0; }
+[data-theme="dark"] .av-review-input[readonly] { background: #222; color: #999; }
 
 /* ─────────────────────────────────────────────────────────────
    AFFILIATE in cart / checkout — clearly separate partner items
@@ -7905,54 +8145,23 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 }
 
 /* Category dropdown icon chip — dark mode */
-[data-theme="dark"] .av-cat-dd-icon {
-    background: #2a2a2a;
-    border-color: #3a3a3a;
-}
 [data-theme="dark"] .av-cat-dd-icon i { color: #aaa; }
-[data-theme="dark"] .av-cat-dropdown-list li a:hover .av-cat-dd-icon {
-    background: color-mix(in srgb, var(--av-red) 22%, #1e1e1e);
-}
 
-/* Affiliate PDP action buttons (heart/star/compare) — match the In Cart /
-   Add to cart button height as square icon buttons, like non-affiliate pages. */
-#o_wsale_cta_wrapper .o_add_wishlist,
-#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"],
-#o_wsale_cta_wrapper .av-add-to-compare {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    padding: 0 !important;
-    border-radius: 10px;
-    border: 1px solid var(--av-border) !important;
-    background: transparent !important;
-    color: var(--av-red, #888) !important;
-    transition: border-color .18s ease, color .18s ease, background .18s ease, transform .18s ease;
-}
-#o_wsale_cta_wrapper .o_add_wishlist .fa,
-#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"] .fa,
-#o_wsale_cta_wrapper .av-add-to-compare .fa {
-    font-size: 18px;
-    margin: 0;
-    color: var(--av-red, #888) !important;
-}
-/* keep the heart outline (not the native filled/red state) until hover/active */
-#o_wsale_cta_wrapper .o_add_wishlist:not(:hover):not(.o_in_wishlist) .fa {
-    color: var(--av-red, #888) !important;
-}
-#o_wsale_cta_wrapper .o_add_wishlist:hover,
-#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"]:hover,
-#o_wsale_cta_wrapper .av-add-to-compare:hover {
-    border-color: var(--av-red) !important;
-    color: var(--av-red) !important;
-    background: color-mix(in srgb, var(--av-red) 10%, #fff) !important;
-    transform: translateY(-2px);
-}
-#o_wsale_cta_wrapper .o_add_wishlist:hover .fa,
-#o_wsale_cta_wrapper [data-action="av_add_to_wishlist"]:hover .fa,
-#o_wsale_cta_wrapper .av-add-to-compare:hover .fa { color: var(--av-red) !important; }
-/* hide the inline text label some native wishlist buttons add */
-#o_wsale_cta_wrapper .o_add_wishlist .o_label { display: none !important; }
+/* Affiliate products: the native CTA is rendered for EVERY product (so the
+   heart / star / compare buttons are 100% identical everywhere). For affiliate
+   products we just hide the native qty selector + native Add-to-Cart / Buy-now
+   and show our own affiliate buy button (.av-affiliate-buy) instead. */
+/* Hide the native qty + Add-to-cart + Buy-now ONLY for affiliate products.
+   We key off our own injected .av-affiliate-buy button (which only renders for
+   affiliate products) using :has(), so this works regardless of whether the
+   .av-affiliate-cta class merge landed on the static-class section div.
+   The native heart / star / compare buttons live outside #add_to_cart_wrap and
+   stay visible — identical to every other product. */
+.o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) .css_quantity,
+.o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) #add_to_cart,
+.o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) #buy_now,
+.o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) .o_we_buy_now,
+.av-affiliate-cta .css_quantity,
+.av-affiliate-cta #add_to_cart,
+.av-affiliate-cta #buy_now,
+.av-affiliate-cta .o_we_buy_now { display: none !important; }

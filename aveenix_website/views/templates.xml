@@ -2,6 +2,62 @@
 <odoo>
 
     <!-- =========================================================
+         REUSABLE: Homepage product card
+         Caller sets `product` (product.template record).
+         ========================================================= -->
+    <template id="av_home_product_card" name="Aveenix: Home Product Card">
+        <div class="av-product-card">
+            <a t-attf-href="/shop/product/#{product.id}" class="av-prod-img-link stretched-link">
+                <t t-if="product.image_512">
+                    <img t-attf-src="/web/image/product.template/#{product.id}/image_512"
+                         t-att-alt="product.name" class="av-prod-img"/>
+                </t>
+                <t t-else="">
+                    <div class="av-prod-placeholder"><i class="fa fa-image fa-3x"/></div>
+                </t>
+            </a>
+            <div class="av-prod-body">
+                <p class="av-prod-name" t-esc="product.name"/>
+                <div class="av-prod-stars">
+                    <t t-foreach="range(1, 6)" t-as="av_ps">
+                        <i t-attf-class="fa #{'fa-star' if av_ps &lt;= int(round(product.rating_avg)) else 'fa-star-o'}"/>
+                    </t>
+                </div>
+                <div class="av-prod-prices">
+                    <span class="av-prod-price" t-esc="'$%.2f' % product.list_price"/>
+                </div>
+                <button type="button" class="av-add-to-cart js_av_add_to_cart"
+                        t-att-data-product-id="product.product_variant_id.id"
+                        t-att-data-product-template-id="product.id">
+                    <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- =========================================================
+         REUSABLE: Homepage product row (heading + grid)
+         Caller sets `row_title` (str) and `row_products` (recordset).
+         ========================================================= -->
+    <template id="av_home_product_row" name="Aveenix: Home Product Row">
+        <t t-if="row_products">
+            <section class="av-section av-trending-section oe_structure">
+                <div class="av-container">
+                    <div class="av-section-header">
+                        <h2 class="av-section-heading" t-esc="row_title"/>
+                        <a href="/shop" class="av-view-all">View All</a>
+                    </div>
+                    <div class="av-products-grid">
+                        <t t-foreach="row_products" t-as="product">
+                            <t t-call="aveenix_website.av_home_product_card"/>
+                        </t>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- =========================================================
          AVEENIX HOMEPAGE
          Only page body — header, footer, scripts come from the
          global aveenix_layout inheritance (see layout.xml).
@@ -102,60 +158,39 @@
                                 <span class="av-title-icon">&#127873;</span>
                                 <h2 class="av-section-heading">Shop by Category</h2>
                             </div>
-                            <div class="av-tabs">
-                                <a href="#" class="av-tab av-tab-active">
-                                    <i class="fa fa-sliders"/> For You
-                                </a>
-                                <a href="#" class="av-tab">
+                            <div class="av-tabs av-cat-tabs">
+                                <a href="#" class="av-tab av-tab-active" data-av-cat-tab="best">
                                     <i class="fa fa-star"/> Best Sellers
                                 </a>
-                                <a href="#" class="av-tab">
+                                <a href="#" class="av-tab" data-av-cat-tab="new">
                                     <i class="fa fa-clock-o"/> New Arrivals
                                 </a>
                             </div>
                             <a href="/categories" class="av-view-all">View All</a>
                         </div>
 
-                        <div class="av-cat-grid">
-                            <t t-if="categories">
-                                <t t-foreach="categories" t-as="cat">
-                                    <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-card">
-                                        <div class="av-cat-img-wrap">
-                                            <img t-att-src="'/web/image/product.public.category/%s/image_128' % cat.id if cat.image_128 else '/web/static/img/placeholder.png'"
-                                                 t-att-alt="cat.sudo().name" class="av-cat-img"/>
-                                        </div>
-                                        <span class="av-cat-label" t-esc="cat.sudo().name"/>
-                                    </a>
-                                </t>
+                        <!-- Best Sellers grid -->
+                        <div class="av-cat-grid av-cat-panel active" data-av-cat-panel="best">
+                            <t t-foreach="categories_best" t-as="cat">
+                                <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-card">
+                                    <div class="av-cat-img-wrap">
+                                        <img t-att-src="'/web/image/product.public.category/%s/image_128' % cat.id if cat.image_128 else '/web/static/img/placeholder.png'"
+                                             t-att-alt="cat.sudo().name" class="av-cat-img"/>
+                                    </div>
+                                    <span class="av-cat-label" t-esc="cat.sudo().name"/>
+                                </a>
                             </t>
-                            <t t-else="">
-                                <a href="/shop" class="av-cat-card av-cat-red">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-laptop fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">Laptops</span>
-                                </a>
-                                <a href="/shop" class="av-cat-card av-cat-light">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-mobile fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">Mobile</span>
-                                </a>
-                                <a href="/shop" class="av-cat-card av-cat-green">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-gamepad fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">Gaming</span>
-                                </a>
-                                <a href="/shop" class="av-cat-card av-cat-dark">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-tv fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">TV &amp; Video</span>
-                                </a>
-                                <a href="/shop" class="av-cat-card av-cat-orange">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-desktop fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">Monitors</span>
-                                </a>
-                                <a href="/shop" class="av-cat-card av-cat-blue">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-headphones fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">Headphones</span>
-                                </a>
-                                <a href="/shop" class="av-cat-card av-cat-pale">
-                                    <div class="av-cat-img-wrap"><i class="fa fa-home fa-2x av-cat-icon-fa"/></div>
-                                    <span class="av-cat-label">Smart Home</span>
+                        </div>
+
+                        <!-- New Arrivals grid -->
+                        <div class="av-cat-grid av-cat-panel" data-av-cat-panel="new">
+                            <t t-foreach="categories_new" t-as="cat">
+                                <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-card">
+                                    <div class="av-cat-img-wrap">
+                                        <img t-att-src="'/web/image/product.public.category/%s/image_128' % cat.id if cat.image_128 else '/web/static/img/placeholder.png'"
+                                             t-att-alt="cat.sudo().name" class="av-cat-img"/>
+                                    </div>
+                                    <span class="av-cat-label" t-esc="cat.sudo().name"/>
                                 </a>
                             </t>
                         </div>
@@ -163,184 +198,21 @@
                 </section>
 
                 <!-- ════════════════════════════════════════════
-                     TRENDING PRODUCTS
+                     PRODUCT ROWS: Trending / Best Sellers / New Arrivals
                      ════════════════════════════════════════════ -->
-                <section class="av-section av-trending-section oe_structure">
-                    <div class="av-container">
-                        <div class="av-section-header">
-                            <h2 class="av-section-heading">Trending Products</h2>
-                            <div class="av-tabs">
-                                <a href="#" class="av-tab av-tab-active">For You</a>
-                                <a href="#" class="av-tab">Best Sellers</a>
-                                <a href="#" class="av-tab">New Arrivals</a>
-                            </div>
-                            <a href="/shop" class="av-view-all">View All</a>
-                        </div>
+                <t t-call="aveenix_website.av_home_product_row">
+                    <t t-set="row_title">Trending Products</t>
+                    <t t-set="row_products" t-value="trending_products"/>
+                </t>
+                <t t-call="aveenix_website.av_home_product_row">
+                    <t t-set="row_title">Best Sellers</t>
+                    <t t-set="row_products" t-value="best_seller_products"/>
+                </t>
+                <t t-call="aveenix_website.av_home_product_row">
+                    <t t-set="row_title">New Arrivals</t>
+                    <t t-set="row_products" t-value="new_arrival_products"/>
+                </t>
 
-                        <div class="av-products-grid">
-                            <t t-if="trending_products">
-                                <t t-foreach="trending_products" t-as="product">
-                                    <div class="av-product-card">
-                                        <span class="av-prod-badge av-badge-red">Sale</span>
-                                        <a t-attf-href="/shop/product/#{product.id}" class="av-prod-img-link stretched-link">
-                                            <t t-if="product.image_512">
-                                                <img t-attf-src="/web/image/product.template/#{product.id}/image_512"
-                                                     t-att-alt="product.name" class="av-prod-img"/>
-                                            </t>
-                                            <t t-else="">
-                                                <div class="av-prod-placeholder">
-                                                    <i class="fa fa-image fa-3x"/>
-                                                </div>
-                                            </t>
-                                        </a>
-                                        <div class="av-prod-body">
-                                            <p class="av-prod-name" t-esc="product.name"/>
-                                            <div class="av-prod-stars">
-                                                <i class="fa fa-star"/><i class="fa fa-star"/>
-                                                <i class="fa fa-star"/><i class="fa fa-star"/>
-                                                <i class="fa fa-star"/>
-                                            </div>
-                                            <div class="av-prod-prices">
-                                                <span class="av-prod-price"
-                                                      t-esc="'$%.2f' % product.list_price"/>
-                                            </div>
-                                            <button type="button" class="av-add-to-cart js_av_add_to_cart"
-                                                    t-att-data-product-id="product.product_variant_id.id"
-                                                    t-att-data-product-template-id="product.id">
-                                                <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </t>
-                            </t>
-                            <t t-else="">
-                                <div class="av-product-card">
-                                    <span class="av-prod-badge av-badge-red">34%</span>
-                                    <a href="/shop" class="stretched-link">
-                                        <div class="av-prod-placeholder"><i class="fa fa-camera fa-3x"/></div>
-                                    </a>
-                                    <div class="av-prod-body">
-                                        <p class="av-prod-name">Home Security Camera 1080 Wi-Fi</p>
-                                        <div class="av-prod-stars">
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/>
-                                        </div>
-                                        <div class="av-prod-prices">
-                                            <span class="av-prod-price">$49.99</span>
-                                            <span class="av-prod-original">$299.95</span>
-                                        </div>
-                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
-                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="av-product-card">
-                                    <span class="av-prod-badge av-badge-red">38%</span>
-                                    <a href="/shop" class="stretched-link">
-                                        <div class="av-prod-placeholder"><i class="fa fa-lightbulb-o fa-3x"/></div>
-                                    </a>
-                                    <div class="av-prod-body">
-                                        <p class="av-prod-name">UZD RGB LED Video Light</p>
-                                        <div class="av-prod-stars">
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/>
-                                        </div>
-                                        <div class="av-prod-prices">
-                                            <span class="av-prod-price">$29.95</span>
-                                            <span class="av-prod-original">$239.95</span>
-                                        </div>
-                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
-                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="av-product-card">
-                                    <span class="av-prod-badge av-badge-red">19%</span>
-                                    <a href="/shop" class="stretched-link">
-                                        <div class="av-prod-placeholder"><i class="fa fa-cube fa-3x"/></div>
-                                    </a>
-                                    <div class="av-prod-body">
-                                        <p class="av-prod-name">Ergonomic Gaming Chair</p>
-                                        <div class="av-prod-stars">
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/>
-                                        </div>
-                                        <div class="av-prod-prices">
-                                            <span class="av-prod-price">$159.99</span>
-                                            <span class="av-prod-original">$1,439.95</span>
-                                        </div>
-                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
-                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="av-product-card">
-                                    <span class="av-prod-badge av-badge-orange">11% Off</span>
-                                    <div class="av-prod-placeholder"><i class="fa fa-fire fa-3x"/></div>
-                                    <div class="av-prod-body">
-                                        <p class="av-prod-name">COSORI Pro Smart Air Fryer 6 Qt</p>
-                                        <div class="av-prod-stars">
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/>
-                                        </div>
-                                        <div class="av-prod-prices">
-                                            <span class="av-prod-price">$99.95</span>
-                                            <span class="av-prod-original">$1,439.95</span>
-                                        </div>
-                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
-                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="av-product-card">
-                                    <span class="av-prod-badge av-badge-orange">19% off</span>
-                                    <a href="/shop" class="stretched-link">
-                                        <div class="av-prod-placeholder"><i class="fa fa-television fa-3x"/></div>
-                                    </a>
-                                    <div class="av-prod-body">
-                                        <p class="av-prod-name">4K Ultra HD Smart TV 55" Android</p>
-                                        <div class="av-prod-stars">
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/>
-                                        </div>
-                                        <div class="av-prod-prices">
-                                            <span class="av-prod-price">$379.95</span>
-                                            <span class="av-prod-original">$489.95</span>
-                                        </div>
-                                        <button type="button" onclick="location.href='/shop'" class="av-add-to-cart">
-                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="av-product-card">
-                                    <a href="/shop" class="stretched-link">
-                                        <div class="av-prod-placeholder"><i class="fa fa-headphones fa-3x"/></div>
-                                    </a>
-                                    <div class="av-prod-body">
-                                        <p class="av-prod-name">Xiaomi Robot Vacuum Mop Pro 2</p>
-                                        <div class="av-prod-stars">
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/><i class="fa fa-star"/>
-                                            <i class="fa fa-star"/>
-                                        </div>
-                                        <div class="av-prod-prices">
-                                            <span class="av-prod-price">$279.95</span>
-                                            <span class="av-prod-original">$289.95</span>
-                                        </div>
-                                        <a href="/shop" class="av-add-to-cart">
-                                            <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                </section>
 
                 <!-- ════════════════════════════════════════════
                      WHY CHOOSE AVEENIX
@@ -1567,6 +1439,43 @@
     </template>
 
     <!-- =========================================================
+         SHOP SIDEBAR: searchable Tags filter.
+         The catalog has 33k+ tags, so we never render them all. Instead we show
+         a search box + the first 5 tags; typing queries the server via
+         /aveenix/shop/tags/search and replaces the visible list. Selected tags
+         (from the URL) are always rendered so their checked state is preserved.
+         ========================================================= -->
+    <template id="av_filter_products_tags_list" inherit_id="website_sale.filter_products_tags_list"
+              name="Aveenix: Searchable Tags List">
+        <xpath expr="//t[@t-foreach='all_tags']" position="replace">
+            <!-- Tags currently applied via the URL (kept checked + shown first). -->
+            <t t-set="_av_sel_tags" t-value="all_tags.filtered(lambda v: v.id in tags)"/>
+            <t t-set="_av_rest_tags" t-value="(all_tags - _av_sel_tags)[:5]"/>
+            <t t-set="_av_visible_tags" t-value="_av_sel_tags + _av_rest_tags"/>
+
+            <div class="av-tags-filter" data-av-tags-filter="1">
+                <div class="av-tags-search-wrap">
+                    <i class="fa fa-search av-tags-search-icon"/>
+                    <input type="text" class="av-tags-search form-control form-control-sm"
+                           placeholder="Search tags…" autocomplete="off"
+                           t-att-data-selected="','.join(str(i) for i in tags)"/>
+                </div>
+                <div class="av-tags-list" data-av-tags-list="1">
+                    <t t-foreach="_av_visible_tags" t-as="tag">
+                        <div class="form-check mb-1 av-tag-item">
+                            <input type="checkbox" name="tags" class="form-check-input"
+                                   t-attf-id="tag_#{tag.id}" t-att-value="tag.id"
+                                   t-att-checked="'checked' if tag.id in tags else None"/>
+                            <label class="form-check-label fw-normal" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="av-tags-empty text-muted small" style="display:none;">No tags found.</div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
          SHOP SIDEBAR: Brand / Category / Stock filters
          ========================================================= -->
     <template id="av_shop_extra_filters" inherit_id="website_sale.products" name="Aveenix: Extra Shop Filters">
@@ -1607,11 +1516,74 @@
         <!-- Remove category filmstrip above product grid -->
         <xpath expr="//t[@t-call='website_sale.filmstrip_categories']" position="replace"/>
 
+        <!-- Filter by Category, injected at the start of the rail -->
+        <xpath expr="//div[hasclass('o_wsale_products_grid_before_rail')]/div[1]" position="before">
+            <t t-if="all_categs">
+                <div id="av_category_filter_block" class="accordion accordion-flush av-filter-category">
+                    <div class="accordion-item">
+                        <div class="accordion-header h6 mb-0">
+                            <button class="accordion-button px-0 bg-transparent shadow-none"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#av_category_filter_inner"
+                                    aria-controls="av_category_filter_inner"
+                                    aria-expanded="true">
+                                <b>Filter by Category</b>
+                            </button>
+                        </div>
+                        <div id="av_category_filter_inner" class="accordion-collapse collapse show">
+                            <div class="d-flex flex-column pt-1 mb-3 av-filter-scroll av-cat-tree">
+                                <t t-foreach="all_categs" t-as="cat">
+                                    <!-- A parent branch is open when the selected category is
+                                         this parent or one of its (deep) children. -->
+                                    <t t-set="cat_descendant_ids" t-value="cat.search([('id','child_of',cat.id)]).ids"/>
+                                    <t t-set="branch_open" t-value="selected_categ in cat_descendant_ids"/>
+                                    <t t-set="has_children" t-value="bool(cat.child_id)"/>
 
-        <!-- Extend "Clear Filters" to include categ/brand/stock and show when any is active -->
-        <xpath expr="//div[contains(@class,'py-3') and contains(@class,'border-bottom')]" position="replace">
+                                    <!-- Parent row -->
+                                    <div t-attf-class="av-cat-row av-cat-parent #{branch_open and 'is-open' or ''}">
+                                        <button t-if="has_children" type="button"
+                                                class="av-cat-toggle"
+                                                t-att-aria-expanded="branch_open and 'true' or 'false'">
+                                            <i t-attf-class="fa #{branch_open and 'fa-chevron-down' or 'fa-chevron-right'}"/>
+                                        </button>
+                                        <span t-else="" class="av-cat-toggle-spacer"/>
+                                        <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
+                                           t-attf-class="av-cat-item flex-grow-1 text-decoration-none small {{cat.id == selected_categ and 'fw-bold text-primary' or 'text-body'}}">
+                                            <t t-out="cat.name"/>
+                                        </a>
+                                    </div>
+
+                                    <!-- Children -->
+                                    <t t-if="has_children">
+                                        <div t-attf-class="av-cat-children #{branch_open and 'is-open' or ''}">
+                                            <t t-foreach="cat.child_id" t-as="child">
+                                                <div class="av-cat-row av-cat-child">
+                                                    <a t-att-href="keep(categ=child.id if child.id != selected_categ else 0)"
+                                                       t-attf-class="av-cat-item flex-grow-1 text-decoration-none small {{child.id == selected_categ and 'fw-bold text-primary' or 'text-body'}}">
+                                                        <t t-out="child.name"/>
+                                                    </a>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+
+        <!-- Remove native "Clear Filters" from its default position. -->
+        <xpath expr="//div[contains(@class,'py-3') and contains(@class,'border-bottom')]" position="replace"/>
+
+        <!-- Re-inject "Clear Filters" ABOVE the category block (runs after the
+             category xpath, so it lands directly before it in the final DOM). -->
+        <xpath expr="//div[@id='av_category_filter_block']" position="before">
             <div t-if="attrib_values or tags or selected_categ or selected_brand or selected_stock or (show_price_filter and isFilteringByPrice)"
-                 class="py-3 border-bottom">
+                 class="py-3 border-bottom av-clear-filters-top">
                 <a t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0, categ=0, brand=0, stock='')"
                    t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
                    title="Clear Filters">
@@ -1643,34 +1615,6 @@
                                     <a t-att-href="keep(brand=brand.id if brand.id != selected_brand else 0)"
                                        t-attf-class="text-decoration-none py-1 small av-brand-item {{brand.id == selected_brand and 'fw-bold text-primary' or 'text-body'}}">
                                         <t t-out="brand.name"/>
-                                    </a>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-
-            <!-- ── Filter by Category ──────────────────────────────── -->
-            <t t-if="all_categs">
-                <div class="accordion accordion-flush border-top av-filter-category">
-                    <div class="accordion-item">
-                        <div class="accordion-header h6 mb-0">
-                            <button class="accordion-button px-0 bg-transparent shadow-none"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#av_category_filter_inner"
-                                    aria-controls="av_category_filter_inner"
-                                    aria-expanded="true">
-                                <b>Filter by Category</b>
-                            </button>
-                        </div>
-                        <div id="av_category_filter_inner" class="accordion-collapse collapse show">
-                            <div class="d-flex flex-column pt-1 mb-3 av-filter-scroll">
-                                <t t-foreach="all_categs" t-as="cat">
-                                    <a t-att-href="keep(categ=cat.id if cat.id != selected_categ else 0)"
-                                       t-attf-class="text-decoration-none py-1 small av-cat-item {{cat.id == selected_categ and 'fw-bold text-primary' or 'text-body'}}">
-                                        <t t-out="cat.name"/>
                                     </a>
                                 </t>
                             </div>
@@ -2075,18 +2019,119 @@
         </xpath>
     </template>
 
-    <!-- 2. Re-render the description full-width, centered, below the detail block. -->
+    <!-- 2. Full-width tabbed section: Description / Reviews / Shipping. -->
     <template id="av_product_description_fullwidth" inherit_id="website_sale.product"
-              name="Aveenix: Full-width Product Description">
+              name="Aveenix: Product Tabs (Description / Reviews / Shipping)">
         <xpath expr="//section[@id='product_detail']" position="after">
-            <t t-if="product.description_ecommerce">
-                <section class="av-pdp-description">
-                    <div class="av-container">
-                        <h2 class="av-pdp-description-title">Product description</h2>
-                        <div class="av-pdp-description-body" t-field="product.description_ecommerce"/>
+            <t t-set="av_ratings" t-value="product.sudo().rating_ids.filtered(lambda r: r.rating &gt; 0 and r.consumed)"/>
+            <t t-set="av_review_count" t-value="len(av_ratings)"/>
+            <section class="av-pdp-tabs" id="av-reviews">
+                <div class="av-container">
+                    <!-- Tab strip -->
+                    <ul class="av-tabs-nav" role="tablist">
+                        <li>
+                            <button type="button" class="av-tab-link active" data-av-tab="description">Description</button>
+                        </li>
+                        <li>
+                            <button type="button" class="av-tab-link" data-av-tab="reviews">
+                                Reviews (<t t-esc="av_review_count"/>)
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="av-tab-link" data-av-tab="shipping">Shipping and Delivery</button>
+                        </li>
+                    </ul>
+
+                    <!-- Description panel -->
+                    <div class="av-tab-panel active" data-av-panel="description">
+                        <t t-if="product.description_ecommerce">
+                            <div class="av-pdp-description-body" t-field="product.description_ecommerce"/>
+                        </t>
+                        <t t-else="">
+                            <p class="text-muted">No description available.</p>
+                        </t>
                     </div>
-                </section>
-            </t>
+
+                    <!-- Reviews panel -->
+                    <div class="av-tab-panel" data-av-panel="reviews">
+                        <div class="row g-4 av-reviews-row">
+                            <!-- Left: existing reviews -->
+                            <div class="col-lg-6 av-reviews-list-col">
+                                <h3 class="av-reviews-heading">Reviews</h3>
+                                <t t-if="av_review_count">
+                                    <div class="av-review-item" t-foreach="av_ratings" t-as="av_r">
+                                        <div class="av-review-stars">
+                                            <t t-foreach="range(1, 6)" t-as="av_s">
+                                                <i t-attf-class="fa #{'fa-star' if av_s &lt;= int(round(av_r.rating)) else 'fa-star-o'}"/>
+                                            </t>
+                                        </div>
+                                        <div class="av-review-author">
+                                            <strong t-esc="av_r.partner_id.name or 'Anonymous'"/>
+                                            <span class="av-review-date" t-esc="av_r.write_date and av_r.write_date.strftime('%d %b %Y') or ''"/>
+                                        </div>
+                                        <div class="av-review-text" t-esc="av_r.feedback or ''"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <p class="av-reviews-empty text-muted">There are no reviews yet.</p>
+                                </t>
+                            </div>
+
+                            <!-- Right: write a review -->
+                            <div class="col-lg-6 av-review-form-col">
+                                <h3 class="av-reviews-heading">
+                                    Be the first to review “<t t-esc="product.name"/>”
+                                </h3>
+                                <t t-if="not request.env.user._is_public()">
+                                    <form class="av-review-form" method="post"
+                                          t-attf-action="/shop/product/#{product.id}/review">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                        <div class="av-review-field">
+                                            <label>Your rating <span class="av-req">*</span></label>
+                                            <div class="av-star-input" data-av-stars="1">
+                                                <t t-foreach="range(1, 6)" t-as="av_si">
+                                                    <i class="fa fa-star-o av-star" t-att-data-val="av_si"/>
+                                                </t>
+                                                <input type="hidden" name="rating" value="" required="required"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="av-review-field">
+                                            <label>Your review <span class="av-req">*</span></label>
+                                            <textarea name="comment" rows="5" class="av-review-textarea" required="required"/>
+                                        </div>
+
+                                        <div class="av-review-field">
+                                            <label>Name</label>
+                                            <input type="text" class="av-review-input" t-att-value="request.env.user.name" readonly="readonly"/>
+                                        </div>
+
+                                        <div class="text-start">
+                                            <button type="submit" class="av-review-submit">SUBMIT</button>
+                                        </div>
+                                    </form>
+                                </t>
+                                <t t-else="">
+                                    <p class="av-review-login-note">
+                                        Please <a t-attf-href="/web/login?redirect=#{product.website_url}%23av-reviews">log in</a> to write a review.
+                                    </p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping panel -->
+                    <div class="av-tab-panel" data-av-panel="shipping">
+                        <t t-if="product.av_shipping_info">
+                            <div class="av-pdp-shipping-body" t-field="product.av_shipping_info"/>
+                        </t>
+                        <t t-else="">
+                            <p class="text-muted">No shipping information available.</p>
+                        </t>
+                    </div>
+                </div>
+            </section>
         </xpath>
     </template>
 
@@ -3982,61 +4027,6 @@
     </template>
 
     <!-- =========================================================
-         EXTERNAL IMAGES: product detail gallery for products whose
-         images are hosted externally (WooCommerce meta_data / Amazon CDN).
-         Replaces the (blank) native image carousel with the external URLs.
-         ========================================================= -->
-    <template id="av_shop_product_images_external"
-              inherit_id="website_sale.shop_product_images"
-              name="Aveenix: External Product Images">
-        <xpath expr="//t[@t-call='website_sale.shop_product_#{website.product_page_image_layout}']" position="before">
-            <t t-set="_av_ext_imgs" t-value="product._get_external_image_list() if 'external_image_urls' in product._fields else []"/>
-        </xpath>
-        <xpath expr="//t[@t-call='website_sale.shop_product_#{website.product_page_image_layout}']" position="attributes">
-            <attribute name="t-if">not _av_ext_imgs</attribute>
-        </xpath>
-        <xpath expr="//t[@t-call='website_sale.shop_product_#{website.product_page_image_layout}']" position="after">
-            <!-- Native-style carousel for external (URL) images, so affiliate
-                 products get the same carousel + indicators as normal ones. -->
-            <div t-if="_av_ext_imgs"
-                 id="o-carousel-product"
-                 t-attf-class="#{len(_av_ext_imgs) > 1 and 'o_carousel_not_single'} o_carousel_product_left_indicators d-flex carousel slide mb-3 overflow-hidden">
-                <div t-if="len(_av_ext_imgs) &gt; 1" class="o_carousel_product_indicators">
-                    <ol class="carousel-indicators position-static pt-2 pt-lg-0 mx-auto my-0 d-flex d-lg-block pe-lg-2">
-                        <li t-foreach="_av_ext_imgs" t-as="_u" t-key="_u_index"
-                            t-attf-class="align-top position-relative {{'active' if _u_first else ''}}"
-                            data-bs-target="#o-carousel-product"
-                            t-att-data-bs-slide-to="str(_u_index)">
-                            <img t-att-src="_u" t-att-alt="product.name"
-                                 class="object-fit-cover w-100 h-100"/>
-                        </li>
-                    </ol>
-                </div>
-                <div class="o_carousel_product_outer carousel-outer position-relative d-flex align-items-center w-100 overflow-hidden">
-                    <div class="carousel-inner h-100">
-                        <div t-foreach="_av_ext_imgs" t-as="_u" t-key="_u_index"
-                             t-attf-class="carousel-item h-100 w-100 text-center#{' active' if _u_first else ''}">
-                            <div class="d-flex align-items-center justify-content-center h-100">
-                                <img t-att-src="_u" t-att-alt="product.name"
-                                     class="product_detail_img w-100 h-100"
-                                     style="object-fit:contain;"/>
-                            </div>
-                        </div>
-                    </div>
-                    <t t-if="len(_av_ext_imgs) &gt; 1">
-                        <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
-                            <i class="oi oi-chevron-left oe_unmovable border bg-white text-900" role="img" aria-label="Previous" title="Previous"/>
-                        </a>
-                        <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
-                            <i class="oi oi-chevron-right oe_unmovable border bg-white text-900" role="img" aria-label="Next" title="Next"/>
-                        </a>
-                    </t>
-                </div>
-            </div>
-        </xpath>
-    </template>
-
-    <!-- =========================================================
          AFFILIATE: product detail page CTA override.
          For affiliate products: replace the entire CTA section with a
          "Buy from Our Trusted Partners" button and hide the qty spinner.
@@ -4046,66 +4036,45 @@
          ========================================================= -->
     <template id="av_product_affiliate_button" inherit_id="website_sale.product"
               name="Aveenix: Affiliate CTA Override">
-        <xpath expr="//div[hasclass('o_wsale_product_details_content_section_cta')]" position="replace">
-            <t t-set="_av_is_affiliate" t-value="product.aveenix_product_type == 'affiliate'"/>
-            <div class="o_wsale_product_details_content_section o_wsale_product_details_content_section_cta mb-4">
-                <t t-if="_av_is_affiliate">
-                    <t t-set="_av_in_cart" t-value="request.env['affiliate.cart.line'].sudo().search_count(
-                        [('product_id', '=', product.id), ('user_id', '=', request.env.user.id)]
-                        if not request.env.user._is_public() else
-                        [('product_id', '=', product.id), ('session_id', '=', request.session.sid), ('user_id', '=', False)]
-                    )"/>
-                    <t t-set="_av_pvariant" t-value="product.product_variant_id"/>
-                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center gap-2 w-100">
-                        <div id="add_to_cart_wrap" class="d-flex flex-grow-1 flex-wrap align-items-center gap-2">
-                            <t t-if="_av_in_cart">
-                                <a class="btn btn-primary av-affiliate-save-btn flex-grow-1 disabled">
-                                    <i class="fa fa-check me-2"/>In Cart
-                                </a>
-                            </t>
-                            <t t-else="">
-                                <a href="#"
-                                   class="btn btn-primary av-affiliate-save-btn flex-grow-1"
-                                   t-att-data-product-id="product.id"
-                                   t-att-data-product-name="product.name">
-                                    <i class="fa fa-shopping-cart me-2"/>Add to cart
-                                </a>
-                            </t>
-                        </div>
-                        <!-- Favourite (heart) -->
-                        <a t-if="_av_pvariant"
-                           class="btn btn-outline-primary o_add_wishlist o_add_wishlist_dyn"
-                           t-att-data-product-template-id="product.id"
-                           t-att-data-product-product-id="_av_pvariant.id"
-                           data-action="o_wishlist" title="Add to favourites">
-                            <i class="fa fa-heart-o" role="img" aria-label="Add to favourites"/>
-                        </a>
-                        <!-- Wishlist (star) — only the data-action handler binds
-                             (NOT .av-add-to-wish too, which would double-toggle). -->
-                        <a t-if="_av_pvariant"
-                           class="btn btn-outline-primary"
-                           t-att-data-product-template-id="product.id"
-                           t-att-data-product-product-id="_av_pvariant.id"
-                           data-action="av_add_to_wishlist" title="Add to wishlist">
-                            <i class="fa fa-star-o" role="img" aria-label="Add to wishlist"/>
-                        </a>
-                        <!-- Compare -->
-                        <a t-if="_av_pvariant"
-                           class="btn btn-outline-primary av-add-to-compare" href="#"
-                           data-action="av_add_to_compare"
-                           t-att-data-product-id="product.id" title="Add to Compare">
-                            <i class="fa fa-plus-square-o" role="img" aria-label="Add to Compare"/>
-                        </a>
-                    </div>
-                </t>
-                <t t-else="">
-                    <t t-call="website_sale.cta_wrapper"/>
-                    <t t-if="is_view_active('website_sale.product_terms_and_conditions')"
-                       t-call="website_sale.product_terms_and_conditions"/>
-                </t>
-            </div>
+        <xpath expr="//div[hasclass('o_wsale_product_details_content_section_cta')]" position="attributes">
+            <attribute name="t-attf-class" add="#{'av-affiliate-cta' if product.aveenix_product_type == 'affiliate' else ''}" separator=" "/>
+        </xpath>
+        <!-- For affiliate products, inject our own buy button at the start of the
+             CTA wrapper. The native qty selector + native Add-to-Cart button are
+             hidden via CSS (.av-affiliate-cta), while the native heart / star /
+             compare buttons stay exactly as on every other product. One markup,
+             zero duplication. -->
+        <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="before">
+            <t t-if="product.aveenix_product_type == 'affiliate'">
+                <t t-set="_av_in_cart" t-value="request.env['affiliate.cart.line'].sudo().search_count(
+                    [('product_id', '=', product.id), ('user_id', '=', request.env.user.id)]
+                    if not request.env.user._is_public() else
+                    [('product_id', '=', product.id), ('session_id', '=', request.session.sid), ('user_id', '=', False)]
+                )"/>
+                <a t-if="_av_in_cart" class="btn btn-primary av-affiliate-save-btn av-affiliate-buy w-100 disabled mb-2">
+                    <i class="fa fa-check me-2"/>In Cart
+                </a>
+                <a t-else="" href="#"
+                   class="btn btn-primary av-affiliate-save-btn av-affiliate-buy w-100 mb-2"
+                   t-att-data-product-id="product.id"
+                   t-att-data-product-name="product.name">
+                    <i class="fa fa-shopping-cart me-2"/>Add to cart
+                </a>
+            </t>
         </xpath>
     </template>
+
+    <!-- Hide the native Add-to-cart + qty wrap for affiliate products, server-side.
+         Inherits cta_wrapper directly because #add_to_cart_wrap is resolved via
+         t-call at render time and isn't xpath-able from website_sale.product.
+         The #product_option_block (heart / star / compare) is left untouched, so
+         those buttons remain identical to every other product. -->
+    <template id="av_cta_wrapper_affiliate" inherit_id="website_sale.cta_wrapper"
+              name="Aveenix: Hide native CTA for affiliate">
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
+            <attribute name="t-attf-class" add="#{'d-none' if product.aveenix_product_type == 'affiliate' else ''}" separator=" "/>
+        </xpath>
+    </template>                                                 
 
     <!-- =========================================================
          CART PAGE — affiliate saved-items section, rendered server-side.
