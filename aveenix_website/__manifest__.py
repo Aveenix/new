@@ -10,8 +10,8 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-        # 'data/product_category_data.xml',
-        # 'data/product_data.xml',
+        'data/product_category_data.xml',
+        'data/product_data.xml',
         'data/mail_template_admin_order.xml',
         'data/ir_cron_data.xml',
         'data/server_action_category_icon.xml',
