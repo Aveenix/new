@@ -5825,10 +5825,16 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 /* ── Categories page ─────────────────────────────────────────── */
 .av-cat-page-hero {
     background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 8%, #fff), color-mix(in srgb, var(--av-red) 4%, #fff));
-    padding: 60px 0 48px;
+    padding: 0;
+    height: var(--av-shop-hero-h, 320px);
     position: relative;
     overflow: hidden;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px !important;
 }
 [data-theme="dark"] .av-cat-page-hero {
     background: linear-gradient(135deg, color-mix(in srgb, var(--av-red) 15%, #111), color-mix(in srgb, var(--av-red) 8%, #1a1a1a));
@@ -6106,7 +6112,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     font-size: 2.2rem;
     font-weight: 800;
     color: var(--av-dark);
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 [data-theme="dark"] .av-cat-page-title { color: #e0e0e0; }
 .av-cat-page-sub {
@@ -7248,7 +7254,8 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     .av-compare-page#wrap,
     .av-favourites-page#wrap,
     .av-wishlist-page#wrap,
-    .av-notif-page#wrap {
+    .av-notif-page#wrap,
+    .av-categories-page#wrap {
         display: grid;
         grid-template-columns: 280px minmax(0, 1fr);
         column-gap: 0.5rem;
@@ -7263,7 +7270,8 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     .av-compare-page > section,
     .av-favourites-page > section,
     .av-wishlist-page > section,
-    .av-notif-page > section {
+    .av-notif-page > section,
+    .av-categories-page > section {
         grid-column: 2;
         grid-row: 1;
     }
@@ -7271,7 +7279,8 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     .av-compare-page > .av-cart-aside,
     .av-favourites-page > .av-cart-aside,
     .av-wishlist-page > .av-cart-aside,
-    .av-notif-page > .av-cart-aside {
+    .av-notif-page > .av-cart-aside,
+    .av-categories-page > .av-cart-aside {
         grid-column: 1;
         grid-row: 1 / 999;
         position: sticky;
@@ -7284,7 +7293,8 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     .av-compare-page > .av-compare-body,
     .av-favourites-page > .av-fav-body,
     .av-wishlist-page > .av-wish-body,
-    .av-notif-page > .av-notif-body {
+    .av-notif-page > .av-notif-body,
+    .av-categories-page > .av-cat-page-body {
         grid-column: 2;
         grid-row: 2;
         min-width: 0;

@@ -1025,11 +1025,16 @@
                             <i class="fa fa-th-large"/>
                         </div>
                         <h1 class="av-cat-page-title">All Categories</h1>
-                        <p class="av-cat-page-sub">Browse all product categories</p>
+                        <p class="av-cat-page-sub">Explore our full range of product categories and discover<br/>everything you need — from everyday essentials to trending picks.</p>
                     </div>
                 </section>
 
-                <div class="av-container" style="padding-top: 40px; padding-bottom: 60px;">
+                <!-- Shared left sidebar (ad slider + browse categories + top rated
+                     + trust badges), same as compare / favourites / shop pages. -->
+                <t t-set="_av_carousel_id" t-value="'av_ad_carousel_categories'"/>
+                <t t-call="aveenix_website.av_full_sidebar"/>
+
+                <div class="av-cat-page-body" style="padding-top: 40px; padding-bottom: 60px;">
                     <div class="av-cat-page-grid">
                         <t t-foreach="categories" t-as="cat">
                             <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-page-card">
