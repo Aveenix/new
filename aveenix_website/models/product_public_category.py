@@ -20,6 +20,7 @@
 #############################################################################
 
 import base64
+import gc
 import io
 import logging
 import random
@@ -80,6 +81,8 @@ class ProductPublicCategory(models.Model):
             )
             # sudo() required: server action runs as admin to write binary field on category
             category.sudo().av_ai_icon = base64.b64encode(self._make_white_transparent(image_b64))
+            del image_b64
+            gc.collect()
             _logger.info("AI icon saved for category '%s'.", category.name)
         return {
             'type': 'ir.actions.client',
@@ -91,14 +94,60 @@ class ProductPublicCategory(models.Model):
             },
         }
 
+    # def create(self, vals):
+    #     record = super().create(vals)
+    #     # Skip external HTTP calls when created by WC sync — cron_generate_ai_assets
+    #     # will fill in missing icons/images for all categories in the next run.
+    #     if self.env.context.get('syncing_from_wc'):
+    #         return record
+    #     if not record.av_ai_icon:
+    #         try:
+    #             record.action_generate_ai_icon()
+    #             _logger.info("Auto icon generation done for '%s'.", record.name)
+    #         except Exception:
+    #             _logger.warning("Auto icon generation failed for '%s'.", record.name, exc_info=True)
+    #     if not record.image_1920:
+    #         try:
+    #             record.action_generate_ai_image()
+    #             _logger.info("Auto image generation done for '%s'.", record.name)
+    #         except Exception:
+    #             _logger.warning("Auto image generation failed for '%s'.", record.name, exc_info=True)
+    #     return record
+
+    def cron_generate_ai_assets(self, batch_size=5):
+        # Process one batch per cron run to avoid memory exhaustion
+        # Categories missing icon — handle first
+        need_icon = self.search([('parent_id', '=', False), ('av_ai_icon', '=', False)], limit=batch_size)
+        for category in need_icon:
+            try:
+                category.action_generate_ai_icon()
+                self.env.cr.commit()
+                gc.collect()
+            except Exception:
+                self.env.cr.rollback()
+                _logger.warning("Icon generation failed for '%s'.", category.name, exc_info=True)
+
+        # Categories missing main image
+        need_image = self.search([('parent_id', '=', False), ('image_1920', '=', False)], limit=batch_size)
+        for category in need_image:
+            try:
+                category.action_generate_ai_image()
+                self.env.cr.commit()
+                gc.collect()
+            except Exception:
+                self.env.cr.rollback()
+                _logger.warning("Image generation failed for '%s'.", category.name, exc_info=True)
+
     def action_generate_ai_image(self):
         for category in self:
             image_b64 = self._fetch_pollinations_image(
-                f"{category.name} product category banner, vibrant professional ecommerce photography, clean background",
-                width=1920, height=1080,
+                f"{category.name} product category image, vibrant professional ecommerce photography, clean background, square composition",
+                width=800, height=800,
             )
             # sudo() required: server action runs as admin to write image_1920 on category
             category.sudo().image_1920 = base64.b64encode(image_b64)
+            del image_b64
+            gc.collect()
             _logger.info("AI main image saved for category '%s'.", category.name)
         return {
             'type': 'ir.actions.client',

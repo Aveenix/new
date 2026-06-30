@@ -733,7 +733,29 @@ body.modal-open {
 .av-cat-dropdown-list li a:hover .av-cat-dd-icon {
     transform: scale(1.08);
 }
+/* Font-icon categories: recolor directly to the brand color. */
 .av-cat-dropdown-list li a:hover .av-cat-dd-icon i { color: var(--av-red); }
+
+/* Image-icon categories: on hover, overlay a solid brand-colored silhouette of
+   the logo (the image is used as a CSS mask, filled with --av-red). This is
+   fully dynamic — it follows whatever the brand color is set to. The original
+   colorful <img> sits underneath and is faded out on hover. */
+.av-cat-dd-icon { position: relative; }
+.av-cat-dd-icon-mask {
+    position: absolute;
+    inset: 0;
+    background-color: var(--av-red);
+    -webkit-mask: var(--av-cat-mask) center / contain no-repeat;
+    mask: var(--av-cat-mask) center / contain no-repeat;
+    opacity: 0;
+    transition: opacity .18s ease;
+    pointer-events: none;
+}
+.av-cat-dropdown-list li a .av-cat-dd-icon img {
+    transition: opacity .18s ease;
+}
+.av-cat-dropdown-list li a:hover .av-cat-dd-icon img { opacity: 0; }
+.av-cat-dropdown-list li a:hover .av-cat-dd-icon-mask { opacity: 1; }
 .av-cat-dropdown-footer {
     border-top: 1px solid var(--av-border);
     padding: 12px 20px;

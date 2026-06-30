@@ -285,7 +285,12 @@
                                     <a t-attf-href="/shop?category=#{c.id}" class="av-cat-dd-link">
                                         <span class="av-cat-dd-icon">
                                             <t t-if="c.av_ai_icon">
-                                                <img t-att-src="image_data_uri(c.av_ai_icon)" t-att-alt="c.sudo().name"/>
+                                                <t t-set="_icon_uri" t-value="image_data_uri(c.av_ai_icon)"/>
+                                                <img t-att-src="_icon_uri" t-att-alt="c.sudo().name"/>
+                                                <!-- brand-colored silhouette shown on hover (masked by the
+                                                     same image); fully dynamic via av-red. -->
+                                                <span class="av-cat-dd-icon-mask"
+                                                      t-attf-style="--av-cat-mask:url('#{_icon_uri}')"/>
                                             </t>
                                             <t t-else="">
                                                 <i class="fa fa-tag"/>
