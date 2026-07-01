@@ -1397,16 +1397,16 @@
                 <div class="av-product-sidebar-section border-top pt-3 mb-3">
                     <div class="d-flex flex-column gap-2">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="fa fa-shield av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">Secure payments</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
                             <i class="fa fa-truck av-product-sidebar-badge-icon"/>
                             <span class="small text-muted">Fast delivery</span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <i class="fa fa-gift av-product-sidebar-badge-icon"/>
                             <span class="small text-muted">Earn rewards</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                            <span class="small text-muted">Secure payments</span>
                         </div>
                     </div>
                 </div>
@@ -1618,16 +1618,16 @@
                         <div class="av-product-sidebar-section border-top pt-3 mb-3">
                             <div class="d-flex flex-column gap-2">
                                 <div class="d-flex align-items-center gap-2">
-                                    <i class="fa fa-shield av-product-sidebar-badge-icon"/>
-                                    <span class="small text-muted">Secure payments</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-truck av-product-sidebar-badge-icon"/>
                                     <span class="small text-muted">Fast delivery</span>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-gift av-product-sidebar-badge-icon"/>
                                     <span class="small text-muted">Earn rewards</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                                    <span class="small text-muted">Secure payments</span>
                                 </div>
                             </div>
                         </div>
@@ -2185,16 +2185,16 @@
                     <div class="av-product-sidebar-section border-top pt-3 mb-3">
                         <div class="d-flex flex-column gap-2">
                             <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-shield av-product-sidebar-badge-icon"/>
-                                <span class="small text-muted">Secure payments</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
                                 <i class="fa fa-truck av-product-sidebar-badge-icon"/>
                                 <span class="small text-muted">Fast delivery</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <i class="fa fa-gift av-product-sidebar-badge-icon"/>
                                 <span class="small text-muted">Earn rewards</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                                <span class="small text-muted">Secure payments</span>
                             </div>
                         </div>
                     </div>
