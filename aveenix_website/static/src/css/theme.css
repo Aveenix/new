@@ -41,7 +41,7 @@ html, body {
 .av-sell-banner,
 .av-promo-bar,
 .av-footer,
-.av-trending-section,
+.av-row-section,
 .av-why-section,
 .av-search-overlay {
     max-width: 100%;
@@ -1085,8 +1085,23 @@ body.modal-open {
     margin-top: 24px;
 } */
 
-.av-trending-section { padding-top: 32px; padding-bottom: 32px; }
-.av-why-section      { padding-top: 32px; padding-bottom: 32px; }
+.av-row-section  { padding-top: 32px; padding-bottom: 32px; background: #fff; }
+.av-why-section  { padding-top: 32px; padding-bottom: 32px; }
+
+/* Icon badge next to the section heading */
+.av-row-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+.av-row-trending   .av-row-icon { background: #fff0f0; color: var(--av-red); }
+.av-row-bestseller .av-row-icon { background: #fff8e1; color: #f59e0b; }
+.av-row-newarrival .av-row-icon { background: #e8f4fd; color: #2563eb; }
 
 .av-section-header {
     display: flex;
@@ -1917,6 +1932,10 @@ body.modal-open {
 
 /* Sections */
 [data-theme="dark"] .av-section { background: #181818; }
+[data-theme="dark"] .av-row-section { background: #181818; }
+[data-theme="dark"] .av-row-trending   .av-row-icon { background: #2d1414; }
+[data-theme="dark"] .av-row-bestseller .av-row-icon { background: #2a220a; }
+[data-theme="dark"] .av-row-newarrival .av-row-icon { background: #0d1e33; }
 [data-theme="dark"] .av-section-heading { color: #f0f0f0; }
 [data-theme="dark"] .av-tab { color: #aaa !important; }
 [data-theme="dark"] .av-tab:hover,
@@ -7765,7 +7784,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 .o_wsale_product_page div[itemprop="description"],
 .av-pdp-description-body,
 .o_wsale_product_page [data-oe-field="description_ecommerce"] {
-    max-width: 860px;
+    /* max-width: 860px; */
     margin: 0 auto;
     font-size: 15px;
     line-height: 1.7;
@@ -7840,7 +7859,7 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 
 .av-tabs-nav {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     gap: 40px;
     list-style: none;
     margin: 0 0 32px;

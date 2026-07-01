@@ -346,37 +346,43 @@
                         <div class="av-footer-col">
                             <h4 class="av-footer-heading av-footer-toggle">Customer Service<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
-                                <li><a href="#">Site Us</a></li>
+                                <li><a href="/about">About Us</a></li>
                                 <li><a href="/contactus">Contact Us</a></li>
-                                <li><a href="#">FAQs</a></li>
-                                <li><a href="#">Order Tracking</a></li>
+                                <li><a href="/privacy#acp-program">Cashback Program</a></li>
+                                <li><a href="/my/orders">Order Tracking</a></li>
                             </ul>
                         </div>
                         <div class="av-footer-col">
-                            <h4 class="av-footer-heading av-footer-toggle">Information<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <h4 class="av-footer-heading av-footer-toggle">Account<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
-                                <li><a href="#">Features</a></li>
-                                <li><a href="#">Partners</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Shipping Policy</a></li>
+                                <li><a href="/shop/cart">Cart</a></li>
+                                <li><a href="/favourites">Favourites</a></li>
+                                <li><a href="/wishlist">Whishlist</a></li>
+                                <li><a href="/notifications">Notification</a></li>
                             </ul>
                         </div>
                         <div class="av-footer-col">
                             <h4 class="av-footer-heading av-footer-toggle">Account<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
                                 <li><a href="/my/account">My Account</a></li>
-                                <li><a href="#">Services</a></li>
-                                <li><a href="#">Connect Aveenix</a></li>
-                                <li><a href="#">Registration</a></li>
+                                <li><a href="/my/addresses">My Addresses</a></li>
+                                <li><a href="/my/rewards">My Rewards</a></li>
+                                <li><a href="/my/invoices">My Invoices</a></li>
                             </ul>
                         </div>
                         <div class="av-footer-col">
                             <h4 class="av-footer-heading av-footer-toggle">Support<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
-                                <li><a href="#">Purple Parlay</a></li>
-                                <li><a href="#">Tarcount</a></li>
-                                <li><a href="#">Career Policy</a></li>
-                                <li><a href="#">Terms of Use</a></li>
+                                <li>
+                                    <!-- <a href="#">Email Us</a> -->
+                                    <a t-att-href="'mailto:%s' % res_company.email" t-if="res_company.email">Email Us</a>
+                                </li>
+
+                                <li>
+                                    <a t-att-href="'tel:%s' % res_company.phone" t-if="res_company.phone">Phone Support</a>
+                                </li>
+                                <li><a href="#" class="av-open-livechat">Live Chat</a></li>
+                                <li><a href="/contactus">Free Consultancy</a></li>
                             </ul>
                         </div>
                         <div class="av-footer-col av-footer-col-legal-mobile">

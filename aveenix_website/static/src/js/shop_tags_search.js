@@ -17,6 +17,9 @@ export class ShopTagsSearch extends Interaction {
         this.list = this.el.querySelector(".av-tags-list");
         this.empty = this.el.querySelector(".av-tags-empty");
         this._timer = null;
+        // Link mode (used on non-shop pages, e.g. /categories): render each tag
+        // as a link to /shop?tags=id instead of a filter checkbox.
+        this.linkMode = this.el.dataset.avLinkMode === "1";
         // The tags applied via the URL — kept checked across searches.
         const sel = (this.input && this.input.dataset.selected) || "";
         this.selected = sel ? sel.split(",").filter(Boolean) : [];
@@ -69,8 +72,15 @@ export class ShopTagsSearch extends Interaction {
         const selectedSet = new Set(this.selected.map(String));
         this.list.innerHTML = tags
             .map((t) => {
-                const checked = selectedSet.has(String(t.id)) ? " checked" : "";
                 const name = this._escape(t.name);
+                if (this.linkMode) {
+                    return (
+                        '<div class="av-tag-item mb-1">' +
+                        `<a href="/shop?tags=${t.id}" class="text-decoration-none small text-body">${name}</a>` +
+                        "</div>"
+                    );
+                }
+                const checked = selectedSet.has(String(t.id)) ? " checked" : "";
                 return (
                     '<div class="form-check mb-1 av-tag-item">' +
                     `<input type="checkbox" name="tags" class="form-check-input" id="tag_${t.id}" value="${t.id}"${checked}/>` +

@@ -6,7 +6,7 @@
     'description': 'Modern eCommerce website - red & gold design',
     'author': 'Anantam Innovision Private Limited',
     'website': 'https://anantaminnovision.com/',
-    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist', 'product_brand', 'account', 'aveenix_rewards'],
+    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist', 'product_brand', 'account', 'aveenix_rewards', 'im_livechat'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
@@ -36,6 +36,7 @@
             'aveenix_website/static/src/js/product_reviews.js',
             'aveenix_website/static/src/js/shop_tags_search.js',
             'aveenix_website/static/src/js/home_category_tabs.js',
+            'aveenix_website/static/src/js/open_livechat.js',
         ],
     },
     'installable': True,

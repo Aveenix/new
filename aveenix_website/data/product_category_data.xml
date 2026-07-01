@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data noupdate="1">
 
     <!-- ═══════════════════════════════════════════════════════════
          AVEENIX WEBSITE CATEGORIES
@@ -41,5 +42,5 @@
         <field name="name">Cameras</field>
         <field name="website_description">&lt;p&gt;Digital cameras, security cameras, and photography equipment.&lt;/p&gt;</field>
     </record>
-
+</data>
 </odoo>

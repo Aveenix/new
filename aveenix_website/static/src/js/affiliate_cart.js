@@ -60,29 +60,37 @@ export class AffiliateRemoveButton extends Interaction {
         }
 
         const item = this.el.closest(".av-aff-item");
-        if (item) {
-            item.style.transition = "opacity .2s, transform .2s";
-            item.style.opacity = "0";
-            item.style.transform = "translateY(-4px)";
-            setTimeout(() => {
-                item.remove();
-                const section = document.querySelector(".av-aff-section");
-                // Update the "N items · fulfilled by partner stores" subtitle.
-                const remaining = section
-                    ? section.querySelectorAll(".av-aff-item").length
-                    : 0;
-                const subtitle = section && section.querySelector(".av-aff-section-subtitle");
-                if (subtitle) {
-                    subtitle.textContent =
-                        remaining + " item" + (remaining !== 1 ? "s" : "") +
-                        " · fulfilled by partner stores";
-                }
-                // Hide only the affiliate wrapper div if no items remain.
-                if (section && remaining === 0) {
-                    section.closest(".mb-4")?.remove();
-                }
-            }, 220);
+        if (!item) {
+            return;
         }
+        const section = document.querySelector(".av-aff-section");
+        // If this is the last item, drop the whole section immediately (no
+        // 220ms item-fade wait) so the "Buy from Our Trusted Partner" block
+        // disappears without a trailing pause.
+        const isLast = section
+            ? section.querySelectorAll(".av-aff-item").length <= 1
+            : true;
+        if (isLast && section) {
+            (section.parentElement || section).remove();
+            return;
+        }
+
+        // Otherwise fade just this row out, then update the subtitle count.
+        item.style.transition = "opacity .2s, transform .2s";
+        item.style.opacity = "0";
+        item.style.transform = "translateY(-4px)";
+        setTimeout(() => {
+            item.remove();
+            const remaining = section
+                ? section.querySelectorAll(".av-aff-item").length
+                : 0;
+            const subtitle = section && section.querySelector(".av-aff-section-subtitle");
+            if (subtitle) {
+                subtitle.textContent =
+                    remaining + " item" + (remaining !== 1 ? "s" : "") +
+                    " · fulfilled by partner stores";
+            }
+        }, 220);
     }
 }
 

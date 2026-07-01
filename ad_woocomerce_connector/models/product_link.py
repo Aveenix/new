@@ -225,6 +225,50 @@ class WooProduct(models.Model):
     def _sync_one(self, backend, record: dict, force: bool = False):
         from datetime import datetime
         ext_id = str(record["id"])
+        wc_type_raw = (record.get("type") or "simple").strip()
+
+        # WC API sometimes returns variations even when ?type=simple|external is
+        # requested. If already inside a _sync_variations call (context flag set),
+        # process normally. Otherwise fetch the parent and delegate — which will
+        # call _sync_variations and create all variants including this one.
+        if wc_type_raw == "variation" or record.get("parent_id"):
+            if self.env.context.get('wc_syncing_variations'):
+                # Called from _sync_variations — process normally, no redirect.
+                pass
+            else:
+                parent_id = record.get("parent_id")
+                if parent_id:
+                    _logger.info(
+                        "[WC Product] id=%s is a variation of parent %s — "
+                        "delegating to variable product sync.",
+                        ext_id, parent_id,
+                    )
+                    try:
+                        client = backend.get_api_client()
+                        parent_result = client.get("products/%s" % parent_id)
+                        parent_data = parent_result.get("data", {})
+                        if parent_data:
+                            self.env["wc.template.link"].syncing_from_wc(
+                                backend, [parent_data], force=force
+                            )
+                    except Exception as exc:
+                        _logger.warning(
+                            "[WC Product] Failed fetching parent %s for variation %s: %s",
+                            parent_id, ext_id, exc,
+                        )
+                else:
+                    _logger.info(
+                        "[WC Product] Skipping variation id=%s — no parent_id in record.",
+                        ext_id,
+                    )
+                return None, "skipped"
+
+        _logger.info(
+            "[WC Product] Syncing id=%s name=%r type=%r",
+            ext_id,
+            (record.get("name") or "").strip(),
+            wc_type_raw,
+        )
 
         existing = self.search([
             ("backend_id", "=", backend.id),
@@ -370,18 +414,70 @@ class WooProduct(models.Model):
                 if backend.default_category_id
                 else self.env.ref("product.product_category_goods").id
             )
-            odoo_product = self.env["product.product"].with_context(
-                syncing_from_wc=True
-            ).create({
-                "name": name,
-                "default_code": sku,
-                "type": product_type,
-                "categ_id": categ_id,
-                "list_price": list_price,
-                "weight": weight,
-                "sale_ok": True,
-                "purchase_ok": True,
-            })
+            matched_variant_id = self.env.context.get('wc_matched_variant_id')
+            parent_tmpl_id = self.env.context.get('wc_parent_tmpl_id')
+            if matched_variant_id:
+                # _sync_variations pre-matched this WC variation to the correct
+                # Odoo variant via attribute values — use it directly.
+                odoo_product = self.env["product.product"].browse(matched_variant_id)
+                _logger.info(
+                    "[WC Variation] Using attribute-matched variant %s for WC variation id=%s",
+                    odoo_product.id, ext_id,
+                )
+                write_vals = {}
+                if sku:
+                    write_vals["default_code"] = sku
+                if list_price:
+                    write_vals["lst_price"] = list_price
+                if weight:
+                    write_vals["weight"] = weight
+                if write_vals:
+                    odoo_product.with_context(syncing_from_wc=True).write(write_vals)
+            elif parent_tmpl_id:
+                # Fallback: attribute matching failed (no structured attributes).
+                # Reuse an unbound variant from the parent template.
+                parent_tmpl = self.env["product.template"].browse(parent_tmpl_id)
+                bound_product_ids = self.env["wc.product.link"].search(
+                    [("product_id.product_tmpl_id", "=", parent_tmpl_id)]
+                ).mapped("product_id.id")
+                unbound = parent_tmpl.product_variant_ids.filtered(
+                    lambda v: v.id not in bound_product_ids
+                )
+                odoo_product = unbound[:1] or parent_tmpl.product_variant_ids[:1]
+                if odoo_product:
+                    _logger.info(
+                        "[WC Variation] Reusing variant %s (tmpl=%s) for WC variation id=%s",
+                        odoo_product.id, parent_tmpl_id, ext_id,
+                    )
+                    write_vals = {}
+                    if sku:
+                        write_vals["default_code"] = sku
+                    if list_price:
+                        write_vals["lst_price"] = list_price
+                    if weight:
+                        write_vals["weight"] = weight
+                    if write_vals:
+                        odoo_product.with_context(syncing_from_wc=True).write(write_vals)
+                else:
+                    _logger.warning(
+                        "[WC Variation] Parent template %s has no variants — skipping variation id=%s",
+                        parent_tmpl_id, ext_id,
+                    )
+                    return None, "skipped"
+            else:
+                product_vals = {
+                    "name": name,
+                    "default_code": sku,
+                    "type": product_type,
+                    "categ_id": categ_id,
+                    "list_price": list_price,
+                    "weight": weight,
+                    "sale_ok": True,
+                    "purchase_ok": True,
+                }
+                odoo_product = self.env["product.product"].with_context(
+                    syncing_from_wc=True
+                ).create(product_vals)
 
         tmpl_extra = {}
         if is_affiliate:
@@ -851,6 +947,89 @@ class WooProductTemplate(models.Model):
         self._sync_variations(backend, tmpl_binding, record, force, results)
         return tmpl_binding, "created"
 
+    def _ensure_attribute_lines(self, odoo_tmpl, var_records):
+        """Create/update product.template.attribute.line from WC variation attributes.
+
+        Collects all (attr_name → set of values) across every variation, then
+        writes attribute_line_ids so Odoo generates the right variant combination
+        matrix.  Returns a mapping:
+            { frozenset({(attr_name, value), ...}) : product.product }
+        so _sync_variations can match each WC variation to its Odoo variant.
+        """
+        AttrModel = self.env["product.attribute"]
+        ValModel  = self.env["product.attribute.value"]
+
+        # --- 1. Collect unique attr names and values from all variations -------
+        attr_values_map = {}   # attr_name -> ordered list of unique values (insertion order)
+        for var in var_records:
+            for a in var.get("attributes") or []:
+                attr_name = (a.get("name") or "").strip()
+                opt       = (a.get("option") or "").strip()
+                if not attr_name or not opt:
+                    continue
+                if attr_name not in attr_values_map:
+                    attr_values_map[attr_name] = []
+                if opt not in attr_values_map[attr_name]:
+                    attr_values_map[attr_name].append(opt)
+
+        if not attr_values_map:
+            # No structured attributes — cannot build combination matrix.
+            return {}
+
+        # --- 2. Find-or-create product.attribute and product.attribute.value ---
+        attr_id_map = {}   # attr_name -> product.attribute record
+        val_id_map  = {}   # (attr_name, value) -> product.attribute.value record
+
+        for attr_name, values in attr_values_map.items():
+            attr = AttrModel.search([("name", "=", attr_name)], limit=1)
+            if not attr:
+                attr = AttrModel.create({"name": attr_name})
+            attr_id_map[attr_name] = attr
+            for v in values:
+                val = ValModel.search(
+                    [("attribute_id", "=", attr.id), ("name", "=", v)], limit=1
+                )
+                if not val:
+                    val = ValModel.create({"attribute_id": attr.id, "name": v})
+                val_id_map[(attr_name, v)] = val
+
+        # --- 3. Write attribute_line_ids on the template ----------------------
+        existing_lines = {
+            line.attribute_id.id: line
+            for line in odoo_tmpl.attribute_line_ids
+        }
+        line_commands = []
+        for attr_name, values in attr_values_map.items():
+            attr = attr_id_map[attr_name]
+            val_ids = [val_id_map[(attr_name, v)].id for v in values]
+            if attr.id in existing_lines:
+                line = existing_lines[attr.id]
+                current_val_ids = line.value_ids.ids
+                missing = [v for v in val_ids if v not in current_val_ids]
+                if missing:
+                    line_commands.append((1, line.id, {"value_ids": [(4, v) for v in missing]}))
+            else:
+                line_commands.append((0, 0, {
+                    "attribute_id": attr.id,
+                    "value_ids": [(4, v) for v in val_ids],
+                }))
+        if line_commands:
+            odoo_tmpl.with_context(syncing_from_wc=True).write(
+                {"attribute_line_ids": line_commands}
+            )
+
+        # --- 4. Build variation-key → product.product mapping ----------------
+        # After writing attribute lines Odoo auto-generates product.product
+        # records. Map each by its ptav combination.
+        variant_map = {}
+        for variant in odoo_tmpl.product_variant_ids:
+            key = frozenset(
+                (ptav.attribute_id.name, ptav.name)
+                for ptav in variant.product_template_attribute_value_ids
+            )
+            variant_map[key] = variant
+        return variant_map
+
     def _sync_variations(self, backend, tmpl_binding, record: dict, force: bool, results=None):
         variation_ids = record.get("variations", [])
         if not variation_ids:
@@ -869,8 +1048,17 @@ class WooProductTemplate(models.Model):
                 results["errors"].append("Variations fetch %s: %s" % (record["id"], exc))
             return
 
-        wc_product_model = self.env["wc.product.link"]
+        odoo_tmpl = tmpl_binding.template_id
         parent_name = wc_unescape(record.get("name") or "")
+
+        # Build attribute lines on the template and get a variant lookup map.
+        variant_map = self._ensure_attribute_lines(odoo_tmpl, var_records)
+        _logger.info(
+            "[WC Variations] Template %s — attribute matrix built, %d Odoo variants available",
+            odoo_tmpl.id, len(odoo_tmpl.product_variant_ids),
+        )
+
+        wc_product_model = self.env["wc.product.link"]
 
         for var in var_records:
             var_ext_id = str(var.get("id", ""))
@@ -892,8 +1080,24 @@ class WooProductTemplate(models.Model):
             if not var.get("tags"):
                 var["tags"] = record.get("tags", [])
 
+            # Find the matching Odoo variant by attribute values.
+            var_key = frozenset(
+                (a.get("name", "").strip(), a.get("option", "").strip())
+                for a in (var.get("attributes") or [])
+                if a.get("name") and a.get("option")
+            )
+            matched_variant = variant_map.get(var_key)
+
             try:
-                var_binding, status = wc_product_model._sync_one(backend, var, force)
+                # wc_syncing_variations prevents _sync_one from re-delegating
+                # to the parent and creating an infinite fetch loop.
+                # wc_matched_variant_id passes the pre-matched product.product
+                # so _sync_one does not create a new template.
+                var_binding, status = wc_product_model.with_context(
+                    wc_syncing_variations=True,
+                    wc_parent_tmpl_id=tmpl_binding.template_id.id,
+                    wc_matched_variant_id=matched_variant.id if matched_variant else False,
+                )._sync_one(backend, var, force)
                 if results is not None:
                     results[status] += 1
                 if var_binding:

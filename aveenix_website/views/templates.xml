@@ -41,10 +41,19 @@
          ========================================================= -->
     <template id="av_home_product_row" name="Aveenix: Home Product Row">
         <t t-if="row_products">
-            <section class="av-section av-trending-section oe_structure">
+            <!-- row_variant: 'trending' | 'bestseller' | 'newarrival' -->
+            <t t-set="_rv" t-value="row_variant or 'trending'"/>
+            <section t-attf-class="av-section av-row-section av-row-{{ _rv }} oe_structure">
                 <div class="av-container">
                     <div class="av-section-header">
-                        <h2 class="av-section-heading" t-esc="row_title"/>
+                        <div class="av-section-title-wrap">
+                            <span class="av-row-icon">
+                                <t t-if="_rv == 'trending'"><i class="fa fa-bolt"/></t>
+                                <t t-elif="_rv == 'bestseller'"><i class="fa fa-trophy"/></t>
+                                <t t-else=""><i class="fa fa-clock-o"/></t>
+                            </span>
+                            <h2 class="av-section-heading" t-esc="row_title"/>
+                        </div>
                         <a href="/shop" class="av-view-all">View All</a>
                     </div>
                     <div class="av-products-grid">
@@ -63,11 +72,6 @@
          global aveenix_layout inheritance (see layout.xml).
          ========================================================= -->
     <template id="homepage" name="Aveenix Homepage">
-        <t t-set="_av_country_id" t-value="request.session.get('av_user_country_id')"/>
-        <t t-set="_av_all_products" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)])"/>
-        <t t-if="not _av_all_products" t-set="_av_all_products" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True)])"/>
-        <t t-if="_av_country_id" t-set="trending_products" t-value="_av_all_products.filtered(lambda p: not p.available_country_ids or _av_country_id in p.available_country_ids.ids)[:6]"/>
-        <t t-else="" t-set="trending_products" t-value="_av_all_products[:6]"/>
         <t t-set="categories" t-value="request.env['product.public.category'].sudo().search([('has_published_products','=',True)] if request.env.user._is_public() else [], limit=7)"/>
         <t t-call="website.layout">
             <t t-set="pageName" t-value="'homepage'"/>
@@ -203,14 +207,17 @@
                 <t t-call="aveenix_website.av_home_product_row">
                     <t t-set="row_title">Trending Products</t>
                     <t t-set="row_products" t-value="trending_products"/>
+                    <t t-set="row_variant">trending</t>
                 </t>
                 <t t-call="aveenix_website.av_home_product_row">
                     <t t-set="row_title">Best Sellers</t>
                     <t t-set="row_products" t-value="best_seller_products"/>
+                    <t t-set="row_variant">bestseller</t>
                 </t>
                 <t t-call="aveenix_website.av_home_product_row">
                     <t t-set="row_title">New Arrivals</t>
                     <t t-set="row_products" t-value="new_arrival_products"/>
+                    <t t-set="row_variant">newarrival</t>
                 </t>
 
 
@@ -742,11 +749,11 @@
                             <div class="av-privacy-sidebar">
                                 <!-- Sponsored ad slider (above sidebar) -->
                                 <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
-                                    [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)],
                                     order='sponsor_rank desc', limit=6)"/>
                                 <t t-if="not _av_sponsored">
                                     <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                                        [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                        [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                                     <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
                                 </t>
                                 <t t-if="_av_sponsored">
@@ -900,21 +907,21 @@
                             <div class="av-about-contact-icon"><i class="fa fa-envelope"/></div>
                             <strong>Email Support</strong>
                             <span>Quick response time</span>
-                            <a href="#">Send us an email</a>
+                            <a t-att-href="'mailto:%s' % res_company.email" t-if="res_company.email">Send us an email</a>
                             <small>Within 24 hours</small>
                         </div>
                         <div class="av-about-contact-card">
                             <div class="av-about-contact-icon"><i class="fa fa-phone"/></div>
                             <strong>Phone Support</strong>
                             <span>Speak with our team</span>
-                            <a href="#">Call us directly</a>
+                            <a t-att-href="'tel:%s' % res_company.phone" t-if="res_company.phone">Call us directly</a>
                             <small>Mon-Fri 9AM-6PM EST</small>
                         </div>
                         <div class="av-about-contact-card">
                             <div class="av-about-contact-icon"><i class="fa fa-comments"/></div>
                             <strong>Live Chat</strong>
                             <span>Chat with support</span>
-                            <a href="#">Available on our platform</a>
+                            <a href="#" class="av-open-livechat">Available on our platform</a>
                             <small>Real-time assistance</small>
                         </div>
                         <div class="av-about-contact-card av-about-contact-card-cta">
@@ -1029,10 +1036,10 @@
                     </div>
                 </section>
 
-                <!-- Shared left sidebar (ad slider + browse categories + top rated
-                     + trust badges), same as compare / favourites / shop pages. -->
+                <!-- Shop-style left sidebar (ad slider + Filter by Category tree +
+                     Brand + Stock + Top Rated); filter links go to /shop. -->
                 <t t-set="_av_carousel_id" t-value="'av_ad_carousel_categories'"/>
-                <t t-call="aveenix_website.av_full_sidebar"/>
+                <t t-call="aveenix_website.av_shop_style_sidebar"/>
 
                 <div class="av-cat-page-body" style="padding-top: 40px; padding-bottom: 60px;">
                     <div class="av-cat-page-grid">
@@ -1111,6 +1118,216 @@
     </template>
 
     <!-- =========================================================
+         REUSABLE: shop-STYLE left sidebar for non-shop pages (e.g. /categories).
+         Mirrors the /shop rail — ad slider + Filter by Category tree + Brand +
+         Stock + Top Rated — but every filter link points to /shop so clicking a
+         filter takes the visitor to the shop already filtered. Standalone: it
+         fetches its own data and needs no shop-controller context.
+         Caller sets `_av_carousel_id` (unique) before t-call.
+         ========================================================= -->
+    <template id="av_shop_style_sidebar" name="Aveenix: Shop-style Sidebar">
+        <aside class="av-cart-aside av-shop-style-aside d-none d-lg-block">
+            <!-- Sponsored ad slider -->
+            <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
+                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)],
+                order='sponsor_rank desc', limit=6)"/>
+            <t t-if="not _av_sponsored">
+                <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
+                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
+                <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
+            </t>
+            <t t-if="_av_sponsored">
+                <div class="av-ad-sidebar-slot">
+                    <t t-call="aveenix_website.av_sponsored_slider"/>
+                </div>
+            </t>
+
+            <div class="av-product-sidebar-rail">
+                <!-- ── Filter by Category (expandable tree, links to /shop) ── -->
+                <t t-set="_av_top_categs" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False)], order='name asc')"/>
+                <t t-if="_av_top_categs">
+                    <div class="accordion accordion-flush av-filter-category mb-2">
+                        <div class="accordion-item">
+                            <div class="accordion-header h6 mb-0">
+                                <button class="accordion-button px-0 bg-transparent shadow-none" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#av_cat_side_inner"
+                                        aria-controls="av_cat_side_inner" aria-expanded="true">
+                                    <b>Filter by Category</b>
+                                </button>
+                            </div>
+                            <div id="av_cat_side_inner" class="accordion-collapse collapse show">
+                                <div class="d-flex flex-column pt-1 mb-3 av-filter-scroll av-cat-tree">
+                                    <t t-foreach="_av_top_categs" t-as="cat">
+                                        <t t-set="has_children" t-value="bool(cat.child_id)"/>
+                                        <div class="av-cat-row av-cat-parent">
+                                            <button t-if="has_children" type="button" class="av-cat-toggle" aria-expanded="false">
+                                                <i class="fa fa-chevron-right"/>
+                                            </button>
+                                            <span t-else="" class="av-cat-toggle-spacer"/>
+                                            <a t-attf-href="/shop?categ=#{cat.id}"
+                                               class="av-cat-item flex-grow-1 text-decoration-none small text-body">
+                                                <t t-out="cat.name"/>
+                                            </a>
+                                        </div>
+                                        <t t-if="has_children">
+                                            <div class="av-cat-children">
+                                                <t t-foreach="cat.child_id" t-as="child">
+                                                    <div class="av-cat-row av-cat-child">
+                                                        <a t-attf-href="/shop?categ=#{child.id}"
+                                                           class="av-cat-item flex-grow-1 text-decoration-none small text-body">
+                                                            <t t-out="child.name"/>
+                                                        </a>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- ── Tags (searchable; each tag links to /shop?tags=id) ── -->
+                <t t-set="_av_side_tags" t-value="request.env['product.tag'].sudo().search([
+                    ('visible_to_customers','=',True),
+                    '|', ('product_template_ids.is_published','=',True), ('product_ids.is_published','=',True),
+                ], limit=5, order='name')"/>
+                <t t-if="_av_side_tags">
+                    <div class="accordion accordion-flush border-top av-filter-tags">
+                        <div class="accordion-item">
+                            <div class="accordion-header h6 mb-0">
+                                <button class="accordion-button px-0 bg-transparent shadow-none" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#av_tags_side_inner"
+                                        aria-controls="av_tags_side_inner" aria-expanded="true">
+                                    <b>Tags</b>
+                                </button>
+                            </div>
+                            <div id="av_tags_side_inner" class="accordion-collapse collapse show">
+                                <div class="pt-1 mb-3 av-tags-filter" data-av-tags-filter="1" data-av-link-mode="1">
+                                    <div class="av-tags-search-wrap">
+                                        <i class="fa fa-search av-tags-search-icon"/>
+                                        <input type="text" class="av-tags-search form-control form-control-sm"
+                                               placeholder="Search tags…" autocomplete="off" data-selected=""/>
+                                    </div>
+                                    <div class="av-tags-list" data-av-tags-list="1">
+                                        <t t-foreach="_av_side_tags" t-as="_tg">
+                                            <div class="av-tag-item mb-1">
+                                                <a t-attf-href="/shop?tags=#{_tg.id}"
+                                                   class="text-decoration-none small text-body" t-out="_tg.name"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="av-tags-empty text-muted small" style="display:none;">No tags found.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- ── Price Range (submits to /shop) ───────────────────── -->
+                <div class="accordion accordion-flush border-top av-filter-price">
+                    <div class="accordion-item">
+                        <div class="accordion-header h6 mb-0">
+                            <button class="accordion-button px-0 bg-transparent shadow-none" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#av_price_side_inner"
+                                    aria-controls="av_price_side_inner" aria-expanded="true">
+                                <b>Price Range</b>
+                            </button>
+                        </div>
+                        <div id="av_price_side_inner" class="accordion-collapse collapse show">
+                            <form action="/shop" method="get" class="d-flex align-items-center gap-2 pt-2 mb-3">
+                                <input type="number" name="min_price" min="0" step="1"
+                                       class="form-control form-control-sm" placeholder="Min"/>
+                                <span class="text-muted small">–</span>
+                                <input type="number" name="max_price" min="0" step="1"
+                                       class="form-control form-control-sm" placeholder="Max"/>
+                                <button type="submit" class="btn btn-sm btn-primary flex-shrink-0">
+                                    <i class="fa fa-arrow-right"/>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Filter by Brand (links to /shop) ─────────────────── -->
+                <t t-set="_av_brands" t-value="request.env['product.brand'].sudo().search([], order='name asc')"/>
+                <t t-if="_av_brands">
+                    <div class="accordion accordion-flush border-top av-filter-brand">
+                        <div class="accordion-item">
+                            <div class="accordion-header h6 mb-0">
+                                <button class="accordion-button px-0 bg-transparent shadow-none" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#av_brand_side_inner"
+                                        aria-controls="av_brand_side_inner" aria-expanded="true">
+                                    <b>Filter by Brand</b>
+                                </button>
+                            </div>
+                            <div id="av_brand_side_inner" class="accordion-collapse collapse show">
+                                <div class="d-flex flex-column pt-1 mb-3 av-filter-scroll">
+                                    <t t-foreach="_av_brands" t-as="brand">
+                                        <a t-attf-href="/shop?brand=#{brand.id}"
+                                           class="text-decoration-none py-1 small av-brand-item text-body">
+                                            <t t-out="brand.name"/>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- ── Stock Status (links to /shop) ────────────────────── -->
+                <div class="accordion accordion-flush border-top av-filter-stock">
+                    <div class="accordion-item">
+                        <div class="accordion-header h6 mb-0">
+                            <button class="accordion-button px-0 bg-transparent shadow-none" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#av_stock_side_inner"
+                                    aria-controls="av_stock_side_inner" aria-expanded="true">
+                                <b>Stock Status</b>
+                            </button>
+                        </div>
+                        <div id="av_stock_side_inner" class="accordion-collapse collapse show">
+                            <div class="d-flex flex-column mb-3 pt-1 gap-1">
+                                <a href="/shop?stock=instock" class="text-decoration-none py-1 small text-body">In stock</a>
+                                <a href="/shop?stock=onsale" class="text-decoration-none py-1 small text-body">On sale</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Top Rated Products ───────────────────────────────── -->
+                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
+                <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
+                <t t-if="_av_top_rated">
+                    <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                        <p class="fw-bold text-uppercase small mb-2" style="letter-spacing:.5px;color:var(--av-text);">Top Rated Products</p>
+                        <t t-foreach="_av_top_rated" t-as="_trp">
+                            <a t-attf-href="/shop/product/#{_trp.id}" class="d-flex align-items-center gap-2 text-decoration-none mb-3">
+                                <div class="flex-shrink-0">
+                                    <t t-if="_trp.image_128">
+                                        <img t-attf-src="/web/image/product.template/#{_trp.id}/image_128"
+                                             t-att-alt="_trp.name"
+                                             style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
+                                            <i class="fa fa-image text-muted"/>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div style="min-width:0;">
+                                    <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_trp.name"/>
+                                    <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _trp.list_price"/>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </aside>
+    </template>
+
+    <!-- =========================================================
          REUSABLE: full left sidebar (ad slider + browse + top rated + badges).
          Caller sets `_av_carousel_id` (unique) before t-call.
          ========================================================= -->
@@ -1118,11 +1335,11 @@
         <aside class="av-cart-aside d-none d-lg-block">
             <!-- Sponsored ad slider -->
             <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
-                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)],
                 order='sponsor_rank desc', limit=6)"/>
             <t t-if="not _av_sponsored">
                 <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                    [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                 <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
             </t>
             <t t-if="_av_sponsored">
@@ -1148,7 +1365,7 @@
                 </t>
 
                 <!-- Top Rated Products -->
-                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                 <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
                 <t t-if="_av_top_rated">
                     <div class="av-product-sidebar-section border-top pt-3 mb-3">
@@ -1180,16 +1397,16 @@
                 <div class="av-product-sidebar-section border-top pt-3 mb-3">
                     <div class="d-flex flex-column gap-2">
                         <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                            <span class="small text-muted">Secure payments</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
                             <i class="fa fa-truck av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">Free shipping over $50</span>
+                            <span class="small text-muted">Fast delivery</span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
-                            <i class="fa fa-rotate-left av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">30-day returns</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa fa-lock av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">Secure checkout</span>
+                            <i class="fa fa-gift av-product-sidebar-badge-icon"/>
+                            <span class="small text-muted">Earn rewards</span>
                         </div>
                     </div>
                 </div>
@@ -1327,7 +1544,7 @@
                 <t t-set="_av_order" t-value="website_sale_order"/>
                 <t t-set="_av_cart_categs" t-value="_av_order.order_line.product_id.product_tmpl_id.public_categ_ids if _av_order else request.env['product.public.category']"/>
                 <t t-set="_av_cart_tmpl_ids" t-value="_av_order.order_line.product_id.product_tmpl_id.ids if _av_order else []"/>
-                <t t-set="_av_base_domain" t-value="[('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)]"/>
+                <t t-set="_av_base_domain" t-value="[('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)]"/>
                 <!-- 1) sponsored products in the customer's cart categories -->
                 <t t-set="_av_relevant" t-value="request.env['product.template'].sudo().search(
                     _av_base_domain + ([('public_categ_ids','in',_av_cart_categs.ids)] if _av_cart_categs else [('id','=',0)]) + [('id','not in',_av_cart_tmpl_ids)],
@@ -1341,7 +1558,7 @@
                      computed/not stored, so fetch a pool and sort in Python) -->
                 <t t-if="not _av_sponsored">
                     <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                        [('sale_ok','=',True),('website_published','=',True),('id','not in',_av_cart_tmpl_ids)], limit=50)"/>
+                        [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('id','not in',_av_cart_tmpl_ids)], limit=50)"/>
                     <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
                 </t>
                 <t t-if="_av_sponsored">
@@ -1369,7 +1586,7 @@
                         </t>
 
                         <!-- Top Rated Products -->
-                        <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                        <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                         <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
                         <t t-if="_av_top_rated">
                             <div class="av-product-sidebar-section border-top pt-3 mb-3">
@@ -1401,16 +1618,16 @@
                         <div class="av-product-sidebar-section border-top pt-3 mb-3">
                             <div class="d-flex flex-column gap-2">
                                 <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                                    <span class="small text-muted">Secure payments</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-truck av-product-sidebar-badge-icon"/>
-                                    <span class="small text-muted">Free shipping over $50</span>
+                                    <span class="small text-muted">Fast delivery</span>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <i class="fa fa-rotate-left av-product-sidebar-badge-icon"/>
-                                    <span class="small text-muted">30-day returns</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fa fa-lock av-product-sidebar-badge-icon"/>
-                                    <span class="small text-muted">Secure checkout</span>
+                                    <i class="fa fa-gift av-product-sidebar-badge-icon"/>
+                                    <span class="small text-muted">Earn rewards</span>
                                 </div>
                             </div>
                         </div>
@@ -1493,16 +1710,16 @@
         <xpath expr="//div[hasclass('o_wsale_products_grid_before_rail')]/div[1]" position="before">
             <t t-set="_av_ctx_categs" t-value="category.search([('id','child_of',category.id)]) if category else request.env['product.public.category']"/>
             <t t-set="_av_relevant" t-value="request.env['product.template'].sudo().search(
-                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)]
+                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)]
                 + ([('public_categ_ids','in',_av_ctx_categs.ids)] if _av_ctx_categs else []),
                 order='sponsor_rank desc', limit=6) if _av_ctx_categs else request.env['product.template']"/>
             <t t-set="_av_more" t-value="request.env['product.template'].sudo().search(
-                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True),('id','not in', _av_relevant.ids)],
+                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True),('id','not in', _av_relevant.ids)],
                 order='sponsor_rank desc', limit=6)"/>
             <t t-set="_av_sponsored" t-value="(_av_relevant + _av_more)[:6]"/>
             <t t-if="not _av_sponsored">
                 <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                    [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                 <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
             </t>
             <t t-if="_av_sponsored">
@@ -1663,9 +1880,9 @@
             </div>
 
             <!-- ── Top Rated Products ─────────────────────────────── -->
-            <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+            <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
             <t t-if="not _av_tr_pool">
-                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True)], limit=50)"/>
+                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('image_1920','!=',False)], limit=50)"/>
             </t>
             <t t-set="av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:3]"/>
             <div class="border-top pt-3 mt-1 av-top-rated-widget">
@@ -1858,16 +2075,16 @@
             <t t-set="_av_excl" t-value="[product.id] if product else []"/>
             <t t-set="_av_ctx_categs" t-value="product.public_categ_ids if product else request.env['product.public.category']"/>
             <t t-set="_av_relevant" t-value="request.env['product.template'].sudo().search(
-                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True),('id','not in',_av_excl)]
+                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True),('id','not in',_av_excl)]
                 + ([('public_categ_ids','in',_av_ctx_categs.ids)] if _av_ctx_categs else []),
                 order='sponsor_rank desc', limit=6) if _av_ctx_categs else request.env['product.template']"/>
             <t t-set="_av_more" t-value="request.env['product.template'].sudo().search(
-                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True),('id','not in', _av_relevant.ids + _av_excl)],
+                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True),('id','not in', _av_relevant.ids + _av_excl)],
                 order='sponsor_rank desc', limit=6)"/>
             <t t-set="_av_sponsored" t-value="(_av_relevant + _av_more)[:6]"/>
             <t t-if="not _av_sponsored">
                 <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                    [('sale_ok','=',True),('website_published','=',True),('id','not in',_av_excl)], limit=50)"/>
+                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('id','not in',_av_excl)], limit=50)"/>
                 <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
             </t>
             <t t-if="_av_sponsored">
@@ -1905,7 +2122,7 @@
 
                     <!-- Related Products -->
                     <t t-set="_av_related" t-value="request.env['product.template'].sudo().search(
-                        [('sale_ok','=',True),('website_published','=',True),('id','!=',product.id)]
+                        [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('id','!=',product.id)]
                         + ([('public_categ_ids','child_of',category.id)] if category else []),
                         limit=4
                     )"/>
@@ -1936,7 +2153,7 @@
                     </t>
 
                     <!-- Top Rated Products -->
-                    <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('id','!=',product.id)], limit=50)"/>
+                    <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('id','!=',product.id)], limit=50)"/>
                     <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:3]"/>
                     <t t-if="_av_top_rated">
                         <div class="av-product-sidebar-section border-top pt-3 mb-3">
@@ -1968,16 +2185,16 @@
                     <div class="av-product-sidebar-section border-top pt-3 mb-3">
                         <div class="d-flex flex-column gap-2">
                             <div class="d-flex align-items-center gap-2">
+                                <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                                <span class="small text-muted">Secure payments</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
                                 <i class="fa fa-truck av-product-sidebar-badge-icon"/>
-                                <span class="small text-muted">Free shipping over $50</span>
+                                <span class="small text-muted">Fast delivery</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-rotate-left av-product-sidebar-badge-icon"/>
-                                <span class="small text-muted">30-day returns</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-lock av-product-sidebar-badge-icon"/>
-                                <span class="small text-muted">Secure checkout</span>
+                                <i class="fa fa-gift av-product-sidebar-badge-icon"/>
+                                <span class="small text-muted">Earn rewards</span>
                             </div>
                         </div>
                     </div>
@@ -2160,11 +2377,11 @@
                             <div class="av-privacy-sidebar">
                                 <!-- Sponsored ad slider (above sidebar) -->
                                 <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
-                                    [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)],
                                     order='sponsor_rank desc', limit=6)"/>
                                 <t t-if="not _av_sponsored">
                                     <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                                        [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                        [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                                     <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
                                 </t>
                                 <t t-if="_av_sponsored">
@@ -3442,11 +3659,11 @@
                         <div class="av-privacy-sidebar">
                             <!-- Sponsored ad slider (above sidebar) -->
                             <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
-                                [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)],
                                 order='sponsor_rank desc', limit=6)"/>
                             <t t-if="not _av_sponsored">
                                 <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                                    [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                                 <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
                             </t>
                             <t t-if="_av_sponsored">
@@ -3781,11 +3998,11 @@
                             <div class="av-privacy-sidebar">
                                 <!-- Sponsored ad slider (above sidebar) -->
                                 <t t-set="_av_sponsored" t-value="request.env['product.template'].sudo().search(
-                                    [('sale_ok','=',True),('website_published','=',True),('is_sponsored','=',True)],
+                                    [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False),('is_sponsored','=',True)],
                                     order='sponsor_rank desc', limit=6)"/>
                                 <t t-if="not _av_sponsored">
                                     <t t-set="_av_pool" t-value="request.env['product.template'].sudo().search(
-                                        [('sale_ok','=',True),('website_published','=',True)], limit=50)"/>
+                                        [('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
                                     <t t-set="_av_sponsored" t-value="_av_pool.sorted(key=lambda p: p.sales_count, reverse=True)[:6]"/>
                                 </t>
                                 <t t-if="_av_sponsored">
@@ -3993,21 +4210,21 @@
                                 <div class="av-about-contact-icon"><i class="fa fa-envelope"/></div>
                                 <strong>Email Support</strong>
                                 <span>Quick response time</span>
-                                <a href="#">Send us an email</a>
+                                <a t-att-href="'mailto:%s' % res_company.email" t-if="res_company.email">Send us an email</a>
                                 <small>Within 24 hours</small>
                             </div>
                             <div class="av-about-contact-card">
                                 <div class="av-about-contact-icon"><i class="fa fa-phone"/></div>
                                 <strong>Phone Support</strong>
                                 <span>Speak with our team</span>
-                                <a href="#">Call us directly</a>
+                                <a t-att-href="'tel:%s' % res_company.phone" t-if="res_company.phone">Call us directly</a>
                                 <small>Mon-Fri 9AM-6PM EST</small>
                             </div>
                             <div class="av-about-contact-card">
                                 <div class="av-about-contact-icon"><i class="fa fa-comments"/></div>
                                 <strong>Live Chat</strong>
                                 <span>Chat with support</span>
-                                <a href="#">Available on our platform</a>
+                                <a href="#" class="av-open-livechat">Available on our platform</a>
                                 <small>Real-time assistance</small>
                             </div>
                             <div class="av-about-contact-card av-about-contact-card-cta">
@@ -4080,6 +4297,19 @@
             <attribute name="t-attf-class" add="#{'d-none' if product.aveenix_product_type == 'affiliate' else ''}" separator=" "/>
         </xpath>
     </template>                                                 
+
+    <!-- Hide the whole cart summary block (#shop_cart: "Order summary" heading,
+         Quick reorder, and the empty-cart message) when the cart has no regular
+         products, so an affiliate-only / empty cart doesn't show a dangling
+         "Order summary" or empty-cart placeholder. -->
+    <template id="av_cart_hide_order_summary" inherit_id="website_sale.cart"
+              name="Aveenix: Hide empty Order summary">
+        <xpath expr="//div[@id='shop_cart']" position="attributes">
+            <attribute name="t-if">website_sale_order and website_sale_order.website_order_line</attribute>
+        </xpath>
+        <!-- Remove the "Quick reorder" button entirely from the cart header. -->
+        <xpath expr="//t[@t-call='website_sale.quick_reorder_button']/.." position="replace"/>
+    </template>
 
     <!-- =========================================================
          CART PAGE — affiliate saved-items section, rendered server-side.

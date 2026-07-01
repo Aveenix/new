@@ -40,6 +40,22 @@ class AveenixWebsite(WebsiteSale):
         Category = request.env['product.public.category'].sudo()
         categories = Category.search([('parent_id', '=', False)])
 
+        # Keep only top-level categories with a published product in their
+        # subtree — credit each product to the TOP-LEVEL ancestor of every
+        # category it belongs to (same walk used on /shop and /categories).
+        pub_templates = request.env['product.template'].sudo().search([
+            ('website_published', '=', True),
+            ('public_categ_ids', '!=', False),
+        ])
+        non_empty_top_ids = set()
+        for tmpl in pub_templates:
+            for cat in tmpl.public_categ_ids:
+                node = cat
+                while node.parent_id:
+                    node = node.parent_id
+                non_empty_top_ids.add(node.id)
+        categories = categories.filtered(lambda c: c.id in non_empty_top_ids)
+
         # New Arrivals: newest categories first.
         cats_new = categories.sorted(key=lambda c: c.create_date or c.id, reverse=True)
 
@@ -67,8 +83,11 @@ class AveenixWebsite(WebsiteSale):
 
         # ── Homepage product rows ────────────────────────────────────
         country_id = request.session.get(_LOCATION_SESSION_KEY)
+        # Only list products that actually have an image (native uploads or
+        # downloaded external images both land in image_1920).
         pub_products = request.env['product.template'].sudo().search([
             ('sale_ok', '=', True), ('website_published', '=', True),
+            ('image_1920', '!=', False),
         ])
         if country_id:
             pub_products = pub_products.filtered(
@@ -77,16 +96,21 @@ class AveenixWebsite(WebsiteSale):
             )
 
         row_limit = 6  # product grid is 6 columns on desktop = one row
+
         # Trending: sponsored first, then best-selling.
         trending = pub_products.sorted(
             key=lambda p: (p.is_sponsored, p.sales_count), reverse=True
         )[:row_limit]
+
+        # Best Sellers and New Arrivals exclude sponsored products entirely.
+        non_sponsored = pub_products.filtered(lambda p: not p.is_sponsored)
+
         # Best Sellers: highest sales_count.
-        best_sellers = pub_products.sorted(
+        best_sellers = non_sponsored.sorted(
             key=lambda p: p.sales_count, reverse=True
         )[:row_limit]
         # New Arrivals: newest products first.
-        new_arrivals = pub_products.sorted(
+        new_arrivals = non_sponsored.sorted(
             key=lambda p: p.create_date or p.id, reverse=True
         )[:row_limit]
 
@@ -103,11 +127,12 @@ class AveenixWebsite(WebsiteSale):
     def home_products(self, limit=6, **kwargs):
         country_id = request.session.get(_LOCATION_SESSION_KEY)
         products = request.env['product.template'].sudo().search(
-            [('sale_ok', '=', True), ('website_published', '=', True)]
+            [('sale_ok', '=', True), ('website_published', '=', True),
+             ('image_1920', '!=', False)]
         )
         if not products:
             products = request.env['product.template'].sudo().search(
-                [('sale_ok', '=', True)]
+                [('sale_ok', '=', True), ('image_1920', '!=', False)]
             )
         if country_id:
             products = products.filtered(
@@ -143,6 +168,22 @@ class AveenixWebsite(WebsiteSale):
         all_categs = request.env['product.public.category'].sudo().search(
             [('parent_id', '=', False)], order='name asc'
         )
+        # Keep only top-level categories that actually have a published product
+        # somewhere in their subtree. Products usually sit on child categories,
+        # so credit each published product to the TOP-LEVEL ancestor of every
+        # category it belongs to (same walk as /categories).
+        published_templates = request.env['product.template'].sudo().search([
+            ('website_published', '=', True),
+            ('public_categ_ids', '!=', False),
+        ])
+        non_empty_top_ids = set()
+        for tmpl in published_templates:
+            for cat in tmpl.public_categ_ids:
+                node = cat
+                while node.parent_id:
+                    node = node.parent_id
+                non_empty_top_ids.add(node.id)
+        all_categs = all_categs.filtered(lambda c: c.id in non_empty_top_ids)
 
         extra.update({
             'all_brands': all_brands,
@@ -313,6 +354,9 @@ class AveenixWebsite(WebsiteSale):
         categories = request.env['product.public.category'].sudo().search(
             [('parent_id', '=', False)], order='name asc',
         )
+        # Show only top-level categories with at least one published product in
+        # their subtree; count_map (built above) holds the per-top-level counts.
+        categories = categories.filtered(lambda c: count_map.get(c.id, 0) > 0)
         return request.render('aveenix_website.categories_page', {
             'categories': categories,
             'count_map': count_map,
