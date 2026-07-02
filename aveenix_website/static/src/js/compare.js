@@ -263,11 +263,12 @@ export class ComparePage extends Interaction {
         }
         if (empty) empty.style.display = "none";
 
-        const rows = [
+        // Factors are now COLUMNS; each product is a ROW.
+        const cols = [
             { label: "Image",       key: "image" },
             { label: "Category",    key: "category" },
             { label: "Price",       key: "price" },
-            { label: "Availability",key: "stock" },
+            { label: "Stock",       key: "stock" },
             { label: "Description", key: "desc" },
             { label: "Action",      key: "action" },
         ];
@@ -278,17 +279,30 @@ export class ComparePage extends Interaction {
         const table = document.createElement("table");
         table.className = "av-cmp-table";
 
-        // Header row — product name + remove
+        // Header row — empty corner (product column) + one column per factor
         const thead = document.createElement("thead");
         const headerRow = document.createElement("tr");
         headerRow.innerHTML = `<th class="av-cmp-th-label"></th>`;
-        products.forEach((p) => {
+        cols.forEach(({ label }) => {
             const th = document.createElement("th");
-            th.className = "av-cmp-th-product";
-            th.innerHTML = `
+            th.className = "av-cmp-th-factor";
+            th.textContent = label;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Body rows — one per product; first cell = product name + remove
+        const tbody = document.createElement("tbody");
+        products.forEach((p) => {
+            const tr = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            nameCell.className = "av-cmp-row-label av-cmp-th-product";
+            nameCell.innerHTML = `
                 <button class="av-cmp-remove" data-id="${p.id}" title="Remove">&#10005;</button>
                 <span class="av-cmp-product-name">${esc(p.name)}</span>`;
-            th.querySelector(".av-cmp-remove").addEventListener("click", () => {
+            nameCell.querySelector(".av-cmp-remove").addEventListener("click", () => {
                 compareStore.remove(p.id);
                 const newProducts = this.products.filter((x) => String(x.id) !== String(p.id));
                 this.products = newProducts;
@@ -300,17 +314,9 @@ export class ComparePage extends Interaction {
                     this.render(newProducts);
                 }
             });
-            headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
+            tr.appendChild(nameCell);
 
-        // Body rows
-        const tbody = document.createElement("tbody");
-        rows.forEach(({ label, key }) => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `<td class="av-cmp-row-label">${esc(label)}</td>`;
-            products.forEach((p) => {
+            cols.forEach(({ key }) => {
                 const td = document.createElement("td");
                 td.className = "av-cmp-row-val";
                 if (key === "image") {
@@ -332,10 +338,11 @@ export class ComparePage extends Interaction {
                     td.textContent = p.description_sale || "—";
                     td.className += " av-cmp-desc";
                 } else if (key === "action") {
-                    td.innerHTML = `<a href="${p.website_url || "/shop"}" class="av-cmp-view-btn">View Product</a>`;
+                    td.innerHTML = `<a href="${p.website_url || "/shop"}" class="av-cmp-view-btn"><i class="fa fa-eye av-cmp-view-icon"></i><span class="av-cmp-view-text">View Product</span></a>`;
                 }
                 tr.appendChild(td);
             });
+
             tbody.appendChild(tr);
         });
         table.appendChild(tbody);

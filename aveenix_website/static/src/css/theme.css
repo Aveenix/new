@@ -1172,6 +1172,8 @@ body.modal-open {
     grid-template-columns: repeat(7, 1fr);
     gap: 14px;
 }
+/* Desktop shows 7 categories (one row); the 8th only appears on mobile (4×2). */
+.av-cat-grid > :nth-child(8) { display: none; }
 
 /* Shop-by-Category tab panels: only the active grid is shown */
 .av-cat-panel { display: none; }
@@ -3297,7 +3299,7 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 .av-cmp-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 480px;
+    table-layout: fixed;   /* columns share the container width — no overflow */
 }
 
 .av-cmp-table thead tr {
@@ -3306,18 +3308,27 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 }
 
 .av-cmp-th-label {
-    width: 140px;
-    min-width: 120px;
+    width: 220px;
     padding: 16px;
 }
 
+/* Explicit column widths (table-layout:fixed) so the name column gets room
+   and the compact factor columns don't hog space.
+   1=name  2=image  3=category  4=price  5=stock  6=desc  7=action */
+.av-cmp-table th:nth-child(1), .av-cmp-table td:nth-child(1) { width: 220px; }
+.av-cmp-table th:nth-child(2), .av-cmp-table td:nth-child(2) { width: 140px; }
+.av-cmp-table th:nth-child(3), .av-cmp-table td:nth-child(3) { width: 12%; }
+.av-cmp-table th:nth-child(4), .av-cmp-table td:nth-child(4) { width: 10%; }
+.av-cmp-table th:nth-child(5), .av-cmp-table td:nth-child(5) { width: 11%; }
+.av-cmp-table th:nth-child(6), .av-cmp-table td:nth-child(6) { width: 12%; }
+.av-cmp-table th:nth-child(7), .av-cmp-table td:nth-child(7) { width: 130px; }
+
 .av-cmp-th-product {
-    padding: 16px 20px;
+    padding: 16px 14px;
     text-align: center;
     border-left: 1px solid var(--av-border);
     vertical-align: top;
     position: relative;
-    min-width: 200px;
 }
 
 .av-cmp-product-name {
@@ -3326,7 +3337,15 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
     font-weight: 700;
     color: var(--av-dark);
     margin-top: 8px;
+    /* Wrap long names instead of forcing the column wider */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
+
+/* Table cells wrap their content so nothing pushes the layout wider */
+.av-cmp-table td,
+.av-cmp-table th { overflow-wrap: anywhere; word-break: break-word; }
 
 .av-cmp-remove {
     position: absolute;
@@ -3371,8 +3390,9 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
 }
 
 .av-cmp-img {
-    width: 140px;
-    height: 140px;
+    width: 100%;
+    max-width: 120px;
+    height: 120px;
     object-fit: contain;
     background: var(--av-light);
     border-radius: 8px;
@@ -3414,6 +3434,8 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary a[href="/shop"]:hover
     transition: background .2s;
 }
 .av-cmp-view-btn:hover { background: var(--av-red-dark); }
+/* Desktop shows the label; the eye icon is a mobile-only fallback. */
+.av-cmp-view-icon { display: none; }
 
 /* Empty state */
 .av-compare-empty {
@@ -3886,6 +3908,40 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     /* container */
     .av-container               { padding-left: 14px; padding-right: 14px; }
 
+    /* ── Compare table: fit the phone width without scroll or cropping ── */
+    .av-cmp-product-name        { display: none; }          /* name hidden on mobile */
+    .av-cmp-table-wrap          { overflow-x: hidden; }
+    .av-cmp-table               { min-width: 0; width: 100%; table-layout: fixed; }
+    /* First column = just the remove button */
+    .av-cmp-th-label            { width: 34px; min-width: 34px; padding: 6px 2px; }
+    .av-cmp-th-product          { width: 34px; min-width: 34px; padding: 6px 2px; }
+    /* Tight cells */
+    .av-cmp-table th,
+    .av-cmp-table td            { padding: 8px 4px; font-size: 11px; word-break: break-word; }
+    .av-cmp-remove              { position: static; margin: 0 auto; }
+    /* Smaller product image so the remaining columns have room */
+    .av-cmp-img                 { width: 100%; max-width: 70px; height: 70px; }
+    /* Description is empty ("—") here — drop it on mobile to free space.
+       nth-child: 1=remove, 2=image, 3=category, 4=price, 5=stock, 6=desc, 7=action */
+    .av-cmp-table th:nth-child(6),
+    .av-cmp-table td:nth-child(6) { display: none; }
+    /* Keep the price/stock text from wrapping oddly */
+    .av-cmp-price               { font-size: 12px; }
+    .av-cmp-stock               { font-size: 10px; }
+    /* View Product → compact icon-only button (text wrapped to 3 lines before) */
+    .av-cmp-view-text           { display: none; }
+    .av-cmp-view-icon           { display: inline-block; font-size: 14px; }
+    .av-cmp-view-btn            { padding: 8px; border-radius: 6px; }
+    /* Smaller header labels on mobile */
+    .av-cmp-table thead th      { font-size: 10px; }
+    /* Override the desktop fixed column widths so columns fit the phone width */
+    .av-cmp-table th:nth-child(1), .av-cmp-table td:nth-child(1) { width: 34px; }
+    .av-cmp-table th:nth-child(2), .av-cmp-table td:nth-child(2) { width: 76px; }
+    .av-cmp-table th:nth-child(3), .av-cmp-table td:nth-child(3),
+    .av-cmp-table th:nth-child(4), .av-cmp-table td:nth-child(4),
+    .av-cmp-table th:nth-child(5), .av-cmp-table td:nth-child(5),
+    .av-cmp-table th:nth-child(7), .av-cmp-table td:nth-child(7) { width: auto; }
+
     /* carousel */
     .av-hero                    { min-height: 0 !important; height: 100% !important; background-size: cover !important; background-position: center center !important; }
     .av-hero-title              { font-size: 20px !important; }
@@ -3925,8 +3981,9 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     .av-tab                     { white-space: nowrap; padding: 6px 12px; font-size: 13px; flex-shrink: 0; }
     .av-view-all                { font-size: 13px; white-space: nowrap; }
 
-    /* category grid — 3 col on mobile */
-    .av-cat-grid                { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    /* category grid — 4 col on mobile (8 boxes = 4×2) */
+    .av-cat-grid                { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .av-cat-grid > :nth-child(8) { display: flex; }  /* show 8th on mobile */
     .av-cat-card                { padding: 10px 6px; gap: 6px; }
     .av-cat-img-wrap            { width: 50px; height: 50px; }
     .av-cat-icon-fa             { font-size: 20px; }
@@ -3992,8 +4049,9 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     .av-hero-sub                { font-size: 0.85rem !important; }
     .av-hero-subtitle           { font-size: 0.8rem !important; }
 
-    /* category grid — 2 col on very small */
-    .av-cat-grid                { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    /* category grid — 4 col (8 boxes = 4×2) on very small */
+    .av-cat-grid                { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .av-cat-grid > :nth-child(8) { display: flex; }  /* show 8th on mobile */
     .av-cat-img-wrap            { width: 44px; height: 44px; }
 
     /* products */
