@@ -215,30 +215,64 @@ class ProductTemplate(models.Model):
 
         return any_success
 
+    def _av_auto_publish(self, product, pub_affiliate, pub_dropship, pub_regular):
+        if product.website_published:
+            return
+        ptype = product.aveenix_product_type or 'regular'
+        should = (
+            (ptype == 'affiliate' and pub_affiliate) or
+            (ptype == 'dropship'  and pub_dropship) or
+            (ptype not in ('affiliate', 'dropship') and pub_regular)
+        )
+        if should:
+            product.website_published = True
+            _logger.info('[AffiliateImg] auto-published %s (%s)', product.id, product.name)
+
     @api.model
     def cron_fetch_external_images(self, batch_size=50, timeout=10):
         """Background cron: download external images into the native image
         field for products flagged 'pending'. Batched + commit-per-product so
         a slow/dead URL never blocks the catalog pull or the whole run."""
-        products = self.search(
+        # Read auto-publish config once per cron run.
+        ICP = self.env['ir.config_parameter'].sudo()
+        auto_publish_affiliate = ICP.get_param('aveenix_website.auto_publish_affiliate') == 'True'
+        auto_publish_dropship  = ICP.get_param('aveenix_website.auto_publish_dropship') == 'True'
+        auto_publish_regular   = ICP.get_param('aveenix_website.auto_publish_regular') == 'True'
+
+        # --- Pass 1: products with external URLs — download image then publish.
+        products_with_url = self.search(
             [('external_image_fetch_state', '=', 'pending'),
              ('external_image_urls', '!=', False)],
             limit=batch_size,
         )
-        if not products:
-            _logger.info('[AffiliateImg] nothing pending.')
-            return
-        _logger.info('[AffiliateImg] downloading %s images...', len(products))
+        if products_with_url:
+            _logger.info('[AffiliateImg] downloading %s images...', len(products_with_url))
         done = 0
-        for product in products:
+        for product in products_with_url:
             product._download_external_image(timeout=timeout)
+            self._av_auto_publish(product, auto_publish_affiliate, auto_publish_dropship, auto_publish_regular)
             self.env.cr.commit()  # persist + release row, resumable
             done += 1
-        _logger.info('[AffiliateImg] processed %s products this run.', done)
+
+        # --- Pass 2: products with no external URL — mark done and publish.
+        products_no_url = self.search(
+            [('external_image_fetch_state', '=', 'pending'),
+             ('external_image_urls', '=', False)],
+            limit=batch_size,
+        )
+        for product in products_no_url:
+            product.external_image_fetch_state = 'done'
+            self._av_auto_publish(product, auto_publish_affiliate, auto_publish_dropship, auto_publish_regular)
+            self.env.cr.commit()
+            done += 1
+
+        if done:
+            _logger.info('[AffiliateImg] processed %s products this run.', done)
+        else:
+            _logger.info('[AffiliateImg] nothing pending.')
         # Re-trigger immediately if more remain (self-resuming).
         remaining = self.search_count(
-            [('external_image_fetch_state', '=', 'pending'),
-             ('external_image_urls', '!=', False)]
+            [('external_image_fetch_state', '=', 'pending')]
         )
         if remaining:
             cron = self.env.ref(

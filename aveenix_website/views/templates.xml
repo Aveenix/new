@@ -4371,6 +4371,34 @@
         </xpath>
     </template>
 
+    <!-- Show the New-User Welcome Discount as an explicit row in the cart
+         Order summary so the customer clearly sees the amount saved. The figure
+         is the reward line's tax-inclusive total, i.e. the exact amount removed
+         from the order Total. -->
+    <template id="av_cart_welcome_discount_row" inherit_id="website_sale.total"
+              name="Aveenix: Welcome Discount Row">
+        <xpath expr="//tr[@name='o_order_total_taxes']" position="after">
+            <t t-set="_av_welcome_reward" t-value="request.env.ref('aveenix_website.loyalty_reward_welcome_discount', raise_if_not_found=False)"/>
+            <t t-if="_av_welcome_reward"
+               t-set="_av_welcome_lines"
+               t-value="website_sale_order.order_line.filtered(lambda l: l.reward_id == _av_welcome_reward)"/>
+            <t t-if="_av_welcome_reward and _av_welcome_lines"
+               t-set="_av_welcome_amount"
+               t-value="sum(_av_welcome_lines.mapped('price_total'))"/>
+            <tr t-if="_av_welcome_reward and _av_welcome_lines" name="av_order_welcome_discount">
+                <td colspan="2" class="text-muted border-0 p-0 pe-3 pb-2">
+                    <i class="fa fa-gift me-1"/>Welcome Discount
+                </td>
+                <td class="text-end border-0 p-0 ps-3 pb-2">
+                    <span t-esc="_av_welcome_amount"
+                          class="monetary_field text-success"
+                          style="white-space: nowrap;"
+                          t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
 </odoo>
 
 

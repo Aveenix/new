@@ -325,16 +325,25 @@
     <template id="aveenix_footer" name="Aveenix Footer">
         <footer class="av-footer">
 
-            <div class="av-promo-bar">
+            <!-- Welcome-discount promo bar: amount + on/off are driven from
+                 Settings → Website (aveenix_website.welcome_discount_*), so the
+                 headline and button always match the real first-order discount. -->
+            <t t-set="_av_wd_enabled"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.welcome_discount_enabled')"/>
+            <t t-set="_av_wd_amount"
+               t-value="float(request.env['ir.config_parameter'].sudo().get_param('aveenix_website.welcome_discount_amount') or 0.0)"/>
+            <t t-set="_av_wd_label"
+               t-value="'%s%g OFF' % (request.env.company.currency_id.symbol, _av_wd_amount)"/>
+            <div t-if="_av_wd_enabled and _av_wd_amount &gt; 0" class="av-promo-bar">
                 <div class="av-container">
                     <div class="av-promo-content">
                         <p class="av-promo-text av-promo-text-desktop">
-                            Get $20 OFF your first order!
+                            Get <t t-out="_av_wd_label"/> your first order!
                         </p>
-                        <form class="av-promo-form" action="#" method="post">
+                        <form class="av-promo-form" onsubmit="return false;">
                             <input type="email" name="email" class="av-promo-input"
-                                   placeholder="Enter your email"/>
-                            <button type="submit" class="av-promo-submit">Get $20 OFF</button>
+                                   placeholder="Enter your email" required="required"/>
+                            <button type="submit" class="av-promo-submit">Get <t t-out="_av_wd_label"/></button>
                         </form>
                     </div>
                 </div>
