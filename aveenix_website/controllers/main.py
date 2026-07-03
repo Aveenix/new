@@ -114,10 +114,12 @@ class AveenixWebsite(WebsiteSale):
             key=lambda p: p.create_date or p.id, reverse=True
         )[:row_limit]
 
-        # Homepage grid is 7 columns — show a single row.
+        # Pass 8 categories: desktop shows 7 (the 8th card is hidden via CSS,
+        # .av-cat-grid > :nth-child(8){display:none}); mobile re-shows the 8th
+        # so the grid is a full 4×2. See theme.css.
         return request.render('aveenix_website.homepage', {
-            'categories_best': cats_best[:7],
-            'categories_new': cats_new[:7],
+            'categories_best': cats_best[:8],
+            'categories_new': cats_new[:8],
             'trending_products': trending,
             'best_seller_products': best_sellers,
             'new_arrival_products': new_arrivals,

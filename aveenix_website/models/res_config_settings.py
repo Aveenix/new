@@ -4,6 +4,54 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    # ── Welcome discount for new users ────────────────────────────────
+    # A first-order-only fixed discount, applied automatically at checkout
+    # through the loyalty "welcome" promotion program. The amount here is
+    # pushed onto that program's reward so admins can tune it with no code
+    # change (fully dynamic from the backend).
+    aveenix_welcome_discount_enabled = fields.Boolean(
+        string='Enable New-User Welcome Discount',
+        config_parameter='aveenix_website.welcome_discount_enabled',
+        help='Give first-time customers a fixed discount on their first order, '
+             'applied automatically at checkout. Turn off to disable.',
+    )
+    aveenix_welcome_discount_amount = fields.Float(
+        string='Welcome Discount Amount',
+        config_parameter='aveenix_website.welcome_discount_amount',
+        help='Fixed amount taken off the customer first order (e.g. 20.00). '
+             'Only granted once, on the first order of a new account.',
+    )
+    currency_id = fields.Many2one(
+        related='company_id.currency_id',
+        string='Currency',
+        readonly=True,
+        help='Company currency, used to display the welcome discount amount.',
+    )
+
+    def set_values(self):
+        super().set_values()
+        # Keep the welcome promotion program in sync with the settings so the
+        # amount is dynamic: saving Settings updates the reward + active flag.
+        self._av_sync_welcome_discount_program()
+
+    def _av_sync_welcome_discount_program(self):
+        # sudo(): loyalty programs are restricted; settings are edited by an
+        # admin who may not hold loyalty-manager rights, and the program is a
+        # single system-owned record we keep aligned with the config values.
+        program = self.env.ref(
+            'aveenix_website.loyalty_program_welcome_discount',
+            raise_if_not_found=False,
+        )
+        if not program:
+            return
+        program = program.sudo()
+        enabled = self.aveenix_welcome_discount_enabled
+        amount = self.aveenix_welcome_discount_amount or 0.0
+        program.active = bool(enabled and amount > 0)
+        reward = program.reward_ids[:1]
+        if reward and amount > 0:
+            reward.discount = amount
+
     # Admin notification: CC these address(es) on website order confirmation
     # emails so staff are alerted when an order comes in.
     aveenix_order_admin_cc = fields.Char(
@@ -32,4 +80,24 @@ class ResConfigSettings(models.TransientModel):
         string='reCAPTCHA v2 Secret Key',
         config_parameter='aveenix_website.recaptcha_v2_secret_key',
         help='Private secret key used server-side to verify the token.',
+    )
+
+    # Auto-publish after image download — one toggle per product type.
+    aveenix_auto_publish_affiliate = fields.Boolean(
+        string='Auto-publish Affiliate Products',
+        config_parameter='aveenix_website.auto_publish_affiliate',
+        help='Publish affiliate products to the website automatically once '
+             'their image is successfully downloaded by the image cron.',
+    )
+    aveenix_auto_publish_dropship = fields.Boolean(
+        string='Auto-publish Dropship Products',
+        config_parameter='aveenix_website.auto_publish_dropship',
+        help='Publish dropship products to the website automatically once '
+             'their image is successfully downloaded by the image cron.',
+    )
+    aveenix_auto_publish_regular = fields.Boolean(
+        string='Auto-publish Regular Products',
+        config_parameter='aveenix_website.auto_publish_regular',
+        help='Publish regular (non-affiliate, non-dropship) products to the '
+             'website automatically once their image is downloaded.',
     )

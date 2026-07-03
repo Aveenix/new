@@ -1,6 +1,6 @@
 {
     'name': 'Aveenix Website',
-    'version': '1.0',
+    'version': '19.0.1.0.1',
     'category': 'Website',
     'summary': 'Modern eCommerce website - red & gold design',
     'description': 'Modern eCommerce website - red & gold design',
@@ -15,6 +15,7 @@
         'data/mail_template_admin_order.xml',
         'data/ir_cron_data.xml',
         'data/server_action_category_icon.xml',
+        'data/loyalty_welcome_discount.xml',
         'views/website_config_views.xml',
         'views/layout.xml',
         'views/templates.xml',
@@ -37,6 +38,7 @@
             'aveenix_website/static/src/js/shop_tags_search.js',
             'aveenix_website/static/src/js/home_category_tabs.js',
             'aveenix_website/static/src/js/open_livechat.js',
+            'aveenix_website/static/src/js/welcome_offer.js',
         ],
     },
     'installable': True,

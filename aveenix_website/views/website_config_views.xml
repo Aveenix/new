@@ -66,6 +66,38 @@
                         <field name="aveenix_order_admin_cc" placeholder="admin@aveenix.com, sales@aveenix.com"/>
                     </setting>
                 </block>
+                <block title="New-User Welcome Discount (Aveenix)" name="aveenix_welcome_discount_block">
+                    <setting string="Enable Welcome Discount" type="boolean"
+                             help="Give first-time customers a fixed discount on their first order, applied automatically at checkout.">
+                        <field name="aveenix_welcome_discount_enabled"/>
+                    </setting>
+                    <setting string="Discount Amount"
+                             invisible="not aveenix_welcome_discount_enabled"
+                             help="Fixed amount taken off the customer's first order. Granted once per new account.">
+                        <div class="content-group mt16">
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="aveenix_welcome_discount_amount"/>
+                                <field name="aveenix_welcome_discount_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" invisible="1"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+                <block title="Auto-publish After Image Download (Aveenix)" name="aveenix_auto_publish_block">
+                    <setting string="Affiliate Products" type="boolean"
+                             help="Automatically publish affiliate products to the website once their image is successfully downloaded.">
+                        <field name="aveenix_auto_publish_affiliate"/>
+                    </setting>
+                    <setting string="Dropship Products" type="boolean"
+                             help="Automatically publish dropship products to the website once their image is successfully downloaded.">
+                        <field name="aveenix_auto_publish_dropship"/>
+                    </setting>
+                    <setting string="Regular Products" type="boolean"
+                             help="Automatically publish regular (non-affiliate, non-dropship) products to the website once their image is downloaded.">
+                        <field name="aveenix_auto_publish_regular"/>
+                    </setting>
+                </block>
                 <block title="reCAPTCHA v2 (Aveenix Forms)" name="aveenix_recaptcha_block">
                     <setting string="Enable Website Captcha" type="boolean"
                              help="Show and validate reCAPTCHA v2 on contact, login, signup and reset-password forms. Turn off to disable captcha site-wide.">

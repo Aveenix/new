@@ -282,7 +282,6 @@ export class ComparePage extends Interaction {
         // Header row — empty corner (product column) + one column per factor
         const thead = document.createElement("thead");
         const headerRow = document.createElement("tr");
-        headerRow.innerHTML = `<th class="av-cmp-th-label"></th>`;
         cols.forEach(({ label }) => {
             const th = document.createElement("th");
             th.className = "av-cmp-th-factor";
