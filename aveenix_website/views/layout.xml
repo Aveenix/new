@@ -58,8 +58,8 @@
                             </div>
                         </div>
                         <span class="av-topbar-sep">|</span>
-                        <!-- Currency (via pricelists) -->
-                        <t t-set="tb_pricelists" t-value="request.website.sudo().get_pricelist_available(show_visible=True)"/>
+                        <!-- Currency (via pricelists, one entry per currency) -->
+                        <t t-set="tb_pricelists" t-value="request.website.sudo().get_currency_pricelist_options()"/>
                         <t t-set="tb_cur_pricelist" t-value="request.pricelist"/>
                         <div class="av-tb-dropdown">
                             <span class="av-topbar-currency av-tb-trigger">
@@ -69,9 +69,9 @@
                             <div class="av-tb-dropdown-menu">
                                 <div class="av-tb-dropdown-scroll">
                                     <t t-foreach="tb_pricelists" t-as="pl">
-                                        <a t-attf-href="/shop/change_pricelist/#{pl.id}" t-attf-class="av-tb-dropdown-item#{' av-tb-selected' if pl.id == tb_cur_pricelist.id else ''}">
+                                        <a t-attf-href="/shop/change_pricelist/#{pl.id}" t-attf-class="av-tb-dropdown-item#{' av-tb-selected' if pl.currency_id.id == tb_cur_pricelist.currency_id.id else ''}">
                                             <span class="av-tb-dd-code"><t t-esc="pl.currency_id.symbol"/></span>
-                                            <span class="av-tb-dd-name"><t t-esc="pl.name"/></span>
+                                            <span class="av-tb-dd-name"><t t-esc="pl.currency_id.name"/></span>
                                             <i class="fa fa-check av-tb-dd-check"/>
                                         </a>
                                     </t>
@@ -307,6 +307,9 @@
                     </div>
                     <ul class="av-cat-menu">
                         <li><a href="/shop">Shop</a></li>
+                        <t t-foreach="request.website.sudo().aveenix_header_menu_categ_ids" t-as="av_hm_cat">
+                            <li><a t-attf-href="/shop?category=#{av_hm_cat.id}"><t t-esc="av_hm_cat.name"/></a></li>
+                        </t>
                     </ul>
                     <!-- <div class="av-menu-btn">
                         <i class="fa fa-bars"/>
@@ -328,22 +331,17 @@
             <!-- Welcome-discount promo bar: amount + on/off are driven from
                  Settings → Website (aveenix_website.welcome_discount_*), so the
                  headline and button always match the real first-order discount. -->
-            <t t-set="_av_wd_enabled"
-               t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.welcome_discount_enabled')"/>
-            <t t-set="_av_wd_amount"
-               t-value="float(request.env['ir.config_parameter'].sudo().get_param('aveenix_website.welcome_discount_amount') or 0.0)"/>
-            <t t-set="_av_wd_label"
-               t-value="'%s%g OFF' % (request.env.company.currency_id.symbol, _av_wd_amount)"/>
-            <div t-if="_av_wd_enabled and _av_wd_amount &gt; 0" class="av-promo-bar">
+            <t t-set="_av_wd" t-value="request.env.company._av_welcome_discount_info()"/>
+            <div t-if="_av_wd['enabled']" class="av-promo-bar">
                 <div class="av-container">
                     <div class="av-promo-content">
                         <p class="av-promo-text av-promo-text-desktop">
-                            Get <t t-out="_av_wd_label"/> your first order!
+                            Get <t t-out="_av_wd['label']"/> your first order!
                         </p>
                         <form class="av-promo-form" onsubmit="return false;">
                             <input type="email" name="email" class="av-promo-input"
                                    placeholder="Enter your email" required="required"/>
-                            <button type="submit" class="av-promo-submit">Get <t t-out="_av_wd_label"/></button>
+                            <button type="submit" class="av-promo-submit">Get <t t-out="_av_wd['label']"/></button>
                         </form>
                     </div>
                 </div>
@@ -355,8 +353,8 @@
                         <div class="av-footer-col">
                             <h4 class="av-footer-heading av-footer-toggle">Customer Service<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
-                                <li><a href="/about">About Us</a></li>
-                                <li><a href="/contactus">Contact Us</a></li>
+                                <li><a href="http://aveenixdigital.com/">Digital</a></li>
+                                <li><a href="https://aveenixdomains.com/">Domains</a></li>
                                 <li><a href="/privacy#acp-program">Cashback Program</a></li>
                                 <li><a href="/my/orders">Order Tracking</a></li>
                             </ul>
@@ -447,8 +445,8 @@
                                         </t>
                                     </div>
                                 </div>
-                                <!-- Currency (via pricelists) -->
-                                <t t-set="av_pricelists" t-value="request.website.sudo().get_pricelist_available(show_visible=True)"/>
+                                <!-- Currency (via pricelists, one entry per currency) -->
+                                <t t-set="av_pricelists" t-value="request.website.sudo().get_currency_pricelist_options()"/>
                                 <t t-set="av_cur_pricelist" t-value="request.pricelist"/>
                                 <div class="av-settings-row av-settings-row-select" id="av-currency-row" style="cursor:pointer;">
                                     <i class="fa fa-dollar av-settings-icon"/>
@@ -459,9 +457,9 @@
                                 <div class="av-settings-dropdown" id="av-currency-dropdown" style="display:none;">
                                     <div class="av-settings-dropdown-scroll">
                                         <t t-foreach="av_pricelists" t-as="pl">
-                                            <a t-attf-href="/shop/change_pricelist/#{pl.id}" t-attf-class="av-settings-dropdown-item#{' selected' if pl.id == av_cur_pricelist.id else ''}">
+                                            <a t-attf-href="/shop/change_pricelist/#{pl.id}" t-attf-class="av-settings-dropdown-item#{' selected' if pl.currency_id.id == av_cur_pricelist.currency_id.id else ''}">
                                                 <span class="av-dd-code"><t t-esc="pl.currency_id.symbol"/></span>
-                                                <span class="av-dd-name"><t t-esc="pl.name"/></span>
+                                                <span class="av-dd-name"><t t-esc="pl.currency_id.name"/></span>
                                                 <i class="fa fa-check av-dd-check"/>
                                             </a>
                                         </t>
@@ -472,6 +470,14 @@
                                     <i class="fa fa-map-marker av-settings-icon" style="color:var(--av-red);"/>
                                     <span class="av-settings-label">Location</span>
                                     <span class="av-settings-val" id="av-mobile-location-val">Detecting&#8230;</span>
+                                </div>
+                                <!-- Weather (based on detected location). Always
+                                     visible like the Location row; the value
+                                     fills in once coords resolve. -->
+                                <div class="av-settings-row" id="av-mobile-weather-row">
+                                    <i class="fa fa-cloud av-settings-icon" id="av-mobile-weather-icon" style="color:var(--av-red);"/>
+                                    <span class="av-settings-label">Weather</span>
+                                    <span class="av-settings-val" id="av-mobile-weather-val">Detecting&#8230;</span>
                                 </div>
                                 <!-- Dark Mode -->
                                 <div class="av-settings-row">
@@ -520,14 +526,18 @@
                         </div>
                     </div>
                     <div class="av-footer-bottom-widgets">
+                        <!-- Social links come from the company's social media
+                             fields (Settings → Companies / Website). Each icon
+                             shows only when its link is set. -->
+                        <t t-set="av_company" t-value="res_company or request.env.company"/>
                         <div class="av-social-links">
-                            <a href="#" class="av-social-link"><i class="fa fa-facebook"/></a>
-                            <a href="#" class="av-social-link"><i class="fa fa-instagram"/></a>
-                            <a href="#" class="av-social-link"><i class="fa fa-linkedin"/></a>
-                            <a href="#" class="av-social-link"><i class="fa fa-pinterest-p"/></a>
-                            <a href="#" class="av-social-link"><i class="fa fa-tiktok"/></a>
-                            <a href="#" class="av-social-link"><i class="fa fa-twitter"/></a>
-                            <a href="#" class="av-social-link"><i class="fa fa-youtube-play"/></a>
+                            <a t-if="av_company.social_facebook" t-att-href="av_company.social_facebook" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-facebook"/></a>
+                            <a t-if="av_company.social_instagram" t-att-href="av_company.social_instagram" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-instagram"/></a>
+                            <a t-if="av_company.social_linkedin" t-att-href="av_company.social_linkedin" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-linkedin"/></a>
+                            <a t-if="av_company.social_pinterest" t-att-href="av_company.social_pinterest" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-pinterest-p"/></a>
+                            <a t-if="av_company.social_tiktok" t-att-href="av_company.social_tiktok" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-tiktok"/></a>
+                            <a t-if="av_company.social_twitter" t-att-href="av_company.social_twitter" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-twitter"/></a>
+                            <a t-if="av_company.social_youtube" t-att-href="av_company.social_youtube" target="_blank" rel="noopener" class="av-social-link"><i class="fa fa-youtube-play"/></a>
                         </div>
                         <div class="av-app-badges">
                             <a href="#" class="av-app-badge">
@@ -724,6 +734,10 @@
                                         if(i.getAttribute('data-val') === val) i.classList.add('selected');
                                     });
                                 }
+                                // Apply the chosen country server-side so its
+                                // currency + pricelist drive prices across the
+                                // whole site (reloads once applied).
+                                if(window.avSetLocationSession) window.avSetLocationSession(val, true);
                             }
                             dd.classList.remove('open');
                         });
@@ -750,6 +764,11 @@
                         + '<span class="av-topbar-location" id="av-topbar-location">'
                         + '<i class="fa fa-map-marker" style="margin-right:4px;color:var(--av-red);"></i>'
                         + '<span id="av-topbar-city">Detecting&#8230;</span>'
+                        + '</span>'
+                        + '<span class="av-topbar-weather" id="av-topbar-weather" style="display:none;">'
+                        + '<span class="av-topbar-sep" style="margin:0 8px;">|</span>'
+                        + '<i class="fa fa-cloud" id="av-weather-icon" style="margin-right:4px;color:var(--av-red);"></i>'
+                        + '<span id="av-topbar-temp"></span>'
                         + '</span>';
 
                     // DEBUG bar — uncomment to enable location debugging
@@ -765,22 +784,27 @@
                     //     if(el) el.textContent = msg;
                     // }
 
-                    function avSetLocationSession(countryCode) {
+                    function avSetLocationSession(countryCode, forceReload) {
                         fetch('/aveenix/location/set', {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({jsonrpc:'2.0',method:'call',id:1,params:{country_code: countryCode}})
                         }).then(function(r){ return r.json(); }).then(function(d) {
-                            // Reload once so the header country + pricelist reflect the
-                            // detected location, but only when it actually changed.
+                            // Reload once so the header country + pricelist (and thus
+                            // all prices in the country's currency) reflect the new
+                            // location. Auto-detect only reloads on an actual change;
+                            // a manual country pick always reloads (forceReload).
                             var tbEl = document.querySelector('.av-topbar-utility');
                             var shown = (tbEl &amp;&amp; tbEl.getAttribute('data-av-country') || '').toUpperCase();
                             var res = d &amp;&amp; d.result;
-                            if(res &amp;&amp; res.ok &amp;&amp; countryCode &amp;&amp; countryCode.toUpperCase() !== shown) {
+                            if(res &amp;&amp; res.ok &amp;&amp; countryCode &amp;&amp; (forceReload || countryCode.toUpperCase() !== shown)) {
                                 window.location.reload();
                             }
                         }).catch(function(){});
                     }
+                    // Expose so the country dropdown handler (separate IIFE) can
+                    // apply the selected country's currency + pricelist site-wide.
+                    window.avSetLocationSession = avSetLocationSession;
 
                     var avLocEl = document.getElementById('av-topbar-location');
 
@@ -813,8 +837,65 @@
                         });
                     }
 
+                    // Map a WMO weather code (Open-Meteo) to a Font Awesome icon
+                    // + short label. Grouped so we don't need all 30+ codes.
+                    function avWeatherMeta(code) {
+                        if(code === 0) return {icon:'fa-sun-o', label:'Clear'};
+                        if(code &gt;= 1 &amp;&amp; code &lt;= 2) return {icon:'fa-cloud', label:'Partly cloudy'};
+                        if(code === 3) return {icon:'fa-cloud', label:'Overcast'};
+                        if(code &gt;= 45 &amp;&amp; code &lt;= 48) return {icon:'fa-align-justify', label:'Fog'};
+                        if(code &gt;= 51 &amp;&amp; code &lt;= 67) return {icon:'fa-tint', label:'Drizzle'};
+                        if(code &gt;= 71 &amp;&amp; code &lt;= 77) return {icon:'fa-snowflake-o', label:'Snow'};
+                        if(code &gt;= 80 &amp;&amp; code &lt;= 82) return {icon:'fa-umbrella', label:'Rain showers'};
+                        if(code &gt;= 85 &amp;&amp; code &lt;= 86) return {icon:'fa-snowflake-o', label:'Snow showers'};
+                        if(code &gt;= 95) return {icon:'fa-bolt', label:'Thunderstorm'};
+                        if(code &gt;= 61 &amp;&amp; code &lt;= 65) return {icon:'fa-umbrella', label:'Rain'};
+                        return {icon:'fa-cloud', label:'Weather'};
+                    }
+
+                    // Fetch current weather for the given coords (Open-Meteo:
+                    // free, no API key, CORS-enabled) and show it in the topbar.
+                    function avFetchWeather(lat, lon) {
+                        fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&amp;longitude=' + lon + '&amp;current=temperature_2m,weather_code&amp;temperature_unit=celsius')
+                            .then(function(r){ return r.json(); })
+                            .then(function(w) {
+                                if(!w || !w.current) return;
+                                var temp = Math.round(w.current.temperature_2m);
+                                var meta = avWeatherMeta(w.current.weather_code);
+                                // Desktop topbar chip
+                                var wrap = document.getElementById('av-topbar-weather');
+                                var icon = document.getElementById('av-weather-icon');
+                                var tempEl = document.getElementById('av-topbar-temp');
+                                if(icon) icon.className = 'fa ' + meta.icon;
+                                if(tempEl) tempEl.textContent = temp + '°C · ' + meta.label;
+                                if(wrap) { wrap.style.display = ''; wrap.setAttribute('title', meta.label); }
+                                // Mobile settings-panel row
+                                var mRow = document.getElementById('av-mobile-weather-row');
+                                var mIcon = document.getElementById('av-mobile-weather-icon');
+                                var mVal = document.getElementById('av-mobile-weather-val');
+                                if(mIcon) { mIcon.className = 'fa ' + meta.icon + ' av-settings-icon'; mIcon.style.color = 'var(--av-red)'; }
+                                if(mVal) mVal.textContent = temp + '°C · ' + meta.label;
+                                if(mRow) mRow.style.display = '';
+                            })
+                            .catch(function(){
+                                // Weather unavailable — clear the placeholder so
+                                // the mobile row doesn't hang on "Detecting…".
+                                var mVal = document.getElementById('av-mobile-weather-val');
+                                if(mVal &amp;&amp; mVal.textContent.indexOf('Detecting') !== -1) mVal.textContent = '—';
+                            });
+                    }
+
+                    // Remember the last coords so weather can be restored on
+                    // repeat visits (where the city comes from the session and
+                    // getCurrentPosition is not called again).
+                    function avCacheCoords(lat, lon) {
+                        try { sessionStorage.setItem('av_coords', lat + ',' + lon); } catch(e) {}
+                    }
+
                     function avDetectLocation(fromBtn) {
                         navigator.geolocation.getCurrentPosition(function(pos) {
+                            avCacheCoords(pos.coords.latitude, pos.coords.longitude);
+                            avFetchWeather(pos.coords.latitude, pos.coords.longitude);
                             fetch('https://nominatim.openstreetmap.org/reverse?format=json&amp;lat=' + pos.coords.latitude + '&amp;lon=' + pos.coords.longitude)
                                 .then(function(r){ return r.json(); })
                                 .then(function(data) {
@@ -831,6 +912,15 @@
                     }
 
                     document.addEventListener('DOMContentLoaded', function() {
+                        // Restore weather immediately from cached coords so it
+                        // shows on repeat visits without re-prompting for GPS.
+                        try {
+                            var cached = sessionStorage.getItem('av_coords');
+                            if(cached) {
+                                var parts = cached.split(',');
+                                if(parts.length === 2) avFetchWeather(parts[0], parts[1]);
+                            }
+                        } catch(e) {}
                         if(!navigator.geolocation) { avSetCityText('Unknown'); return; }
                         fetch('/aveenix/location/get', {
                             method: 'POST',
@@ -1023,6 +1113,15 @@
                                             i.classList.remove('av-tb-selected');
                                             if(i.getAttribute('data-val') === val) i.classList.add('av-tb-selected');
                                         });
+                                    }
+                                }
+                                // Country pick → apply its currency + pricelist
+                                // site-wide (data-code carries the ISO code that
+                                // location/set expects). Reloads once applied.
+                                if(storageKey === 'av_country') {
+                                    var code = item.getAttribute('data-code');
+                                    if(code &amp;&amp; window.avSetLocationSession) {
+                                        window.avSetLocationSession(code, true);
                                     }
                                 }
                                 // close
@@ -1284,6 +1383,50 @@
                     background-color: #242424 !important;
                 }
             </style>
+        </xpath>
+    </template>
+
+    <!-- =========================================================
+         LOGIN / SIGNUP COLOR THEME
+         web/login and web/signup render through web.login_layout,
+         which is NOT part of website.layout's inheritance tree, so the
+         color vars injected above never reach it. Inject the same
+         color override into web.frontend_layout's head tag so
+         signup/login buttons follow the site's color theme.
+         ========================================================= -->
+    <template id="aveenix_login_layout_colors" inherit_id="web.frontend_layout" name="Aveenix Login/Signup Color Theme">
+        <xpath expr="//head" position="inside">
+            <t t-set="av_website" t-value="request.website.sudo() if request.website else False"/>
+            <t t-set="av_primary" t-value="(av_website and av_website.aveenix_primary_color) or '#CC0000'"/>
+            <style>
+                :root {
+                    --av-red: <t t-esc="av_primary"/>;
+                    --av-red-dark: color-mix(in srgb, <t t-esc="av_primary"/> 75%, black);
+                    --bs-primary: <t t-esc="av_primary"/>;
+                }
+                .btn-primary {
+                    background-color: var(--av-red) !important;
+                    border-color: var(--av-red) !important;
+                }
+                .btn-primary:hover, .btn-primary:focus {
+                    background-color: var(--av-red-dark) !important;
+                    border-color: var(--av-red-dark) !important;
+                }
+                a { color: var(--av-red); }
+            </style>
+            <script>
+                (function(){
+                    try {
+                        var c = localStorage.getItem('av_primary_color');
+                        if (c) {
+                            var r = document.documentElement;
+                            r.style.setProperty('--av-red', c);
+                            r.style.setProperty('--av-red-dark', 'color-mix(in srgb, ' + c + ' 75%, black)');
+                            r.style.setProperty('--bs-primary', c);
+                        }
+                    } catch(e) {}
+                })();
+            </script>
         </xpath>
     </template>
 

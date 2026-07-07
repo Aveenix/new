@@ -26,11 +26,27 @@
                 <div class="av-prod-prices">
                     <span class="av-prod-price" t-esc="'$%.2f' % product.list_price"/>
                 </div>
-                <button type="button" class="av-add-to-cart js_av_add_to_cart"
-                        t-att-data-product-id="product.product_variant_id.id"
-                        t-att-data-product-template-id="product.id">
-                    <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
-                </button>
+                <!-- Affiliate products never enter the real cart (see
+                     AveenixCart.add_to_cart) — they use the same
+                     av-affiliate-save-btn flow as the product detail page,
+                     which posts to /aveenix/affiliate/cart/add and shows its
+                     own popup. Using the plain add-to-cart button here would
+                     silently no-op (real cart add for an affiliate product
+                     always adds 0 qty by design), with no visible feedback. -->
+                <t t-if="product.aveenix_product_type == 'affiliate'">
+                    <a href="#" class="av-add-to-cart av-affiliate-save-btn"
+                       t-att-data-product-id="product.id"
+                       t-att-data-product-name="product.name">
+                        <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                    </a>
+                </t>
+                <t t-else="">
+                    <button type="button" class="av-add-to-cart js_av_add_to_cart"
+                            t-att-data-product-id="product.product_variant_id.id"
+                            t-att-data-product-template-id="product.id">
+                        <i class="fa fa-shopping-cart"/> <span>Add to Cart</span>
+                    </button>
+                </t>
             </div>
         </div>
     </template>
@@ -54,7 +70,7 @@
                             </span>
                             <h2 class="av-section-heading" t-esc="row_title"/>
                         </div>
-                        <a href="/shop" class="av-view-all">View All</a>
+                        <a t-att-href="row_view_all_url or '/shop'" class="av-view-all">View All</a>
                     </div>
                     <div class="av-products-grid">
                         <t t-foreach="row_products" t-as="product">
@@ -78,6 +94,11 @@
 
             <!-- ── PAGE BODY ──────────────────────────────────── -->
             <div id="wrap" class="av-homepage oe_structure">
+
+                <!-- New-user welcome-discount pill: floats bottom-left, does
+                     not affect page flow. Also greets fresh signups landing
+                     here. Dismissible (see welcome_offer.js). -->
+                <t t-call="aveenix_website.av_welcome_discount_pill"/>
 
                 <!-- ════════════════════════════════════════════
                      HERO BANNER (SLIDER)
@@ -220,6 +241,19 @@
                     <t t-set="row_variant">newarrival</t>
                 </t>
 
+                <!-- ════════════════════════════════════════════
+                     FEATURED CATEGORY ROWS (admin-selected in Settings)
+                     One row per selected category; View All → shop filtered.
+                     ════════════════════════════════════════════ -->
+                <t t-foreach="featured_categories" t-as="_fc">
+                    <t t-call="aveenix_website.av_home_product_row">
+                        <t t-set="row_title" t-value="_fc['category'].sudo().name"/>
+                        <t t-set="row_products" t-value="_fc['products']"/>
+                        <t t-set="row_variant">newarrival</t>
+                        <t t-set="row_view_all_url" t-value="'/shop?categ=%s' % _fc['category'].id"/>
+                    </t>
+                </t>
+
 
                 <!-- ════════════════════════════════════════════
                      WHY CHOOSE AVEENIX
@@ -298,7 +332,7 @@
                             <p class="av-sell-desc">
                                 Reach millions of customers by becoming a seller on AVEENIX
                             </p>
-                            <a href="#" class="av-btn-sell">Start Selling</a>
+                            <a href="#" class="av-btn-sell">Coming Soon</a>
                         </div>
                         <div class="av-sell-visual">
                             <div class="av-sell-box"/>
@@ -782,6 +816,9 @@
                                     <strong class="av-privacy-note-title">Business Hours</strong>
                                     <p class="av-privacy-note-text">Monday – Sunday: 06:00 – 18:00. Public Holidays – Closed.</p>
                                 </div>
+
+                                <!-- Categories + Top Rated + Trust Badges -->
+                                <t t-call="aveenix_website.av_sidebar_extra"/>
                             </div>
                         </div>
 
@@ -949,7 +986,7 @@
         <t t-call="website.layout">
             <t t-set="pageName" t-value="'notifications'"/>
 
-            <div id="wrap" class="av-notif-page">
+            <div id="wrap" class="av-notif-page" t-att-data-is-public="'1' if is_public else '0'">
 
                 <!-- Hero -->
                 <section class="av-compare-hero">
@@ -982,35 +1019,45 @@
                         </div>
                     </div>
 
-                    <!-- Actions bar -->
-                    <div class="av-notif-actions">
-                        <button class="av-notif-mark-all" id="av-notif-mark-all">
-                            <i class="fa fa-check"/> Mark All Read
-                        </button>
-                        <button class="av-notif-filter-btn" id="av-notif-filter-btn">
-                            <i class="fa fa-filter"/> Filters
-                        </button>
+                    <t t-if="not is_public">
+                        <!-- Actions bar -->
+                        <div class="av-notif-actions">
+                            <button class="av-notif-mark-all" id="av-notif-mark-all">
+                                <i class="fa fa-check"/> Mark All Read
+                            </button>
+                            <button class="av-notif-filter-btn" id="av-notif-filter-btn">
+                                <i class="fa fa-filter"/> Filters
+                            </button>
 
-                        <!-- Filter dropdown -->
-                        <div class="av-notif-filter-dropdown" id="av-notif-filter-dropdown" style="display:none;">
-                            <button class="av-notif-filter-opt av-notif-filter-active" data-filter="all">All</button>
-                            <button class="av-notif-filter-opt" data-filter="unread">Unread</button>
-                            <button class="av-notif-filter-opt" data-filter="orders">Orders</button>
-                            <button class="av-notif-filter-opt" data-filter="promotions">Promotions</button>
-                            <button class="av-notif-filter-opt" data-filter="inventory">Inventory</button>
+                            <!-- Filter dropdown -->
+                            <div class="av-notif-filter-dropdown" id="av-notif-filter-dropdown" style="display:none;">
+                                <button class="av-notif-filter-opt av-notif-filter-active" data-filter="all">All</button>
+                                <button class="av-notif-filter-opt" data-filter="unread">Unread</button>
+                            </div>
+
+                            <span class="ms-auto av-notif-summary" id="av-notif-summary">0 of 0 notifications</span>
                         </div>
 
-                        <span class="ms-auto av-notif-summary" id="av-notif-summary">0 of 0 notifications</span>
-                    </div>
-
-                    <!-- Notification list -->
-                    <div id="av-notif-list">
-                        <div class="av-notif-empty" id="av-notif-empty" style="display:none;">
-                            <div class="av-notif-empty-icon"><i class="fa fa-bell-slash-o"/></div>
-                            <h3>No notifications</h3>
-                            <p>You're all caught up!</p>
+                        <!-- Notification list -->
+                        <div id="av-notif-list">
+                            <div class="av-notif-empty" id="av-notif-empty" style="display:none;">
+                                <div class="av-notif-empty-icon"><i class="fa fa-bell-slash-o"/></div>
+                                <h3>No notifications</h3>
+                                <p>You're all caught up!</p>
+                            </div>
                         </div>
-                    </div>
+                    </t>                                                                                                                        
+                    <t t-else="">
+                        <div class="av-notif-empty">
+                            <div class="av-notif-empty-icon"><i class="fa fa-user-circle-o"/></div>
+                            <h3>Sign in to see your notifications</h3>
+                            <p>Log in to track your order status, promotions, and updates.</p>
+                            <div class="d-flex justify-content-center gap-2 mt-3">
+                                <a href="/web/login?redirect=/notifications" class="btn btn-primary">Sign In</a>
+                                <a href="/web/signup?redirect=/notifications" class="btn btn-outline-primary">Sign Up</a>
+                            </div>
+                        </div>
+                    </t>
 
                 </div><!-- /.av-container -->
 
@@ -1348,69 +1395,7 @@
                 </div>
             </t>
 
-            <div class="av-product-sidebar-rail">
-                <!-- Browse Categories -->
-                <t t-set="_av_cats" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False)])"/>
-                <t t-if="_av_cats">
-                    <div class="av-product-sidebar-section mb-3">
-                        <p class="av-product-sidebar-title">Browse Categories</p>
-                        <div class="av-cat-grid-2col av-cat-scroll">
-                            <t t-foreach="_av_cats" t-as="_cat">
-                                <a t-attf-href="/shop?categ=#{_cat.id}" class="av-product-sidebar-link">
-                                    <t t-out="_cat.name"/>
-                                </a>
-                            </t>
-                        </div>
-                    </div>
-                </t>
-
-                <!-- Top Rated Products -->
-                <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
-                <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
-                <t t-if="_av_top_rated">
-                    <div class="av-product-sidebar-section border-top pt-3 mb-3">
-                        <p class="av-product-sidebar-title">Top Rated Products</p>
-                        <t t-foreach="_av_top_rated" t-as="_trp">
-                            <a t-attf-href="/shop/product/#{_trp.id}" class="av-product-sidebar-related d-flex align-items-center gap-2 text-decoration-none mb-3">
-                                <div class="flex-shrink-0">
-                                    <t t-if="_trp.image_128">
-                                        <img t-attf-src="/web/image/product.template/#{_trp.id}/image_128"
-                                             t-att-alt="_trp.name"
-                                             style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
-                                    </t>
-                                    <t t-else="">
-                                        <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
-                                            <i class="fa fa-image text-muted"/>
-                                        </div>
-                                    </t>
-                                </div>
-                                <div style="min-width:0;">
-                                    <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_trp.name"/>
-                                    <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _trp.list_price"/>
-                                </div>
-                            </a>
-                        </t>
-                    </div>
-                </t>
-
-                <!-- Trust Badges -->
-                <div class="av-product-sidebar-section border-top pt-3 mb-3">
-                    <div class="d-flex flex-column gap-2">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa fa-truck av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">Fast delivery</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa fa-gift av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">Earn rewards</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa fa-shield av-product-sidebar-badge-icon"/>
-                            <span class="small text-muted">Secure payments</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <t t-call="aveenix_website.av_sidebar_extra"/>
         </aside>
     </template>
 
@@ -1485,6 +1470,78 @@
                 </section>
             </t>
         </xpath>
+    </template>
+
+    <!-- =========================================================
+         REUSABLE: Sidebar "after ad" content
+         Browse Categories + Top Rated Products + Trust Badges.
+         Same block used by av_full_sidebar; shared here so the
+         About/Contact/Privacy/Terms sidebars can show it too.
+         ========================================================= -->
+    <template id="av_sidebar_extra" name="Aveenix: Sidebar Extra Content">
+        <div class="av-product-sidebar-rail">
+            <!-- Browse Categories -->
+            <t t-set="_av_cats" t-value="request.env['product.public.category'].sudo().search([('parent_id','=',False)])"/>
+            <t t-if="_av_cats">
+                <div class="av-product-sidebar-section mb-3">
+                    <p class="av-product-sidebar-title">Browse Categories</p>
+                    <div class="av-cat-grid-2col av-cat-scroll">
+                        <t t-foreach="_av_cats" t-as="_cat">
+                            <a t-attf-href="/shop?categ=#{_cat.id}" class="av-product-sidebar-link">
+                                <t t-out="_cat.name"/>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Top Rated Products -->
+            <t t-set="_av_tr_pool" t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True),('image_1920','!=',False)], limit=50)"/>
+            <t t-set="_av_top_rated" t-value="sorted(_av_tr_pool, key=lambda p: p.rating_avg, reverse=True)[:4]"/>
+            <t t-if="_av_top_rated">
+                <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                    <p class="av-product-sidebar-title">Top Rated Products</p>
+                    <t t-foreach="_av_top_rated" t-as="_trp">
+                        <a t-attf-href="/shop/product/#{_trp.id}" class="av-product-sidebar-related d-flex align-items-center gap-2 text-decoration-none mb-3">
+                            <div class="flex-shrink-0">
+                                <t t-if="_trp.image_128">
+                                    <img t-attf-src="/web/image/product.template/#{_trp.id}/image_128"
+                                         t-att-alt="_trp.name"
+                                         style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="width:48px;height:48px;background:var(--av-product-img-bg,#f5f5f5);border-radius:6px;border:1px solid var(--bs-border-color,#dee2e6);display:flex;align-items:center;justify-content:center;">
+                                        <i class="fa fa-image text-muted"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div style="min-width:0;">
+                                <p class="mb-0 small fw-medium av-product-sidebar-related-name" t-esc="_trp.name"/>
+                                <span class="small fw-bold" style="color:var(--av-red);" t-esc="'$%.2f' % _trp.list_price"/>
+                            </div>
+                        </a>
+                    </t>
+                </div>
+            </t>
+
+            <!-- Trust Badges -->
+            <div class="av-product-sidebar-section border-top pt-3 mb-3">
+                <div class="d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa fa-truck av-product-sidebar-badge-icon"/>
+                        <span class="small text-muted">Fast delivery</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa fa-gift av-product-sidebar-badge-icon"/>
+                        <span class="small text-muted">Earn rewards</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa fa-shield av-product-sidebar-badge-icon"/>
+                        <span class="small text-muted">Secure payments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
 
     <!-- =========================================================
@@ -2524,6 +2581,9 @@
                                     <strong class="av-privacy-note-title">Your privacy is important to us.</strong>
                                     <p class="av-privacy-note-text">We are committed to protecting your personal information and being transparent about how we use it.</p>
                                 </div>
+
+                                <!-- Categories + Top Rated + Trust Badges -->
+                                <t t-call="aveenix_website.av_sidebar_extra"/>
                             </div>
                         </div>
 
@@ -3702,6 +3762,9 @@
                                 <strong class="av-privacy-note-title">Please read carefully.</strong>
                                 <p class="av-privacy-note-text">By accessing or using our Services, you agree to be bound by these Terms.</p>
                             </div>
+
+                            <!-- Categories + Top Rated + Trust Badges -->
+                            <t t-call="aveenix_website.av_sidebar_extra"/>
                         </div>
                     </div>
                     <!-- Main content (right) -->
@@ -4035,6 +4098,9 @@
                                     <strong class="av-privacy-note-title">Shop Smarter. Earn More. Give Back.</strong>
                                     <p class="av-privacy-note-text">When we share the value we create, everyone wins — customers, sellers, and communities alike.</p>
                                 </div>
+
+                                <!-- Categories + Top Rated + Trust Badges -->
+                                <t t-call="aveenix_website.av_sidebar_extra"/>
                             </div>
                         </div>
 
@@ -4266,42 +4332,114 @@
              hidden via CSS (.av-affiliate-cta), while the native heart / star /
              compare buttons stay exactly as on every other product. One markup,
              zero duplication. -->
-        <xpath expr="//t[@t-call='website_sale.cta_wrapper']" position="before">
-            <t t-if="product.aveenix_product_type == 'affiliate'">
-                <t t-set="_av_in_cart" t-value="request.env['affiliate.cart.line'].sudo().search_count(
-                    [('product_id', '=', product.id), ('user_id', '=', request.env.user.id)]
-                    if not request.env.user._is_public() else
-                    [('product_id', '=', product.id), ('session_id', '=', request.session.sid), ('user_id', '=', False)]
-                )"/>
-                <a t-if="_av_in_cart" class="btn btn-primary av-affiliate-save-btn av-affiliate-buy w-100 disabled mb-2">
-                    <i class="fa fa-check me-2"/>In Cart
-                </a>
-                <a t-else="" href="#"
-                   class="btn btn-primary av-affiliate-save-btn av-affiliate-buy w-100 mb-2"
-                   t-att-data-product-id="product.id"
-                   t-att-data-product-name="product.name">
-                    <i class="fa fa-shopping-cart me-2"/>Add to cart
-                </a>
-            </t>
+    </template>
+
+    <!-- Affiliate CTA: put our "Add to cart" button INSIDE the native
+         #add_to_cart_wrap so it sits in the same flex row as the heart / star /
+         compare icons — identical layout to a normal product, just without the
+         qty selector. The native #add_to_cart and .css_quantity are hidden for
+         affiliate products (CSS + the AffiliateHideNativeCta interaction). -->
+    <template id="av_cta_wrapper_affiliate" inherit_id="website_sale.cta_wrapper"
+              name="Aveenix: Affiliate button in CTA row">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <a t-if="product.aveenix_product_type == 'affiliate'"
+               href="#"
+               class="btn btn-primary av-affiliate-save-btn av-affiliate-buy flex-grow-1"
+               t-att-data-product-id="product.id"
+               t-att-data-product-name="product.name">
+                <i class="fa fa-shopping-cart me-2"/>Add to cart
+            </a>
         </xpath>
     </template>
 
-    <!-- Hide the native Add-to-cart + qty wrap for affiliate products, server-side.
-         Inherits cta_wrapper directly because #add_to_cart_wrap is resolved via
-         t-call at render time and isn't xpath-able from website_sale.product.
-         The #product_option_block (heart / star / compare) is left untouched, so
-         those buttons remain identical to every other product. -->
-    <template id="av_cta_wrapper_affiliate" inherit_id="website_sale.cta_wrapper"
-              name="Aveenix: Hide native CTA for affiliate">
-        <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
-            <attribute name="t-attf-class" add="#{'d-none' if product.aveenix_product_type == 'affiliate' else ''}" separator=" "/>
+    <!-- =========================================================
+         AFFILIATE: /shop grid tile popup fix.
+         The native tile button (o_wsale_product_btn_primary) is left 100%
+         untouched (no class/tag change — a prior attempt to swap it for a
+         link altered its appearance and was reverted). We only add an
+         invisible data attribute so AffiliateSaveButtonGrid (affiliate_
+         cart.js) can detect an affiliate product's button and intercept its
+         click in capture phase — same popup as the product detail page,
+         zero visual difference on any tile.
+         ========================================================= -->
+    <template id="av_shop_product_btn_affiliate_flag" inherit_id="website_sale.shop_product_buttons"
+              name="Aveenix: Flag Affiliate Shop Grid Button">
+        <xpath expr="//button[hasclass('o_wsale_product_btn_primary')]" position="attributes">
+            <attribute name="t-att-data-aveenix-affiliate">'1' if product.aveenix_product_type == 'affiliate' else None</attribute>
         </xpath>
-    </template>                                                 
+    </template>
 
     <!-- Hide the whole cart summary block (#shop_cart: "Order summary" heading,
          Quick reorder, and the empty-cart message) when the cart has no regular
          products, so an affiliate-only / empty cart doesn't show a dangling
          "Order summary" or empty-cart placeholder. -->
+    <!-- =========================================================
+         WELCOME-DISCOUNT BANNER (reusable)
+         Shows the new-user first-order discount promise. Amount + on/off come
+         from Settings → Website via company._av_welcome_discount_info(), so it
+         always matches the real discount.
+
+         Visibility rule (per requirement): only a LOGGED-IN customer who has
+         not placed an order yet — i.e. after first login, before first order.
+         Public/logged-out visitors do NOT see it. Call with t-call and pass
+         _av_wd_context ('home' | 'cart') for context-specific copy.
+         ========================================================= -->
+    <template id="av_welcome_discount_banner" name="Aveenix: Welcome Discount Banner">
+        <t t-set="_av_wd" t-value="request.env.company._av_welcome_discount_info()"/>
+        <t t-set="_av_wd_partner"
+           t-value="request.env.user.partner_id if not request.env.user._is_public() else False"/>
+        <t t-set="_av_wd_show"
+           t-value="_av_wd['enabled'] and _av_wd_partner and _av_wd_partner._av_welcome_discount_eligible()"/>
+        <div t-if="_av_wd_show"
+             class="av-welcome-banner" t-att-data-context="_av_wd_context or 'home'">
+            <div class="av-welcome-banner-inner">
+                <i class="fa fa-gift av-welcome-banner-icon"/>
+                <span class="av-welcome-banner-text">
+                    <t t-if="_av_wd_context == 'cart'">
+                        You are getting <b><t t-out="_av_wd['label']"/></b> your first order — applied automatically at checkout.
+                    </t>
+                    <t t-else="">
+                        Your <b><t t-out="_av_wd['label']"/></b> welcome reward is ready — it applies automatically on your first order.
+                    </t>
+                </span>
+            </div>
+        </div>
+    </template>
+
+    <!-- Homepage floating pill: same visibility rule as the banner — only a
+         logged-in customer with no order yet (after first login, before first
+         order). Small dismissible chip fixed at bottom-left. -->
+    <template id="av_welcome_discount_pill" name="Aveenix: Welcome Discount Pill">
+        <t t-set="_av_wd" t-value="request.env.company._av_welcome_discount_info()"/>
+        <t t-set="_av_wd_partner"
+           t-value="request.env.user.partner_id if not request.env.user._is_public() else False"/>
+        <t t-set="_av_wd_show"
+           t-value="_av_wd['enabled'] and _av_wd_partner and _av_wd_partner._av_welcome_discount_eligible()"/>
+        <div t-if="_av_wd_show" class="av-welcome-pill" role="status">
+            <span class="av-welcome-pill-medal">
+                <i class="fa fa-gift"/>
+            </span>
+            <span class="av-welcome-pill-body">
+                <span class="av-welcome-pill-eyebrow">Welcome offer</span>
+                <span class="av-welcome-pill-head">
+                    <b><t t-out="_av_wd['label'].replace(' OFF', ' off')"/></b> your first order
+                </span>
+            </span>
+            <button type="button" class="av-welcome-pill-close" aria-label="Dismiss">&#215;</button>
+        </div>
+    </template>
+
+    <!-- Cart: welcome-discount notice at the top of the cart so first-order
+         customers see the perk before checkout. -->
+    <template id="av_cart_welcome_banner" inherit_id="website_sale.cart"
+              name="Aveenix: Cart Welcome Discount Banner">
+        <xpath expr="//div[@id='shop_cart']" position="before">
+            <t t-call="aveenix_website.av_welcome_discount_banner">
+                <t t-set="_av_wd_context" t-value="'cart'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="av_cart_hide_order_summary" inherit_id="website_sale.cart"
               name="Aveenix: Hide empty Order summary">
         <xpath expr="//div[@id='shop_cart']" position="attributes">

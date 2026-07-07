@@ -20,6 +20,19 @@ def _apply_affiliate_tag(url, tag):
     ))
 
 
+def _company_domain():
+    """Domain leaves restricting products to the current website's company.
+
+    Multi-company: each website is bound to a company; show that company's
+    products plus company-less (shared) products. Returns [] when the website
+    has no company set (single-company fallback = everything visible)."""
+    website = request.env['website'].get_current_website()
+    company = website.company_id
+    if not company:
+        return []
+    return ['|', ('company_id', '=', company.id), ('company_id', '=', False)]
+
+
 class AveenixWebsite(WebsiteSale):
 
     @http.route([
@@ -46,7 +59,7 @@ class AveenixWebsite(WebsiteSale):
         pub_templates = request.env['product.template'].sudo().search([
             ('website_published', '=', True),
             ('public_categ_ids', '!=', False),
-        ])
+        ] + _company_domain())
         non_empty_top_ids = set()
         for tmpl in pub_templates:
             for cat in tmpl.public_categ_ids:
@@ -66,7 +79,7 @@ class AveenixWebsite(WebsiteSale):
             products = request.env['product.template'].sudo().search([
                 ('public_categ_ids', 'in', categories.ids),
                 ('sale_ok', '=', True),
-            ])
+            ] + _company_domain())
             # Map each product's sales onto every (top-level) category it belongs to.
             top_ids = set(categories.ids)
             for prod in products:
@@ -88,7 +101,7 @@ class AveenixWebsite(WebsiteSale):
         pub_products = request.env['product.template'].sudo().search([
             ('sale_ok', '=', True), ('website_published', '=', True),
             ('image_1920', '!=', False),
-        ])
+        ] + _company_domain())
         if country_id:
             pub_products = pub_products.filtered(
                 lambda p: not p.available_country_ids
@@ -114,6 +127,50 @@ class AveenixWebsite(WebsiteSale):
             key=lambda p: p.create_date or p.id, reverse=True
         )[:row_limit]
 
+        # ── Featured category rows (admin-selected in Website Settings) ──
+        # Each selected category becomes one homepage row after New Arrivals,
+        # showing its published products, with View All → /shop?categ=<id>.
+        website = request.env['website'].get_current_website()
+        featured_categories = []
+        featured_cats = website.sudo().aveenix_home_categ_ids
+        if featured_cats:
+            # Batched queries only (no DB call inside the loop):
+            #  1) every category once, to build a parent→descendant-ids map;
+            #  2) all published products across the featured subtrees at once.
+            all_cats = request.env['product.public.category'].sudo().search([])
+            parent_of = {c.id: c.parent_id.id for c in all_cats}
+            # For each featured category, collect its own id + all descendants.
+            subtree_by_feat = {c.id: {c.id} for c in featured_cats}
+            for cid, pid in parent_of.items():
+                node = pid
+                while node:
+                    if node in subtree_by_feat:
+                        subtree_by_feat[node].add(cid)
+                    node = parent_of.get(node)
+
+            cat_products = request.env['product.template'].sudo().search([
+                ('sale_ok', '=', True), ('website_published', '=', True),
+                ('image_1920', '!=', False),
+                ('public_categ_ids', 'child_of', featured_cats.ids),
+            ] + _company_domain())
+            for cat in featured_cats:
+                subtree_ids = subtree_by_feat.get(cat.id, {cat.id})
+                prods = cat_products.filtered(
+                    lambda p: bool(set(p.public_categ_ids.ids) & subtree_ids)
+                )
+                if country_id:
+                    prods = prods.filtered(
+                        lambda p: not p.available_country_ids
+                        or country_id in p.available_country_ids.ids
+                    )
+                if prods:
+                    featured_categories.append({
+                        'category': cat,
+                        'products': prods.sorted(
+                            key=lambda p: p.sales_count, reverse=True
+                        )[:row_limit],
+                    })
+
         # Pass 8 categories: desktop shows 7 (the 8th card is hidden via CSS,
         # .av-cat-grid > :nth-child(8){display:none}); mobile re-shows the 8th
         # so the grid is a full 4×2. See theme.css.
@@ -123,6 +180,7 @@ class AveenixWebsite(WebsiteSale):
             'trending_products': trending,
             'best_seller_products': best_sellers,
             'new_arrival_products': new_arrivals,
+            'featured_categories': featured_categories,
         })
 
     @http.route('/aveenix/home/products', type='jsonrpc', auth='public', website=True, readonly=True)
@@ -130,11 +188,12 @@ class AveenixWebsite(WebsiteSale):
         country_id = request.session.get(_LOCATION_SESSION_KEY)
         products = request.env['product.template'].sudo().search(
             [('sale_ok', '=', True), ('website_published', '=', True),
-             ('image_1920', '!=', False)]
+             ('image_1920', '!=', False)] + _company_domain()
         )
         if not products:
             products = request.env['product.template'].sudo().search(
                 [('sale_ok', '=', True), ('image_1920', '!=', False)]
+                + _company_domain()
             )
         if country_id:
             products = products.filtered(
@@ -177,7 +236,7 @@ class AveenixWebsite(WebsiteSale):
         published_templates = request.env['product.template'].sudo().search([
             ('website_published', '=', True),
             ('public_categ_ids', '!=', False),
-        ])
+        ] + _company_domain())
         non_empty_top_ids = set()
         for tmpl in published_templates:
             for cat in tmpl.public_categ_ids:
@@ -296,7 +355,7 @@ class AveenixWebsite(WebsiteSale):
                     products = request.env['product.template'].sudo().search([
                         ('id', 'in', ids),
                         ('website_published', '=', True),
-                    ])
+                    ] + _company_domain())
             except Exception:
                 pass
         return request.render('aveenix_website.compare_page', {
@@ -316,10 +375,10 @@ class AveenixWebsite(WebsiteSale):
         except Exception:
             return []
         templates = request.env['product.template'].sudo().search(
-            [('id', 'in', id_list)], limit=50,
+            [('id', 'in', id_list)] + _company_domain(), limit=50,
         )
         result = request.env['product.template'].sudo().search_read(
-            [('id', 'in', id_list)],
+            [('id', 'in', id_list)] + _company_domain(),
             fields=['id', 'name', 'list_price', 'image_512', 'website_url',
                     'virtual_available', 'type', 'description_sale', 'categ_id', 'public_categ_ids'],
             limit=50,
@@ -419,7 +478,30 @@ class AveenixWebsite(WebsiteSale):
 
     @http.route('/notifications', type='http', auth='public', website=True)
     def notifications_page(self, **kwargs):
-        return request.render('aveenix_website.notifications_page', {})
+        return request.render('aveenix_website.notifications_page', {
+            'is_public': request.env.user._is_public(),
+        })
+
+    @http.route('/aveenix/notifications/count', type='jsonrpc', auth='user',
+                website=True, readonly=True)
+    def notifications_count(self, **kwargs):
+        return {'count': request.env.user.partner_id._get_needaction_count()}
+
+    @http.route('/aveenix/notifications/mark_read', type='jsonrpc', auth='user',
+                website=True)
+    def notifications_mark_read(self, message_ids=None, all=False, **kwargs):
+        if all:
+            messages = request.env['mail.message'].search([
+                ('needaction', '=', True),
+            ])
+        elif message_ids:
+            messages = request.env['mail.message'].browse(
+                [int(i) for i in message_ids]
+            )
+        else:
+            messages = request.env['mail.message']
+        messages.set_message_done()
+        return {'ok': True}
 
     @http.route('/contactus', type='http', auth='public', website=True)
     def contact_us_page(self, **kwargs):
@@ -591,7 +673,24 @@ class AveenixWebsite(WebsiteSale):
         line = request.env['affiliate.cart.line'].sudo()._get_or_create(
             product, request.session.sid, user
         )
-        return {'ok': True, 'line_id': line.id}
+        # Line payload shaped for the native website_sale cart notification, so
+        # an affiliate save shows the SAME popup as a real add-to-cart (without
+        # ever touching the Odoo cart).
+        currency = request.env.company.currency_id
+        return {
+            'ok': True,
+            'line_id': line.id,
+            'notification': {
+                'lines': [{
+                    'id': line.id,
+                    'image_url': '/web/image/product.template/%s/image_128' % product.id,
+                    'quantity': 1,
+                    'name': product.name,
+                    'price_total': product.list_price,
+                }],
+                'currency_id': currency.id,
+            },
+        }
 
     @http.route('/aveenix/affiliate/cart/remove', type='jsonrpc', auth='public', website=True)
     def affiliate_cart_remove(self, line_id=None, **kw):

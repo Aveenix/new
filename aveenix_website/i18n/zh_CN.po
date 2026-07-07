@@ -16,9 +16,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_home_product_card
+msgid "<i class=\"fa fa-shopping-cart\"/> <span>Add to Cart</span>"
+msgstr "<i class=\"fa fa-shopping-cart\"/> <span>加入购物车</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_home_product_row
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "Summer Electronics<br/>Sale"
-msgstr "夏季电子产品<br/>促销"
+msgid "View All"
+msgstr "查看全部"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Summer Electronics Sale"
+msgstr "夏季电子产品促销"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
@@ -58,7 +69,7 @@ msgstr "探索"
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
 msgid "Home &amp; Garden"
-msgstr ""
+msgstr "家居与园艺"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
@@ -97,11 +108,6 @@ msgstr "按分类购物"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<i class=\"fa fa-sliders\"/> For You"
-msgstr "<i class=\"fa fa-sliders\"/> 为您推荐"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
 msgid "<i class=\"fa fa-star\"/> Best Sellers"
 msgstr "<i class=\"fa fa-star\"/> 畅销商品"
 
@@ -112,153 +118,13 @@ msgstr "<i class=\"fa fa-clock-o\"/> 新品上市"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "View All"
-msgstr "查看全部"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">Laptops</span>"
-msgstr "<span class=\"av-cat-label\">笔记本电脑</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">Mobile</span>"
-msgstr "<span class=\"av-cat-label\">手机</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">Gaming</span>"
-msgstr "<span class=\"av-cat-label\">游戏</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">TV &amp; Video</span>"
-msgstr "<span class=\"av-cat-label\">电视与视频</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">Monitors</span>"
-msgstr "<span class=\"av-cat-label\">显示器</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">Headphones</span>"
-msgstr "<span class=\"av-cat-label\">耳机</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-cat-label\">Smart Home</span>"
-msgstr "<span class=\"av-cat-label\">智能家居</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
 msgid "Trending Products"
 msgstr "热门商品"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "For You"
-msgstr "为您推荐"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
 msgid "Best Sellers"
 msgstr "畅销商品"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-badge av-badge-red\">Sale</span>"
-msgstr "<span class=\"av-prod-badge av-badge-red\">促销</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<i class=\"fa fa-shopping-cart\"/> <span>Add to Cart</span>"
-msgstr "<i class=\"fa fa-shopping-cart\"/> <span>加入购物车</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-badge av-badge-red\">34%</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "Home Security Camera 1080 Wi-Fi"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-price\">$49.99</span>\n                                            <span class=\"av-prod-original\">$299.95</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-badge av-badge-red\">38%</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "UZD RGB LED Video Light"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-price\">$29.95</span>\n                                            <span class=\"av-prod-original\">$239.95</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-badge av-badge-red\">19%</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "Ergonomic Gaming Chair"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-price\">$159.99</span>\n                                            <span class=\"av-prod-original\">$1,439.95</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-badge av-badge-orange\">11% Off</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "COSORI Pro Smart Air Fryer 6 Qt"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-price\">$99.95</span>\n                                            <span class=\"av-prod-original\">$1,439.95</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-badge av-badge-orange\">19% off</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "4K Ultra HD Smart TV 55\" Android"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-price\">$379.95</span>\n                                            <span class=\"av-prod-original\">$489.95</span>"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "Xiaomi Robot Vacuum Mop Pro 2"
-msgstr ""
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "<span class=\"av-prod-price\">$279.95</span>\n                                            <span class=\"av-prod-original\">$289.95</span>"
-msgstr ""
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
@@ -274,6 +140,16 @@ msgstr "安全支付"
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
 msgid "Safe and secure payment methods guaranteed."
 msgstr "保证安全可靠的支付方式。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "SSL Encrypted"
+msgstr "SSL 加密"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Guaranteed data encryption and protection."
+msgstr "保证数据加密与保护。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
@@ -297,6 +173,16 @@ msgstr "所有商品均有简单便捷的退货政策。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Earn Rewards"
+msgstr "赚取奖励"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
+msgid "Become a part of the customer loyalty program."
+msgstr "加入客户忠诚度计划。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
 msgid "24/7 Support"
 msgstr "全天候支持"
 
@@ -317,8 +203,8 @@ msgstr "成为 AVEENIX 卖家，触达数百万顾客"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.homepage
-msgid "Start Selling"
-msgstr "开始销售"
+msgid "Coming Soon"
+msgstr "即将推出"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
@@ -328,7 +214,7 @@ msgstr "商品对比"
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
 msgid "Compare products' features, pricing, and specifications side-by-side. Add as many products as you need to make informed decisions."
-msgstr ""
+msgstr "并排比较商品的功能、价格和规格。添加任意数量的商品，做出明智决定。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
@@ -351,7 +237,7 @@ msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-count\">0</span>\n      
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
 msgid "<span class=\"av-compare-stat-val\" id=\"av-cmp-total\">$0.00</span>\n                            <span class=\"av-compare-stat-label\">Total Value</span>"
-msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-total\">$0.00</span>\n                            <span class=\"av-compare-stat-label\">总价值</span>"
+msgstr "<span class=\"av-compare-stat-val\" id=\"av-cmp-total\">0.00 美元</span>\n                            <span class=\"av-compare-stat-label\">总价值</span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
@@ -386,7 +272,7 @@ msgstr "开始对比商品"
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
 msgid "Search and add products to compare their features, pricing, and specifications side-by-side."
-msgstr ""
+msgstr "搜索并添加商品，并排比较其功能、价格和规格。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.compare_page
@@ -411,26 +297,28 @@ msgstr "添加到愿望清单"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
-msgid "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to favourites\"/>"
-msgstr "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"添加到收藏\"/>"
+msgid "<i class=\"fa fa-heart-o\" role=\"img\" aria-label=\"Add to favourites\"/>"
+msgstr "<i class=\"fa fa-heart-o\" role=\"img\" aria-label=\"添加到收藏\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
 msgid "Add to favourites"
 msgstr "添加到收藏"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
-msgid "<i class=\"fa fa-star-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr "<i class=\"fa fa-star-o me-2 me-lg-0\" role=\"img\" aria-label=\"添加到愿望清单\"/>"
+msgid "<i class=\"fa fa-star-o\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr "<i class=\"fa fa-star-o\" role=\"img\" aria-label=\"添加到愿望清单\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
-msgid "<i class=\"fa fa-balance-scale me-2\" role=\"img\" aria-label=\"Add to Compare\"/>\n                <span>Add to Compare</span>"
-msgstr "<i class=\"fa fa-balance-scale me-2\" role=\"img\" aria-label=\"添加到对比\"/>\n                <span>添加到对比</span>"
+msgid "<i class=\"fa fa-plus-square-o\" role=\"img\" aria-label=\"Add to Compare\"/>"
+msgstr "<i class=\"fa fa-plus-square-o\" role=\"img\" aria-label=\"添加到对比\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_option_to_favourites
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
 msgid "Add to Compare"
 msgstr "添加到对比"
 
@@ -442,7 +330,7 @@ msgstr "我的收藏"
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
 msgid "Items you frequently purchase or access. Quick reorder your most loved products and track your shopping habits."
-msgstr ""
+msgstr "您经常购买或访问的商品。快速再次订购喜爱的商品并跟踪购物习惯。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
@@ -474,7 +362,7 @@ msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-count\">0</span>\n          
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
 msgid "<span class=\"av-fav-stat-val\" id=\"av-fav-total\">$0.00</span>\n                            <span class=\"av-fav-stat-label\">Total Value</span>"
-msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-total\">$0.00</span>\n                            <span class=\"av-fav-stat-label\">总价值</span>"
+msgstr "<span class=\"av-fav-stat-val\" id=\"av-fav-total\">0.00 美元</span>\n                            <span class=\"av-fav-stat-label\">总价值</span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.favourites_page
@@ -525,7 +413,7 @@ msgstr "我的愿望清单"
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
 msgid "Save items for later and track price changes. Create lists for different occasions and monitor price drops."
-msgstr ""
+msgstr "保存商品以备后用并跟踪价格变化。为不同场合创建清单并关注降价。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
@@ -545,7 +433,7 @@ msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-count\">0</span>\n        
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
 msgid "<span class=\"av-wish-stat-val\" id=\"av-wish-total\">$0.00</span>\n                            <span class=\"av-wish-stat-label\">Total Value</span>"
-msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-total\">$0.00</span>\n                            <span class=\"av-wish-stat-label\">总价值</span>"
+msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-total\">0.00 美元</span>\n                            <span class=\"av-wish-stat-label\">总价值</span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
@@ -558,6 +446,7 @@ msgid "<span class=\"av-wish-stat-val\" id=\"av-wish-sale\">0</span>\n          
 msgstr "<span class=\"av-wish-stat-val\" id=\"av-wish-sale\">0</span>\n                            <span class=\"av-wish-stat-label\">促销中</span>"
 
 #. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
 #: model_terms:ir.ui.view,arch_db:aveenix_website.wishlist_page
 msgid "Add All to Cart"
 msgstr "全部加入购物车"
@@ -583,10 +472,66 @@ msgid "Add products to your wishlist by clicking the star icon on product cards"
 msgstr "点击商品卡片上的星形图标将商品添加到愿望清单"
 
 #. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
 #: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Aveenix Express Contact: Customer Support &amp; Help Center"
+msgstr "Aveenix Express 联系方式：客户支持与帮助中心"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Need assistance with an order or have a question? Contact Aveenix Express for friendly customer support and reliable help. Our team is here to assist with inquiries and platform support."
+msgstr "订单需要帮助或有疑问？联系 Aveenix Express 获得友好可靠的客户支持。我们的团队随时协助处理咨询和平台支持。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Customer Support, Contact Us, Help Center, Get in Touch, Support Team, Customer Service, Online Support, Customer Inquiry"
+msgstr "客户支持、联系我们、帮助中心、联系、支持团队、客户服务、在线支持、客户查询"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<span>Contact Us</span>\n                                    <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+msgstr "<span>联系我们</span>\n                                    <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<i class=\"fa fa-map-marker\"/> Location"
+msgstr "<i class=\"fa fa-map-marker\"/> 地址"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<i class=\"fa fa-comments\"/>   Contact Us"
+msgstr "<i class=\"fa fa-comments\"/>   联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<i class=\"fa fa-envelope\"/>   Send A Message"
+msgstr "<i class=\"fa fa-envelope\"/>   发送消息"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<i class=\"fa fa-envelope-o\"/> Get in Touch"
+msgstr "<i class=\"fa fa-envelope-o\"/> 联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<strong class=\"av-privacy-note-title\">Business Hours</strong>"
+msgstr "<strong class=\"av-privacy-note-title\">营业时间</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Monday – Sunday: 06:00 – 18:00. Public Holidays – Closed."
+msgstr "周一至周日：06:00 – 18:00。公众假期休息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
 msgid "Contact Us"
 msgstr "联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "We'd love to hear from you. Send us a message and we'll respond as soon as possible."
+msgstr "期待您的来信。给我们留言，我们会尽快回复。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
@@ -606,7 +551,7 @@ msgstr "区域配送中心"
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
 msgid "401 Ellerslie Panmure Highway Mount Wellington, Auckland 1060"
-msgstr ""
+msgstr "401 Ellerslie Panmure Highway 惠灵顿山, 奥克兰 1060"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
@@ -670,13 +615,87 @@ msgstr "网站"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<option value=\"\">Subject*</option>"
+msgstr "<option value=\"\">主题*</option>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
 msgid "Your message...*"
 msgstr "您的留言...*"
 
 #. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
 #: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
 msgid "Free Consultancy"
 msgstr "免费咨询"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Ready to transform your business with Aveenix? We'd love to hear from you and discuss how our platform can help you achieve your goals."
+msgstr "准备好与 Aveenix 一起改变您的业务了吗？我们很乐意听取您的意见并讨论我们的平台如何帮助您实现目标。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<strong>Email Support</strong>\n                            <span>Quick response time</span>"
+msgstr "<strong>邮件支持</strong>\n                            <span>快速响应</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Send us an email"
+msgstr "给我们发邮件"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<small>Within 24 hours</small>"
+msgstr "<small>24小时内</small>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<strong>Phone Support</strong>\n                            <span>Speak with our team</span>"
+msgstr "<strong>电话支持</strong>\n                            <span>与我们的团队交流</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Call us directly"
+msgstr "直接致电我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<small>Mon-Fri 9AM-6PM EST</small>"
+msgstr "<small>美国东部时间周一至周五上午 9 点至下午 6 点</small>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<strong>Live Chat</strong>\n                            <span>Chat with support</span>"
+msgstr "<strong>在线聊天</strong>\n                            <span>与支持人员聊天</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "Available on our platform"
+msgstr "在我们的平台上可用"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<small>Real-time assistance</small>"
+msgstr "<small>实时帮助</small>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "<strong>Learn More</strong>\n                            <span>Discover our platform</span>"
+msgstr "<strong>了解更多</strong>\n                            <span>探索我们的平台</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+#: model_terms:ir.ui.view,arch_db:aveenix_website.contact_us_page
+msgid "About Aveenix"
+msgstr "关于 Aveenix"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
@@ -685,13 +704,18 @@ msgstr "通知"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
-msgid "Stay updated with order status, promotions, and important updates"
-msgstr "随时了解订单状态、促销活动和重要更新"
+msgid "Stay updated with order status, promotions, and important updates. Never miss a deal, shipment alert, or platform announcement."
+msgstr "及时了解订单状态、促销和重要更新。不错过任何优惠、发货提醒或平台公告。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
 msgid "Notifications <span class=\"av-notif-new-badge\" id=\"av-notif-new-count\" style=\"display:none;\"/>"
 msgstr "通知 <span class=\"av-notif-new-badge\" id=\"av-notif-new-count\" style=\"display:none;\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Stay updated with order status, promotions, and important updates"
+msgstr "随时了解订单状态、促销活动和重要更新"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
@@ -715,21 +739,6 @@ msgstr "未读"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
-msgid "Orders"
-msgstr "订单"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
-msgid "Promotions"
-msgstr "促销"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
-msgid "Inventory"
-msgstr "库存"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
 msgid "<span class=\"ms-auto av-notif-summary\" id=\"av-notif-summary\">0 of 0 notifications</span>"
 msgstr "<span class=\"ms-auto av-notif-summary\" id=\"av-notif-summary\">0 条通知中的 0 条</span>"
 
@@ -744,19 +753,2483 @@ msgid "You're all caught up!"
 msgstr "您已全部读完！"
 
 #. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Sign in to see your notifications"
+msgstr "登录以查看通知"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Log in to track your order status, promotions, and updates."
+msgstr "登录以跟踪订单状态、促销和更新。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Sign In"
+msgstr "登录"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.notifications_page
+msgid "Sign Up"
+msgstr "注册"
+
+#. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.categories_page
 msgid "All Categories"
 msgstr "所有分类"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.categories_page
-msgid "Browse all product categories"
-msgstr "浏览所有商品分类"
+msgid "Explore our full range of product categories and discover<br/>everything you need — from everyday essentials to trending picks."
+msgstr "探索我们全系列的产品类别并发现<br/>您需要的一切——从日常必需品到热门精选。"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.categories_page
 msgid "products"
 msgstr "产品"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_signup_recaptcha
+msgid "I agree to the"
+msgstr "我同意"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_signup_recaptcha
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Terms &amp; Conditions"
+msgstr "条款和条件"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_offcanvas_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "<b>Filter by Category</b>"
+msgstr "<b>按分类筛选</b>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "<b>Tags</b>"
+msgstr "<b>标签</b>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_filter_products_tags_list
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "Search tags…"
+msgstr "搜索标签…"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_filter_products_tags_list
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "No tags found."
+msgstr "未找到标签。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "<b>Price Range</b>"
+msgstr "<b>价格范围</b>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "Min"
+msgstr "最低"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "<span class=\"text-muted small\">–</span>"
+msgstr ""
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "Max"
+msgstr "最高"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_offcanvas_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "<b>Filter by Brand</b>"
+msgstr "<b>按品牌筛选</b>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_offcanvas_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "<b>Stock Status</b>"
+msgstr "<b>库存状态</b>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_offcanvas_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "In stock"
+msgstr "有货"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_offcanvas_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+msgid "On sale"
+msgstr "促销中"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_checkout_sidebar
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_sidebar
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_style_sidebar
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sidebar_extra
+msgid "Top Rated Products"
+msgstr "好评商品"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Shopping Cart"
+msgstr "购物车"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Review your selected items, apply coupons, and proceed to checkout when you're ready."
+msgstr "查看所选商品，使用优惠券，准备好后前往结账。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Delivery Address"
+msgstr "收货地址"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Enter or select your delivery address to proceed with your order."
+msgstr "输入或选择您的收货地址以继续下单。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Secure Payment"
+msgstr "安全支付"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Select your preferred payment method and complete your purchase securely."
+msgstr "选择您偏好的支付方式，安全完成购买。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Checkout"
+msgstr "结账"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Complete your order securely. Enter your delivery details and choose your preferred payment method."
+msgstr "安全完成订单。输入配送信息并选择支付方式。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Order Confirmed!"
+msgstr "订单已确认！"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_checkout_layout_hero
+msgid "Thank you for your purchase. Your order has been placed and is being processed."
+msgstr "感谢您的购买。您的订单已提交，正在处理中。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_checkout_sidebar
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_sidebar
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sidebar_extra
+msgid "Browse Categories"
+msgstr "浏览分类"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sidebar_extra
+msgid "<i class=\"fa fa-truck av-product-sidebar-badge-icon\"/>\n                        <span class=\"small text-muted\">Fast delivery</span>"
+msgstr "<i class=\"fa fa-truck av-product-sidebar-badge-icon\"/>\n                        <span class=\"small text-muted\">快速配送</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sidebar_extra
+msgid "<i class=\"fa fa-gift av-product-sidebar-badge-icon\"/>\n                        <span class=\"small text-muted\">Earn rewards</span>"
+msgstr "<i class=\"fa fa-gift av-product-sidebar-badge-icon\"/>\n                        <span class=\"small text-muted\">赚取奖励</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sidebar_extra
+msgid "<i class=\"fa fa-shield av-product-sidebar-badge-icon\"/>\n                        <span class=\"small text-muted\">Secure payments</span>"
+msgstr "<i class=\"fa fa-shield av-product-sidebar-badge-icon\"/>\n                        <span class=\"small text-muted\">安全支付</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sponsored_slider
+msgid "<span class=\"av-ad-badge\">Sponsored</span>"
+msgstr "<span class=\"av-ad-badge\">赞助</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sponsored_slider
+msgid "<span class=\"av-ad-cta\">Shop now <i class=\"fa fa-arrow-right\"/></span>"
+msgstr "<span class=\"av-ad-cta\">立即购买 <i class=\"fa fa-arrow-right\"/></span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sponsored_slider
+msgid "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n                    <span class=\"visually-hidden\">Previous</span>"
+msgstr "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n                    <span class=\"visually-hidden\">上一个</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_sponsored_slider
+msgid "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n                    <span class=\"visually-hidden\">Next</span>"
+msgstr "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n                    <span class=\"visually-hidden\">下一个</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_checkout_sidebar
+msgid "<i class=\"fa fa-truck av-product-sidebar-badge-icon\"/>\n                                    <span class=\"small text-muted\">Fast delivery</span>"
+msgstr "<i class=\"fa fa-truck av-product-sidebar-badge-icon\"/>\n                                    <span class=\"small text-muted\">快速配送</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_checkout_sidebar
+msgid "<i class=\"fa fa-gift av-product-sidebar-badge-icon\"/>\n                                    <span class=\"small text-muted\">Earn rewards</span>"
+msgstr "<i class=\"fa fa-gift av-product-sidebar-badge-icon\"/>\n                                    <span class=\"small text-muted\">赚取奖励</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_checkout_sidebar
+msgid "<i class=\"fa fa-shield av-product-sidebar-badge-icon\"/>\n                                    <span class=\"small text-muted\">Secure payments</span>"
+msgstr "<i class=\"fa fa-shield av-product-sidebar-badge-icon\"/>\n                                    <span class=\"small text-muted\">安全支付</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_account_hero
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "My Account"
+msgstr "我的账户"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_account_hero
+msgid "Update your personal details, billing address, and contact information. Keep your account information accurate and up to date."
+msgstr "更新您的个人资料、账单地址和联系信息。保持账户信息准确且最新。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+msgid "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n                    <i class=\"oi oi-close\" role=\"presentation\"/>"
+msgstr "<small class=\"mx-auto\"><b>清除筛选</b></small>\n                    <i class=\"oi oi-close\" role=\"presentation\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_offcanvas_extra_filters
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_extra_filters
+msgid "Clear Filters"
+msgstr "清除筛选"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_login_hero
+msgid "Welcome Back"
+msgstr "欢迎回来"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_login_hero
+msgid "Sign in to your Aveenix account to manage orders, track shipments, and access exclusive deals."
+msgstr "登录您的 Aveenix 账户以管理订单、跟踪物流并享受专属优惠。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_sidebar
+msgid "Related Products"
+msgstr "相关商品"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_sidebar
+msgid "<i class=\"fa fa-truck av-product-sidebar-badge-icon\"/>\n                                <span class=\"small text-muted\">Fast delivery</span>"
+msgstr "<i class=\"fa fa-truck av-product-sidebar-badge-icon\"/>\n                                <span class=\"small text-muted\">快速配送</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_sidebar
+msgid "<i class=\"fa fa-gift av-product-sidebar-badge-icon\"/>\n                                <span class=\"small text-muted\">Earn rewards</span>"
+msgstr "<i class=\"fa fa-gift av-product-sidebar-badge-icon\"/>\n                                <span class=\"small text-muted\">赚取奖励</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_sidebar
+msgid "<i class=\"fa fa-shield av-product-sidebar-badge-icon\"/>\n                                <span class=\"small text-muted\">Secure payments</span>"
+msgstr "<i class=\"fa fa-shield av-product-sidebar-badge-icon\"/>\n                                <span class=\"small text-muted\">安全支付</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_detail_hero
+msgid "View product details, specifications, and pricing. Add to cart or compare with similar items."
+msgstr "查看商品详情、规格和价格。加入购物车或与同类商品比较。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Description"
+msgstr "商品描述"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Reviews ("
+msgstr "评价（"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Shipping and Delivery"
+msgstr "运输与配送"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "No description available."
+msgstr "暂无描述。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Reviews"
+msgstr "评价"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "There are no reviews yet."
+msgstr "暂无评价。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Be the first to review “"
+msgstr "成为第一个评价“"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Your rating <span class=\"av-req\">*</span>"
+msgstr "您的评价 <span class=\"av-req\">*</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Your review <span class=\"av-req\">*</span>"
+msgstr "您的评论 <span class=\"av-req\">*</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Name"
+msgstr "姓名"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "SUBMIT"
+msgstr "提交"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "Please"
+msgstr "请"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "log in"
+msgstr "登录"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "to write a review."
+msgstr "后撰写评价。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_product_description_fullwidth
+msgid "No shipping information available."
+msgstr "暂无运输信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix Privacy Policy: Data Protection &amp; User Privacy"
+msgstr "Aveenix 隐私政策：数据保护和用户隐私"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "This Privacy Policy explains how Aveenix Express collects, uses, stores, and protects your personal information. We are committed to safeguarding your privacy and handling your data responsibly."
+msgstr "本隐私政策解释了 Aveenix Express 如何收集、使用、存储和保护您的个人信息。我们致力于保护您的隐私并负责任地处理您的数据。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Privacy Policy, Data Protection, User Privacy, Personal Information, Data Security, Cookie Policy, Data Usage, Third-Party Sharing, User Rights, Returns Management, E-commerce Returns, Product Returns Process, Return Policy, Refund Process, Exchange Policy, Defective Product Return, Website Security, Online Security, Secure Transactions, Customer Data Security, Payment Security, Fraud Prevention, Encryption Technology, Cybersecurity Measures, Secure Shopping Experience, Sell Online, Become a Seller, E-commerce Sellers, Online Marketplace, Seller Dashboard, Product Listings, Order Management, Shipping Setup, Vendor Support, Shipping Policy, International Shipping, Shipping Rates, Order Tracking, Delivery Times, Customs Clearance, Free Shipping, Expedited Shipping, Cashback Program, Cashback Rewards, Earn Rewards Online, E-commerce Cashback, Affiliate Cashback"
+msgstr "隐私政策、数据保护、用户隐私、个人信息、数据安全、Cookie 政策、数据使用、第三方共享、用户权利、退货管理、电子商务退货、产品退货流程、退货政策、退款流程、换货政策、缺陷产品退货、网站安全、在线安全、安全交易、客户数据安全、支付安全、欺诈预防、加密技术、网络安全措施、安全购物体验、在线销售、成为卖家、电子商务卖家、在线市场、卖家仪表板、产品列表、订单管理、运输设置、供应商支持、运输政策、国际运输、运费、订单跟踪、交货时间、清关、免费送货、加急运输、现金返还计划、现金返还奖励、在线赚取奖励、电子商务现金返还、联盟现金返还"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<span>Privacy Policy</span>\n                                    <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+msgstr "<span>隐私政策</span>\n                                    <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-shield\"/>      Overview"
+msgstr "<i class=\"fa fa-shield\"/>      概述"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-user\"/>        Information We Collect"
+msgstr "<i class=\"fa fa-user\"/>        我们收集的信息"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-database\"/>    How We Use Information"
+msgstr "<i class=\"fa fa-database\"/>    我们如何使用信息"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-share-alt\"/>   Information Sharing"
+msgstr "<i class=\"fa fa-share-alt\"/>   信息共享"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-circle-o\"/>    Cookies &amp; Tracking"
+msgstr "<i class=\"fa fa-circle-o\"/>    Cookie 和跟踪"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-lock\"/>        Data Security"
+msgstr "<i class=\"fa fa-lock\"/>        数据安全"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-user-circle\"/> Your Rights &amp; Choices"
+msgstr "<i class=\"fa fa-user-circle\"/> 您的权利和选择"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-clock-o\"/>     Data Retention"
+msgstr "<i class=\"fa fa-clock-o\"/>     数据保留"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-child\"/>       Children's Privacy"
+msgstr "<i class=\"fa fa-child\"/>       儿童隐私"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-globe\"/>       International Transfers"
+msgstr "<i class=\"fa fa-globe\"/>       国际转账"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-link\"/>        Third-Party Links"
+msgstr "<i class=\"fa fa-link\"/>        第三方链接"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-file-text\"/>   Policy Updates"
+msgstr "<i class=\"fa fa-file-text\"/>   政策更新"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-envelope\"/>    Contact Us"
+msgstr "<i class=\"fa fa-envelope\"/>    联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<span>Return Policy</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+msgstr "<span>退货政策</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-times-circle\"/> Order Cancellations"
+msgstr "<i class=\"fa fa-times-circle\"/> 订单取消"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-check-circle\"/> Eligibility for Returns"
+msgstr "<i class=\"fa fa-check-circle\"/> 退货资格"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-cubes\"/>       Returns by Product Type"
+msgstr "<i class=\"fa fa-cubes\"/>       按产品类型划分的退货"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-money\"/>       Refund Process"
+msgstr "<i class=\"fa fa-money\"/>       退款流程"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-truck\"/>       Shipping Costs"
+msgstr "<i class=\"fa fa-truck\"/>       运费"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-wrench\"/>      Defective or Incorrect Items"
+msgstr "<i class=\"fa fa-wrench\"/>      有缺陷或不正确的物品"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-exchange\"/>    Exchanges"
+msgstr "<i class=\"fa fa-exchange\"/>    交流"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-exclamation-triangle\"/> Exceptional Circumstances"
+msgstr "<i class=\"fa fa-exclamation-triangle\"/> 特殊情况"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<span>Security Policy</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+msgstr "<span>安全政策</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-lock\"/>         Encryption &amp; Secure Connections"
+msgstr "<i class=\"fa fa-lock\"/>         加密和安全连接"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-certificate\"/>  Verified Security Certificates"
+msgstr "<i class=\"fa fa-certificate\"/>  经过验证的安全证书"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-credit-card\"/>  Payment Security"
+msgstr "<i class=\"fa fa-credit-card\"/>  支付安全"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-paypal\"/>       Payments via PayPal"
+msgstr "<i class=\"fa fa-paypal\"/>       通过 PayPal 付款"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-cc-stripe\"/>    Payments via Stripe"
+msgstr "<i class=\"fa fa-cc-stripe\"/>    通过 Stripe 付款"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-shield\"/>       Fraud Prevention &amp; Monitoring"
+msgstr "<i class=\"fa fa-shield\"/>       欺诈预防和监控"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-user-secret\"/>  Data Access &amp; Privacy"
+msgstr "<i class=\"fa fa-user-secret\"/>  数据访问和隐私"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-building\"/>     Company Information"
+msgstr "<i class=\"fa fa-building\"/>     公司资料"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<span>Sellers Policy</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+msgstr "<span>卖家政策</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-user-plus\"/>   Create Your Seller Account"
+msgstr "<i class=\"fa fa-user-plus\"/>   创建您的卖家帐户"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-shopping-bag\"/> Set Up Your Store"
+msgstr "<i class=\"fa fa-shopping-bag\"/> 设置您的商店"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-list\"/>        List Your Products"
+msgstr "<i class=\"fa fa-list\"/>        列出您的产品"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-sliders\"/>     Manage Your Listings"
+msgstr "<i class=\"fa fa-sliders\"/>     管理您的列表"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-credit-card\"/> Set Up Payments"
+msgstr "<i class=\"fa fa-credit-card\"/> 设置付款"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-truck\"/>       Configure Shipping &amp; Delivery"
+msgstr "<i class=\"fa fa-truck\"/>       配置运输和交付"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-file-text\"/>   Store Policies"
+msgstr "<i class=\"fa fa-file-text\"/>   商店政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-tasks\"/>       Order Management &amp; Service"
+msgstr "<i class=\"fa fa-tasks\"/>       订单管理与服务"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-bullhorn\"/>    Promote Your Store"
+msgstr "<i class=\"fa fa-bullhorn\"/>    推广您的商店"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-line-chart\"/> Monitor &amp; Improve Performance"
+msgstr "<i class=\"fa fa-line-chart\"/> 监控和提高绩效"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-gavel\"/>       Stay Compliant"
+msgstr "<i class=\"fa fa-gavel\"/>       保持合规"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<span>Shipping Policy</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+msgstr "<span>配送政策</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-globe\"/>      Shipping &amp; Delivery Overview"
+msgstr "<i class=\"fa fa-globe\"/>      运输和交付概述"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-truck\"/>      Methods &amp; Delivery Times"
+msgstr "<i class=\"fa fa-truck\"/>      方法和交货时间"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-clock-o\"/>    Order Processing Time"
+msgstr "<i class=\"fa fa-clock-o\"/>    订单处理时间"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-map-marker\"/> Order Tracking"
+msgstr "<i class=\"fa fa-map-marker\"/> 订单追踪"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-money\"/>      Shipping Rates"
+msgstr "<i class=\"fa fa-money\"/>      运费"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-plane\"/>      International Shipping &amp; Customs"
+msgstr "<i class=\"fa fa-plane\"/>      国际运输和海关"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-ban\"/>       Shipping Restrictions"
+msgstr "<i class=\"fa fa-ban\"/>       运输限制"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<span>Aveenix Cashback Program</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+msgstr "<span>Aveenix 现金返还计划</span>\n                                    <i class=\"fa fa-plus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-gift\"/>        Aveenix Cashback Program"
+msgstr "<i class=\"fa fa-gift\"/>        Aveenix 现金返还计划"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-check-circle\"/> Eligibility"
+msgstr "<i class=\"fa fa-check-circle\"/> 合格"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-shopping-cart\"/> Qualifying Purchases"
+msgstr "<i class=\"fa fa-shopping-cart\"/> 符合资格的购买"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-cubes\"/>      Product Type Eligibility"
+msgstr "<i class=\"fa fa-cubes\"/>      产品类型资格"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-calculator\"/> Cashback Calculation"
+msgstr "<i class=\"fa fa-calculator\"/> 返现计算"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-hourglass-half\"/> Verification &amp; Processing"
+msgstr "<i class=\"fa fa-hourglass-half\"/> 验证与处理"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-money\"/>       Cashback Balance &amp; Use"
+msgstr "<i class=\"fa fa-money\"/>       现金返还余额及使用"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-refresh\"/>     Adjustments, Reversals &amp; Errors"
+msgstr "<i class=\"fa fa-refresh\"/>     调整、逆转和错误"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-ban\"/>        Fraud &amp; Abuse"
+msgstr "<i class=\"fa fa-ban\"/>        欺诈和滥用"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-edit\"/>       Program Changes"
+msgstr "<i class=\"fa fa-edit\"/>       计划变更"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-user\"/>    Responsibility &amp; Account Management"
+msgstr "<i class=\"fa fa-user\"/>    责任与账户管理"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong class=\"av-privacy-note-title\">Your privacy is important to us.</strong>"
+msgstr "<strong class=\"av-privacy-note-title\">您的隐私对我们很重要。</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We are committed to protecting your personal information and being transparent about how we use it."
+msgstr "我们致力于保护您的个人信息并对其使用方式保持透明。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Privacy Policy"
+msgstr "隐私政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "This Privacy Policy explains how Aveenix collects, uses, stores, and protects your personal information when you use our services."
+msgstr "本隐私政策解释了当您使用我们的服务时，Aveenix 如何收集、使用、存储和保护您的个人信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<i class=\"fa fa-calendar\"/> Last updated: 20 May 2024"
+msgstr "<i class=\"fa fa-calendar\"/> 最后更新时间：2024 年 5 月 20 日"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Policy Topics"
+msgstr "政策主题"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "This Privacy Policy applies to Aveenix Express, owned and operated by Aveenix Global Ltd (\"Aveenix\", \"we\", \"us\", or \"our\"), and covers our website, related services, and any features or tools provided through the platform. By using our Services, you agree to the practices described here. Explore the topics below to learn more about how we handle your information."
+msgstr "本隐私政策适用于由 Aveenix Global Ltd（“Aveenix”、“我们”或“我们的”）拥有和运营的 Aveenix Express，并涵盖我们的网站、相关服务以及通过平台提供的任何功能或工具。使用我们的服务即表示您同意此处描述的做法。探索以下主题，详细了解我们如何处理您的信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Information We Collect</strong>\n                                                    <span>Learn about the types of personal information we collect from you.</span>"
+msgstr "<strong>我们收集的信息</strong>\n                                                    <span>了解我们从您那里收集的个人信息的类型。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We collect personal information only where necessary to operate our Services and provide a smooth shopping experience."
+msgstr "我们仅在运营我们的服务和提供顺畅的购物体验所必需的情况下收集个人信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Personal Information:</strong> full name, email address, phone number, billing and shipping address, and payment-related information (processed securely via third-party payment providers)."
+msgstr "<strong>个人信息：</strong> 全名、电子邮件地址、电话号码、帐单和送货地址以及支付相关信息（通过第三方支付提供商安全处理）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Account Information:</strong> login credentials, order history, rewards or cashback balance, and saved preferences."
+msgstr "<strong>账户信息：</strong> 登录凭据、订单历史记录、奖励或现金返还余额以及保存的偏好设置。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Transaction Information:</strong> orders placed through Aveenix checkout, affiliate click tracking (non-payment data only), and refunds or cancellations."
+msgstr "<strong>交易信息：</strong> 通过 Aveenix 结账、附属点击跟踪（仅限非付款数据）以及退款或取消下的订单。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Automatically Collected:</strong> IP address, device type and browser information, pages visited and interaction data, and cookies or similar tracking technologies."
+msgstr "<strong>自动收集：</strong> IP 地址、设备类型和浏览器信息、访问的页面和交互数据以及 Cookie 或类似的跟踪技术。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>From Third Parties:</strong> limited information from affiliate partners, payment processors (confirmation only), and analytics providers (aggregated, non-identifying data)."
+msgstr "<strong>来自第三方：</strong> 来自联属合作伙伴、支付处理商（仅确认）和分析提供商（汇总的非识别数据）的有限信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>How We Use Information</strong>\n                                                    <span>Understand how we use your personal information to provide our services.</span>"
+msgstr "<strong>我们如何使用信息</strong>\n                                                    <span>了解我们如何使用您的个人信息来提供我们的服务。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We use your information for the following purposes:"
+msgstr "我们将您的信息用于以下目的："
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Order Processing &amp; Fulfilment:</strong> to process orders, confirm payments, arrange delivery, and manage refunds for products sold directly through Aveenix."
+msgstr "<strong>订单处理和履行：</strong> 处理订单、确认付款、安排送货以及管理通过 Aveenix 直接销售的产品的退款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Customer Support:</strong> to respond to enquiries, resolve issues, and provide assistance."
+msgstr "<strong>客户支持：</strong> 回应询问、解决问题并提供帮助。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Platform Operation &amp; Improvement:</strong> to maintain, improve, and optimise our website and Services."
+msgstr "<strong>平台运营及改进：</strong> 维护、改进和优化我们的网站和服务。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Personalisation (Optional):</strong> to customise content, product displays, or communications based on your interactions."
+msgstr "<strong>个性化（可选）：</strong> 根据您的交互自定义内容、产品显示或通信。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Marketing Communications:</strong> to send promotional messages or updates only where you have consented, with opt-out options available at all times."
+msgstr "<strong>营销传播：</strong> 仅在您同意的情况下发送促销信息或更新，并随时提供选择退出选项。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Legal &amp; Security Purposes:</strong> to prevent fraud, enforce platform policies, and comply with legal obligations."
+msgstr "<strong>法律和安全目的：</strong> 防止欺诈、执行平台政策并遵守法律义务。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Information Sharing</strong>\n                                                    <span>We do not sell your personal data. See when and why we share it.</span>"
+msgstr "<strong>信息共享</strong>\n                                                    <span>我们不会出售您的个人数据。查看我们何时以及为何分享它。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We do not sell your personal information. We may share limited data only where necessary with:"
+msgstr "我们不会出售您的个人信息。我们仅在必要时与以下人员共享有限的数据："
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Service Providers</strong> such as payment processors, hosting providers, analytics tools, or customer support platforms."
+msgstr "<strong>服务提供商</strong> 例如支付处理器、托管提供商、分析工具或客户支持平台。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Affiliate Partners</strong> when you click an affiliate link or complete a purchase on a third-party website, limited tracking data may be shared to confirm the transaction."
+msgstr "<strong>附属合作伙伴</strong> 当您点击附属链接或在第三方网站上完成购买时，可能会共享有限的跟踪数据以确认交易。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Suppliers &amp; Fulfilment Partners</strong> where required to deliver products sold directly through Aveenix."
+msgstr "<strong>供应商和履行合作伙伴</strong> 需要交付直接通过 Aveenix 销售的产品时。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Legal or Regulatory Authorities</strong> where required by law or to protect our legal rights."
+msgstr "<strong>法律或监管机构</strong> 法律要求或为了保护我们的合法权利。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Cookies &amp; Tracking</strong>\n                                                    <span>How we use cookies and similar technologies to enhance your experience.</span>"
+msgstr "<strong>Cookie 和跟踪</strong>\n                                                    <span>我们如何使用 cookie 和类似技术来增强您的体验。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We use cookies and similar technologies to enable core website functionality, analyse website performance, and improve user experience."
+msgstr "我们使用 cookie 和类似技术来启用核心网站功能、分析网站性能并改善用户体验。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "You can manage or disable cookies through your browser settings. Please note that disabling cookies may affect certain website features."
+msgstr "您可以通过浏览器设置管理或禁用 cookie。请注意，禁用 cookie 可能会影响某些网站功能。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Data Security</strong>\n                                                    <span>The security measures we use to protect your information.</span>"
+msgstr "<strong>数据安全</strong>\n                                                    <span>我们用来保护您的信息的安全措施。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We take reasonable and appropriate steps to protect your personal information, including secure hosting environments, encrypted communications, and trusted third-party payment gateways."
+msgstr "我们采取合理且适当的措施来保护您的个人信息，包括安全的托管环境、加密通信和可信的第三方支付网关。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "However, no system is completely secure, and we cannot guarantee absolute security of data transmitted online."
+msgstr "然而，没有一个系统是完全安全的，我们不能保证在线传输数据的绝对安全。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Your Rights &amp; Choices</strong>\n                                                    <span>Your rights to access, update, delete, or control your personal data.</span>"
+msgstr "<strong>您的权利和选择</strong>\n                                                    <span>您访问、更新、删除或控制您的个人数据的权利。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Depending on your location, you may have the right to access your personal information, correct or update inaccurate data, request deletion of your data (subject to legal obligations), and withdraw consent for marketing communications."
+msgstr "根据您所在的位置，您可能有权访问您的个人信息、更正或更新不准确的数据、请求删除您的数据（须遵守法律义务）以及撤回对营销传播的同意。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Requests can be made via our Contact Us page."
+msgstr "可以通过我们的“联系我们”页面提出请求。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Data Retention</strong>\n                                                    <span>How long we keep your information and the criteria we use.</span>"
+msgstr "<strong>数据保留</strong>\n                                                    <span>我们保留您的信息的时间以及我们使用的标准。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We retain personal information only for as long as necessary to provide our Services, comply with legal, accounting, or regulatory requirements, and resolve disputes or enforce agreements."
+msgstr "我们仅在提供服务、遵守法律、会计或监管要求以及解决争议或执行协议所需的时间内保留个人信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "When data is no longer required, it is securely deleted or anonymised."
+msgstr "当不再需要数据时，数据将被安全删除或匿名化。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Children's Privacy</strong>\n                                                    <span>Our commitment to protecting the privacy of children online.</span>"
+msgstr "<strong>儿童隐私</strong>\n                                                    <span>我们致力于保护儿童的在线隐私。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix Express is not intended for use by children under 18. We do not knowingly collect personal information from minors. If such data is identified, it will be deleted promptly."
+msgstr "Aveenix Express 不适合 18 岁以下儿童使用。我们不会故意收集未成年人的个人信息。如果此类数据被识别，将立即删除。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>International Transfers</strong>\n                                                    <span>How your information may be transferred outside your country.</span>"
+msgstr "<strong>国际转账</strong>\n                                                    <span>您的信息如何传输到您所在的国家/地区之外。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Your information may be processed or stored outside your country of residence. Where this occurs, we take reasonable steps to ensure appropriate data protection safeguards are in place."
+msgstr "您的信息可能会在您居住的国家/地区之外进行处理或存储。如果发生这种情况，我们会采取合理措施确保采取适当的数据保护措施。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Third-Party Links</strong>\n                                                    <span>Our website may contain links to other sites. Learn more.</span>"
+msgstr "<strong>第三方链接</strong>\n                                                    <span>我们的网站可能包含其他网站的链接。了解更多。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Some products on Aveenix Express link to third-party websites. Purchases made on third-party websites are governed by their own privacy policies."
+msgstr "Aveenix Express 上的某些产品链接到第三方网站。在第三方网站上进行的购买受其自己的隐私政策的约束。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix does not control how third parties collect or use your data. We encourage you to review their privacy practices before completing a purchase."
+msgstr "Aveenix 不控制第三方收集或使用您的数据的方式。我们鼓励您在完成购买之前查看他们的隐私惯例。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Policy Updates</strong>\n                                                    <span>We may update this policy from time to time. See what's changed.</span>"
+msgstr "<strong>政策更新</strong>\n                                                    <span>我们可能会不时更新本政策。看看有什么变化。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. Continued use of our Services constitutes acceptance of the updated policy."
+msgstr "我们可能会不时更新本隐私政策。任何更改都将在此页面上发布，并附有更新的修订日期。继续使用我们的服务即表示接受更新后的政策。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Contact Us</strong>\n                                                <span>Have questions or concerns? We're here to help.</span>"
+msgstr "<strong>联系我们</strong>\n                                                <span>有疑问或疑虑吗？我们随时为您提供帮助。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Return Policy"
+msgstr "退货政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "At Aveenix Express, your satisfaction matters. This Returns Policy explains how cancellations, returns, refunds, and exchanges work across different product types available on our platform."
+msgstr "在 Aveenix Express，您的满意很重要。本退货政策解释了我们平台上不同产品类型的取消、退货、退款和换货如何运作。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Order Cancellations</strong><span>Pre- and post-shipment cancellation rules.</span>"
+msgstr "<strong>订单取消</strong><span>发货前和发货后取消规则。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Pre-Shipment:</strong> orders may be cancelled before shipment. To cancel or change an order, please contact us within 12 hours of placing it."
+msgstr "<strong>装运前：</strong> 订单可能会在发货前取消。如需取消或更改订单，请在下单后 12 小时内联系我们。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Post-Shipment:</strong> once an order has entered packaging or shipping, cancellations are no longer possible. You may instead request a return after delivery (subject to eligibility)."
+msgstr "<strong>装运后：</strong> 一旦订单进入包装或运输阶段，就无法再取消。您可以在交货后要求退货（视资格而定）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Eligibility for Returns</strong><span>Conditions and non-returnable items.</span>"
+msgstr "<strong>退货资格</strong><span>条件和不可退货的物品。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>General Conditions:</strong> return requests must be made within 15 days of delivery. Items must be unused, undamaged, and in original packaging. Proof of purchase is required."
+msgstr "<strong>一般条件：</strong> 退货请求必须在交货后 15 天内提出。物品必须未使用过、未损坏且采用原包装。需要购买证明。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Non-Returnable Items:</strong> digital products or downloads, personalized or custom-made items, perishable goods, and items marked \"Final Sale\" (where clearly stated)."
+msgstr "<strong>不可退货的物品：</strong> 数字产品或下载、个性化或定制商品、易腐烂商品以及标记为“最终销售”的商品（如有明确说明）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Returns by Product Type</strong><span>How returns differ per product type.</span>"
+msgstr "<strong>按产品类型划分的退货</strong><span>不同产品类型的退货有何不同。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Affiliate Products:</strong> purchased on third-party websites. Returns and refunds must follow the affiliate seller's return policy. Aveenix does not process refunds for affiliate purchases; return instructions are provided by the affiliate seller directly."
+msgstr "<strong>附属产品：</strong> 在第三方网站上购买的。退货和退款必须遵循联属卖家的退货政策。 Aveenix 不处理附属购买的退款；退货说明由联属卖家直接提供。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Dropshipping Products:</strong> fulfilled by third-party suppliers. To initiate a return, contact the seller via your Aveenix account; if unresolved, escalate to Aveenix Support. Refunds are issued after the supplier receives and inspects the item. Processing may take up to 15 days after return confirmation."
+msgstr "<strong>直销产品：</strong> 由第三方供应商履行。要发起退货，请通过您的 Aveenix 帐户联系卖家；如果未解决，请升级至 Aveenix 支持。供应商收到并检查商品后将退款。退货确认后最多可能需要 15 天进行处理。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Aveenix-Branded Products:</strong> sold and fulfilled directly by Aveenix. Returns can be initiated through your Aveenix account or customer support. Refunds are processed within 15 days after inspection, to the original payment method or store credit."
+msgstr "<strong>Aveenix 品牌产品：</strong> 由 Aveenix 直接销售和履行。可以通过您的 Aveenix 帐户或客户支持发起退货。退款将在检查后 15 天内按照原始付款方式或商店信用进行处理。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Multi-Vendor Products:</strong> fulfilled by independent third-party vendors. Each vendor may have its own return policy. Returns must be initiated through the vendor via your Aveenix account; Aveenix support is available if vendor resolution fails. Refunds are issued after vendor confirmation and inspection."
+msgstr "<strong>多供应商产品：</strong> 由独立第三方供应商完成。每个供应商可能有自己的退货政策。退货必须通过您的 Aveenix 帐户通过供应商发起；如果供应商解析失败，Aveenix 支持可用。经供应商确认并检查后予以退款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Refund Process</strong><span>Review, timing, and refund method.</span>"
+msgstr "<strong>退款流程</strong><span>审核、时间安排和退款方式。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Review &amp; Approval:</strong> return requests are reviewed before approval instructions are issued."
+msgstr "<strong>审核及批准：</strong> 在发出批准指令之前会审查退货请求。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Processing Time:</strong> refunds are typically processed within 15 days of item inspection."
+msgstr "<strong>处理时间：</strong> 退款通常会在商品检查后 15 天内处理。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Refund Method:</strong> refunds are issued to the original payment method, or store credit (where applicable)."
+msgstr "<strong>退款方式：</strong> 退款将退回至原始付款方式或商店信用额度（如适用）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping Costs</strong><span>Who pays for return shipping.</span>"
+msgstr "<strong>运费</strong><span>退货运费谁支付。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Customers are responsible for return shipping unless the item is defective, the wrong item was sent, or the error was caused by the seller or Aveenix."
+msgstr "除非商品有缺陷、发送了错误的商品，或者错误是由卖家或 Aveenix 造成的，否则客户负责退货运费。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "In eligible cases, a prepaid return label may be provided."
+msgstr "在符合条件的情况下，可以提供预付费退货标签。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Defective or Incorrect Items</strong><span>What to do if your item is wrong.</span>"
+msgstr "<strong>有缺陷或不正确的物品</strong><span>如果您的商品有误该怎么办。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "If you receive a defective or incorrect item, contact us immediately via your Aveenix account. We will arrange a replacement, or a full refund (including return shipping where applicable)."
+msgstr "如果您收到有缺陷或不正确的商品，请立即通过您的 Aveenix 帐户与我们联系。我们将安排更换或全额退款（包括适用的退货运费）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Resolution depends on product type: affiliate products follow the affiliate seller's return process; dropshipping products are supplier-managed with Aveenix support; Aveenix-branded products are fully handled by Aveenix; multi-vendor products are vendor-managed with Aveenix escalation support."
+msgstr "解决方案取决于产品类型：联属产品遵循联属卖家的退货流程；代发货产品由供应商在 Aveenix 支持下进行管理； Aveenix 品牌的产品完全由 Aveenix 处理；多供应商产品由供应商管理，并提供 Aveenix 升级支持。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Exchanges</strong><span>How exchanges work.</span>"
+msgstr "<strong>交流</strong><span>交易所如何运作。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Exchanges are subject to product availability. Please contact us before returning any item. Do not ship items back without authorization. Exchange shipping costs may apply."
+msgstr "换货须视产品供应情况而定。退回任何物品之前请联系我们。未经授权，请勿退回物品。可能需要支付换货运费。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Exceptional Circumstances</strong><span>Incorrect address and delays.</span>"
+msgstr "<strong>特殊情况</strong><span>地址错误和延误。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Incorrect Address:</strong> orders not delivered due to incorrect address details provided by the customer are not eligible for refund."
+msgstr "<strong>地址错误：</strong> 由于客户提供的地址详细信息不正确而未送达的订单不符合退款条件。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Delays Beyond Control:</strong> delays caused by customs, carrier disruptions, or natural events are handled case-by-case. Refund requests may be submitted 15 days after the 45-day guaranteed delivery window."
+msgstr "<strong>无法控制的延误：</strong> 由海关、承运人中断或自然事件造成的延误将根据具体情况进行处理。退款请求可在 45 天保证送达期限后 15 天提交。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Security Policy"
+msgstr "安全政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "At Aveenix Express, protecting your personal information and transaction data is a top priority. We implement strong technical and organisational security measures to ensure a safe and secure shopping experience."
+msgstr "在 Aveenix Express，保护您的个人信息和交易数据是首要任务。我们实施强有力的技术和组织安全措施，以确保安全可靠的购物体验。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Encryption &amp; Secure Connections</strong><span>SSL/TLS encryption and HTTPS.</span>"
+msgstr "<strong>加密和安全连接</strong><span>SSL/TLS 加密和 HTTPS。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "All data transmitted between your browser and our servers is encrypted using Secure Socket Layer (SSL) / TLS encryption."
+msgstr "您的浏览器和我们的服务器之间传输的所有数据均使用安全套接字层 (SSL) / TLS 加密进行加密。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "This encryption ensures your personal and payment information remains unreadable to unauthorised third parties during transmission. Our website operates exclusively over HTTPS for secure communication."
+msgstr "这种加密可确保您的个人信息和支付信息在传输过程中不会被未经授权的第三方读取。我们的网站仅通过 HTTPS 运行以确保安全通信。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Verified Security Certificates</strong><span>Trusted certificate authorities and PCI-DSS.</span>"
+msgstr "<strong>经过验证的安全证书</strong><span>受信任的证书颁发机构和 PCI-DSS。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Our SSL certificates are issued by trusted certificate authorities. Payment transactions are handled only by PCI-DSS compliant providers, ensuring industry-standard security."
+msgstr "我们的 SSL 证书由受信任的证书颁发机构颁发。支付交易仅由符合 PCI-DSS 的提供商处理，确保行业标准的安全性。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Payment Security</strong><span>Accepted methods and card handling.</span>"
+msgstr "<strong>支付安全</strong><span>可接受的方法和卡处理。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix Express never stores your credit card details. All payments are securely processed by trusted third-party payment providers."
+msgstr "Aveenix Express 绝不会存储您的信用卡详细信息。所有付款均由值得信赖的第三方支付提供商安全处理。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Accepted Payment Methods:</strong> PayPal, Stripe, major credit and debit cards (Visa, MasterCard, American Express, Discover), and internet banking and other supported electronic payment methods (where available)."
+msgstr "<strong>接受的付款方式：</strong> PayPal、Stripe、主要信用卡和借记卡（Visa、MasterCard、American Express、Discover）以及网上银行和其他支持的电子支付方式（如果有）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Payments via PayPal</strong><span>How PayPal payments work.</span>"
+msgstr "<strong>通过 PayPal 付款</strong><span>PayPal 付款方式如何运作。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "When you select PayPal, you are redirected to PayPal's secure environment and payment details are entered directly on PayPal's platform. Aveenix never accesses or stores your card or bank information. You may pay using PayPal balance, credit card, debit card, or bank account (e-check)."
+msgstr "当您选择 PayPal 时，您将被重定向到 PayPal 的安全环境，并且付款详细信息将直接在 PayPal 平台上输入。 Aveenix 绝不会访问或存储您的卡或银行信息。您可以使用 PayPal 余额、信用卡、借记卡或银行帐户（电子支票）付款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "How it works: review your cart and proceed to checkout; select PayPal as your payment method; log in to PayPal or create an account; complete payment securely; you are redirected back to Aveenix with order confirmation."
+msgstr "运作方式：查看您的购物车并继续结帐；选择 PayPal 作为您的付款方式；登录 PayPal 或创建帐户；安全完成付款；您将被重定向回 Aveenix 并确认订单。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Payments via Stripe</strong><span>How Stripe payments work.</span>"
+msgstr "<strong>通过 Stripe 付款</strong><span>Stripe 付款方式如何运作。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Stripe provides secure, encrypted payment processing directly on our website. Card information is encrypted before transmission; payments are processed according to PCI-DSS Level 1 compliance; Aveenix does not store or process raw card data."
+msgstr "Stripe 直接在我们的网站上提供安全、加密的支付处理。卡信息在传输前进行加密；付款按照 PCI-DSS 1 级合规性进行处理； Aveenix 不存储或处理原始卡数据。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "How it works: review your cart and proceed to checkout; select Stripe as your payment method; enter card details securely; payment is processed through Stripe; you receive instant order confirmation."
+msgstr "运作方式：查看您的购物车并继续结帐；选择 Stripe 作为您的付款方式；安全地输入银行卡详细信息；付款通过 Stripe 处理；您会收到即时订单确认。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Fraud Prevention &amp; Monitoring</strong><span>How we detect suspicious activity.</span>"
+msgstr "<strong>欺诈预防和监控</strong><span>我们如何检测可疑活动。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Transactions are monitored for suspicious activity. Orders may be reviewed or delayed for verification if unusual behaviour is detected. Accounts involved in fraudulent activity may be suspended or terminated."
+msgstr "交易受到可疑活动的监控。如果发现异常行为，订单可能会被审查或延迟验证。涉及欺诈活动的帐户可能会被暂停或终止。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Both PayPal and Stripe offer industry-leading fraud prevention, encrypted transactions, traceable payment records, and buyer and seller protection mechanisms. You can always review transaction status directly through your PayPal or Stripe account."
+msgstr "PayPal 和 Stripe 都提供业界领先的欺诈预防、加密交易、可追踪的支付记录以及买家和卖家保护机制。您始终可以直接通过 PayPal 或 Stripe 账户查看交易状态。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Data Access &amp; Privacy</strong><span>Who can access customer data.</span>"
+msgstr "<strong>数据访问和隐私</strong><span>谁可以访问客户数据。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Access to customer data is restricted to authorised personnel only, used strictly for order processing, support, and legal compliance, and governed by our Privacy Policy and Terms of Service."
+msgstr "客户数据的访问仅限于授权人员，严格用于订单处理、支持和法律合规性，并受我们的隐私政策和服务条款的约束。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Company Information</strong><span>Legal entity and payment options.</span>"
+msgstr "<strong>公司资料</strong><span>法人实体和付款方式。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Legal Entity:</strong> AVEENIX LTD. <strong>NZBN:</strong> 9429051284299. <strong>GST Number:</strong> 139-002-016. <strong>Incorporation Date:</strong> 27 April 2023."
+msgstr "<strong>法人实体：</strong> 艾维尼克斯有限公司 <strong>新西兰宽带网：</strong> 9429051284299。 <strong>商品及服务税编号：</strong> 139-002-016。 <strong>成立日期：</strong> 2023 年 4 月 27 日。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Payment Options:</strong> Credit Card · Internet Banking · PayPal · Stripe."
+msgstr "<strong>付款方式：</strong> 信用卡·网上银行·PayPal·Stripe。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Sellers Policy"
+msgstr "卖家政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Welcome to Aveenix Express. We provide sellers with a flexible platform to reach customers, manage products, and grow their online business with confidence. This guide outlines the steps to get started and the standards expected of all sellers on the Aveenix platform."
+msgstr "欢迎来到艾维尼克斯快递。我们为卖家提供灵活的平台来接触客户、管理产品并充满信心地发展在线业务。本指南概述了开始步骤以及 Aveenix 平台上所有卖家的期望标准。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Create Your Seller Account</strong><span>Sign up and business information.</span>"
+msgstr "<strong>创建您的卖家帐户</strong><span>注册和商业信息。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Sign Up:</strong> register for a seller account by visiting the Seller Registration page and completing the application form."
+msgstr "<strong>报名：</strong> 通过访问卖家注册页面并填写申请表来注册卖家帐户。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Business Information:</strong> you'll be asked to provide your business or trading name, contact details, and tax or registration information (where applicable). All seller applications are reviewed to ensure platform quality and compliance."
+msgstr "<strong>业务信息：</strong> 系统会要求您提供您的公司或商号名称、联系方式以及税务或注册信息（如适用）。所有卖家申请都会经过审核，以确保平台质量和合规性。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Set Up Your Store</strong><span>Branding and business details.</span>"
+msgstr "<strong>设置您的商店</strong><span>品牌和业务细节。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Store Branding:</strong> choose a unique store name, upload your logo, and customise your store profile to reflect your brand."
+msgstr "<strong>商店品牌：</strong> 选择一个独特的商店名称，上传您的徽标，并自定义您的商店资料以反映您的品牌。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Business Details:</strong> set up business hours, shipping information, returns and refund policy, and customer support contact details."
+msgstr "<strong>业务详情：</strong> 设置营业时间、运输信息、退货和退款政策以及客户支持联系方式。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>List Your Products</strong><span>Listings and listing types.</span>"
+msgstr "<strong>列出您的产品</strong><span>列表和列表类型。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Product Listings:</strong> create clear, accurate listings that include high-quality images, detailed product descriptions, correct pricing and availability, and variants (size, colour, etc.) where applicable."
+msgstr "<strong>产品清单：</strong> 创建清晰、准确的列表，其中包括高质量的图像、详细的产品描述、正确的定价和可用性以及适用的变体（尺寸、颜色等）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Listing Types:</strong> depending on the product category and seller setup, listings may include Buy Now (fixed-price products) and auction-style listings (where enabled)."
+msgstr "<strong>列表类型：</strong> 根据产品类别和卖家设置，列表可能包括立即购买（固定价格产品）和拍卖式列表（如果启用）。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping &amp; Extras:</strong> set shipping fees clearly, include handling times, and add optional promotions where supported."
+msgstr "<strong>运输及额外费用：</strong> 明确设置运费，包括处理时间，并在支持的情况下添加可选促销活动。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Manage Your Listings</strong><span>Seller dashboard and mobile access.</span>"
+msgstr "<strong>管理您的列表</strong><span>卖家仪表板和移动访问。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Seller Dashboard:</strong> use the Seller Dashboard to edit and update listings, track inventory, receive order notifications, and monitor performance."
+msgstr "<strong>卖家仪表板：</strong> 使用卖家仪表板编辑和更新列表、跟踪库存、接收订单通知并监控绩效。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Mobile Access:</strong> where available, mobile tools allow you to manage your store on the go."
+msgstr "<strong>移动访问：</strong> 如果有的话，移动工具可以让您随时随地管理您的商店。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Set Up Payments</strong><span>Payment integration and compliance.</span>"
+msgstr "<strong>设置付款</strong><span>支付集成和合规性。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Payment Integration:</strong> configure supported payment methods, which may include credit and debit cards, PayPal, and other payment gateways supported by Aveenix."
+msgstr "<strong>支付整合：</strong> 配置支持的支付方式，其中可能包括信用卡和借记卡、PayPal 以及 Aveenix 支持的其他支付网关。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Security &amp; Compliance:</strong> all payment methods must comply with Aveenix's security standards and applicable regulations."
+msgstr "<strong>安全与合规性：</strong> 所有付款方式必须符合 Aveenix 的安全标准和适用法规。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Configure Shipping &amp; Delivery</strong><span>Options and shipping policy.</span>"
+msgstr "<strong>配置运输和交付</strong><span>选项和运输政策。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping Options:</strong> define domestic and international shipping methods, delivery timeframes, and shipping rates."
+msgstr "<strong>运输选项：</strong> 定义国内和国际运输方式、交货时间范围和运费。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping Policy:</strong> clearly outline processing times, estimated delivery windows, and responsibility for shipping costs."
+msgstr "<strong>运输政策：</strong> 清楚地概述处理时间、预计的交货窗口以及运输费用的责任。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Store Policies</strong><span>Returns, refunds, and privacy.</span>"
+msgstr "<strong>商店政策</strong><span>退货、退款和隐私。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Returns &amp; Refunds:</strong> sellers must publish a return and refund policy that aligns with Aveenix guidelines and meets applicable consumer protection laws."
+msgstr "<strong>退货和退款：</strong> 卖家必须发布符合 Aveenix 准则并符合适用的消费者保护法的退货和退款政策。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Privacy Policy:</strong> explain how customer data is collected, used, and protected in line with Aveenix standards and legal requirements."
+msgstr "<strong>隐私政策：</strong> 解释如何根据 Aveenix 标准和法律要求收集、使用和保护客户数据。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Order Management &amp; Customer Service</strong><span>Fulfilment and support.</span>"
+msgstr "<strong>订单管理和客户服务</strong><span>履行和支持。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Order Fulfilment:</strong> process orders promptly, update order statuses accurately, and provide tracking information where applicable."
+msgstr "<strong>订单履行：</strong> 及时处理订单，准确更新订单状态，并在适用的情况下提供跟踪信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Customer Support:</strong> respond to customer enquiries professionally via Aveenix's messaging tools. Timely communication is essential to maintaining a strong seller reputation."
+msgstr "<strong>客户支持：</strong> 通过 Aveenix 的消息传递工具专业地回复客户询问。及时沟通对于维持良好的卖家声誉至关重要。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Promote Your Store</strong><span>Marketing and advertising tools.</span>"
+msgstr "<strong>推广您的商店</strong><span>营销和广告工具。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Marketing Tools:</strong> use Aveenix's built-in tools (where available) to run promotions, highlight products, and engage customers."
+msgstr "<strong>营销工具：</strong> 使用 Aveenix 的内置工具（如果可用）进行促销、突出产品并吸引客户。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Advertising Opportunities:</strong> optional advertising tools may be available to increase product visibility and reach."
+msgstr "<strong>广告机会：</strong> 可选的广告工具可用于提高产品的知名度和覆盖范围。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Monitor &amp; Improve Performance</strong><span>Analytics, feedback, and reviews.</span>"
+msgstr "<strong>监控和提高绩效</strong><span>分析、反馈和评论。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Analytics &amp; Insights:</strong> track sales performance, customer behaviour, and conversion trends."
+msgstr "<strong>分析与见解：</strong> 跟踪销售业绩、客户行为和转化趋势。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Feedback &amp; Reviews:</strong> customer reviews help build trust. Use feedback to improve listings, service quality, and fulfilment processes."
+msgstr "<strong>反馈与评论：</strong> 客户评论有助于建立信任。利用反馈来改进列表、服务质量和履行流程。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Stay Compliant</strong><span>Legal and platform compliance.</span>"
+msgstr "<strong>保持合规</strong><span>法律和平台合规性。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Sellers must comply with all applicable e-commerce, tax, and consumer laws, and follow Aveenix's platform rules and best practices. Failure to comply may result in account restrictions or removal from the platform."
+msgstr "卖家必须遵守所有适用的电子商务、税务和消费者法律，并遵循 Aveenix 的平台规则和最佳实践。不遵守规定可能会导致帐户受到限制或从平台中删除。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Shipping Policy"
+msgstr "配送政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix Express partners with a range of suppliers and sellers worldwide. Shipping options, delivery times, and costs vary depending on the product type and shipping origin."
+msgstr "Aveenix Express 与全球众多供应商和销售商合作。运输选项、交货时间和成本因产品类型和运输来源而异。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping &amp; Delivery Overview</strong><span>What this policy covers.</span>"
+msgstr "<strong>运输和交付概述</strong><span>该政策涵盖哪些内容。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "This policy explains how shipping works for Affiliate Products, Dropshipping Products, Aveenix-Branded Products, and Multivendor Products."
+msgstr "本政策解释了联属产品、代发货产品、Aveenix 品牌产品和多供应商产品的运输方式。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping Methods &amp; Delivery Times</strong><span>Times by product type.</span>"
+msgstr "<strong>运输方式和交货时间</strong><span>按产品类型划分的时间。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Affiliate Products:</strong> sold and fulfilled by third-party retailers (such as Amazon). Shipping methods, delivery times, costs, and tracking are determined and provided by the affiliate seller. All shipping, delivery, and returns are subject to the affiliate seller's policies."
+msgstr "<strong>附属产品：</strong> 由第三方零售商（例如亚马逊）销售和履行。运输方式、交货时间、成本和跟踪由联属卖家确定和提供。所有运输、交付和退货均须遵守联属卖家的政策。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Dropshipping Products:</strong> free shipping on select products (depending on supplier); standard shipping estimated 10–15 business days; expedited shipping estimated 5–10 business days (additional charges may apply); international shipping available to most countries. Times may vary by supplier location, customs processing, and destination."
+msgstr "<strong>直销产品：</strong> 部分产品免运费（取决于供应商）；标准运送预计需要 10-15 个工作日；加急运送预计需要 5-10 个工作日（可能会收取额外费用）；大多数国家/地区均可进行国际运输。时间可能因供应商地点、海关处理和目的地而异。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Aveenix-Branded Products:</strong> free shipping on select products or promotions; standard shipping estimated 5–7 business days; expedited shipping estimated 2–3 business days (additional charges apply); international shipping available to selected regions. Exact times and costs shown at checkout."
+msgstr "<strong>Aveenix 品牌产品：</strong> 特定产品或促销活动免费送货；标准运送预计需要 5-7 个工作日；加急运送预计需要 2-3 个工作日（需支付额外费用）；可向选定地区提供国际运输服务。结账时会显示确切的时间和费用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Multivendor Products:</strong> shipping methods set by each individual vendor; standard shipping estimated 7–14 business days; expedited shipping where supported by the vendor (additional charges may apply); international shipping availability depends on the vendor."
+msgstr "<strong>多供应商产品：</strong> 每个供应商设定的运输方式；标准运送预计需要 7-14 个工作日；在供应商支持的情况下加急运送（可能会收取额外费用）；国际运输的可用性取决于供应商。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Order Processing Time</strong><span>How long before orders ship.</span>"
+msgstr "<strong>订单处理时间</strong><span>订单发货前多久。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Orders are typically processed within 1–2 business days. During peak periods, processing may take up to 3 business days."
+msgstr "订单通常会在 1-2 个工作日内得到处理。在高峰时段，处理最多可能需要 3 个工作日。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Processing times vary by product type: affiliate products managed by the affiliate retailer; dropshipping products processed by the supplier; branded products processed by Aveenix; multivendor products processed by the individual seller. Once your order ships, you'll receive confirmation with tracking details where available."
+msgstr "处理时间因产品类型而异：由联属零售商管理的联属产品；由供应商加工的直销产品；由 Aveenix 加工的品牌产品；由个人卖家加工的多供应商产品。订单发货后，您将收到包含跟踪详细信息（如果有）的确认信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Order Tracking</strong><span>Where to view tracking.</span>"
+msgstr "<strong>订单追踪</strong><span>在哪里查看跟踪。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Tracking details are provided once an order is shipped. Tracking availability depends on the product type and carrier. You can view tracking updates via your Aveenix account (where applicable) or the seller or supplier's tracking link."
+msgstr "订单发货后将提供跟踪详细信息。跟踪可用性取决于产品类型和承运商。您可以通过您的 Aveenix 帐户（如果适用）或卖家或供应商的跟踪链接查看跟踪更新。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping Rates</strong><span>How costs are calculated.</span>"
+msgstr "<strong>运费</strong><span>成本如何计算。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Shipping costs are calculated based on product type, weight and size, shipping destination, and selected shipping method. Any applicable shipping charges are displayed before checkout. Free shipping may apply to select products or promotions."
+msgstr "运输成本根据产品类型、重量和尺寸、运输目的地以及选择的运输方式计算。结帐前会显示任何适用的运费。免费送货可能​​适用于部分产品或促销活动。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>International Shipping &amp; Customs</strong><span>Duties and import fees.</span>"
+msgstr "<strong>国际运输和海关</strong><span>关税和进口费用。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "For international orders, customs duties, taxes, and import fees may apply. These charges are not included in the product or shipping price. The recipient is responsible for any customs fees imposed by their country. By placing an international order, you acknowledge and accept potential customs charges."
+msgstr "对于国际订单，可能需要缴纳关税、税款和进口费用。这些费用不包含在产品或运费中。收件人负责支付其所在国家/地区征收的任何海关费用。下达国际订单即表示您承认并接受潜在的海关费用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Shipping Restrictions</strong><span>Where we can and can't ship.</span>"
+msgstr "<strong>运输限制</strong><span>我们可以运送和不能运送的地方。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "We ship to many international destinations, but some locations may be restricted. Certain suppliers or vendors may not ship to specific countries. If shipping is unavailable to your location, you'll be notified before checkout or contacted directly."
+msgstr "我们运送到许多国际目的地，但某些地点可能受到限制。某些供应商或供应商可能不会运送到特定国家/地区。如果您所在的位置无法送货，我们会在结帐前通知您或直接联系您。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix Cashback Program"
+msgstr "Aveenix 现金返还计划"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Welcome to Aveenix. By participating in the Cashback Program, you agree to the terms outlined below. Please read them carefully."
+msgstr "欢迎来到艾维尼克斯。参与现金返还计划即表示您同意下述条款。请仔细阅读。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Aveenix Cashback Program</strong><span>How the program rewards you.</span>"
+msgstr "<strong>Aveenix 现金返还计划</strong><span>该计划如何奖励您。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "The Aveenix Cashback Program rewards eligible customers by sharing a portion of commissions earned on qualifying purchases. This policy explains how cashback is earned, tracked, and managed on the Aveenix platform."
+msgstr "Aveenix 现金返还计划通过分享符合资格的购买赚取的部分佣金来奖励符合资格的客户。本政策解释了如何在 Aveenix 平台上赚取、跟踪和管理现金返还。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Eligibility</strong><span>Who can participate.</span>"
+msgstr "<strong>合格</strong><span>谁可以参加。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "To participate you must be a registered Aveenix user, logged in at the time of purchase or tracked click (where applicable), and your account must be in good standing. Cashback is not available to accounts involved in fraudulent, abusive, or manipulative activity. Cashback is not guaranteed and is awarded only when qualifying conditions are met."
+msgstr "要参与，您必须是 Aveenix 注册用户，在购买或跟踪点击（如果适用）时登录，并且您的帐户必须信誉良好。参与欺诈、滥用或操纵活动的账户无法获得现金返还。现金返还没有保证，只有在满足资格条件时才会奖励。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Qualifying Purchases</strong><span>When a purchase qualifies.</span>"
+msgstr "<strong>符合资格的购买</strong><span>当购买符合条件时。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "A purchase qualifies for cashback only if the purchase results in a successful and verified sale, the order is not cancelled, returned, or refunded, and the transaction is completed through a valid Aveenix tracking mechanism. Cashback eligibility may vary by product, supplier, or promotion and will be determined at Aveenix's discretion."
+msgstr "仅当购买成功并经过验证的销售，订单未取消、退回或退款，并且交易通过有效的 Aveenix 跟踪机制完成时，才有资格获得现金返还。现金返还资格可能因产品、供应商或促销活动而异，并将由 Aveenix 自行决定。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Product Type Eligibility</strong><span>Affiliate, branded, exclusions.</span>"
+msgstr "<strong>产品类型资格</strong><span>附属机构、品牌、排除。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Affiliate Products:</strong> cashback may apply to purchases made through Aveenix affiliate links, funded from a portion of the commission Aveenix receives, and issued only after the affiliate provider confirms the commission."
+msgstr "<strong>附属产品：</strong> 现金返还可能适用于通过 Aveenix 附属链接进行的购买，由 Aveenix 收到的部分佣金提供资金，并且仅在附属提供商确认佣金后发放。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Aveenix-Sold Products (Branded / Dropship):</strong> cashback may apply where explicitly stated, calculated only after payment is confirmed and return periods have passed."
+msgstr "<strong>Aveenix 销售的产品（品牌/代发货）：</strong> 现金返还可能适用于明确说明的情况，仅在付款确认且退货期过后才计算。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Exclusions:</strong> gift cards, coupons, or heavily discounted promotional items may be excluded. Certain brands or suppliers may restrict cashback eligibility."
+msgstr "<strong>排除情况：</strong> 礼品卡、优惠券或大幅折扣的促销品可能不包括在内。某些品牌或供应商可能会限制现金返还资格。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Cashback Calculation</strong><span>How amounts are worked out.</span>"
+msgstr "<strong>返现计算</strong><span>金额是如何计算出来的。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Cashback amounts are calculated based on a percentage of commission earned, not the product price. The cashback rate may vary depending on retailer or supplier, product category, and promotional terms in effect at the time of purchase."
+msgstr "现金返还金额是根据赚取的佣金百分比计算的，而不是产品价格。现金返还率可能会有所不同，具体取决于零售商或供应商、产品类别以及购买时有效的促销条款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix reserves the right to adjust cashback rates at any time. Current rates, where applicable, will be shown on the website or user dashboard."
+msgstr "Aveenix 保留随时调整现金返还率的权利。当前费率（如适用）将显示在网站或用户仪表板上。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Cashback Verification &amp; Processing</strong><span>Pending status and timing.</span>"
+msgstr "<strong>现金返还验证和处理</strong><span>待处理状态和时间。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Cashback enters a pending status after a qualifying transaction. Verification typically occurs within 30–60 days, depending on affiliate confirmation and refund and return windows. If a transaction is reversed or rejected, associated cashback will be cancelled."
+msgstr "符合条件的交易后，现金返还进入待处理状态。验证通常会在 30-60 天内进行，具体取决于联营公司​​确认以及退款和退货窗口。如果交易被撤销或拒绝，相关的现金返还将被取消。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Cashback Balance &amp; Use</strong><span>Go-live scope at launch.</span>"
+msgstr "<strong>现金返还余额及使用</strong><span>发布时上线范围。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "At launch, cashback is credited to your Aveenix rewards balance. Cashback is not redeemable at checkout, cannot be withdrawn as cash, and has no cash value outside the Aveenix platform."
+msgstr "启动时，现金返还将计入您的 Aveenix 奖励余额。现金返还不可在结帐时兑换，不能作为现金提取，并且在 Aveenix 平台之外没有现金价值。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Future redemption or withdrawal features may be introduced later and will be governed by updated terms."
+msgstr "未来的兑换或提款功能可能会在稍后推出，并将受更新条款的约束。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Adjustments, Reversals &amp; Errors</strong><span>When cashback changes.</span>"
+msgstr "<strong>调整、逆转和错误</strong><span>当现金返还发生变化时。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix reserves the right to adjust cashback balances for cancelled, refunded, or disputed transactions, reverse cashback awarded in error, and decline cashback where tracking data is incomplete or invalid. Any cashback discrepancies must be reported within 30 days of the transaction date."
+msgstr "Aveenix 保留调整已取消、退款或有争议交易的现金返还余额、撤销错误授予的现金返还以及在跟踪数据不完整或无效的情况下拒绝现金返还的权利。任何现金返还差异必须在交易日期后 30 天内报告。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Fraud &amp; Abuse</strong><span>What leads to forfeiture.</span>"
+msgstr "<strong>欺诈和滥用</strong><span>什么会导致没收。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Accounts may be suspended or terminated if involved in false or self-generated transactions, multiple account abuse, manipulation of tracking systems, or breach of affiliate or platform terms. In such cases, all cashback balances may be forfeited."
+msgstr "如果涉及虚假或自行生成的交易、滥用多个账户、操纵跟踪系统或违反附属机构或平台条款，账户可能会被暂停或终止。在这种情况下，所有现金返还余额可能会被没收。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Program Changes</strong><span>How changes are communicated.</span>"
+msgstr "<strong>计划变更</strong><span>如何传达变更。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "Aveenix may modify, suspend, or terminate the Cashback Program at any time. Where reasonably possible, material changes will be communicated via website updates, account notifications, and email notices. Continued use of the platform constitutes acceptance of updated terms."
+msgstr "Aveenix 可以随时修改、暂停或终止现金返还计划。在合理可能的情况下，重大变更将通过网站更新、帐户通知和电子邮件通知进行传达。继续使用该平台即表示接受更新的条款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>Responsibility &amp; Account Management</strong><span>Your responsibilities.</span>"
+msgstr "<strong>责任与账户管理</strong><span>你的责任。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "You are responsible for maintaining accurate account information, monitoring your cashback balance, and ensuring compliance with this policy. Failure to report issues within the stated timeframe may result in forfeiture of claims."
+msgstr "您有责任维护准确的账户信息、监控您的现金返还余额并确保遵守本政策。未能在规定的时间内报告问题可能会导致索赔被没收。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.privacy_policy_page
+msgid "<strong>We're committed to transparency</strong>\n                                        <span>If you have any questions about this Privacy Policy or how we handle your data, please don't hesitate to get in touch with us.</span>"
+msgstr "<strong>我们致力于透明度</strong>\n                                        <span>如果您对本隐私政策或我们如何处理您的数据有任何疑问，请随时与我们联系。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_hero
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "Shop"
+msgstr "商店"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_shop_hero
+msgid "Browse our full product catalog. Filter by category, brand, and price to find exactly what you need."
+msgstr "浏览完整商品目录。按分类、品牌和价格筛选，精准找到所需商品。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Aveenix Express Terms &amp; Conditions: User Agreement &amp; Legal Details"
+msgstr "Aveenix Express 条款和条件：用户协议和法律详细信息"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Read our Terms and Conditions for user agreement, privacy terms, and legal details. Understand our e-commerce policies, site usage, and purchase terms."
+msgstr "请阅读我们的条款和条件，了解用户协议、隐私条款和法律详细信息。了解我们的电子商务政策、网站使用情况和购买条款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Terms and Conditions, User Agreement, Privacy Terms, Website Terms, E-commerce Terms, Legal Terms, Usage Policy, Purchase Terms, Site Policies"
+msgstr "条款和条件、用户协议、隐私条款、网站条款、电子商务条款、法律条款、使用政策、购买条款、网站政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<span>Terms &amp; Conditions</span>\n                                <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+msgstr "<span>条款及条件</span>\n                                <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-info-circle\"/> Introduction"
+msgstr "<i class=\"fa fa-info-circle\"/> 介绍"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-check\"/>        Use of Services"
+msgstr "<i class=\"fa fa-check\"/>        服务的使用"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-user-circle\"/>  Accounts &amp; Registration"
+msgstr "<i class=\"fa fa-user-circle\"/>  账户与注册"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-cubes\"/>       Products &amp; Transactions"
+msgstr "<i class=\"fa fa-cubes\"/>       产品与交易"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-credit-card\"/> Payments &amp; Fees"
+msgstr "<i class=\"fa fa-credit-card\"/> 付款及费用"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-undo\"/>        Returns, Refunds &amp; Shipping"
+msgstr "<i class=\"fa fa-undo\"/>        退货、退款和运输"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-copyright\"/>  Intellectual Property"
+msgstr "<i class=\"fa fa-copyright\"/>  知识产权"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-comments\"/>    User Content"
+msgstr "<i class=\"fa fa-comments\"/>    用户内容"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-ban\"/>         Prohibited Activities"
+msgstr "<i class=\"fa fa-ban\"/>         禁止活动"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-link\"/>        Third-Party Services &amp; Links"
+msgstr "<i class=\"fa fa-link\"/>        第三方服务和链接"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-balance-scale\"/> Limitation of Liability"
+msgstr "<i class=\"fa fa-balance-scale\"/> 责任限制"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-shield\"/>      Indemnification"
+msgstr "<i class=\"fa fa-shield\"/>      保障"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-bolt\"/>        Force Majeure"
+msgstr "<i class=\"fa fa-bolt\"/>        不可抗力"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-times-circle\"/> Termination"
+msgstr "<i class=\"fa fa-times-circle\"/> 终止"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-gavel\"/>       Governing Law &amp; Disputes"
+msgstr "<i class=\"fa fa-gavel\"/>       适用法律和争议"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<i class=\"fa fa-edit\"/>        Changes to These Terms"
+msgstr "<i class=\"fa fa-edit\"/>        这些条款的变更"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong class=\"av-privacy-note-title\">Please read carefully.</strong>"
+msgstr "<strong class=\"av-privacy-note-title\">请仔细阅读。</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "By accessing or using our Services, you agree to be bound by these Terms."
+msgstr "通过访问或使用我们的服务，您同意受这些条款的约束。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Please read these terms and conditions carefully before using our services."
+msgstr "在使用我们的服务之前，请仔细阅读这些条款和条件。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "These Terms of Service (\"Terms\") govern your access to and use of the Aveenix Express website, mobile applications, and any related software or services (collectively, the \"Services\"), operated by Aveenix Global Ltd. By accessing or using our Services, you agree to be bound by these Terms. If you do not agree, you must not use the Services."
+msgstr "这些服务条款（“条款”）管辖您对 Aveenix Express 网站、移动应用程序以及由 Aveenix Global Ltd 运营的任何相关软件或服务（统称为“服务”）的访问和使用。访问或使用我们的服务，即表示您同意受这些条款的约束。如果您不同意，则不得使用服务。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Introduction</strong><span>What these Terms cover.</span>"
+msgstr "<strong>介绍</strong><span>这些条款涵盖的内容。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "These Terms of Service (\"Terms\") govern your access to and use of the Aveenix Express website, mobile applications, and any related software or services (collectively, the \"Services\"), operated by Aveenix Global Ltd."
+msgstr "这些服务条款（“条款”）管辖您对由 Aveenix Global Ltd 运营的 Aveenix Express 网站、移动应用程序以及任何相关软件或服务（统称为“服务”）的访问和使用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "By accessing or using our Services, you agree to be bound by these Terms. If you do not agree, you must not use the Services."
+msgstr "通过访问或使用我们的服务，您同意受这些条款的约束。如果您不同意，则不得使用服务。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Use of Services</strong><span>Lawful use only.</span>"
+msgstr "<strong>服务的使用</strong><span>仅限合法使用。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "You may use the Services only for lawful purposes and in accordance with these Terms. You agree not to use the Services in any way that violates applicable local, national, or international laws or regulations."
+msgstr "您只能出于合法目的并根据这些条款使用服务。您同意不以任何违反适用的当地、国家或国际法律或法规的方式使用服务。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Accounts &amp; Registration</strong><span>Your account responsibilities.</span>"
+msgstr "<strong>账户与注册</strong><span>您的帐户责任。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Some features require account registration. By creating an account, you agree to provide accurate, complete, and current information, maintain the confidentiality of your login credentials, and accept responsibility for all activity conducted under your account."
+msgstr "某些功能需要注册帐户。创建帐户即表示您同意提供准确、完整和最新的信息，维护您的登录凭据的机密性，并对在您的帐户下进行的所有活动承担责任。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "You must notify Aveenix immediately of any unauthorised use or security breach."
+msgstr "您必须立即通知 Aveenix 任何未经授权的使用或安全漏洞。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Products &amp; Transactions</strong><span>Product models supported.</span>"
+msgstr "<strong>产品与交易</strong><span>支持的产品型号。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Affiliate Products:</strong> sold and fulfilled by third-party retailers. Purchases are completed on the affiliate partner's platform. Returns, refunds, shipping, and warranties are governed by the affiliate partner's policies."
+msgstr "<strong>附属产品：</strong> 由第三方零售商销售和履行。购买是在联属合作伙伴的平台上完成的。退货、退款、运输和保修均受联属合作伙伴的政策管辖。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Dropshipping Products:</strong> fulfilled by third-party suppliers. Shipping times and returns may vary by supplier."
+msgstr "<strong>直销产品：</strong> 由第三方供应商履行。运输时间和退货可能因供应商而异。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Aveenix-Branded Products:</strong> sold and fulfilled directly by Aveenix or authorised partners."
+msgstr "<strong>Aveenix 品牌产品：</strong> 由 Aveenix 或授权合作伙伴直接销售和履行。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Multivendor Products:</strong> sold by independent vendors on the Aveenix platform. Each vendor may have their own shipping and return policies, disclosed at checkout. Aveenix is not the seller of record for affiliate products."
+msgstr "<strong>多供应商产品：</strong> 由独立供应商在 Aveenix 平台上销售。每个供应商可能有自己的运输和退货政策，并在结账时披露。 Aveenix 不是附属产品的记录卖家。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Payments &amp; Fees</strong><span>Prices, taxes, and charges.</span>"
+msgstr "<strong>付款及费用</strong><span>价格、税金和费用。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "By placing an order, you agree to pay all applicable prices, taxes, shipping charges, and fees displayed at checkout. Payments are processed by third-party providers such as Stripe and PayPal. Aveenix does not store your payment details."
+msgstr "下订单即表示您同意支付结帐时显示的所有适用价格、税费、运费和费用。付款由 Stripe 和 PayPal 等第三方提供商处理。 Aveenix 不会存储您的付款详细信息。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Additional charges may apply depending on product type, vendor policies, and shipping destination."
+msgstr "根据产品类型、供应商政策和运输目的地，可能会收取额外费用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Returns, Refunds &amp; Shipping</strong><span>Governed by our policies.</span>"
+msgstr "<strong>退货、退款和运输</strong><span>受我们的政策管辖。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Returns, refunds, and shipping are governed by our published policies: the Returns (RMA) Policy, Shipping Policy, and Buyer Protection Policy. Affiliate products are subject to the policies of the affiliate retailer."
+msgstr "退货、退款和运输受我们发布的政策约束：退货 (RMA) 政策、运输政策和买家保护政策。附属产品须遵守附属零售商的政策。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Intellectual Property</strong><span>Ownership of content.</span>"
+msgstr "<strong>知识产权</strong><span>内容的所有权。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "All content on the Services — including text, images, software, logos, videos, and design — is owned by Aveenix or its licensors and protected by intellectual property laws."
+msgstr "服务上的所有内容（包括文本、图像、软件、徽标、视频和设计）均归 Aveenix 或其许可方所有，并受知识产权法保护。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "You may not copy, reproduce, distribute, modify, or exploit any content without prior written consent, except as necessary for normal site usage."
+msgstr "未经事先书面同意，您不得复制、复制、分发、修改或利用任何内容，正常网站使用所必需的除外。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>User Content</strong><span>Reviews, comments, feedback.</span>"
+msgstr "<strong>用户内容</strong><span>评论、评论、反馈。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "If you submit content (e.g. reviews, comments, feedback), you retain ownership of that content but grant Aveenix a non-exclusive, royalty-free, worldwide licence to use, display, modify, and distribute it in connection with the Services."
+msgstr "如果您提交内容（例如评论、意见、反馈），您保留该内容的所有权，但授予 Aveenix 非排他性、免版税、全球范围的许可，以使用、显示、修改和分发与服务相关的内容。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "You warrant that your content is lawful and accurate, does not infringe third-party rights, and is not defamatory, abusive, or misleading."
+msgstr "您保证您的内容合法且准确，不侵犯第三方权利，并且不具有诽谤性、辱骂性或误导性。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Prohibited Activities</strong><span>What you agree not to do.</span>"
+msgstr "<strong>禁止活动</strong><span>你同意不做的事。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "You agree not to engage in fraudulent, deceptive, or unlawful activity; impersonate any person or entity; upload malicious code or harmful content; infringe intellectual property rights; interfere with the operation or security of the Services; or harvest or misuse user data without consent."
+msgstr "您同意不从事欺诈、欺骗或非法活动；冒充任何人或实体；上传恶意代码或有害内容；侵犯知识产权；干扰服务的运行或安全；未经同意收集或滥用用户数据。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Third-Party Services &amp; Links</strong><span>External sites and risk.</span>"
+msgstr "<strong>第三方服务和链接</strong><span>外部站点和风险。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "The Services may include links to third-party websites or services. Aveenix is not responsible for third-party content, policies, or practices. Your use of third-party services is at your own risk and subject to their terms."
+msgstr "服务可能包括第三方网站或服务的链接。 Aveenix 不对第三方内容、政策或做法负责。您使用第三方服务的风险由您自行承担，并受其条款的约束。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Limitation of Liability</strong><span>Limits on Aveenix liability.</span>"
+msgstr "<strong>责任限制</strong><span>Aveenix 责任限制。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "To the maximum extent permitted by law, Aveenix shall not be liable for indirect, incidental, consequential, or special damages arising from your use of the Services."
+msgstr "在法律允许的最大范围内，Aveenix 不对因您使用服务而产生的间接、偶然、后果性或特殊损害承担责任。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Aveenix is not responsible for affiliate product quality or delivery, supplier or vendor performance, or delays caused by third parties."
+msgstr "Aveenix 不对附属产品质量或交付、供应商或供应商的表现或第三方造成的延误负责。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Indemnification</strong><span>Holding Aveenix harmless.</span>"
+msgstr "<strong>保障</strong><span>确保艾维尼克斯不受伤害。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "You agree to indemnify and hold Aveenix harmless from any claims, losses, damages, or expenses arising from your breach of these Terms or misuse of the Services."
+msgstr "您同意赔偿并确保 Aveenix 免受因您违反这些条款或滥用服务而引起的任何索赔、损失、损害或费用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Force Majeure</strong><span>Events beyond our control.</span>"
+msgstr "<strong>不可抗力</strong><span>超出我们控制范围的事件。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Aveenix will not be liable for failure or delay caused by events beyond our reasonable control, including natural disasters, pandemics, labour disputes, system failures, or government actions."
+msgstr "对于超出我们合理控制范围的事件（包括自然灾害、流行病、劳资纠纷、系统故障或政府行为）造成的故障或延误，Aveenix 不承担任何责任。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Termination</strong><span>When access can be ended.</span>"
+msgstr "<strong>终止</strong><span>何时可以结束访问。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "Aveenix may suspend or terminate your access to the Services at any time for violation of these Terms or for any lawful reason. Termination does not affect accrued rights or obligations."
+msgstr "如果您违反这些条款或出于任何合法原因，Aveenix 可以随时暂停或终止您对服务的访问。终止不影响应计权利或义务。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Governing Law &amp; Dispute Resolution</strong><span>New Zealand law.</span>"
+msgstr "<strong>适用法律和争议解决</strong><span>新西兰法律。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "These Terms are governed by the laws of New Zealand, unless otherwise required by law. Any disputes shall be resolved through good-faith negotiation, and where necessary, through binding arbitration or courts of competent jurisdiction."
+msgstr "除非法律另有规定，这些条款受新西兰法律管辖。任何争议均应通过善意谈判解决，并在必要时通过具有约束力的仲裁或有管辖权的法院解决。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Changes to These Terms</strong><span>How updates happen.</span>"
+msgstr "<strong>这些条款的变更</strong><span>更新是如何发生的。</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "We may update these Terms from time to time. Updated versions will be posted on this page. Continued use of the Services constitutes acceptance of the revised Terms."
+msgstr "我们可能会不时更新这些条款。更新版本将发布在此页面上。继续使用服务即表示接受修订后的条款。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_terms_hero
+msgid "<strong>Contact Us</strong><span>Questions about these Terms?</span>"
+msgstr "<strong>联系我们</strong><span>对这些条款有疑问吗？</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "About Aveenix Express: Best Ecommerce Platform for Secure, User-Friendly Shopping"
+msgstr "关于 Aveenix Express：安全、用户友好购物的最佳电子商务平台"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Welcome to Aveenix Express — a modern e-commerce platform built for secure, user-friendly shopping. Discover trusted local and international brands, enjoy a seamless experience, and earn cashback rewards as you shop smarter."
+msgstr "欢迎来到 Aveenix Express——一个专为安全、用户友好的购物而打造的现代电子商务平台。发现值得信赖的本地和国际品牌，享受无缝体验，并通过更明智的购物获得现金返还奖励。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Online Shopping Platform, Best E-commerce Websites, Secure Online Shopping, User-Friendly E-commerce, Cashback Rewards Shopping, Local and International Brands, Seamless Shopping Experience, Innovative E-commerce Technology, Responsive Customer Support, Effortless Shopping Journey"
+msgstr "在线购物平台、最佳电子商务网站、安全的在线购物、用户友好的电子商务、现金返还奖励购物、本地和国际品牌、无缝的购物体验、创新的电子商务技术、快速响应的客户支持、轻松的购物之旅"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<span>About Aveenix</span>\n                                    <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+msgstr "<span>关于 Aveenix</span>\n                                    <i class=\"fa fa-minus av-privacy-sidebar-icon\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-book\"/>             Our Story"
+msgstr "<i class=\"fa fa-book\"/>             我们的故事"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-trophy\"/>           Key Achievements"
+msgstr "<i class=\"fa fa-trophy\"/>           主要成就"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-heart-o\"/>          Mission &amp; Values"
+msgstr "<i class=\"fa fa-heart-o\"/>          使命与价值观"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-heart\"/>            Giving Back"
+msgstr "<i class=\"fa fa-heart\"/>            回馈"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-certificate\"/>      Awards &amp; Certifications"
+msgstr "<i class=\"fa fa-certificate\"/>      奖项与认证"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-map-o\"/>           Our Journey"
+msgstr "<i class=\"fa fa-map-o\"/>           我们的旅程"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-check-square-o\"/>  Why Choose Aveenix"
+msgstr "<i class=\"fa fa-check-square-o\"/>  为什么选择艾维尼克斯"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-envelope\"/>        Get in Touch"
+msgstr "<i class=\"fa fa-envelope\"/>        联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong class=\"av-privacy-note-title\">Shop Smarter. Earn More. Give Back.</strong>"
+msgstr "<strong class=\"av-privacy-note-title\">购物更智能。赚取更多。回馈。</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "When we share the value we create, everyone wins — customers, sellers, and communities alike."
+msgstr "当我们分享我们创造的价值时，每个人都会获益——客户、卖家和社区都是如此。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Shop Smarter. Earn More. Give Back."
+msgstr "购物更智能。赚取更多。回馈。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-book\"/> Our Story"
+msgstr "<i class=\"fa fa-book\"/> 我们的故事"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "At Aveenix, we're building more than just another online store — we're creating a smarter way to shop. Powered by automation, curated by insight, and driven by community values, Aveenix connects you with top-rated global products while rewarding every purchase you make."
+msgstr "在 Aveenix，我们构建的不仅仅是另一家在线商店，我们正在创建一种更智能的购物方式。 Aveenix 由自动化提供支持，由洞察力策划，并由社区价值观驱动，将您与顶级的全球产品联系起来，同时奖励您的每一次购买。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Our platform combines affiliate, dropshipping, branded, and multivendor models to offer a wide product range — from trending tech and everyday essentials to unique niche finds. We focus on what's popular, what's proven, and what gives back."
+msgstr "我们的平台结合了联属网络营销、直销、品牌和多供应商模式，提供广泛的产品范围——从流行技术和日常必需品到独特的利基发现。我们关注什么是流行的、什么是经过验证的以及什么是有回馈的。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "We believe shopping should do more than just fill your cart. At the heart of Aveenix is a simple idea: When we share the value we create, everyone wins — customers, sellers, and communities alike."
+msgstr "我们相信购物不仅仅是填满购物车。 Aveenix 的核心是一个简单的想法：当我们分享我们创造的价值时，每个人都会受益——客户、卖家和社区。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-trophy\"/> Key Achievements"
+msgstr "<i class=\"fa fa-trophy\"/> 主要成就"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "500K+"
+msgstr "50万+"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Active Users"
+msgstr "活跃用户"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "50+"
+msgstr "50+"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Countries Served"
+msgstr "服务国家"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "1M+"
+msgstr "100万+"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Transactions"
+msgstr "交易"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "99.9%"
+msgstr "99.9%"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Uptime"
+msgstr "正常运行时间"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-heart-o\"/> Our Mission &amp; Values"
+msgstr "<i class=\"fa fa-heart-o\"/> 我们的使命和价值观"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Why Shop With Us?"
+msgstr "为什么选择我们？"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "By shopping at Aveenix, you're not just getting better products — you're joining a smarter, more meaningful way to shop. Let's build a platform that's good for people, good for business, and good for the planet."
+msgstr "通过在 Aveenix 购物，您不仅可以获得更好的产品，还加入了一种更智能、更有意义的购物方式。让我们建立一个有利于人类、有利于商业、有利于地球的平台。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Core Values"
+msgstr "核心价值观"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Top-Rated, Always</strong>"
+msgstr "<strong>始终好评如潮</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "We automatically source products rated 4 stars and above — so you're not guessing what's good. Then we handpick 2–3 trending products from every category."
+msgstr "我们会自动采购 4 星及以上的产品，因此您不会猜测什么是好的。然后我们从每个类别中精心挑选 2-3 个热门产品。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Real Cashback on Every Purchase</strong>"
+msgstr "<strong>每次购买均可获得真正的现金返还</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Every time you shop, we share a portion of our affiliate or vendor commission with you — tracked transparently in your rewards dashboard."
+msgstr "每次您购物时，我们都会与您分享我们的附属公司或供应商佣金的一部分 - 在您的奖励仪表板中透明地跟踪。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Support That Works Both Ways</strong>"
+msgstr "<strong>双向支持</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "We reinvest a portion of sales into rewarding our trusted suppliers and small businesses — because better partnerships build better products."
+msgstr "我们将部分销售额再投资于奖励值得信赖的供应商和小型企业，因为更好的合作伙伴关系可以打造更好的产品。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Sustainability, Built-In</strong>"
+msgstr "<strong>可持续性，内置</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "We prioritize eco-conscious vendors and encourage circular practices, from packaging to supply chain. Every action counts toward a greener future."
+msgstr "我们优先考虑具有生态意识的供应商，并鼓励从包装到供应链的循环实践。每一项行动都有助于打造更绿色的未来。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-heart-o\"/> Giving Back Matters"
+msgstr "<i class=\"fa fa-heart-o\"/> 回馈事项"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Community Support</strong>"
+msgstr "<strong>社区支持</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "A percentage of profits goes to local community initiatives and children's charities like Starship."
+msgstr "一定比例的利润将捐献给当地社区倡议和 Starship 等儿童慈善机构。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Meaningful Impact</strong>"
+msgstr "<strong>有意义的影响</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "When you shop with us, you're helping more than just yourself — you're contributing to positive change."
+msgstr "当您在我们这里购物时，您不仅帮助了自己，还为积极的改变做出了贡献。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Cycle That Lifts Everyone</strong>"
+msgstr "<strong>提升每个人的自行车</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Our simple idea: when we share the value we create, everyone wins — customers, sellers, and communities."
+msgstr "我们的简单想法是：当我们分享我们创造的价值时，每个人都会受益——客户、卖家和社区。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-certificate\"/> Awards &amp; Certifications"
+msgstr "<i class=\"fa fa-certificate\"/> 奖项与认证"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>SOC 2 Certified</strong><span>Security Compliance</span>"
+msgstr "<strong>SOC 2 认证</strong><span>安全合规性</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>GDPR Compliant</strong><span>Data Protection</span>"
+msgstr "<strong>符合 GDPR</strong><span>数据保护</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Tech Innovation</strong><span>Industry Award 2024</span>"
+msgstr "<strong>科技创新</strong><span>2024 年行业奖</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Best UX Design</strong><span>Platform Excellence</span>"
+msgstr "<strong>最佳用户体验设计</strong><span>卓越平台</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-map-o\"/> Our Journey"
+msgstr "<i class=\"fa fa-map-o\"/> 我们的旅程"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "20"
+msgstr "20"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Company Founded</strong> <span class=\"av-about-tl-year\">(2020)</span>"
+msgstr "<strong>公司成立</strong> <span class=\"av-about-tl-year\">(2020)</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Started with a vision to create a unified platform for businesses and consumers."
+msgstr "最初的愿景是为企业和消费者创建一个统一的平台。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "21"
+msgstr "21"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Platform Launch</strong> <span class=\"av-about-tl-year\">(2021)</span>"
+msgstr "<strong>平台发布</strong> <span class=\"av-about-tl-year\">(2021)</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Launched our first e-commerce platform with basic marketplace functionality."
+msgstr "推出了我们的第一个具有基本市场功能的电子商务平台。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "22"
+msgstr "22 号"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>SaaS Integration</strong> <span class=\"av-about-tl-year\">(2022)</span>"
+msgstr "<strong>SaaS 集成</strong> <span class=\"av-about-tl-year\">(2022)</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Expanded to include comprehensive business management tools and analytics."
+msgstr "扩展到包括全面的业务管理工具和分析。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "23"
+msgstr "23"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>AI Implementation</strong> <span class=\"av-about-tl-year\">(2023)</span>"
+msgstr "<strong>人工智能实施</strong> <span class=\"av-about-tl-year\">(2023)</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Introduced AI-powered features including Jarvis assistant and intelligent recommendations."
+msgstr "推出了人工智能驱动的功能，包括贾维斯助手和智能推荐。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "24"
+msgstr "24"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Global Expansion</strong> <span class=\"av-about-tl-year\">(2024)</span>"
+msgstr "<strong>全球扩张</strong> <span class=\"av-about-tl-year\">(2024)</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Reached 50+ countries with localized services and multi-currency support."
+msgstr "提供本地化服务和多货币支持，覆盖 50 多个国家/地区。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-code\"/> Technology Stack"
+msgstr "<i class=\"fa fa-code\"/> 技术栈"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<span class=\"av-about-tech-tag\"><i class=\"fa fa-desktop\"/> React</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-server\"/> Node.js</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-magic\"/> AI/ML</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-cloud\"/> Cloud</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-database\"/> PostgreSQL</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-code\"/> TypeScript</span>"
+msgstr "<span class=\"av-about-tech-tag\"><i class=\"fa fa-desktop\"/> 反应</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-server\"/> Node.js</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-magic\"/> 人工智能/机器学习</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-cloud\"/> 云</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-database\"/> PostgreSQL</span>\n                                    <span class=\"av-about-tech-tag\"><i class=\"fa fa-code\"/> 打字稿</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Built with modern, scalable technologies to ensure reliability, performance, and security across all platform modules."
+msgstr "采用现代、可扩展的技术构建，确保所有平台模块的可靠性、性能和安全性。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<i class=\"fa fa-check-square-o\"/> Why Choose Aveenix"
+msgstr "<i class=\"fa fa-check-square-o\"/> 为什么选择艾维尼克斯"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>All-in-One Platform</strong>"
+msgstr "<strong>多合一平台</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Combine e-commerce, business management, and AI tools in one unified platform."
+msgstr "将电子商务、业务管理和人工智能工具结合在一个统一的平台中。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Global Reach</strong>"
+msgstr "<strong>全球影响力</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Serve customers worldwide with multi-currency and localization support."
+msgstr "为全球客户提供多货币和本地化支持。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>AI-Powered Insights</strong>"
+msgstr "<strong>人工智能驱动的见解</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Leverage Jarvis AI for intelligent business automation and analytics."
+msgstr "利用 Jarvis AI 进行智能业务自动化和分析。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>24/7 Support</strong>"
+msgstr "<strong>全天候支持</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Get help whenever you need it with our comprehensive support system."
+msgstr "通过我们全面的支持系统，您可以随时获得帮助。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Scalable Solutions</strong>"
+msgstr "<strong>可扩展的解决方案</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Grow from startup to enterprise with our flexible platform architecture."
+msgstr "借助我们灵活的平台架构，从初创公司成长为企业。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Continuous Innovation</strong>"
+msgstr "<strong>持续创新</strong>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Stay ahead with regular updates and cutting-edge features."
+msgstr "通过定期更新和尖端功能保持领先地位。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Email Support</strong>\n                                <span>Quick response time</span>"
+msgstr "<strong>邮件支持</strong>\n                                <span>快速响应</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Phone Support</strong>\n                                <span>Speak with our team</span>"
+msgstr "<strong>电话支持</strong>\n                                <span>与我们的团队交流</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Live Chat</strong>\n                                <span>Chat with support</span>"
+msgstr "<strong>在线聊天</strong>\n                                <span>与支持人员聊天</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "<strong>Contact Page</strong>\n                                <span>Full contact options</span>"
+msgstr "<strong>联系页面</strong>\n                                <span>完整的联系方式</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.about_us_page
+msgid "Visit Contact Page"
+msgstr "访问联系页面"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cta_wrapper_affiliate
+msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to cart"
+msgstr "<i class=\"fa fa-shopping-cart me-2\"/>加入购物车"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_banner
+msgid "You are getting"
+msgstr "您将获得"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_banner
+msgid "your first order — applied automatically at checkout."
+msgstr "首单结账时自动应用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_banner
+msgid "Your"
+msgstr "您的"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_banner
+msgid "welcome reward is ready — it applies automatically on your first order."
+msgstr "欢迎奖励已就绪——首单自动应用。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_pill
+msgid "<span class=\"av-welcome-pill-eyebrow\">Welcome offer</span>"
+msgstr "<span class=\"av-welcome-pill-eyebrow\">欢迎优惠</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_pill
+msgid "your first order"
+msgstr "您的首单"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_welcome_discount_pill
+msgid "Dismiss"
+msgstr "关闭"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_affiliate_section
+msgid "<span class=\"av-aff-section-title\">Buy from Our Trusted Partner</span>"
+msgstr "<span class=\"av-aff-section-title\">从我们的可信合作伙伴购买</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_affiliate_section
+msgid "<i class=\"fa fa-external-link\"/>Buy on Partner Site"
+msgstr "<i class=\"fa fa-external-link\"/>在合作伙伴网站购买"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_affiliate_section
+msgid "<i class=\"fa fa-times\"/> Remove"
+msgstr "<i class=\"fa fa-times\"/> 移除"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.av_cart_welcome_discount_row
+msgid "<i class=\"fa fa-gift me-1\"/>Welcome Discount"
+msgstr "<i class=\"fa fa-gift me-1\"/>欢迎折扣"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
@@ -780,8 +3253,8 @@ msgstr "<i class=\"fa fa-bell\"/> 通知\n                            <span id=\
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
-msgid "<span class=\"av-topbar-link\" data-bs-toggle=\"dropdown\" style=\"cursor:pointer;\">\n                                <i class=\"fa fa-tint\"/> Color <i class=\"fa fa-chevron-down\" style=\"font-size:10px;\"/>\n                            </span>"
-msgstr "<span class=\"av-topbar-link\" data-bs-toggle=\"dropdown\" style=\"cursor:pointer;\">\n                                <i class=\"fa fa-tint\"/> 颜色 <i class=\"fa fa-chevron-down\" style=\"font-size:10px;\"/>\n                            </span>"
+msgid "<span class=\"av-topbar-link dropdown-toggle\" data-bs-toggle=\"dropdown\" style=\"cursor:pointer;\">\n                                <i class=\"fa fa-tint\"/> Color <i class=\"fa fa-chevron-down\" style=\"font-size:10px;\"/>\n                            </span>"
+msgstr "<span class=\"av-topbar-link dropdown-toggle\" data-bs-toggle=\"dropdown\" style=\"cursor:pointer;\">\n                                <i class=\"fa fa-tint\"/> 颜色 <i class=\"fa fa-chevron-down\" style=\"font-size:10px;\"/>\n                            </span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
@@ -792,6 +3265,11 @@ msgstr "<span class=\"fw-bold av-color-popup-title\">颜色主题</span>"
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
 msgid "<span id=\"av-current-color-name\">Default</span>\n                                        <i class=\"fa fa-chevron-up\" style=\"font-size: 10px;\"/>"
 msgstr "<span id=\"av-current-color-name\">默认</span>\n                                        <i class=\"fa fa-chevron-up\" style=\"font-size: 10px;\"/>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span class=\"fw-bold\" style=\"font-size:13px;\">Default</span>"
+msgstr "<span class=\"fw-bold\" style=\"font-size:13px;\">默认</span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
@@ -929,11 +3407,6 @@ msgstr "在 Aveenix 上搜索商品…"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
-msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-balance-scale\"/>\n                                <span class=\"av-compare-badge\" id=\"av-compare-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Compare</span>"
-msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-balance-scale\"/>\n                                <span class=\"av-compare-badge\" id=\"av-compare-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>对比</span>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
 msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-heart\"/>\n                                <span class=\"av-compare-badge\" id=\"av-fav-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Favourites</span>"
 msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-heart\"/>\n                                <span class=\"av-compare-badge\" id=\"av-fav-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>收藏</span>"
 
@@ -941,6 +3414,11 @@ msgstr "<span style=\"position:relative; display:inline-block;\">\n             
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
 msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-star\"/>\n                                <span class=\"av-compare-badge\" id=\"av-wish-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Wishlist</span>"
 msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-star\"/>\n                                <span class=\"av-compare-badge\" id=\"av-wish-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>愿望清单</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
+msgid "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-plus-square-o\"/>\n                                <span class=\"av-compare-badge\" id=\"av-compare-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>Compare</span>"
+msgstr "<span style=\"position:relative; display:inline-block;\">\n                                <i class=\"fa fa-plus-square-o\"/>\n                                <span class=\"av-compare-badge\" id=\"av-compare-count\" style=\"display:none;\">0</span>\n                            </span>\n                            <span>对比</span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
@@ -968,14 +3446,14 @@ msgid "View All Categories →"
 msgstr "查看所有分类 →"
 
 #. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_header
-msgid "Shop"
-msgstr "商店"
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Get"
+msgstr "获取"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Get <span class=\"av-promo-highlight\">$20 OFF</span> your first order!"
-msgstr "Get <span class=\"av-promo-highlight\">优惠20美元</span> your first order!"
+msgid "your first order!"
+msgstr "您的首单！"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
@@ -984,23 +3462,23 @@ msgstr "输入您的电子邮件"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Get $20 OFF"
-msgstr "立减20美元"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
 msgid "Customer Service<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
 msgstr "客户服务<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Site Us"
-msgstr "关于我们"
+msgid "Digital"
+msgstr "数字产品"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "FAQs"
-msgstr "常见问题"
+msgid "Domains"
+msgstr "域名"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "Cashback Program"
+msgstr "返现计划"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
@@ -1009,53 +3487,43 @@ msgstr "订单追踪"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Information<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
-msgstr "信息<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Features"
-msgstr "功能"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Partners"
-msgstr "合作伙伴"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Privacy Policy"
-msgstr "隐私政策"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Shipping Policy"
-msgstr "配送政策"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
 msgid "Account<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
 msgstr "账户<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "My Account"
-msgstr "我的账户"
+msgid "Cart"
+msgstr "购物车"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Services"
-msgstr "服务"
+msgid "Favourites"
+msgstr "收藏"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Connect Aveenix"
-msgstr "连接 Aveenix"
+msgid "Whishlist"
+msgstr "愿望清单"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Registration"
-msgstr "注册"
+msgid "Notification"
+msgstr "通知"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "My Addresses"
+msgstr "我的地址"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "My Rewards"
+msgstr "我的奖励"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "My Invoices"
+msgstr "我的发票"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
@@ -1064,23 +3532,18 @@ msgstr "支持<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Purple Parlay"
-msgstr "Purple Parlay"
+msgid "Email Us"
+msgstr "给我们发邮件"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Tarcount"
-msgstr "Tarcount"
+msgid "Phone Support"
+msgstr "电话支持"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Career Policy"
-msgstr "职业政策"
-
-#. module: aveenix_website
-#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Terms of Use"
-msgstr "使用条款"
+msgid "Live Chat"
+msgstr "在线聊天"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
@@ -1089,13 +3552,23 @@ msgstr "法律<i class=\"fa fa-chevron-right av-footer-chevron\"/>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Cookie Policy"
-msgstr "Cookie 政策"
+msgid "<i class=\"fa fa-info-circle av-footer-link-icon\"/>About Us"
+msgstr "<i class=\"fa fa-info-circle av-footer-link-icon\"/>关于我们"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "Contact Support"
-msgstr "联系支持"
+msgid "<i class=\"fa fa-envelope av-footer-link-icon\"/>Contact Us"
+msgstr "<i class=\"fa fa-envelope av-footer-link-icon\"/>联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-shield av-footer-link-icon\"/>Privacy Policy"
+msgstr "<i class=\"fa fa-shield av-footer-link-icon\"/>隐私政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-file-text av-footer-link-icon\"/>Terms &amp; Conditions"
+msgstr "<i class=\"fa fa-file-text av-footer-link-icon\"/>条款及条件"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
@@ -1116,6 +3589,16 @@ msgstr "<i class=\"fa fa-language av-settings-icon\"/>\n                        
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
 msgid "<i class=\"fa fa-dollar av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">Currency</span>"
 msgstr "<i class=\"fa fa-dollar av-settings-icon\"/>\n                                    <span class=\"av-settings-label\">货币</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-map-marker av-settings-icon\" style=\"color:var(--av-red);\"/>\n                                    <span class=\"av-settings-label\">Location</span>\n                                    <span class=\"av-settings-val\" id=\"av-mobile-location-val\">Detecting…</span>"
+msgstr "<i class=\"fa fa-map-marker av-settings-icon\" style=\"color:var(--av-red);\"/>\n                                    <span class=\"av-settings-label\">地址</span>\n                                    <span class=\"av-settings-val\" id=\"av-mobile-location-val\">检测…</span>"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-cloud av-settings-icon\" id=\"av-mobile-weather-icon\" style=\"color:var(--av-red);\"/>\n                                    <span class=\"av-settings-label\">Weather</span>\n                                    <span class=\"av-settings-val\" id=\"av-mobile-weather-val\">Detecting…</span>"
+msgstr "<i class=\"fa fa-cloud av-settings-icon\" id=\"av-mobile-weather-icon\" style=\"color:var(--av-red);\"/>\n                                    <span class=\"av-settings-label\">天气</span>\n                                    <span class=\"av-settings-val\" id=\"av-mobile-weather-val\">检测…</span>"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
@@ -1149,8 +3632,28 @@ msgstr "<i class=\"fa fa-play me-2\"/>\n                                <span>�
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
-msgid "© 2025 AVEENIX. All rights reserved."
-msgstr "© 2025 AVEENIX. 保留所有权利。"
+msgid "<i class=\"fa fa-info-circle av-legal-icon\"/>\n                                About Us"
+msgstr "<i class=\"fa fa-info-circle av-legal-icon\"/>\n                                关于我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-envelope av-legal-icon\"/>\n                                Contact Us"
+msgstr "<i class=\"fa fa-envelope av-legal-icon\"/>\n                                联系我们"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "AVEENIX. All Rights Reserved."
+msgstr "AVEENIX。保留所有权利。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-shield av-legal-icon\"/>\n                                Privacy Policy"
+msgstr "<i class=\"fa fa-shield av-legal-icon\"/>\n                                隐私政策"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_footer
+msgid "<i class=\"fa fa-file-text av-legal-icon\"/>\n                                Terms &amp; Conditions"
+msgstr "<i class=\"fa fa-file-text av-legal-icon\"/>\n                                条款及条件"
 
 #. module: aveenix_website
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
@@ -1236,3 +3739,143 @@ msgstr "相机"
 #: model_terms:ir.ui.view,arch_db:aveenix_website.aveenix_layout
 msgid "Watch"
 msgstr "手表"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/affiliate_cart.js
+msgid "%s items · fulfilled by partner stores"
+msgstr "%s 件商品 · 由合作商店履约"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/affiliate_cart.js
+msgid "%s item · fulfilled by partner stores"
+msgstr "%s 件商品 · 由合作商店履约"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/cart_login_gate.js
+msgid "Close"
+msgstr "关闭"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/cart_login_gate.js
+msgid "Sign in to continue"
+msgstr "登录以继续"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/cart_login_gate.js
+msgid "Please log in or create an account to add items to your cart."
+msgstr "请登录或创建账户以将商品加入购物车。"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/cart_login_gate.js
+msgid "Log in"
+msgstr "登录"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/cart_login_gate.js
+msgid "Sign up"
+msgstr "注册"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Added to Compare"
+msgstr "已加入对比"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Image"
+msgstr "图片"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Category"
+msgstr "分类"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Price"
+msgstr "价格"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Stock"
+msgstr "库存"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Action"
+msgstr "操作"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "In Stock"
+msgstr "有货"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Out of Stock"
+msgstr "缺货"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Adding..."
+msgstr "添加中…"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "In your favourites"
+msgstr "已在收藏中"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Uncategorized"
+msgstr "未分类"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Add to Wishlist"
+msgstr "加入愿望清单"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/compare.js
+msgid "Added to Wishlist"
+msgstr "已加入愿望清单"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "just now"
+msgstr "刚刚"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "%s minutes ago"
+msgstr "%s 分钟前"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "%s hours ago"
+msgstr "%s 小时前"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "%s days ago"
+msgstr "%s 天前"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "%s day ago"
+msgstr "%s 天前"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "%s of %s notifications"
+msgstr "%s / %s 条通知"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "%s new"
+msgstr "%s 条新"
+
+#. module: aveenix_website
+#: model_terms:ir.ui.view,arch_db:aveenix_website.static/src/js/notifications.js
+msgid "Mark as read"
+msgstr "标为已读"

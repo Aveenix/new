@@ -101,3 +101,22 @@ class ResConfigSettings(models.TransientModel):
         help='Publish regular (non-affiliate, non-dropship) products to the '
              'website automatically once their image is downloaded.',
     )
+
+    # Homepage featured categories — proxied from the current website record so
+    # admins pick them in Settings. related+readonly=False writes back to website.
+    aveenix_home_categ_ids = fields.Many2many(
+        related='website_id.aveenix_home_categ_ids',
+        readonly=False,
+        string='Homepage Featured Categories',
+        help='Categories featured on the homepage after New Arrivals, each as a '
+             'product row with a View All link to the filtered shop.',
+    )
+
+    # Header menu categories — proxied from the current website record so
+    # admins pick them in Settings. related+readonly=False writes back to website.
+    aveenix_header_menu_categ_ids = fields.Many2many(
+        related='website_id.aveenix_header_menu_categ_ids',
+        readonly=False,
+        string='Header Menu Categories',
+        help='Categories shown as menu links in the header, right after Shop.',
+    )

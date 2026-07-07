@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Ensure every active currency has a selectable website pricelist so the
+        header currency switcher lists them all.
+
+        Runs on both install AND upgrade (unlike post_init_hook, which Odoo only
+        fires on install). Idempotent: the method skips currencies that already
+        have a usable pricelist, so re-running on every -u is safe.
+    -->
+    <function model="website" name="action_av_sync_currency_pricelists">
+        <function eval="[[('id', '!=', False)]]" model="website" name="search"/>
+    </function>
+</odoo>

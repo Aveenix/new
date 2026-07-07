@@ -100,84 +100,9 @@
         // On load: if no stored color, highlight the default button
         if (!storedColor && DEFAULT_COLOR) { applyColor(DEFAULT_COLOR); }
 
-        // ── Direct Add to Cart (AJAX) ───────────────────────────────
-        document.addEventListener("click", function(e) {
-            var btn = e.target.closest(".js_av_add_to_cart");
-            if (btn) {
-                e.preventDefault();
-                var productId = btn.getAttribute("data-product-id");
-                var productTemplateId = btn.getAttribute("data-product-template-id");
-                if (!productId) return;
-
-                // Show loading state
-                var originalHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Adding...';
-                btn.style.pointerEvents = "none";
-                btn.style.opacity = "0.7";
-
-                // Get CSRF token from the page or odoo object
-                var csrfToken = document.querySelector('input[name="csrf_token"]')?.value || (window.odoo && window.odoo.csrf_token) || "";
-
-                fetch('/shop/cart/add', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        jsonrpc: "2.0",
-                        method: "call",
-                        params: {
-                            product_template_id: parseInt(productTemplateId),
-                            product_id: parseInt(productId),
-                            quantity: 1,
-                            csrf_token: csrfToken
-                        }
-                    })
-                })
-                .then(function(res) { 
-                    if (!res.ok) throw new Error("HTTP error " + res.status);
-                    return res.json(); 
-                })
-                .then(function(data) {
-                    if (data.error) {
-                        console.error("Server error:", data.error);
-                        throw new Error(data.error.message || "Server Error");
-                    }
-                    if (data.result) {
-                        btn.innerHTML = '<i class="fa fa-check"></i> Added!';
-                        btn.style.backgroundColor = "#2E7D52"; // Success green
-                        
-                        // Update cart badge without reload
-                        var badge = document.querySelector(".my_cart_quantity");
-                        if (badge) {
-                            badge.textContent = data.result.cart_quantity;
-                        }
-
-                        // Reset button after 2 seconds
-                        setTimeout(function() {
-                            btn.innerHTML = originalHtml;
-                            btn.style.pointerEvents = "auto";
-                            btn.style.opacity = "1";
-                            btn.style.backgroundColor = "var(--av-red)";
-                        }, 2000);
-                    } else {
-                        throw new Error("No result in response");
-                    }
-                })
-                .catch(function(err) {
-                    console.error("Cart AJAX Error:", err);
-                    btn.innerHTML = '<i class="fa fa-exclamation-triangle"></i> ' + (err.message || "Error");
-                    btn.style.backgroundColor = "#C62828"; // Error red
-                    setTimeout(function() {
-                        btn.innerHTML = originalHtml;
-                        btn.style.pointerEvents = "auto";
-                        btn.style.opacity = "1";
-                        btn.style.backgroundColor = "var(--av-red)";
-                    }, 4000); // Show for longer
-                });
-            }
-        });
+        // NOTE: the product-card "Add to Cart" (.js_av_add_to_cart) is handled
+        // by the AveenixCardAddToCart OWL interaction (cart_add.js), which uses
+        // Odoo's native `cart` service so the standard add-to-cart popup shows.
     }
 
     if (document.readyState === "loading") {

@@ -3,6 +3,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 // Non-storable products (consumable/service) are always in stock
 function isInStock(p) {
@@ -188,7 +189,7 @@ export class AddToCompareButton extends Interaction {
         const icon = this.el.querySelector(".fa");
         if (id && compareStore.has(id)) {
             this.el.classList.add("av-added-to-compare");
-            this.el.title = "Added to Compare";
+            this.el.title = _t("Added to Compare");
             if (icon) { icon.classList.remove("fa-plus-square-o"); icon.classList.add("fa-plus-square"); }
         }
     }
@@ -201,12 +202,12 @@ export class AddToCompareButton extends Interaction {
         if (compareStore.has(id)) {
             compareStore.remove(id);
             this.el.classList.remove("av-added-to-compare");
-            this.el.title = "Add to Compare";
+            this.el.title = _t("Add to Compare");
             if (icon) { icon.classList.remove("fa-plus-square"); icon.classList.add("fa-plus-square-o"); }
         } else {
             compareStore.add(id);
             this.el.classList.add("av-added-to-compare");
-            this.el.title = "Added to Compare";
+            this.el.title = _t("Added to Compare");
             if (icon) { icon.classList.remove("fa-plus-square-o"); icon.classList.add("fa-plus-square"); }
         }
         this.el.classList.remove("av-icon-bounce");
@@ -265,12 +266,12 @@ export class ComparePage extends Interaction {
 
         // Factors are now COLUMNS; each product is a ROW.
         const cols = [
-            { label: "Image",       key: "image" },
-            { label: "Category",    key: "category" },
-            { label: "Price",       key: "price" },
-            { label: "Stock",       key: "stock" },
-            { label: "Description", key: "desc" },
-            { label: "Action",      key: "action" },
+            { label: _t("Image"),       key: "image" },
+            { label: _t("Category"),    key: "category" },
+            { label: _t("Price"),       key: "price" },
+            { label: _t("Stock"),       key: "stock" },
+            { label: _t("Description"), key: "desc" },
+            { label: _t("Action"),      key: "action" },
         ];
 
         const wrap = document.createElement("div");
@@ -299,7 +300,7 @@ export class ComparePage extends Interaction {
             const nameCell = document.createElement("td");
             nameCell.className = "av-cmp-row-label av-cmp-th-product";
             nameCell.innerHTML = `
-                <button class="av-cmp-remove" data-id="${p.id}" title="Remove">&#10005;</button>
+                <button class="av-cmp-remove" data-id="${p.id}" title="${esc(_t('Remove'))}">&#10005;</button>
                 <span class="av-cmp-product-name">${esc(p.name)}</span>`;
             nameCell.querySelector(".av-cmp-remove").addEventListener("click", () => {
                 compareStore.remove(p.id);
@@ -331,7 +332,7 @@ export class ComparePage extends Interaction {
                     const ok = isInStock(p);
                     td.innerHTML = `<span class="av-cmp-stock ${ok ? "in-stock" : "out-stock"}">
                         <i class="fa ${ok ? "fa-check-circle" : "fa-times-circle"}"></i>
-                        ${ok ? "In Stock" : "Out of Stock"}
+                        ${ok ? _t("In Stock") : _t("Out of Stock")}
                     </span>`;
                 } else if (key === "desc") {
                     td.textContent = p.description_sale || "—";
@@ -374,7 +375,7 @@ export class ComparePage extends Interaction {
     async onAddAll() {
         if (!this.products || !this.products.length) return;
         const btn = this.el.querySelector("#av-cmp-add-all");
-        if (btn) { btn.disabled = true; btn.textContent = "Adding..."; }
+        if (btn) { btn.disabled = true; btn.textContent = _t("Adding..."); }
         for (const p of this.products) {
             if (!p.product_id) continue;
             try {
@@ -385,7 +386,7 @@ export class ComparePage extends Interaction {
                 });
             } catch {}
         }
-        if (btn) { btn.disabled = false; btn.textContent = "Add All to Cart"; }
+        if (btn) { btn.disabled = false; btn.textContent = _t("Add All to Cart"); }
         window.location.href = "/shop/cart";
     }
 }
@@ -445,12 +446,12 @@ export class AddToFavButton extends Interaction {
         if (getFavIds().includes(String(id))) {
             removeFavId(id);
             this.el.classList.remove("av-added-to-fav");
-            this.el.title = "Add to favourites";
+            this.el.title = _t("Add to favourites");
             if (icon) { icon.classList.remove("fa-heart"); icon.classList.add("fa-heart-o"); }
         } else {
             addFavId(id);
             this.el.classList.add("av-added-to-fav");
-            this.el.title = "In your favourites";
+            this.el.title = _t("In your favourites");
             if (icon) { icon.classList.remove("fa-heart-o"); icon.classList.add("fa-heart"); }
         }
         window.dispatchEvent(new CustomEvent("av-fav-changed"));
@@ -500,16 +501,16 @@ export class FavouritesPage extends Interaction {
             const card = document.createElement("div");
             card.className = "av-fav-card";
             card.innerHTML = `
-                <button class="av-fav-card-remove" data-id="${p.id}" title="Remove">&#10005;</button>
+                <button class="av-fav-card-remove" data-id="${p.id}" title="${esc(_t('Remove'))}">&#10005;</button>
                 <img src="${imgSrc}" alt="${esc(p.name)}" class="av-fav-card-img"/>
                 <div class="av-fav-card-body">
-                    <div class="av-fav-card-cat">${esc(p.public_categ_name || (p.categ_id && p.categ_id[1]) || "Uncategorized")}</div>
+                    <div class="av-fav-card-cat">${esc(p.public_categ_name || (p.categ_id && p.categ_id[1]) || _t("Uncategorized"))}</div>
                     <h4 class="av-fav-card-name">${esc(p.name)}</h4>
                     <div class="av-fav-card-price">$${(p.list_price || 0).toFixed(2)}</div>
                     ${p.description_sale ? `<p class="av-fav-card-desc">${esc(p.description_sale)}</p>` : ""}
                     <div class="av-fav-card-stock ${isInStock(p) ? "in-stock" : "out-stock"}">
                         <i class="fa ${isInStock(p) ? "fa-check-circle" : "fa-times-circle"}"></i>
-                        ${isInStock(p) ? "In Stock" : "Out of Stock"}
+                        ${isInStock(p) ? _t("In Stock") : _t("Out of Stock")}
                     </div>
                     ${false ? `<div class="av-fav-card-sale"><i class="fa fa-tag"></i> On Sale</div>` : ""}
                     <a href="${p.website_url || "/shop"}" class="av-fav-card-view">View Product</a>
@@ -555,7 +556,7 @@ export class FavouritesPage extends Interaction {
     async onAddAll() {
         if (!this.products || !this.products.length) return;
         const btn = this.el.querySelector("#av-fav-add-all");
-        if (btn) { btn.disabled = true; btn.textContent = "Adding..."; }
+        if (btn) { btn.disabled = true; btn.textContent = _t("Adding..."); }
         for (const p of this.products) {
             if (!p.product_id) continue;
             try {
@@ -566,7 +567,7 @@ export class FavouritesPage extends Interaction {
                 });
             } catch {}
         }
-        if (btn) { btn.disabled = false; btn.textContent = "Add All to Cart"; }
+        if (btn) { btn.disabled = false; btn.textContent = _t("Add All to Cart"); }
         window.location.href = "/shop/cart";
     }
 }
@@ -624,12 +625,12 @@ export class AddToWishButton extends Interaction {
         if (getWishIds().includes(String(id))) {
             removeWishId(id);
             this.el.classList.remove("av-added-to-wish");
-            this.el.title = "Add to Wishlist";
+            this.el.title = _t("Add to Wishlist");
             if (icon) { icon.classList.remove("fa-star"); icon.classList.add("fa-star-o"); }
         } else {
             addWishId(id);
             this.el.classList.add("av-added-to-wish");
-            this.el.title = "Added to Wishlist";
+            this.el.title = _t("Added to Wishlist");
             if (icon) { icon.classList.remove("fa-star-o"); icon.classList.add("fa-star"); }
         }
         const wishFa = this.el.querySelector(".fa") || this.el;
@@ -684,16 +685,16 @@ export class WishlistPage extends Interaction {
             const card = document.createElement("div");
             card.className = "av-wish-card";
             card.innerHTML = `
-                <button class="av-wish-card-remove" data-id="${p.id}" title="Remove">&#10005;</button>
+                <button class="av-wish-card-remove" data-id="${p.id}" title="${esc(_t('Remove'))}">&#10005;</button>
                 <img src="${imgSrc}" alt="${esc(p.name)}" class="av-wish-card-img"/>
                 <div class="av-wish-card-body">
-                    <div class="av-wish-card-cat">${esc(p.public_categ_name || (p.categ_id && p.categ_id[1]) || "Uncategorized")}</div>
+                    <div class="av-wish-card-cat">${esc(p.public_categ_name || (p.categ_id && p.categ_id[1]) || _t("Uncategorized"))}</div>
                     <h4 class="av-wish-card-name">${esc(p.name)}</h4>
                     <div class="av-wish-card-price">$${(p.list_price || 0).toFixed(2)}</div>
                     ${p.description_sale ? `<p class="av-wish-card-desc">${esc(p.description_sale)}</p>` : ""}
                     <div class="av-wish-card-stock ${isInStock(p) ? "in-stock" : "out-stock"}">
                         <i class="fa ${isInStock(p) ? "fa-check-circle" : "fa-times-circle"}"></i>
-                        ${isInStock(p) ? "In Stock" : "Out of Stock"}
+                        ${isInStock(p) ? _t("In Stock") : _t("Out of Stock")}
                     </div>
                     ${false ? `<div class="av-wish-card-sale"><i class="fa fa-tag"></i> On Sale</div>` : ""}
                     <a href="${p.website_url || "/shop"}" class="av-wish-card-view">View Product</a>
@@ -739,7 +740,7 @@ export class WishlistPage extends Interaction {
     async onAddAll() {
         if (!this.products || !this.products.length) return;
         const btn = this.el.querySelector("#av-wish-add-all");
-        if (btn) { btn.disabled = true; btn.textContent = "Adding..."; }
+        if (btn) { btn.disabled = true; btn.textContent = _t("Adding..."); }
         for (const p of this.products) {
             if (!p.product_id) continue;
             try {
@@ -750,234 +751,8 @@ export class WishlistPage extends Interaction {
                 });
             } catch {}
         }
-        if (btn) { btn.disabled = false; btn.textContent = "Add All to Cart"; }
+        if (btn) { btn.disabled = false; btn.textContent = _t("Add All to Cart"); }
         window.location.href = "/shop/cart";
-    }
-}
-
-// ── Notifications storage helpers ────────────────────────────
-const NOTIF_KEY = "av_notifications";
-
-const DEMO_NOTIFICATIONS = [
-    {
-        id: "n1",
-        icon: "fa-shopping-cart",
-        iconColor: "#2E7D52",
-        title: "Order #ORD-2024-001 Delivered",
-        message: "Your order containing Wireless Headphones has been successfully delivered to 123 Main Street.",
-        time: Date.now() - 2 * 60 * 60 * 1000,
-        tag: "Orders",
-        priority: "important",
-        read: false,
-    },
-    {
-        id: "n2",
-        icon: "fa-bell",
-        iconColor: "#2C6B8A",
-        title: "Flash Sale: 50% off Electronics",
-        message: "Limited time offer on selected electronics items. Sale ends in 6 hours!",
-        time: Date.now() - 4 * 60 * 60 * 1000,
-        tag: "Promotions",
-        priority: null,
-        read: false,
-    },
-    {
-        id: "n3",
-        icon: "fa-bell",
-        iconColor: "#2C6B8A",
-        title: "Item Back in Stock",
-        message: "Wireless Headphones from your wishlist is now available. Only 5 left in stock!",
-        time: Date.now() - 24 * 60 * 60 * 1000,
-        tag: "Inventory",
-        priority: null,
-        read: true,
-    },
-];
-
-function getNotifications() {
-    try {
-        const raw = localStorage.getItem(NOTIF_KEY);
-        if (raw) return JSON.parse(raw);
-    } catch {}
-    localStorage.setItem(NOTIF_KEY, JSON.stringify(DEMO_NOTIFICATIONS));
-    return DEMO_NOTIFICATIONS;
-}
-
-function saveNotifications(list) {
-    try { localStorage.setItem(NOTIF_KEY, JSON.stringify(list)); } catch {}
-}
-
-function getUnreadCount() {
-    return getNotifications().filter((n) => !n.read).length;
-}
-
-function timeAgo(ts) {
-    const diff = Math.floor((Date.now() - ts) / 1000);
-    if (diff < 60) return "just now";
-    if (diff < 3600) return Math.floor(diff / 60) + " minutes ago";
-    if (diff < 86400) return Math.floor(diff / 3600) + " hours ago";
-    return Math.floor(diff / 86400) + " day" + (Math.floor(diff / 86400) > 1 ? "s" : "") + " ago";
-}
-
-// ── Notifications header badge ────────────────────────────────
-export class NotifHeaderBadge extends Interaction {
-    static selector = "#av-notif-header-btn";
-
-    setup() {
-        this.updateBadge();
-    }
-
-    start() {
-        this.addListener(window, "storage", (e) => { if (e.key === NOTIF_KEY) this.updateBadge(); });
-        this.addListener(window, "av-notif-changed", () => this.updateBadge());
-    }
-
-    updateBadge() {
-        const count = getUnreadCount();
-        const badge = this.el.querySelector("#av-notif-count");
-        if (!badge) return;
-        if (count > 0) { badge.textContent = count; badge.style.display = "flex"; }
-        else { badge.style.display = "none"; }
-    }
-}
-
-// ── Notifications page ────────────────────────────────────────
-export class NotificationsPage extends Interaction {
-    static selector = ".av-notif-page";
-
-    setup() {
-        this.currentFilter = "all";
-        this.notifications = getNotifications();
-    }
-
-    start() {
-        const markAllBtn = this.el.querySelector("#av-notif-mark-all");
-        const filterBtn = this.el.querySelector("#av-notif-filter-btn");
-        const dropdown = this.el.querySelector("#av-notif-filter-dropdown");
-
-        if (markAllBtn) this.addListener(markAllBtn, "click", () => this.markAll());
-
-        if (filterBtn && dropdown) {
-            this.addListener(filterBtn, "click", (e) => {
-                e.stopPropagation();
-                dropdown.style.display = dropdown.style.display === "none" ? "flex" : "none";
-            });
-            this.addListener(document, "click", () => { dropdown.style.display = "none"; });
-
-            dropdown.querySelectorAll(".av-notif-filter-opt").forEach((btn) => {
-                this.addListener(btn, "click", (e) => {
-                    e.stopPropagation();
-                    this.currentFilter = btn.dataset.filter;
-                    dropdown.querySelectorAll(".av-notif-filter-opt").forEach((b) => b.classList.remove("av-notif-filter-active"));
-                    btn.classList.add("av-notif-filter-active");
-                    dropdown.style.display = "none";
-                    this.render();
-                });
-            });
-        }
-
-        this.render();
-    }
-
-    filtered() {
-        const f = this.currentFilter;
-        if (f === "all") return this.notifications;
-        if (f === "unread") return this.notifications.filter((n) => !n.read);
-        return this.notifications.filter((n) => n.tag && n.tag.toLowerCase() === f);
-    }
-
-    render() {
-        const list = this.filtered();
-        const all = this.notifications;
-        const unread = all.filter((n) => !n.read).length;
-
-        const summary = this.el.querySelector("#av-notif-summary");
-        if (summary) summary.textContent = list.length + " of " + all.length + " notifications";
-
-        const newBadge = this.el.querySelector("#av-notif-new-count");
-        if (newBadge) {
-            if (unread > 0) { newBadge.textContent = unread + " new"; newBadge.style.display = "inline-flex"; }
-            else { newBadge.style.display = "none"; }
-        }
-
-        const container = this.el.querySelector("#av-notif-list");
-        const empty = this.el.querySelector("#av-notif-empty");
-
-        const prev = container.querySelector(".av-notif-items");
-        if (prev) prev.remove();
-
-        if (!list.length) {
-            if (empty) empty.style.display = "flex";
-            return;
-        }
-        if (empty) empty.style.display = "none";
-
-        const wrap = document.createElement("div");
-        wrap.className = "av-notif-items";
-
-        list.forEach((n) => {
-            const item = document.createElement("div");
-            item.className = "av-notif-item" + (n.read ? "" : " av-notif-unread");
-            item.dataset.id = n.id;
-
-            item.innerHTML = `
-                <div class="av-notif-item-icon" style="background:${esc(n.iconColor || "#2E7D52")}20; color:${esc(n.iconColor || "#2E7D52")};">
-                    <i class="fa ${esc(n.icon || "fa-bell")}"></i>
-                </div>
-                <div class="av-notif-item-body">
-                    <div class="av-notif-item-header">
-                        <span class="av-notif-item-title">${esc(n.title)}</span>
-                        ${n.priority === "important" ? `<span class="av-notif-priority">${esc(n.priority.charAt(0).toUpperCase() + n.priority.slice(1))}</span>` : ""}
-                    </div>
-                    <p class="av-notif-item-msg">${esc(n.message)}</p>
-                    <div class="av-notif-item-meta">
-                        <span class="av-notif-item-time">${timeAgo(n.time)}</span>
-                        ${n.tag ? `<span class="av-notif-item-tag">${esc(n.tag)}</span>` : ""}
-                    </div>
-                </div>
-                <div class="av-notif-item-actions">
-                    ${!n.read ? `<button class="av-notif-action-read" data-id="${esc(n.id)}" title="Mark as read"><i class="fa fa-check"></i></button>` : ""}
-                    <button class="av-notif-action-delete" data-id="${esc(n.id)}" title="Dismiss"><i class="fa fa-times"></i></button>
-                </div>`;
-
-            const readBtn = item.querySelector(".av-notif-action-read");
-            if (readBtn) {
-                readBtn.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    this.markRead(n.id);
-                });
-            }
-
-            item.querySelector(".av-notif-action-delete").addEventListener("click", (e) => {
-                e.stopPropagation();
-                this.deleteNotif(n.id);
-            });
-
-            wrap.appendChild(item);
-        });
-
-        container.appendChild(wrap);
-    }
-
-    markRead(id) {
-        this.notifications = this.notifications.map((n) => n.id === id ? { ...n, read: true } : n);
-        saveNotifications(this.notifications);
-        window.dispatchEvent(new CustomEvent("av-notif-changed"));
-        this.render();
-    }
-
-    markAll() {
-        this.notifications = this.notifications.map((n) => ({ ...n, read: true }));
-        saveNotifications(this.notifications);
-        window.dispatchEvent(new CustomEvent("av-notif-changed"));
-        this.render();
-    }
-
-    deleteNotif(id) {
-        this.notifications = this.notifications.filter((n) => n.id !== id);
-        saveNotifications(this.notifications);
-        window.dispatchEvent(new CustomEvent("av-notif-changed"));
-        this.render();
     }
 }
 
@@ -990,5 +765,3 @@ registry.category("public.interactions").add("FavouritesPage", FavouritesPage);
 registry.category("public.interactions").add("WishHeaderBadge", WishHeaderBadge);
 registry.category("public.interactions").add("AddToWishButton", AddToWishButton);
 registry.category("public.interactions").add("WishlistPage", WishlistPage);
-registry.category("public.interactions").add("NotifHeaderBadge", NotifHeaderBadge);
-registry.category("public.interactions").add("NotificationsPage", NotificationsPage);

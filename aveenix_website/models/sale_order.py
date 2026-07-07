@@ -1,9 +1,33 @@
-from odoo import _, models
+from odoo import _, api, fields, models
 from odoo.tools import email_split
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    av_welcome_discount_eligible = fields.Boolean(
+        string='Welcome Discount Eligible',
+        compute='_compute_av_welcome_discount_eligible',
+        help='True when this is the customer first order and the new-user '
+             'welcome discount is enabled, so staff know the perk applies.',
+    )
+    av_welcome_discount_label = fields.Char(
+        string='Welcome Discount Label',
+        compute='_compute_av_welcome_discount_eligible',
+        help='Display text for the welcome discount (e.g. "$20 OFF").',
+    )
+
+    @api.depends('partner_id', 'state')
+    def _compute_av_welcome_discount_eligible(self):
+        info = self.env.company._av_welcome_discount_info()
+        for order in self:
+            eligible = (
+                info['enabled']
+                and bool(order.partner_id)
+                and not order._av_partner_has_prior_order()
+            )
+            order.av_welcome_discount_eligible = eligible
+            order.av_welcome_discount_label = info['label'] if eligible else False
 
     def _av_partner_has_prior_order(self):
         """True if this order's partner already has a confirmed order.
@@ -48,7 +72,39 @@ class SaleOrder(models.Model):
             aff_lines = order.order_line.filtered('is_affiliate')
             if aff_lines:
                 aff_lines.unlink()
-        return super()._action_confirm()
+        result = super()._action_confirm()
+        for order in self:
+            order._av_notify_customer(
+                _("Your order %s has been confirmed.") % order.name
+            )
+        return result
+
+    def _action_cancel(self):
+        result = super()._action_cancel()
+        for order in self:
+            order._av_notify_customer(
+                _("Your order %s has been cancelled.") % order.name
+            )
+        return result
+
+    def _av_notify_customer(self, body):
+        """Post a portal-visible needaction notification for this order's
+        customer, so it shows up in the website notification bell.
+
+        Skipped when the partner has no linked res.users: a guest-checkout
+        contact can never log in to read a needaction, so posting one would
+        just create an orphaned unread notification nobody can ever see.
+        """
+        self.ensure_one()
+        if not self.partner_id or not self.partner_id.user_ids:
+            return
+        # sudo(): the system posts this on behalf of the order, not the
+        # (possibly public/staff) user who triggered the confirm/cancel action.
+        self.sudo().message_post(
+            body=body,
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_id.id],
+        )
 
     def _av_admin_notify_partners(self):
         """Resolve the configured admin notification email(s) into partners."""
