@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Backend notice for internal users: flag when the order's customer
+         qualifies for the new-user welcome discount, so sales staff know the
+         first-order perk applies before confirming. -->
+    <record id="view_order_form_aveenix_welcome_discount" model="ir.ui.view">
+        <field name="name">sale.order.form.aveenix.welcome.discount</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="av_welcome_discount_eligible" invisible="1"/>
+                <div class="alert alert-success mb-0" role="status"
+                     invisible="not av_welcome_discount_eligible">
+                    <i class="fa fa-gift me-2" title="Welcome discount"/>
+                    New customer: eligible for the
+                    <field name="av_welcome_discount_label" class="fw-bold d-inline"
+                           nolabel="1" readonly="1"/>
+                    welcome discount on this first order.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

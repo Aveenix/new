@@ -30,8 +30,16 @@ class AveenixAuthSignup(AuthSignupHome):
 
     @http.route()
     def web_login(self, *args, **kw):
-        """Validate reCAPTCHA v2 on the login POST before authenticating."""
-        if request.httprequest.method == 'POST' and request.params.get('login'):
+        """Validate reCAPTCHA v2 on the login POST before authenticating.
+
+        Skip when the login is the internal auto-login that ``web_auth_signup``
+        performs right after creating an account: Odoo signals this via the
+        ``skip_captcha_login`` context (the signup form already passed its own
+        captcha, and no login-form token exists on that internal call).
+        """
+        if (request.httprequest.method == 'POST'
+                and request.params.get('login')
+                and not request.env.context.get('skip_captcha_login')):
             token = request.params.get('g-recaptcha-response')
             if not request.env['ir.http']._verify_recaptcha_v2(token):
                 # Re-render the login form with an error, without authenticating.

@@ -37,6 +37,25 @@ def clean_wc_description(html: str) -> str:
     # 1) Remove script/style/noscript blocks entirely.
     text = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", "", text)
 
+    # 1b) Remove the Amazon nav-assist keyboard-shortcut button + its wrapper div.
+    #     These arrive as a leaked <button id="nav-assist-product-summary"...>
+    #     block containing the shift/alt/D shortcut UI.
+    text = re.sub(r"(?is)<button[^>]*nav-assist[^>]*>.*?</button>", "", text)
+    text = re.sub(r"(?is)<div[^>]*keyboard-shortcut[^>]*>.*?</div>", "", text)
+    # Strip any leftover bare </button> or </p></div> orphan tags from the block.
+    text = re.sub(r"(?i)</button>", "", text)
+
+    # 1c) Remove Amazon price/disclaimer block inserted by wp_automatic plugin.
+    text = re.sub(
+        r"(?is)Price:\s*<span[^>]*>.*?</span>.*?<i><small>.*?</small></i>",
+        "", text,
+    )
+    # Remove "Buy Now" image links pointing to amazon.com/dp/
+    text = re.sub(
+        r'(?is)<a\s+href=["\']https?://(?:www\.)?amazon\.[^"\']*["\'][^>]*>.*?</a>',
+        "", text,
+    )
+
     # 2) Remove leaked inline JS blobs (Amazon click-tracking) that arrive as
     #    plain text, e.g. "var dpAcrHasRegistered... });".
     text = re.sub(r"(?is)\bvar\s+dpAcr[^<]*?\}\)\s*;?", "", text)
@@ -51,13 +70,26 @@ def clean_wc_description(html: str) -> str:
         r"(?im)^\s*Department\s*[:：].*$",
         r"(?im)^\s*Product Warranty.*$",
         r"(?im)^\s*Product summary.*$",
+        r"(?im)^\s*Product description\s*$",
+        r"(?is)<p[^>]*>\s*Product description\s*</p>",
+        r"(?is)<[^>]+>\s*Product description\s*</[^>]+>",
+        r"(?im)^\s*From the brand\s*$",
+        r"(?is)<p[^>]*>\s*From the brand\s*</p>",
+        r"(?im)^\s*Hot Selling.*$",
+        r"(?im)^\s*New Arrivals\s*$",
         r"(?im)^\s*shift\s*\+\s*alt\s*\+\s*\w+\s*$",
+        r"(?is)<[^>]+>\s*shift\s*\+\s*alt\s*\+\s*\w+\s*</[^>]+>",
+        r"(?i)shift\s*\+\s*alt\s*\+\s*\w+",
         r"(?im)click here",
     ]
     for pat in noise_patterns:
         text = re.sub(pat, "", text)
 
-    # 4) Collapse excess blank lines / spaces.
+    # 4) Remove empty/whitespace-only block tags left behind after stripping.
+    text = re.sub(r"(?is)<p[^>]*>\s*(?:<br\s*/?>\s*)*</p>", "", text)
+    text = re.sub(r"(?is)<(div|h[1-6]|li|span)[^>]*>\s*</\1>", "", text)
+
+    # 5) Collapse excess blank lines / spaces.
     text = re.sub(r"(?:\s*<br\s*/?>\s*){3,}", "<br/><br/>", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
@@ -328,6 +360,8 @@ class WooProduct(models.Model):
         image_list = self._collect_image_urls(record, dropship=is_dropship)
         images = ",".join(image_list)
 
+        brand_id = self._resolve_brand(record)
+
         vals = {
             "wc_product_name": name,
             "wc_status": record.get("status", "publish"),
@@ -374,6 +408,12 @@ class WooProduct(models.Model):
                 tmpl_vals["affiliate_url"] = affiliate_url
         elif is_dropship:
             tmpl_vals["aveenix_product_type"] = "dropship"
+        if brand_id and "product_brand_id" in Tmpl._fields:
+            tmpl_vals["product_brand_id"] = brand_id
+        # Assign the store's company so products are segregated per company
+        # (multi-company / multi-website). False = shared across all companies.
+        if backend.company_id:
+            tmpl_vals["company_id"] = backend.company_id.id
 
         if existing:
             if not force and self._is_up_to_date(existing, record):
@@ -496,6 +536,11 @@ class WooProduct(models.Model):
             tmpl_extra["public_categ_ids"] = [(6, 0, public_categ_ids)]
         if product_tag_ids and "product_tag_ids" in Tmpl._fields:
             tmpl_extra["product_tag_ids"] = [(6, 0, product_tag_ids)]
+        if brand_id and "product_brand_id" in Tmpl._fields:
+            tmpl_extra["product_brand_id"] = brand_id
+        # Segregate product per store's company (multi-company).
+        if backend.company_id:
+            tmpl_extra["company_id"] = backend.company_id.id
         if tmpl_extra:
             odoo_product.product_tmpl_id.with_context(
                 syncing_from_wc=True).write(tmpl_extra)
@@ -564,6 +609,48 @@ class WooProduct(models.Model):
             if wc_tag and wc_tag.product_tag_id:
                 ids.append(wc_tag.product_tag_id.id)
         return ids
+
+    def _resolve_brand(self, record: dict):
+        """Find or create product.brand from WC record.
+
+        WC sends brand in three possible places (checked in order):
+          1. meta_data key 'brand' (most common via Perfect Brands / YITH plugins)
+          2. meta_data key 'pwb-brand' (Perfect WooCommerce Brands)
+          3. attributes array — entry with name 'Brand'
+        Returns product.brand id or False.
+        """
+        if "product.brand" not in self.env:
+            return False
+
+        # 1) Native WC brands array (Perfect Brands / YITH / WC Brands plugin)
+        brands_list = record.get("brands") or []
+        brand_name = (brands_list[0].get("name") or "").strip() if brands_list else ""
+
+        # 2) Fallback: meta_data keys
+        if not brand_name:
+            brand_name = (
+                self._get_meta(record, "brand")
+                or self._get_meta(record, "pwb-brand")
+            ).strip()
+
+        # 3) Fallback: attributes array entry named "Brand"
+        if not brand_name:
+            brand_name = next(
+                (
+                    (a.get("options", [None])[0] or a.get("option", "")).strip()
+                    for a in (record.get("attributes") or [])
+                    if (a.get("name") or "").strip().lower() == "brand"
+                ),
+                "",
+            )
+        if not brand_name:
+            return False
+
+        brand = self.env["product.brand"].search([("name", "=ilike", brand_name)], limit=1)
+        if not brand:
+            brand = self.env["product.brand"].create({"name": brand_name})
+            _logger.info("[WC Brand] Created brand %r (id=%s)", brand_name, brand.id)
+        return brand.id
 
     def _is_up_to_date(self, binding, remote_record: dict) -> bool:
         if not binding.sync_date:
@@ -871,6 +958,8 @@ class WooProductTemplate(models.Model):
                 tmpl_write["public_categ_ids"] = [(6, 0, public_categ_ids)]
             if product_tag_ids and "product_tag_ids" in self.env["product.template"]._fields:
                 tmpl_write["product_tag_ids"] = [(6, 0, product_tag_ids)]
+            if backend.company_id:
+                tmpl_write["company_id"] = backend.company_id.id
             existing.template_id.with_context(syncing_from_wc=True).write(tmpl_write)
             existing.with_context(syncing_from_wc=True).write(vals)
             self._sync_variations(backend, existing, record, force, results)
@@ -934,6 +1023,9 @@ class WooProductTemplate(models.Model):
             tmpl_extra["public_categ_ids"] = [(6, 0, public_categ_ids)]
         if product_tag_ids and "product_tag_ids" in self.env["product.template"]._fields:
             tmpl_extra["product_tag_ids"] = [(6, 0, product_tag_ids)]
+        # Segregate variable product per store's company (multi-company).
+        if backend.company_id:
+            tmpl_extra["company_id"] = backend.company_id.id
         if tmpl_extra:
             odoo_tmpl.with_context(syncing_from_wc=True).write(tmpl_extra)
 

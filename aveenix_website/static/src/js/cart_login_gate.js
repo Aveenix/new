@@ -4,6 +4,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
+import { _t } from "@web/core/l10n/translation";
 
 function redirectBack() {
     return encodeURIComponent(window.location.pathname + window.location.search);
@@ -84,13 +85,13 @@ export class CartLoginGate extends Interaction {
         // Always (re)populate so a pre-existing empty node can't leave it blank.
         overlay.innerHTML = `
             <div class="av-login-gate-box" role="dialog" aria-modal="true">
-                <button type="button" class="av-login-gate-close" aria-label="Close">&times;</button>
+                <button type="button" class="av-login-gate-close" aria-label="${_t("Close")}">&times;</button>
                 <div class="av-login-gate-icon"><i class="fa fa-user-circle"></i></div>
-                <h3 class="av-login-gate-title">Sign in to continue</h3>
-                <p class="av-login-gate-sub">Please log in or create an account to add items to your cart.</p>
+                <h3 class="av-login-gate-title">${_t("Sign in to continue")}</h3>
+                <p class="av-login-gate-sub">${_t("Please log in or create an account to add items to your cart.")}</p>
                 <div class="av-login-gate-actions">
-                    <a class="av-login-gate-btn av-login-gate-btn-primary" href="/web/login?redirect=${redirectBack()}">Log in</a>
-                    <a class="av-login-gate-btn av-login-gate-btn-outline" href="/web/signup?redirect=${redirectBack()}">Sign up</a>
+                    <a class="av-login-gate-btn av-login-gate-btn-primary" href="/web/login?redirect=${redirectBack()}">${_t("Log in")}</a>
+                    <a class="av-login-gate-btn av-login-gate-btn-outline" href="/web/signup?redirect=${redirectBack()}">${_t("Sign up")}</a>
                 </div>
             </div>`;
         this.overlay = overlay;

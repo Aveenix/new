@@ -84,6 +84,22 @@
                         </div>
                     </setting>
                 </block>
+                <block title="Homepage Featured Categories (Aveenix)" name="aveenix_home_categ_block">
+                    <setting string="Featured Categories"
+                             help="Categories featured on the homepage after New Arrivals. Each shows a product row with a View All link to the shop filtered by that category.">
+                        <field name="aveenix_home_categ_ids" widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Select categories to feature on the homepage..."/>
+                    </setting>
+                </block>
+                <block title="Header Menu Categories (Aveenix)" name="aveenix_header_menu_categ_block">
+                    <setting string="Header Menu Categories"
+                             help="Categories shown as menu links in the header, right after the Shop link.">
+                        <field name="aveenix_header_menu_categ_ids" widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Select categories to show in the header menu..."/>
+                    </setting>
+                </block>
                 <block title="Auto-publish After Image Download (Aveenix)" name="aveenix_auto_publish_block">
                     <setting string="Affiliate Products" type="boolean"
                              help="Automatically publish affiliate products to the website once their image is successfully downloaded.">

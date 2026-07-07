@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ── Coupon display fix (existing) ── -->
+    <!-- ── Coupon display fix (existing) ──
+         Target the coupons <strong> purely STRUCTURALLY — via the
+         program_type == 'coupons' t-elif (an untranslated code attribute) and
+         the strong's position. We must NOT match on the word "Coupons": view
+         inheritance runs against the *translated* arch, so in non-English langs
+         (e.g. German "Gutscheine") a text predicate finds nothing and rendering
+         the cart fails. -->
     <template id="coupon_amount_display" inherit_id="website_sale_loyalty.modify_code_form">
-        <xpath expr="//strong[contains(text(),'Coupons')]" position="replace">
+        <xpath expr="//t[@t-elif=&quot;program.program_type == 'coupons'&quot;]/strong" position="replace">
             <strong class="small">
                 Coupons -
                 <t t-out="reward.description"/>

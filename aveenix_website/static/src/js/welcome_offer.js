@@ -41,3 +41,34 @@ export class WelcomeOfferForm extends Interaction {
 }
 
 registry.category("public.interactions").add("WelcomeOfferForm", WelcomeOfferForm);
+
+// Homepage welcome-discount pill: dismiss on ✕ and remember it for the
+// session so it does not nag on every homepage visit.
+export class WelcomeDiscountPill extends Interaction {
+    static selector = ".av-welcome-pill";
+
+    dynamicContent = {
+        ".av-welcome-pill-close": { "t-on-click": () => this.dismiss() },
+    };
+
+    setup() {
+        try {
+            if (sessionStorage.getItem("av_welcome_pill_dismissed") === "1") {
+                this.el.classList.add("av-hidden");
+            }
+        } catch {
+            // sessionStorage may be unavailable (private mode) — show the pill.
+        }
+    }
+
+    dismiss() {
+        this.el.classList.add("av-hidden");
+        try {
+            sessionStorage.setItem("av_welcome_pill_dismissed", "1");
+        } catch {
+            // ignore — dismissal still works for this page view.
+        }
+    }
+}
+
+registry.category("public.interactions").add("WelcomeDiscountPill", WelcomeDiscountPill);

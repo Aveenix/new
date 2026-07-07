@@ -75,7 +75,12 @@ export class ExternalProductImages extends Interaction {
         const map = new Map();
         this.el.querySelectorAll(selector).forEach((img) => {
             if (img.dataset.avExtDone) return;
-            const m = (img.getAttribute("src") || "").match(re);
+            // Odoo's shop grid lazy-loads images: the product id can live on
+            // src OR data-src (the not-yet-loaded lazy source). Check both so
+            // off-screen cards get swapped on page load, not only on hover.
+            const src = img.getAttribute("src") || "";
+            const dataSrc = img.getAttribute("data-src") || "";
+            const m = src.match(re) || dataSrc.match(re);
             if (!m) return;
             const id = m[1];
             if (!map.has(id)) map.set(id, []);
@@ -91,6 +96,10 @@ export class ExternalProductImages extends Interaction {
                 img.src = urls[i] || urls[0];
                 img.srcset = "";
                 img.removeAttribute("data-src");
+                // Force the browser to fetch now instead of waiting for the
+                // element to scroll into view (fixes "only shows on hover").
+                img.loading = "eager";
+                img.classList.remove("o_lazy_image");
                 img.dataset.avExtDone = "1";
             });
         }
@@ -103,7 +112,8 @@ export class ExternalProductImages extends Interaction {
     // product.template images (shop grid, product page).
     async apply() {
         const map = this._collectBy(
-            'img[src*="/web/image/product.template/"]', IMG_RE
+            'img[src*="/web/image/product.template/"], img[data-src*="/web/image/product.template/"]',
+            IMG_RE
         );
         if (!map.size) return;
         let data;
@@ -120,7 +130,8 @@ export class ExternalProductImages extends Interaction {
     // product.product (variant) images — cart lines & order summary card.
     async applyVariants() {
         const map = this._collectBy(
-            'img[src*="/web/image/product.product/"]', VARIANT_IMG_RE
+            'img[src*="/web/image/product.product/"], img[data-src*="/web/image/product.product/"]',
+            VARIANT_IMG_RE
         );
         if (!map.size) return;
         let data;

@@ -1544,6 +1544,149 @@ body.modal-open {
     padding: 8px 0;
 }
 
+/* ── New-user welcome-discount ─────────────────────────────────────────
+   Floating card, bottom-left of the homepage. Premium + unobtrusive; does
+   not affect page flow and is fully theme-aware. Local tokens flip for dark
+   mode below so the card always reads as a considerate perk, never an ad. */
+:root {
+    --av-wd-surface:  var(--av-white);
+    --av-wd-text:     var(--av-text);
+    --av-wd-muted:    var(--av-gray);
+    --av-wd-border:   var(--av-border);
+    /* Accent follows the site's dynamic primary (--av-red, reassigned live by
+       the Color switcher in dark_mode.js) so the pill recolours with the theme
+       instead of a static gold. */
+    --av-wd-accent:      var(--av-red);
+    --av-wd-accent-2:    var(--av-red-dark);
+    --av-wd-medal-text:  #ffffff;
+    --av-wd-hover:    var(--av-light);
+    --av-wd-shadow:   0 14px 34px -12px rgba(16, 24, 32, .30), 0 2px 8px rgba(16, 24, 32, .06);
+}
+[data-theme="dark"] {
+    --av-wd-surface:  #20252d;
+    --av-wd-text:     #eef1f4;
+    --av-wd-muted:    #9aa6b2;
+    --av-wd-border:   #2f3742;
+    /* Lift the primary a touch so it stays legible on the dark card. */
+    --av-wd-accent:      color-mix(in srgb, var(--av-red) 82%, white);
+    --av-wd-accent-2:    var(--av-red);
+    --av-wd-medal-text:  #ffffff;
+    --av-wd-hover:    #2a313a;
+    --av-wd-shadow:   0 16px 40px -14px rgba(0, 0, 0, .6), 0 2px 8px rgba(0, 0, 0, .4);
+}
+
+.av-welcome-pill {
+    position: fixed;
+    left: 22px;
+    bottom: 22px;
+    z-index: 1030;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: min(340px, calc(100vw - 32px));
+    padding: 12px 14px 12px 12px;
+    background: var(--av-wd-surface);
+    color: var(--av-wd-text);
+    border: 1px solid var(--av-wd-border);
+    border-radius: 14px;
+    box-shadow: var(--av-wd-shadow);
+    animation: av-welcome-pill-in .35s cubic-bezier(.2, .7, .3, 1) both;
+}
+.av-welcome-pill.av-hidden { display: none; }
+
+/* Gold gift medallion — the one bold accent, quiet everything else. */
+.av-welcome-pill-medal {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(150deg, var(--av-wd-accent), var(--av-wd-accent-2));
+    color: var(--av-wd-medal-text);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+    font-size: 18px;
+}
+.av-welcome-pill-body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+}
+.av-welcome-pill-eyebrow {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .11em;
+    font-weight: 700;
+    color: var(--av-wd-muted);
+}
+.av-welcome-pill-head {
+    font-size: 14.5px;
+    font-weight: 550;
+}
+.av-welcome-pill-head b {
+    color: var(--av-wd-accent);
+    font-weight: 800;
+}
+.av-welcome-pill-close {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin: -4px -2px 0 2px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    color: var(--av-wd-muted);
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+.av-welcome-pill-close:hover { background: var(--av-wd-hover); color: var(--av-wd-text); }
+@keyframes av-welcome-pill-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .av-welcome-pill { animation: none; }
+}
+@media (max-width: 575px) {
+    .av-welcome-pill { left: 12px; right: 12px; bottom: 12px; max-width: none; }
+}
+
+/* Cart welcome-discount notice — same card language, inline in the page. */
+.av-welcome-banner[data-context="cart"] {
+    background: var(--av-wd-surface);
+    color: var(--av-wd-text);
+    padding: 13px 16px;
+    border: 1px solid var(--av-wd-border);
+    border-left: 4px solid var(--av-wd-accent);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    text-align: left;
+}
+.av-welcome-banner[data-context="cart"] .av-welcome-banner-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    font-size: 15px;
+}
+.av-welcome-banner[data-context="cart"] .av-welcome-banner-icon {
+    color: var(--av-wd-accent);
+    font-size: 17px;
+}
+.av-welcome-banner[data-context="cart"] .av-welcome-banner-text b {
+    color: var(--av-wd-accent);
+    font-weight: 700;
+}
+
 .av-container {
     max-width: 1500px;
     margin: 0 auto;
@@ -7602,8 +7745,6 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 /* =============================================================
    PREMIUM BUTTONS — unified Buy / Add to Cart (affiliate + native + cards)
    ============================================================= */
-.av-affiliate-btn,
-.av-affiliate-save-btn,
 /* Affiliate products hide the native CTA via .d-none on #add_to_cart_wrap.
    The premium-button rule below uses a 2-ID selector and would otherwise win
    the !important fight against .d-none, forcing the button visible again.
@@ -7615,7 +7756,9 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 
 #product_detail #add_to_cart,
 #product_detail #buy_now,
-.av-add-to-cart {
+.av-add-to-cart,
+.av-affiliate-btn,
+.av-affiliate-save-btn {
     --av-btn-grad-a: var(--av-red);
     --av-btn-grad-b: color-mix(in srgb, var(--av-red) 80%, #000);
     display: inline-flex !important;
@@ -7718,11 +7861,13 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     margin-top: auto;
 }
 
-/* Affiliate PDP button: lock size/font so the "Add to cart" → "Saved!" text
-   swap never changes the button's height or font. */
+/* Affiliate PDP button: match the native #add_to_cart exactly (size, padding,
+   grow) so it sits inline with the heart/star/compare icons — just without the
+   qty selector. Do NOT force width:100% (that would break the inline row). */
 .av-affiliate-save-btn {
-    width: 100%;
-    min-height: 48px;
+    flex-grow: 1;
+    min-width: 180px;          /* match native #add_to_cart */
+    padding: 13px 28px !important;
     font-size: 15px !important;
     font-weight: 600 !important;
     white-space: nowrap;
@@ -8270,7 +8415,61 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
 .o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) #add_to_cart,
 .o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) #buy_now,
 .o_wsale_product_details_content_section_cta:has(.av-affiliate-buy) .o_we_buy_now,
+/* Our button now lives inside #add_to_cart_wrap; hide the native add-to-cart +
+   qty from first paint (no 1s flash) whenever the wrap holds our button. */
+#add_to_cart_wrap:has(.av-affiliate-buy) #add_to_cart,
+#add_to_cart_wrap:has(.av-affiliate-buy) .css_quantity,
+.o_wsale_cta_wrapper:has(.av-affiliate-buy) .css_quantity,
 .av-affiliate-cta .css_quantity,
 .av-affiliate-cta #add_to_cart,
 .av-affiliate-cta #buy_now,
 .av-affiliate-cta .o_we_buy_now { display: none !important; }
+
+/* Our affiliate "Add to cart" sits inside #add_to_cart_wrap, in the same flex
+   row as the heart/star/compare icons. Keep it visible + inline (grow to fill
+   the row like the native button, but never force full width). */
+a.av-affiliate-save-btn.av-affiliate-buy {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Affiliate CTA row: match the native (normal-product) layout ───
+   Add-to-cart grows to fill width (native height); heart/star/compare keep
+   native size, all vertically centred on one line. Scoped to the affiliate
+   CTA wrapper so normal-product rows are untouched. */
+#o_wsale_cta_wrapper:has(.av-affiliate-buy) {
+    align-items: center;
+}
+/* Add-to-cart: grows to fill remaining width, matching native height. */
+#o_wsale_cta_wrapper:has(.av-affiliate-buy) .av-affiliate-save-btn {
+    flex: 1 1 auto;
+}
+/* PDP icon buttons (heart / star / compare): force ALL three to the SAME size
+   on every product — normal AND affiliate — so they line up identically.
+   Uses the native heart's dimensions (≈49.78 × 37.78). Targets anchor/button
+   children only, never inline <script> helpers. */
+#product_detail #product_option_block > a,
+#product_detail #product_option_block > button {
+    width: 49.78px !important;
+    height: 37.78px !important;
+    min-width: 49.78px !important;
+    padding: 6px 16px !important;
+    border-radius: 6.4px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: 0 !important;
+}
+#product_detail #product_option_block > a .fa,
+#product_detail #product_option_block > button .fa {
+    margin: 0 !important;
+}
+/* Belt: keep any inline <script> in the option block non-rendering. */
+#product_option_block > script,
+#o_wsale_cta_wrapper script { display: none !important; }
+/* Keep the icon row itself aligned and not stretching the icons vertically. */
+#o_wsale_cta_wrapper:has(.av-affiliate-buy) #product_option_block {
+    align-items: center;
+}
