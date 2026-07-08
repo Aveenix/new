@@ -1294,7 +1294,10 @@ body.modal-open {
 .av-prod-img {
     width: 100%;
     height: 160px;
-    object-fit: cover;
+    /* contain (not cover): show the FULL product image, no cropping —
+       matches the product detail page. White bg pads non-square images. */
+    object-fit: contain;
+    background: #fff;
     transition: transform .3s;
     display: block;
 }
@@ -4048,6 +4051,8 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
 
 /* ── Mobile (≤767px) ─────────────────────────────────────── */
 @media (max-width: 767px) {
+    /* Safety net: never allow the homepage to scroll horizontally on mobile. */
+    .av-homepage                { overflow-x: hidden; }
     /* container */
     .av-container               { padding-left: 14px; padding-right: 14px; }
 
@@ -4132,11 +4137,13 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     .av-cat-icon-fa             { font-size: 20px; }
     .av-cat-label               { font-size: 11px; }
 
-    /* products grid — 2 col */
-    .av-products-grid           { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    /* products grid — 2 col. minmax(0,1fr): plain 1fr = minmax(auto,1fr),
+       long content forces track past half-viewport → card/btn clipped. */
+    .av-products-grid           { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 100%; }
+    .av-product-card            { min-width: 0; max-width: 100%; }
     .av-prod-img                { height: 120px; }
     .av-prod-placeholder        { height: 120px; }
-    .av-prod-body               { padding: 8px; gap: 5px; }
+    .av-prod-body               { padding: 8px; gap: 5px; min-width: 0; }
     .av-prod-name               { font-size: 12px; }
     .av-prod-price              { font-size: 14px; }
     .av-prod-stars              { font-size: 11px; }
@@ -4197,10 +4204,16 @@ html[data-theme="dark"] #o_payment_form span:not(.badge) {
     .av-cat-grid > :nth-child(8) { display: flex; }  /* show 8th on mobile */
     .av-cat-img-wrap            { width: 44px; height: 44px; }
 
-    /* products */
-    .av-products-grid           { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    /* products — minmax(0,1fr) so a column can't grow past half the viewport
+       (plain 1fr = minmax(auto,1fr) let long content overflow the screen and
+       clipped the Add-to-Cart button on the right card). */
+    .av-products-grid           { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .av-product-card            { min-width: 0; }
+    .av-prod-body               { min-width: 0; }
     .av-prod-img                { height: 110px; }
     .av-prod-placeholder        { height: 110px; }
+    .av-add-to-cart             { font-size: 12px; padding: 7px 6px; white-space: nowrap; min-width: 0; }
+    .av-add-to-cart .fa         { flex-shrink: 0; }
 
     /* footer accordion */
     .av-footer-grid             { grid-template-columns: 1fr; gap: 0; }
@@ -7782,6 +7795,26 @@ select.av-contact-input option[value=""] { color: var(--av-gray, #999); }
     position: relative;
     overflow: hidden;
     transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    /* Never exceed the card; let the label ellipsize instead of overflowing. */
+    max-width: 100%;
+    min-width: 0;
+}
+/* Homepage product-card buttons fill the card and can shrink to fit.
+   box-sizing: border-box so the horizontal padding is INCLUDED in width:100%
+   — otherwise (content-box default) the padding is added on top and the button
+   overflows the card, clipping "Add to Cart". */
+.av-product-card .av-add-to-cart {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+.av-product-card .av-add-to-cart span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 /* PDP buttons should fill the available width like a premium store CTA */
@@ -8472,4 +8505,91 @@ a.av-affiliate-save-btn.av-affiliate-buy {
 /* Keep the icon row itself aligned and not stretching the icons vertically. */
 #o_wsale_cta_wrapper:has(.av-affiliate-buy) #product_option_block {
     align-items: center;
+}
+
+/* =============================================================
+   Homepage product-card "Add to Cart" — responsive fit (last in the
+   cascade so it beats the premium-button block above at small sizes).
+   ============================================================= */
+@media (max-width: 767px) {
+    .av-product-card .av-add-to-cart {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        gap: 6px;
+        padding: 9px 10px;
+        font-size: 13px !important;
+    }
+}
+@media (max-width: 480px) {
+    .av-product-card .av-add-to-cart {
+        padding: 8px 8px;
+        font-size: 12px !important;
+        gap: 5px;
+    }
+}
+
+/* Homepage card buttons — one size for BOTH types (affiliate <a> carries
+   .av-affiliate-save-btn whose PDP rule forces min-width:180px + fat padding
+   via !important → clipped/taller; non-affiliate <button> got premium 13px
+   padding → height mismatch). Neutralize + unify inside product cards. */
+.av-product-card .av-add-to-cart,
+.av-product-card .av-affiliate-save-btn {
+    min-width: 0 !important;
+    flex-grow: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+}
+@media (max-width: 480px) {
+    .av-product-card .av-add-to-cart,
+    .av-product-card .av-affiliate-save-btn {
+        padding: 8px 8px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* =============================================================
+   MOBILE VIEWPORT GUARD — the header .av-cat-menu (nav links) overflowed
+   the page width, which makes mobile browsers expand the layout viewport
+   (measured: 482px on a 375px device). Every 100%-width section then
+   renders wider than the screen → product cards / Add-to-Cart look cut.
+   Clamp the page and let the nav scroll inside its own bar instead.
+   ============================================================= */
+@media (max-width: 767px) {
+    html, body, #wrapwrap {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    .av-cat-nav-inner {
+        overflow-x: auto;
+        scrollbar-width: none;      /* firefox: hide bar */
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    .av-cat-nav-inner::-webkit-scrollbar { display: none; }
+    .av-cat-menu {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+    }
+    /* Right-edge fade: signals more menu items are swipeable. Matches the
+       bar's dynamic brand color, lets touches pass through. */
+    .av-cat-nav {
+        position: relative;
+    }
+    .av-cat-nav::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 44px;
+        background: linear-gradient(90deg,
+            color-mix(in srgb, var(--av-red) 0%, transparent),
+            var(--av-red) 85%);
+        pointer-events: none;
+        z-index: 2;
+    }
 }
