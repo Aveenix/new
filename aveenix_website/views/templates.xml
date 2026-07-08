@@ -94,6 +94,10 @@
 
             <!-- ── PAGE BODY ──────────────────────────────────── -->
             <div id="wrap" class="av-homepage oe_structure">
+                <!-- Invisible anchor: website_sale's CartService._trackProducts
+                     dispatches add_to_cart_event on .oe_website_sale; shop pages
+                     have it, homepage doesn't → null.dispatchEvent crash. -->
+                <div class="oe_website_sale d-none"/>
 
                 <!-- New-user welcome-discount pill: floats bottom-left, does
                      not affect page flow. Also greets fresh signups landing

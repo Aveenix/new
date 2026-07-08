@@ -663,6 +663,12 @@ class AveenixWebsite(WebsiteSale):
     @http.route('/aveenix/affiliate/cart/add', type='jsonrpc', auth='public', website=True)
     def affiliate_cart_add(self, product_id=None, **kw):
         """Save an affiliate product to the visitor's affiliate cart (not the Odoo cart)."""
+        # Server-side login gate (defense-in-depth): the frontend also shows a
+        # login popup, but a guest could call this endpoint directly. Require a
+        # logged-in account before anything is saved.
+        if request.env.user._is_public():
+            return {'ok': False, 'require_login': True,
+                    'login_url': '/web/login', 'signup_url': '/web/signup'}
         if not product_id:
             return {'ok': False, 'error': 'missing product_id'}
         product = request.env['product.template'].sudo().browse(int(product_id))

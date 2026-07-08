@@ -44,14 +44,23 @@ export class CartLoginGate extends Interaction {
             "click",
             (ev) => {
                 const btn = ev.target.closest(
-                    "#add_to_cart, #buy_now, .js_av_add_to_cart"
+                    "#add_to_cart, #buy_now, .js_av_add_to_cart, " +
+                    ".av-affiliate-save-btn, " +
+                    'button.o_wsale_product_btn_primary[data-aveenix-affiliate="1"]'
                 );
                 if (!btn) return;
                 if (!this._isPublicUser()) return; // logged-in → normal flow
                 ev.preventDefault();
                 ev.stopPropagation();
                 ev.stopImmediatePropagation();
-                this._savePendingFromButton(btn);
+                // Affiliate products aren't added to the real cart, so there's
+                // nothing to auto-add after login; just show the gate. Regular
+                // products remember what to add post-login.
+                const isAffiliate = btn.classList.contains("av-affiliate-save-btn")
+                    || btn.dataset.aveenixAffiliate === "1";
+                if (!isAffiliate) {
+                    this._savePendingFromButton(btn);
+                }
                 this.open();
             },
             { capture: true }

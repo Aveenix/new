@@ -1,4 +1,5 @@
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 _LOCATION_SESSION_KEY = 'av_user_country_id'
@@ -57,8 +58,21 @@ class Website(models.Model):
         'category_id',
         string='Header Menu Categories',
         help='Select categories to show as menu links in the header, right '
-             'after the Shop link. Each links to /shop filtered by that category.',
+             'after the Shop link. Each links to /shop filtered by that category. '
+             'Maximum 5 — the header bar has limited space.',
     )
+
+    # Header bar space is limited (esp. mobile) — cap the menu categories.
+    AVEENIX_HEADER_MENU_MAX = 5
+
+    @api.constrains('aveenix_header_menu_categ_ids')
+    def _check_aveenix_header_menu_limit(self):
+        for website in self:
+            if len(website.aveenix_header_menu_categ_ids) > self.AVEENIX_HEADER_MENU_MAX:
+                raise ValidationError(
+                    "You can select at most %s header menu categories — the "
+                    "header bar has limited space." % self.AVEENIX_HEADER_MENU_MAX
+                )
 
     def _product_domain(self):
         """Scope /shop and all website_sale product queries to this website's
