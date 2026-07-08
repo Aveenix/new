@@ -8564,16 +8564,17 @@ a.av-affiliate-save-btn.av-affiliate-buy {
         overflow-x: hidden;
     }
     .av-cat-nav-inner {
+        overflow: visible;
+    }
+    .av-cat-menu {
+        flex-wrap: nowrap;
+        white-space: nowrap;
         overflow-x: auto;
         scrollbar-width: none;      /* firefox: hide bar */
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
-    .av-cat-nav-inner::-webkit-scrollbar { display: none; }
-    .av-cat-menu {
-        flex-wrap: nowrap;
-        white-space: nowrap;
-    }
+    .av-cat-menu::-webkit-scrollbar { display: none; }
     /* Right-edge fade: signals more menu items are swipeable. Matches the
        bar's dynamic brand color, lets touches pass through. */
     .av-cat-nav {
