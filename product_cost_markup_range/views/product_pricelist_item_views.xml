@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_pricelist_item_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.pricelist.item.form.inherit</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Insert our custom help/info block right after the formula settings group -->
+            <xpath expr="//group[@name='pricelist_rule_base']" position="after">
+                <group name="pricelist_rule_markup_range" invisible="compute_price != 'markup_range'">
+                    <div class="alert alert-info" role="alert" style="margin-bottom: 0px; width: 100%;">
+                        <strong>Markup based on Cost Range:</strong> Price is calculated by matching the product's Standard Cost against the configured Cost Markup Rules (defined under <em>Sales &gt; Configuration &gt; Products &gt; Cost Markup Rules</em>).
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

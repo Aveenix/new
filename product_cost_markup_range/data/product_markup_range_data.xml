@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Rule 1: $0.00 - $4.99 | Markup 300% | Cost * 4.00 - 0.01 -->
+        <record id="product_markup_range_1" model="product.markup.range">
+            <field name="min_cost">0.00</field>
+            <field name="max_cost">4.99</field>
+            <field name="markup_percent">300.0</field>
+            <field name="multiplier">4.00</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 2: $5.00 - $9.99 | Markup 250% | Cost * 3.50 - 0.01 -->
+        <record id="product_markup_range_2" model="product.markup.range">
+            <field name="min_cost">5.00</field>
+            <field name="max_cost">9.99</field>
+            <field name="markup_percent">250.0</field>
+            <field name="multiplier">3.50</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 3: $10.00 - $19.99 | Markup 180% | Cost * 2.80 - 0.01 -->
+        <record id="product_markup_range_3" model="product.markup.range">
+            <field name="min_cost">10.00</field>
+            <field name="max_cost">19.99</field>
+            <field name="markup_percent">180.0</field>
+            <field name="multiplier">2.80</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 4: $20.00 - $39.99 | Markup 130% | Cost * 2.30 - 0.01 -->
+        <record id="product_markup_range_4" model="product.markup.range">
+            <field name="min_cost">20.00</field>
+            <field name="max_cost">39.99</field>
+            <field name="markup_percent">130.0</field>
+            <field name="multiplier">2.30</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 5: $40.00 - $59.99 | Markup 100% | Cost * 2.00 - 0.01 -->
+        <record id="product_markup_range_5" model="product.markup.range">
+            <field name="min_cost">40.00</field>
+            <field name="max_cost">59.99</field>
+            <field name="markup_percent">100.0</field>
+            <field name="multiplier">2.00</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 6: $60.00 - $99.99 | Markup 80% | Cost * 1.80 - 0.01 -->
+        <record id="product_markup_range_6" model="product.markup.range">
+            <field name="min_cost">60.00</field>
+            <field name="max_cost">99.99</field>
+            <field name="markup_percent">80.0</field>
+            <field name="multiplier">1.80</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 7: $100.00 - $199.99 | Markup 60% | Cost * 1.60 - 0.01 -->
+        <record id="product_markup_range_7" model="product.markup.range">
+            <field name="min_cost">100.00</field>
+            <field name="max_cost">199.99</field>
+            <field name="markup_percent">60.0</field>
+            <field name="multiplier">1.60</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 8: $200.00 - $399.99 | Markup 45% | Cost * 1.45 - 0.01 -->
+        <record id="product_markup_range_8" model="product.markup.range">
+            <field name="min_cost">200.00</field>
+            <field name="max_cost">399.99</field>
+            <field name="markup_percent">45.0</field>
+            <field name="multiplier">1.45</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+
+        <!-- Rule 9: $400.00+ | Markup 35% | Cost * 1.35 - 0.01 -->
+        <record id="product_markup_range_9" model="product.markup.range">
+            <field name="min_cost">400.00</field>
+            <field name="max_cost">99999999.00</field>
+            <field name="markup_percent">35.0</field>
+            <field name="multiplier">1.35</field>
+            <field name="extra_fee">-0.01</field>
+        </record>
+    </data>
+</odoo>
