@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View for Cost Markup Ranges -->
+    <record id="view_product_markup_range_list" model="ir.ui.view">
+        <field name="name">product.markup.range.list</field>
+        <field name="model">product.markup.range</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" string="Cost Markup Range Rules">
+                <field name="min_cost" widget="monetary"/>
+                <field name="max_cost" widget="monetary"/>
+                <field name="markup_percent"/>
+                <field name="multiplier"/>
+                <field name="extra_fee" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View for Cost Markup Ranges -->
+    <record id="view_product_markup_range_form" model="ir.ui.view">
+        <field name="name">product.markup.range.form</field>
+        <field name="model">product.markup.range</field>
+        <field name="arch" type="xml">
+            <form string="Cost Markup Range Rule">
+                <sheet>
+                    <group>
+                        <group string="Cost Range Bounds">
+                            <field name="min_cost" widget="monetary"/>
+                            <field name="max_cost" widget="monetary"/>
+                        </group>
+                        <group string="Markup Formula">
+                            <field name="markup_percent"/>
+                            <field name="multiplier"/>
+                            <field name="extra_fee" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open Cost Markup Ranges -->
+    <record id="action_product_markup_range" model="ir.actions.act_window">
+        <field name="name">Cost Markup Rules</field>
+        <field name="res_model">product.markup.range</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Cost Markup Range Rule.
+            </p>
+            <p>
+                Configure Min/Max cost ranges and their corresponding multiplier and extra fees.
+                Pricelist items set to "Markup based on Cost Range" will automatically use these rules.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item in Sales Configuration -->
+    <menuitem id="menu_product_markup_range"
+              name="Cost Markup Rules"
+              parent="sale.prod_config_main"
+              action="action_product_markup_range"
+              sequence="45"/>
+</odoo>
