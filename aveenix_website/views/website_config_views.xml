@@ -84,6 +84,16 @@
                         </div>
                     </setting>
                 </block>
+                <block title="NewsData.io Integration (Aveenix)" name="aveenix_newsdata_block">
+                    <setting string="NewsData.io API Key"
+                             help="Your API Key from NewsData.io to fetch live news articles.">
+                        <field name="aveenix_newsdata_api_key" placeholder="pub_..."/>
+                    </setting>
+                    <setting string="NewsData.io Countries"
+                             help="Select the target countries to fetch news from. Leave empty for global/all news.">
+                        <field name="aveenix_newsdata_country_ids" widget="many2many_tags" placeholder="Select countries..."/>
+                    </setting>
+                </block>
                 <block title="Homepage Featured Categories (Aveenix)" name="aveenix_home_categ_block">
                     <setting string="Featured Categories"
                              help="Categories featured on the homepage after New Arrivals. Each shows a product row with a View All link to the shop filtered by that category.">
@@ -137,5 +147,7 @@
             </xpath>
         </field>
     </record>
+
+    
 
 </odoo>

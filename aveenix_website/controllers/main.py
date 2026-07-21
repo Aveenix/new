@@ -48,6 +48,458 @@ class AveenixWebsite(WebsiteSale):
         return super().shop(page=page, category=category, search=search,
                             min_price=min_price, max_price=max_price, tags=tags, **post)
 
+# Unsplash URLs for premium news mockup images
+NEWS_IMAGES = {
+    'main_style': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+    'vacation': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+    'fashion_retro': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80',
+    'bloggers': 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&q=80',
+    'ashes': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80',
+    'economy': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80',
+    'coronavirus': 'https://images.unsplash.com/photo-1584118624012-df4968df875b?auto=format&fit=crop&w=300&q=80',
+    'real_economy': 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=300&q=80',
+    'stock_market': 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=300&q=80',
+    'hm_photoshoot': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=300&q=80',
+    'travel1': 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=600&q=80',
+    'travel2': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80',
+    'travel3': 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80',
+    'pop1': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    'pop2': 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=150&q=80',
+    'pop3': 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=150&q=80',
+    'ad': 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=300&q=250',
+}
+
+ARTICLES = {
+    999001: {
+        'id': 999001,
+        'category': 'STYLE',
+        'title': "What Makeup to Wear Daily, No Matter What You've Got Planned",
+        'author': 'David Lee',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['main_style'],
+        'url': '/news/999001',
+        'summary': "Daily makeup doesn't have to be complicated. Whether you are running errands, heading to the office, or meeting friends, a clean, natural look is always in style. In this guide, we break down the simple steps to a fresh, long-lasting daily routine.",
+        'content': """
+<p>Daily makeup doesn't have to be complicated. Whether you are running errands, heading to the office, or meeting friends, a clean, natural look is always in style. In this guide, we break down the simple steps to a fresh, long-lasting daily routine.</p>
+<h4>1. Skin Preparation is Key</h4>
+<p>Before applying any makeup, ensure your skin is clean, hydrated, and protected with SPF. A good moisturizer acts as a natural primer, creating a smooth surface for your base products. If you have dry skin, opt for a dewy moisturizer; for oily skin, a mattifying gel works wonders.</p>
+<h4>2. Choose a Light Base</h4>
+<p>Instead of heavy foundation, daily makeup calls for something lighter like a BB cream, CC cream, or tinted moisturizer. This evens out your skin tone while letting your natural skin texture breathe. Use a spot concealer only where needed—under the eyes, around the nose, and on any blemishes.</p>
+<h4>3. Add a Touch of Color</h4>
+<p>A soft cream blush on the apples of your cheeks adds an instant healthy glow. For the eyes, a quick sweep of bronzer in the crease defines the eyes without the need for complex eyeshadow palettes. Finish with a coat of lengthening mascara to open up your eyes.</p>
+<h4>4. Keep Lips Hydrated</h4>
+<p>Skip the drying matte liquid lipsticks for daily wear. Instead, reach for a tinted lip balm, lip oil, or a nude lip gloss. This keeps your lips hydrated throughout the day while adding a subtle hint of color that complements your overall natural look.</p>
+        """
+    },
+    999002: {
+        'id': 999002,
+        'category': 'TRAVEL',
+        'title': 'Work Out as Much as Possible During Your All Inclusive Vacations',
+        'author': 'Emma Watson',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['vacation'],
+        'url': '/news/999002',
+        'summary': 'All-inclusive resorts are famous for unlimited food and drinks, but they are also a great place to stay active. Discover how to balance relaxation with fitness during your next getaway.',
+        'content': """
+<p>All-inclusive resorts are famous for unlimited food and drinks, but they are also a great place to stay active. Discover how to balance relaxation with fitness during your next getaway.</p>
+<h4>Why Stay Active on Vacation?</h4>
+<p>Working out on holiday isn't about punishment; it's about energy and well-being. Exercising in a beautiful, tropical setting releases endorphins that enhance your relaxation. Plus, staying active allows you to enjoy the resort's culinary offerings guilt-free!</p>
+<h4>Outdoor Activities and Water Sports</h4>
+<p>Most all-inclusive resorts offer free access to non-motorized water sports. Kayaking, paddleboarding, and snorkeling are fantastic workouts that don't feel like exercise. A beach volleyball game or a morning jog along the shoreline is another fun way to burn calories while enjoying the sun.</p>
+<h4>Utilizing the Resort Gym</h4>
+<p>Modern resorts boast state-of-the-art fitness centers, often with ocean views or outdoor training areas. Try scheduling a short 30-minute workout in the morning before the day's heat sets in. Focus on full-body compound movements or a quick HIIT session to get your heart rate up and get on with your day.</p>
+        """
+    },
+    999003: {
+        'id': 999003,
+        'category': 'STYLE',
+        'title': 'Expert Advice: The Best Cheap Retro Chic Fashion for this Fall',
+        'author': 'Sophia Loren',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['fashion_retro'],
+        'url': '/news/999003',
+        'summary': 'Retro chic is making a massive comeback this fall. Our fashion experts share how to curate retro-inspired outfits without breaking the bank.',
+        'content': """
+<p>Retro chic is making a massive comeback this fall. Our fashion experts share how to curate retro-inspired outfits without breaking the bank.</p>
+<h4>The Vintage Aesthetic on a Budget</h4>
+<p>You don't need to spend thrift-store fortunes or designer prices to rock a vintage look. The key to retro chic is mixing classic silhouettes with modern basics. Look for key elements like high-waisted trousers, oversized blazers, and retro prints.</p>
+<h4>Thrifting and Consignment Stores</h4>
+<p>The best place to find authentic retro pieces is your local thrift shop. Spend time browsing the racks for quality fabrics like wool, corduroy, and leather. Often, older garments have better construction and durability than modern fast fashion.</p>
+<h4>Key Retro Accessories</h4>
+<p>If you prefer a subtle nod to the past, focus on accessories. Retro sunglasses, wide-brimmed hats, silk scarves, and leather boots can transform a basic outfit into a chic, vintage statement. Experiment with colors like mustard yellow, burnt orange, and deep brown.</p>
+        """
+    },
+    999004: {
+        'id': 999004,
+        'category': 'SHOWBIZ',
+        'title': 'Bloggers Hijacked the Industry, Cutting a Piece of Earnings',
+        'author': 'Alex Johnson',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['bloggers'],
+        'url': '/news/999004',
+        'summary': 'The media landscape has shifted dramatically with the rise of independent bloggers and content creators. We analyze the financial impact on traditional media companies.',
+        'content': """
+<p>The media landscape has shifted dramatically with the rise of independent bloggers and content creators. We analyze the financial impact on traditional media companies.</p>
+<h4>The Democratization of Media</h4>
+<p>In the past, major publishing houses held a monopoly on fashion, lifestyle, and news reporting. Today, anyone with a laptop and a passion can build a global audience. This democratization has forced traditional publishers to share the advertising revenue pool with individual influencers.</p>
+<h4>How Influencers Monetize</h4>
+<p>Successful bloggers no longer rely on banner ads alone. Through affiliate marketing, sponsored posts, digital products, and brand partnerships, top creators are building multi-million dollar businesses. This direct-to-consumer approach cuts out the middleman and maximizes earnings.</p>
+        """
+    },
+    999005: {
+        'id': 999005,
+        'category': 'FACTS',
+        'title': 'The Weirdest Places Ashes Have Been Scattered in South America',
+        'author': 'Carlos Santana',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['ashes'],
+        'url': '/news/999005',
+        'summary': 'South America is home to some of the most breathtaking natural wonders, making it a popular destination for final resting places. Here are the most unusual locations.',
+        'content': """
+<p>South America is home to some of the most breathtaking natural wonders, making it a popular destination for final resting places. Here are the most unusual locations.</p>
+<h4>1. The Atacama Desert</h4>
+<p>Known as the driest place on Earth, some choose the vast, quiet landscapes of the Chilean desert to scatter ashes. The clear night skies and otherworldly terrain offer a peaceful and eternal resting place under the stars.</p>
+<h4>2. Angel Falls, Venezuela</h4>
+<p>The world's highest uninterrupted waterfall is a dramatic and sacred spot. The mist rising from the falls carries ashes into the lush rainforest below, making it a popular choice for adventurers and nature lovers.</p>
+        """
+    },
+    999006: {
+        'id': 999006,
+        'category': 'GLOBAL',
+        'title': 'Witnessing the Birth of the New Coronavirus Economy',
+        'author': 'David Lee',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['economy'],
+        'url': '/news/999006',
+        'summary': 'People live better in big houses and in big cities. I try to contrast; life today is full of contrast. We have to change...',
+        'content': """
+<p>The global pandemic has reshaped economic structures, accelerating digital transformation and work-from-home trends. We take a look at the emerging business models of this new era.</p>
+<h4>The Digital Shift</h4>
+<p>E-commerce, remote communication tools, and online entertainment saw unprecedented growth. Companies that adapted quickly to digital channels thrived, while traditional brick-and-mortar operations faced major restructuring.</p>
+        """
+    },
+    999007: {
+        'id': 999007,
+        'category': 'GLOBAL',
+        'title': 'More and More People Stay Home as Coronavirus Spreads',
+        'author': 'David Lee',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['coronavirus'],
+        'url': '/news/999007',
+        'summary': 'Governments worldwide implemented social distancing guidelines to curb the spread, leading to a surge in home-cooking and digital hobbies.',
+        'content': """
+<p>Governments worldwide implemented social distancing guidelines to curb the spread, leading to a surge in home-cooking and digital hobbies.</p>
+        """
+    },
+    999008: {
+        'id': 999008,
+        'category': 'GLOBAL',
+        'title': 'The Real Economy Has Never Been Tested by a Pandemic',
+        'author': 'David Lee',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['real_economy'],
+        'url': '/news/999008',
+        'summary': 'Modern supply chains and global trade networks are facing historic disruptions. Economists debate the path to recovery.',
+        'content': """
+<p>Modern supply chains and global trade networks are facing historic disruptions. Economists debate the path to recovery.</p>
+        """
+    },
+    999009: {
+        'id': 999009,
+        'category': 'GLOBAL',
+        'title': 'How to Think and Act in the Plummeting Stock Market',
+        'author': 'David Lee',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['stock_market'],
+        'url': '/news/999009',
+        'summary': 'Market volatility can trigger emotional reactions. Experts advise on long-term investment strategies and risk management during economic downturns.',
+        'content': """
+<p>Market volatility can trigger emotional reactions. Experts advise on long-term investment strategies and risk management during economic downturns.</p>
+        """
+    },
+    999010: {
+        'id': 999010,
+        'category': 'GLOBAL',
+        'title': "H&M's Fashion Photoshoot Campaign is the Coolest Thing We've Seen",
+        'author': 'David Lee',
+        'date': 'June 1, 2020',
+        'image': NEWS_IMAGES['hm_photoshoot'],
+        'url': '/news/999010',
+        'summary': 'H&M has launched a brand-new seasonal campaign featuring sustainable fashion, bold prints, and modern street aesthetics.',
+        'content': """
+<p>H&M has launched a brand-new seasonal campaign featuring sustainable fashion, bold prints, and modern street aesthetics.</p>
+        """
+    },
+    999011: {
+        'id': 999011,
+        'category': 'STYLE',
+        'title': '5 Most Affordable and Fun Swimsuits to Try This Summer Season',
+        'author': 'Emma Watson',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['pop2'],
+        'url': '/news/999011',
+        'summary': 'Summer is here! We have compiled a list of the most flattering, comfortable, and affordable swimwear options for your beach trips.',
+        'content': """
+<p>Summer is here! We have compiled a list of the most flattering, comfortable, and affordable swimwear options for your beach trips.</p>
+        """
+    },
+    999012: {
+        'id': 999012,
+        'category': 'STYLE',
+        'title': 'Style Spy: Fashion Model Goes Casual in Distinct and Original Way',
+        'author': 'Sophia Loren',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['pop3'],
+        'url': '/news/999012',
+        'summary': 'Casual styling can be highly sophisticated. See how top models combine athleisure with tailored elements for an effortless street look.',
+        'content': """
+<p>Casual styling can be highly sophisticated. See how top models combine athleisure with tailored elements for an effortless street look.</p>
+        """
+    },
+    999013: {
+        'id': 999013,
+        'category': 'TRAVEL',
+        'title': 'Out of This World Experience with these Exotic Travel Destinations',
+        'author': 'Carlos Santana',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['travel1'],
+        'url': '/news/999013',
+        'summary': 'From remote tropical islands to historic mountain citadels, add these spectacular destinations to your bucket list for the ultimate adventure.',
+        'content': """
+<p>From remote tropical islands to historic mountain citadels, add these spectacular destinations to your bucket list for the ultimate adventure.</p>
+        """
+    },
+    999014: {
+        'id': 999014,
+        'category': 'TRAVEL',
+        'title': 'Ball Travel Experience: Combine Luxury with a Real Life Adventure',
+        'author': 'Carlos Santana',
+        'date': 'June 3, 2020',
+        'image': NEWS_IMAGES['travel3'],
+        'url': '/news/999014',
+        'summary': 'Experience travel at its best. Discover premium eco-resorts and guided tours that offer unmatched luxury while preserving local cultures and ecosystems.',
+        'content': """
+<p>Experience travel at its best. Discover premium eco-resorts and guided tours that offer unmatched luxury while preserving local cultures and ecosystems.</p>
+        """
+    }
+}
+
+
+class AveenixWebsite(WebsiteSale):
+
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
+    ], type='http', auth='public', website=True)
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
+        website = request.env['website'].get_current_website()
+        if website.shop_ppg != 25 or website.shop_ppr != 5:
+            website.sudo().write({'shop_ppg': 25, 'shop_ppr': 5})
+        return super().shop(page=page, category=category, search=search,
+                            min_price=min_price, max_price=max_price, tags=tags, **post)
+
+    @http.route('/news', type='http', auth='public', website=True)
+    def news_home(self, **kwargs):
+        # Fetch from local DB
+        db_records = request.env['aveenix.news'].sudo().search([], limit=50)
+        articles_list = []
+        for r in db_records:
+            articles_list.append({
+                'id': r.id,
+                'category': r.category,
+                'title': r.title,
+                'author': r.author or "Staff Reporter",
+                'date': r.published_date.strftime('%B %d, %Y') if r.published_date else "",
+                'image': r.image_url or "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                'url': f"/news/{r.id}",
+                'summary': r.description or "",
+                'content': r.content or "",
+                'is_db': True,
+            })
+
+        # Fill remaining slots using mock data to keep the premium layout complete
+        all_articles = articles_list + [ARTICLES[k] for k in sorted(ARTICLES.keys())]
+
+        # Extract segments
+        hero_main = all_articles[0]
+        hero_side = all_articles[1:5]
+        global_main = all_articles[5]
+        global_side = all_articles[6:10]
+        popular = all_articles[10:13]
+        
+        # Fetch Our Blogs directly from Odoo's blog.blog model
+        blogs = request.env['blog.blog'].sudo().search([])
+        blog_list = []
+        travel_guides = []
+        for b in blogs:
+            image_url = ""
+            if b.av_blog_image:
+                image_url = f"/web/image/blog.blog/{b.id}/av_blog_image"
+            if not image_url:
+                image_url = "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80"
+                
+            summary = b.subtitle or ""
+            default_sub = "We are a team of passionate people whose goal is to improve everyone's life."
+            if summary.strip() == default_sub:
+                summary = ""
+                
+            cat_name = b.tag_category_id.name.upper() if b.tag_category_id else "BLOG"
+                
+            blog_data = {
+                'id': b.id,
+                'category': cat_name,
+                'title': b.name,
+                'author': "Admin",
+                'date': "",
+                'image': image_url,
+                'url': f"/news/blog/{b.id}",
+                'summary': summary,
+                'content': "",
+                'is_blog': True,
+            }
+            
+            # Check if it's a travel blog based ONLY on category
+            is_travel = False
+            if b.tag_category_id and 'travel' in b.tag_category_id.name.lower():
+                is_travel = True
+                
+            if is_travel:
+                travel_guides.append(blog_data)
+            else:
+                blog_list.append(blog_data)
+        
+        # Fallback to mock data if no travel blogs are found to keep layout filled
+        if not travel_guides:
+            travel_guides = [ARTICLES[999013], ARTICLES[999002], ARTICLES[999014]]
+            
+        blog_categories = [{'name': 'OUR BLOGS', 'posts': blog_list}]
+
+        data = {
+            'trending_title': hero_main['title'],
+            'hero_main': hero_main,
+            'hero_side': hero_side,
+            'global_main': global_main,
+            'global_side': global_side,
+            'popular': popular,
+            'travel_guides': travel_guides,
+            'blog_categories': blog_categories,
+            'ad_image': NEWS_IMAGES['ad'],
+            'is_news_page': True,
+        }
+        return request.render('aveenix_website.news_home_template', data)
+
+    @http.route('/news/blog/<int:blog_id>', type='http', auth='public', website=True)
+    def news_blog_category(self, blog_id, **kwargs):
+        blog = request.env['blog.blog'].sudo().browse(blog_id)
+        if not blog.exists():
+            return request.not_found()
+            
+        posts = request.env['blog.post'].sudo().search([('blog_id', '=', blog.id)])
+        
+        # Prepare blog data
+        image_url = ""
+        if blog.cover_properties:
+            try:
+                import json
+                cover_data = json.loads(blog.cover_properties)
+                bg_img = cover_data.get('background-image', '')
+                if bg_img and 'url(' in bg_img:
+                    image_url = bg_img.split("url(")[1].split(")")[0].strip("'\"")
+            except Exception:
+                pass
+        if not image_url:
+            image_url = "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80"
+            
+        # Extract post data to pass to template
+        post_list = []
+        for p in posts:
+            p_img = ""
+            if p.cover_properties:
+                try:
+                    import json
+                    p_cover = json.loads(p.cover_properties)
+                    p_bg = p_cover.get('background-image', '')
+                    if p_bg and 'url(' in p_bg:
+                        p_img = p_bg.split("url(")[1].split(")")[0].strip("'\"")
+                except Exception:
+                    pass
+            if not p_img:
+                p_img = image_url
+                
+            post_list.append({
+                'id': p.id,
+                'title': p.name,
+                'date': p.post_date.strftime('%B %d, %Y') if p.post_date else "",
+                'author': p.author_id.name or "Admin",
+                'summary': p.subtitle or "",
+                'image': p_img,
+                'url': f"/blog/{blog.id}/{p.id}",
+            })
+
+        data = {
+            'blog': blog,
+            'blog_image': image_url,
+            'posts': post_list,
+            'is_news_page': True,
+        }
+        return request.render('aveenix_website.news_blog_category_template', data)
+
+    @http.route('/news/<int:article_id>', type='http', auth='public', website=True)
+    def news_detail(self, article_id, **kwargs):
+        # Try to find the article in database first
+        r = request.env['aveenix.news'].sudo().browse(article_id)
+        if r.exists():
+            article = {
+                'id': r.id,
+                'category': r.category,
+                'title': r.title,
+                'author': r.author or "Staff Reporter",
+                'date': r.published_date.strftime('%B %d, %Y') if r.published_date else "",
+                'image': r.image_url or "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                'url': f"/news/{r.id}",
+                'summary': r.description or "",
+                'content': r.content or "",
+                'is_db': True,
+            }
+        else:
+            # Fall back to mock articles list
+            article = ARTICLES.get(article_id)
+            if not article:
+                return request.not_found()
+
+        # Get popular articles dynamically
+        db_records = request.env['aveenix.news'].sudo().search([], limit=3)
+        popular_articles = []
+        for pop_r in db_records:
+            popular_articles.append({
+                'id': pop_r.id,
+                'category': pop_r.category,
+                'title': pop_r.title,
+                'author': pop_r.author or "Staff Reporter",
+                'date': pop_r.published_date.strftime('%B %d, %Y') if pop_r.published_date else "",
+                'image': pop_r.image_url or "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                'url': f"/news/{pop_r.id}",
+                'summary': pop_r.description or "",
+                'content': pop_r.content or "",
+            })
+        
+        # Fallback popular articles
+        if len(popular_articles) < 3:
+            mock_popular = [ARTICLES[999001], ARTICLES[999011], ARTICLES[999012]]
+            popular_articles = popular_articles + mock_popular[len(popular_articles):]
+
+        data = {
+            'article': article,
+            'popular': popular_articles,
+            'ad_image': NEWS_IMAGES['ad'],
+            'is_news_page': True,
+        }
+        return request.render('aveenix_website.news_detail_template', data)
+
+
+
     @http.route('/', type='http', auth='public', website=True)
     def homepage(self, **kwargs):
         Category = request.env['product.public.category'].sudo()

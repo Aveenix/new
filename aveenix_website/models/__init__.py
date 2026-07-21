@@ -12,3 +12,6 @@ from . import crm_lead
 from . import affiliate_cart_line
 from . import product_public_category
 from . import loyalty_reward
+from . import aveenix_news
+from . import blog_blog
+
