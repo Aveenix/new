@@ -4541,6 +4541,358 @@
         </xpath>
     </template>
 
+    <template id="news_home_template" name="Aveenix News Home">
+        <t t-set="is_news_page" t-value="True"/>
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'news_home'"/>
+            <div id="wrap" class="av-news-page">
+                <!-- 1. Trending Bar (Clean, transparent styling) -->
+                <div class="av-news-trending-bar">
+                    <div class="av-container d-flex align-items-center">
+                        <span class="av-trending-badge">TRENDING NOW</span>
+                        <div class="av-trending-ticker ms-3">
+                            <span t-esc="trending_title"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="av-container py-4">
+                    <!-- 2. Hero Grid -->
+                    <div class="av-news-hero-grid mb-5">
+                        <!-- Main Large Post (Left) -->
+                        <div class="av-news-hero-main" t-att-style="'background-image: url(%s);' % hero_main['image']">
+                            <div class="av-news-overlay"/>
+                            <div class="av-news-content">
+                                <span class="av-news-cat-badge" t-esc="hero_main['category']"/>
+                                <h2 class="av-news-title mt-2">
+                                    <a t-att-href="hero_main['url']" t-esc="hero_main['title']"/>
+                                </h2>
+                                <div class="av-news-meta mt-2">
+                                    <span t-esc="hero_main['author']"/> <span class="mx-1">•</span> <span t-esc="hero_main['date']"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2x2 Grid of Small Posts (Right) -->
+                        <div class="av-news-hero-side-grid">
+                            <t t-foreach="hero_side" t-as="item">
+                                <div class="av-news-hero-side-item" t-att-style="'background-image: url(%s);' % item['image']">
+                                    <div class="av-news-overlay"/>
+                                    <div class="av-news-content">
+                                        <span class="av-news-cat-badge-small" t-esc="item['category']"/>
+                                        <h4 class="av-news-title-small mt-2">
+                                            <a t-att-href="item['url']" t-esc="item['title']"/>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- 3. Two Columns: Global News vs Sidebar -->
+                    <div class="row">
+                        <!-- Left Column: Global News & Travel Guides -->
+                        <div class="col-lg-8">
+                            <!-- Global News section header -->
+                            <div class="av-news-section-header d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="av-news-section-title">GLOBAL NEWS</h3>
+                                <a href="#" class="av-news-view-all">All <i class="fa fa-caret-down"/></a>
+                            </div>
+
+                            <div class="row mb-5">
+                                <!-- Global Main Left Card -->
+                                <div class="col-md-6 mb-4 mb-md-0">
+                                    <div class="av-news-global-main-card">
+                                        <div class="av-news-img-wrap mb-3">
+                                            <img t-att-src="global_main['image']" class="img-fluid rounded" alt="Global Main"/>
+                                        </div>
+                                        <span class="av-news-cat-badge-text" t-esc="global_main['category']"/>
+                                        <h4 class="av-news-card-title mt-2">
+                                            <a t-att-href="global_main['url']" t-esc="global_main['title']"/>
+                                        </h4>
+                                        <div class="av-news-meta-text my-2">
+                                            <span t-esc="global_main['author']"/> <span class="mx-1">•</span> <span t-esc="global_main['date']"/>
+                                        </div>
+                                        <p class="av-news-summary text-muted" t-esc="global_main['summary']"/>
+                                    </div>
+                                </div>
+
+                                <!-- Global List Right List -->
+                                <div class="col-md-6">
+                                    <div class="av-news-global-list">
+                                        <t t-foreach="global_side" t-as="item">
+                                            <div class="av-news-list-item d-flex mb-3">
+                                                <div class="av-news-list-thumb me-3">
+                                                    <img t-att-src="item['image']" class="img-fluid rounded" alt="Thumb"/>
+                                                </div>
+                                                <div class="av-news-list-body">
+                                                    <h5 class="av-news-list-title">
+                                                        <a t-att-href="item['url']" t-esc="item['title']"/>
+                                                    </h5>
+                                                    <span class="av-news-list-date text-muted" t-esc="item['date']"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Travel Guides section header -->
+                            <div class="av-news-section-header mb-4">
+                                <h3 class="av-news-section-title">TRAVEL GUIDES</h3>
+                            </div>
+
+                            <div class="row">
+                                <t t-foreach="travel_guides" t-as="item">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="av-news-travel-card">
+                                            <div class="av-news-travel-img-wrap position-relative mb-2">
+                                                <img t-att-src="item['image']" class="img-fluid rounded" alt="Travel"/>
+                                                <span class="av-news-travel-badge" t-esc="item['category']"/>
+                                            </div>
+                                            <h5 class="av-news-travel-title mt-2">
+                                                <a t-att-href="item['url']" t-esc="item['title']"/>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Column: Sidebar -->
+                        <div class="col-lg-4">
+                            <!-- Social Follow Widget -->
+                            <div class="av-news-sidebar-widget mb-5">
+                                <div class="row g-2">
+                                    <div class="col-4 text-center">
+                                        <div class="av-social-box av-fb">
+                                            <i class="fa fa-facebook fa-lg mb-2"/>
+                                            <div class="av-count">21,998</div>
+                                            <div class="av-label">Fans</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div class="av-social-box av-twitter">
+                                            <i class="fa fa-twitter fa-lg mb-2"/>
+                                            <div class="av-count">3,913</div>
+                                            <div class="av-label">Followers</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div class="av-social-box av-youtube">
+                                            <i class="fa fa-youtube-play fa-lg mb-2"/>
+                                            <div class="av-count">22,900</div>
+                                            <div class="av-label">Subscribers</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ad Banner Widget -->
+                            <div class="av-news-sidebar-widget text-center mb-5">
+                                <div class="av-news-ad-wrap">
+                                    <span class="av-ad-label d-block text-muted mb-1">- Advertisement -</span>
+                                    <img t-att-src="ad_image" class="img-fluid rounded" alt="Ad Banner"/>
+                                </div>
+                            </div>
+
+                            <!-- Most Popular Widget -->
+                            <div class="av-news-sidebar-widget mb-5">
+                                <div class="av-news-section-header mb-4">
+                                    <h3 class="av-news-section-title">MOST POPULAR</h3>
+                                </div>
+                                <div class="av-news-popular-list">
+                                    <t t-foreach="popular" t-as="item">
+                                        <div class="av-news-pop-item d-flex align-items-center mb-3">
+                                            <div class="av-news-pop-thumb me-3">
+                                                <img t-att-src="item['image']" class="img-fluid rounded-circle" alt="Pop Thumb"/>
+                                            </div>
+                                            <div class="av-news-pop-body">
+                                                <span class="av-news-cat-badge-text-small text-uppercase" t-esc="item['category']"/>
+                                                <h5 class="av-news-pop-title mt-1 mb-0">
+                                                    <a t-att-href="item['url']" t-esc="item['title']"/>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- DYNAMIC BLOG SECTIONS (Full Width, 3 Columns) -->
+                    <t t-set="is_dark" t-value="True"/>
+                    <t t-foreach="blog_categories" t-as="bc">
+                        <div class="av-news-section-header mb-4 mt-5">
+                            <h3 class="av-news-section-title text-uppercase" t-esc="bc['name']"/>
+                        </div>
+                        <div class="row mb-5">
+                            <t t-foreach="bc['posts']" t-as="item">
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div t-attf-class="av-news-blog-card shadow-sm rounded overflow-hidden #{'bg-dark text-light border-0' if is_dark else 'bg-white text-dark'}" t-att-style="'transition: transform 0.3s ease;' + ('' if is_dark else ' border: 1px solid rgba(0,0,0,0.05);')">
+                                        <div class="av-news-blog-img-wrap position-relative" style="height: 220px; overflow: hidden;">
+                                            <a t-att-href="item['url']" class="d-block w-100 h-100">
+                                                <img t-att-src="item['image']" class="img-fluid w-100 h-100" style="object-fit: cover; transition: transform 0.5s ease;" alt="Blog Image" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+                                            </a>
+                                            <span class="av-news-blog-badge position-absolute" t-att-style="'top: 15px; left: 15px; background: ' + ('var(--av-primary, #e23737)' if not is_dark else '#ffeb3b') + '; color: ' + ('#fff' if not is_dark else '#000') + '; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;'" t-esc="item['category']"/>
+                                        </div>
+                                        <div class="av-news-blog-body p-4">
+                                            <div t-attf-class="av-news-blog-meta mb-2 d-flex align-items-center #{'text-white-50' if is_dark else 'text-muted'}" style="font-size: 0.8rem; font-weight: 500;">
+                                                <span class="d-flex align-items-center me-3"><i t-attf-class="fa fa-user me-2 #{'text-warning' if is_dark else ''}" t-att-style="'color: var(--av-primary, #e23737);' if not is_dark else ''"/> <t t-esc="item['author']"/></span>
+                                                <span class="d-flex align-items-center"><i t-attf-class="fa fa-calendar me-2 #{'text-warning' if is_dark else ''}" t-att-style="'color: var(--av-primary, #e23737);' if not is_dark else ''"/> <t t-esc="item['date']"/></span>
+                                            </div>
+                                            <h4 class="av-news-blog-title mb-3" style="font-weight: 700; font-size: 1.2rem; line-height: 1.4;">
+                                                <a t-att-href="item['url']" t-attf-class="text-decoration-none hover-primary #{'text-light' if is_dark else 'text-dark'}" style="transition: color 0.2s;" t-esc="item['title']"/>
+                                            </h4>
+                                            <p t-attf-class="av-news-blog-summary mb-4 #{'text-white-50' if is_dark else 'text-muted'}" style="font-size: 0.95rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;" t-esc="item['summary']"/>
+                                            <a t-att-href="item['url']" t-attf-class="av-news-blog-read-more d-inline-flex align-items-center #{'text-warning' if is_dark else ''}" t-att-style="'color: var(--av-primary, #e23737);' if not is_dark else ''" style="font-weight: 700; font-size: 0.85rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                                                Read Article <i class="fa fa-arrow-right ms-2" style="transition: transform 0.3s ease;"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="news_blog_category_template" name="Aveenix Blog Category">
+        <t t-set="is_news_page" t-value="True"/>
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'news_blog'"/>
+            <div id="wrap" class="av-news-page">
+                <!-- Breadcrumb Section -->
+                <div class="av-news-breadcrumb-bar py-3 border-bottom mb-4">
+                    <div class="av-container">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0" style="background: transparent; padding: 0;">
+                                <li class="breadcrumb-item"><a href="/" class="text-muted text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/news" class="text-muted text-decoration-none">News</a></li>
+                                <li class="breadcrumb-item active text-muted" aria-current="page"><t t-esc="blog.name"/></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="av-news-breadcrumb-bar py-4 border-bottom mb-4 text-center">
+                    <div class="av-container">
+                        <h1 class="text-uppercase mb-2" style="font-weight: 800; font-size: 3rem;" t-esc="blog.name"/>
+                        <p class="lead text-muted mb-0" t-esc="blog.subtitle or 'Explore our latest articles and updates.'"/>
+                    </div>
+                </div>
+
+                <!-- Blog Content -->
+                <div class="av-container py-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <!-- Render the new Image field -->
+                            <t t-if="blog.av_blog_image">
+                                <div class="text-center mb-5">
+                                    <img t-att-src="image_data_uri(blog.av_blog_image)" class="img-fluid rounded" alt="Blog Image"/>
+                                </div>
+                            </t>
+                            <!-- Render the new HTML desc field -->
+                            <div t-field="blog.desc" class="av-blog-description"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="news_detail_template" name="Aveenix News Detail">
+        <t t-set="is_news_page" t-value="True"/>
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'news_detail'"/>
+            
+            <div id="wrap" class="av-news-page av-news-detail-page">
+                <!-- Breadcrumb Section -->
+                <div class="av-news-breadcrumb-bar py-3 border-bottom mb-4">
+                    <div class="av-container">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0" style="background: transparent; padding: 0;">
+                                <li class="breadcrumb-item"><a href="/" class="text-muted text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/news" class="text-muted text-decoration-none">News</a></li>
+                                <li class="breadcrumb-item"><a t-attf-href="/news?category=#{article['category']}" class="text-muted text-decoration-none"><t t-esc="article['category']"/></a></li>
+                                <li class="breadcrumb-item active text-muted" aria-current="page"><t t-esc="article['title']"/></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="av-container py-2">
+                    <div class="row">
+                        <!-- Main Content (Left) -->
+                        <div class="col-lg-8">
+                            <!-- Article Header -->
+                            <div class="av-article-header mb-4">
+                                <span class="av-news-cat-badge mb-2 d-inline-block" t-esc="article['category']"/>
+                                <h1 class="av-article-title mt-2 mb-3" style="font-weight: 800; font-size: 36px; line-height: 1.2; color: inherit;" t-esc="article['title']"/>
+                                <div class="av-article-meta d-flex align-items-center text-muted" style="font-size: 14px;">
+                                    <span class="fw-bold" style="color: var(--av-red, #dc3545);" t-esc="article['author']"/>
+                                    <span class="mx-2">•</span>
+                                    <span t-esc="article['date']"/>
+                                </div>
+                            </div>
+
+                            <!-- Featured Image -->
+                            <div class="av-article-featured-img mb-4" style="border-radius: 8px; overflow: hidden; max-height: 480px;">
+                                <img t-att-src="article['image']" class="img-fluid w-100" style="object-fit: cover;" alt="Featured Image"/>
+                            </div>
+
+                            <!-- Article Content -->
+                            <div class="av-article-body mb-5" style="font-size: 17px; line-height: 1.8; color: inherit;">
+                                <t t-out="article['content']"/>
+                            </div>
+
+                            <!-- Social Share Box -->
+                            <div class="av-article-share-box d-flex align-items-center py-3 border-top border-bottom mb-5">
+                                <span class="fw-bold me-3">SHARE THIS ARTICLE:</span>
+                                <a href="https://facebook.com" target="_blank" class="btn btn-sm btn-outline-primary me-2"><i class="fa fa-facebook me-1"/>Facebook</a>
+                                <a href="https://twitter.com" target="_blank" class="btn btn-sm btn-outline-info me-2"><i class="fa fa-twitter me-1"/>Twitter</a>
+                                <a href="https://pinterest.com" target="_blank" class="btn btn-sm btn-outline-danger"><i class="fa fa-pinterest me-1"/>Pinterest</a>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar (Right) -->
+                        <div class="col-lg-4">
+                            <!-- Popular Posts Widget -->
+                            <div class="av-news-sidebar-widget mb-5">
+                                <div class="av-news-section-header mb-4">
+                                    <h3 class="av-news-section-title">MOST POPULAR</h3>
+                                </div>
+                                <div class="av-news-popular-list">
+                                    <t t-foreach="popular" t-as="item">
+                                        <div class="av-news-pop-item d-flex align-items-center mb-3">
+                                            <div class="av-news-pop-thumb me-3">
+                                                <img t-att-src="item['image']" class="img-fluid rounded-circle" alt="Pop Thumb"/>
+                                            </div>
+                                            <div class="av-news-pop-body">
+                                                <span class="av-news-cat-badge-text-small text-uppercase" t-esc="item['category']"/>
+                                                <h5 class="av-news-pop-title mt-1 mb-0">
+                                                    <a t-att-href="item['url']" t-esc="item['title']"/>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Ad Banner Widget -->
+                            <div class="av-news-sidebar-widget text-center">
+                                <img t-att-src="ad_image" class="img-fluid rounded" alt="Ad Banner"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
 </odoo>
 
 

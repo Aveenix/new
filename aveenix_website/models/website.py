@@ -48,6 +48,14 @@ class Website(models.Model):
              'Each shows a row of its published products with a View All link to '
              'the shop filtered by that category.',
     )
+    aveenix_newsdata_country_ids = fields.Many2many(
+        'res.country',
+        'aveenix_website_newsdata_country_rel',
+        'website_id',
+        'country_id',
+        string='NewsData.io Countries',
+        help='Select the countries from which to fetch news articles.'
+    )
 
     # Categories shown as menu items in the header nav bar, right after the
     # "Shop" link. Each renders as "<name>" linking to /shop?category=<id>.

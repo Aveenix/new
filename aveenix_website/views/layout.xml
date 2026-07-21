@@ -159,6 +159,20 @@
             </div>
 
             <!-- ── Main header row ─────────────────────────────── -->
+            <!-- Client-side logic for news layout to bypass QWeb caching issues -->
+            <style>
+                body.is-news-page .av-default-logo-group { display: none !important; }
+                body.is-news-page .av-logo-news { display: block !important; }
+                body.is-news-page #top_menu { display: none !important; }
+                body.is-news-page .av-cat-nav { display: none !important; }
+            </style>
+            <script type="text/javascript">
+                document.addEventListener("DOMContentLoaded", function() {
+                    if (window.location.pathname.indexOf('/news') !== -1) {
+                        document.body.classList.add('is-news-page');
+                    }
+                });
+            </script>
             <div class="av-topbar">
                 <div class="av-topbar-inner">
 
@@ -172,7 +186,7 @@
                                 </linearGradient>
                               </defs>
                               <rect fill="url(#av-logo-gradient)" x="3.67" y="3.02" width="137.14" height="137.14" rx="16.77" ry="16.77"/>
-                              <g fill="var(--av-logo-text, #58595b)">
+                              <g fill="var(--av-logo-text, #58595b)" class="av-logo-express av-default-logo-group">
                                 <path d="M626.48,123.43h15.42v3.29h-19.21v-26.46h18.68v3.29h-14.9v19.89ZM626.14,111.67h13.61v3.21h-13.61v-3.21Z"/>
                                 <path d="M644.14,126.72l8.62-11.19-.04,1.85-8.2-10.7h4.04l6.28,8.24h-1.55l6.28-8.24h3.97l-8.32,10.77.04-1.93,8.7,11.19h-4.12l-6.62-8.77,1.47.23-6.5,8.54h-4.04Z"/>
                                 <path d="M667.92,134.05v-27.37h3.48v5.41l-.23,4.65.38,4.65v12.67h-3.63ZM678.54,126.95c-1.66,0-3.18-.38-4.56-1.15s-2.47-1.91-3.29-3.42-1.23-3.4-1.23-5.67.4-4.16,1.19-5.67,1.88-2.65,3.25-3.4c1.37-.76,2.92-1.13,4.63-1.13,1.97,0,3.71.43,5.22,1.29,1.51.86,2.71,2.05,3.59,3.57.88,1.53,1.32,3.31,1.32,5.35s-.44,3.83-1.32,5.37c-.88,1.54-2.08,2.74-3.59,3.59-1.51.86-3.25,1.29-5.22,1.29ZM678.24,123.77c1.29,0,2.44-.29,3.46-.87,1.02-.58,1.83-1.4,2.42-2.48.59-1.07.89-2.31.89-3.72s-.3-2.68-.89-3.72c-.59-1.05-1.4-1.86-2.42-2.44s-2.17-.87-3.46-.87-2.4.29-3.42.87-1.83,1.39-2.42,2.44c-.59,1.05-.89,2.29-.89,3.72s.3,2.65.89,3.72c.59,1.07,1.4,1.9,2.42,2.48,1.02.58,2.16.87,3.42.87Z"/>
@@ -197,6 +211,7 @@
                               <polygon fill="var(--av-logo-text, #231f20)" points="658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 686.03 85.24 658.55 85.24"/>
                               <polygon fill="var(--av-logo-text, #231f20)" points="712.71 34.39 690.08 13.15 662.44 13.15 698.99 47.27 712.71 34.39 712.71 34.39"/>
                               <polygon fill="var(--av-red, #d6292e)" points="726.48 47.31 735.22 39.12 735.22 39.12 762.91 13.15 735.32 13.15 721.64 26 721.64 26 715.49 31.77 712.71 34.39 712.71 34.39 698.99 47.27 658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 712.79 60.15 726.47 47.31 726.48 47.31"/>
+                              <text style="display: none;" x="622" y="127" fill="var(--av-logo-text, #58595b)" class="av-logo-news" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="28px" letter-spacing="1px">NEWS</text>
                             </svg>
                         </div>
                     </a>
@@ -355,6 +370,7 @@
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
                                 <li><a href="http://aveenixdigital.com/">Digital</a></li>
                                 <li><a href="https://aveenixdomains.com/">Domains</a></li>
+                                <li><a href="/news">News</a></li>
                                 <li><a href="/privacy#acp-program">Cashback Program</a></li>
                                 <li><a href="/my/orders">Order Tracking</a></li>
                             </ul>

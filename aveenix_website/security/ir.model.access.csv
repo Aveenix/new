@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_affiliate_click_log_user,affiliate.click.log.user,model_affiliate_click_log,base.group_user,1,1,1,1
 access_affiliate_cart_line_user,affiliate.cart.line.user,model_affiliate_cart_line,base.group_user,1,1,1,1
+access_aveenix_news_user,aveenix.news.user,model_aveenix_news,base.group_user,1,1,1,1
+

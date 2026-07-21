@@ -21,6 +21,16 @@ class ResConfigSettings(models.TransientModel):
         help='Fixed amount taken off the customer first order (e.g. 20.00). '
              'Only granted once, on the first order of a new account.',
     )
+    aveenix_newsdata_api_key = fields.Char(
+        string='NewsData.io API Key',
+        config_parameter='aveenix_website.newsdata_api_key',
+        help='Your API Key from NewsData.io to fetch live news articles.',
+    )
+    aveenix_newsdata_country_ids = fields.Many2many(
+        related='website_id.aveenix_newsdata_country_ids',
+        readonly=False,
+        string='NewsData.io Countries',
+    )
     currency_id = fields.Many2one(
         related='company_id.currency_id',
         string='Currency',
