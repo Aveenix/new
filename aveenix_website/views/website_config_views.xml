@@ -145,6 +145,22 @@
                     </setting>
                 </block>
             </xpath>
+            <xpath expr="//block[@name='aveenix_recaptcha_block']" position="after">
+                <block title="Advertisement Banners (News)" name="aveenix_advertisement_block">
+                    <setting string="Ad Banner 1 Image" help="Upload an image for the first advertisement banner in the news sidebar.">
+                        <field name="aveenix_news_ad1_image" widget="image" options="{'size': [150, 150]}"/>
+                    </setting>
+                    <setting string="Ad Banner 1 URL" help="URL to redirect to when the first ad is clicked.">
+                        <field name="aveenix_news_ad1_url" placeholder="https://..."/>
+                    </setting>
+                    <setting string="Ad Banner 2 Image" help="Upload an image for the second advertisement banner in the news sidebar.">
+                        <field name="aveenix_news_ad2_image" widget="image" options="{'size': [150, 150]}"/>
+                    </setting>
+                    <setting string="Ad Banner 2 URL" help="URL to redirect to when the second ad is clicked.">
+                        <field name="aveenix_news_ad2_url" placeholder="https://..."/>
+                    </setting>
+                </block>
+            </xpath>
         </field>
     </record>
 

@@ -11,6 +11,10 @@ class ResCompany(models.Model):
         string='Pinterest Account',
         help='Full Pinterest profile URL shown in the website footer.',
     )
+    social_whatsapp = fields.Char(
+        string='WhatsApp Number',
+        help='WhatsApp number or wa.me URL shown in the website footer.',
+    )
 
     def _av_welcome_discount_info(self):
         """Single source of truth for the new-user welcome-discount banner.

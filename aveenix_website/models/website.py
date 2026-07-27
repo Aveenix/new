@@ -57,6 +57,27 @@ class Website(models.Model):
         help='Select the countries from which to fetch news articles.'
     )
 
+    aveenix_news_ad1_image = fields.Image(
+        string='News Ad 1 Image',
+        max_width=500, max_height=500,
+        help='Advertisement banner image shown in the news sidebar.',
+    )
+    aveenix_news_ad1_url = fields.Char(
+        string='News Ad 1 URL',
+        default='https://themeforest.net/item/newspaper/5489609',
+        help='URL to redirect to when the first news ad is clicked.',
+    )
+    aveenix_news_ad2_image = fields.Image(
+        string='News Ad 2 Image',
+        max_width=500, max_height=500,
+        help='Second advertisement banner image shown in the news sidebar.',
+    )
+    aveenix_news_ad2_url = fields.Char(
+        string='News Ad 2 URL',
+        default='https://themeforest.net/item/newspaper/5489609',
+        help='URL to redirect to when the second news ad is clicked.',
+    )
+
     # Categories shown as menu items in the header nav bar, right after the
     # "Shop" link. Each renders as "<name>" linking to /shop?category=<id>.
     aveenix_header_menu_categ_ids = fields.Many2many(

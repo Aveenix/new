@@ -20,5 +20,5 @@ class ResUsers(models.Model):
         'product.template',
         'av_user_wish_rel',
         'user_id', 'product_id',
-        string='Wishlist',
+        string='Aveenix Wishlist',
     )

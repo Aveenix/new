@@ -31,6 +31,22 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         string='NewsData.io Countries',
     )
+    aveenix_news_ad1_image = fields.Image(
+        related='website_id.aveenix_news_ad1_image',
+        readonly=False,
+    )
+    aveenix_news_ad1_url = fields.Char(
+        related='website_id.aveenix_news_ad1_url',
+        readonly=False,
+    )
+    aveenix_news_ad2_image = fields.Image(
+        related='website_id.aveenix_news_ad2_image',
+        readonly=False,
+    )
+    aveenix_news_ad2_url = fields.Char(
+        related='website_id.aveenix_news_ad2_url',
+        readonly=False,
+    )
     currency_id = fields.Many2one(
         related='company_id.currency_id',
         string='Currency',
