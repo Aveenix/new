@@ -41,121 +41,99 @@ class AveenixNews(models.Model):
         params = {
             'apikey': api_key,
             'language': 'en',
-            'category': 'world,tourism,entertainment,technology,business',
-            'size': 10,  # sync 10 articles per execution
+            'country': 'us',
+            'category': 'world,lifestyle,entertainment,technology,health',
+            'image': '1', # Only fetch articles with images!
+            'removeduplicate': '1',
         }
         
-        # Retrieve target countries from the website record
-        website = self.env['website'].sudo().search([], limit=1)
-        if website and website.aveenix_newsdata_country_ids:
-            country_codes = [c.code.lower() for c in website.aveenix_newsdata_country_ids if c.code]
-            if country_codes:
-                params['country'] = ",".join(country_codes)
-                _logger.info("NewsData.io sync: Configured target country filters: %s", params['country'])
-        else:
-            _logger.info("NewsData.io sync: No country filters configured. Fetching global news.")
-
         # Log parameters (mask api key for security)
         masked_params = dict(params)
         if 'apikey' in masked_params and masked_params['apikey']:
             masked_params['apikey'] = masked_params['apikey'][:6] + '...' + masked_params['apikey'][-4:]
         _logger.info("NewsData.io sync: Request parameters: %s", masked_params)
 
+        articles_created = 0
+        articles_updated = 0
+        next_page = None
+
         try:
-            response = requests.get(url, params=params, timeout=10)
-            _logger.info("NewsData.io sync: API response status code: %s", response.status_code)
-            
-            if response.status_code != 200:
-                _logger.error("Failed to fetch news from NewsData.io: Status %s, Response: %s", 
-                              response.status_code, response.text)
-                return
-            
-            data = response.json()
-            if data.get('status') != 'success':
-                _logger.error("NewsData.io returned error status: %s", data)
-                return
+            for page in range(8): # Fetch up to 8 pages (~80 articles)
+                if next_page:
+                    params['page'] = next_page
+                    
+                response = requests.get(url, params=params, timeout=20)
+                if response.status_code != 200:
+                    _logger.error("Failed to fetch news: Status %s", response.status_code)
+                    break
+                    
+                data = response.json()
+                if data.get('status') == 'success' and data.get('results'):
+                    results = data['results']
+                    for article in results:
+                        article_id = article.get('article_id')
+                        title = article.get('title')
+                        if not title: continue
+                        existing = self.search(['|', ('api_article_id', '=', article_id), ('title', '=', title)], limit=1)
 
-            results = data.get('results', [])
-            _logger.info("NewsData.io sync: API returned %s articles.", len(results))
-            synced_count = 0
-
-            for article in results:
-                api_id = article.get('article_id')
-                article_title = article.get('title') or "Untitled"
-                article_countries = article.get('country', [])
-                
-                _logger.info("NewsData.io sync: Processing article ID: %s | Title: %s | Country source: %s", 
-                             api_id, article_title, article_countries)
-                
-                if not api_id:
-                    continue
-
-                # Prevent duplicates
-                existing = self.search([('api_article_id', '=', api_id)], limit=1)
-                if existing:
-                    _logger.info("NewsData.io sync: Article %s already exists. Skipping.", api_id)
-                    continue
-
-                # Map API categories to our predefined list
-                api_categories = article.get('category', [])
-                category = 'GLOBAL'
-                if api_categories:
-                    first_cat = api_categories[0].upper()
-                    if first_cat in ['STYLE', 'FASHION', 'LIFESTYLE', 'BEAUTY']:
-                        category = 'STYLE'
-                    elif first_cat in ['TRAVEL', 'TOURISM', 'OUTDOORS']:
-                        category = 'TRAVEL'
-                    elif first_cat in ['ENTERTAINMENT', 'SHOWBIZ', 'CELEBRITY', 'MOVIES']:
-                        category = 'SHOWBIZ'
-                    elif first_cat in ['SCIENCE', 'FACTS', 'EDUCATION', 'ENVIRONMENT']:
-                        category = 'FACTS'
-                    else:
+                        api_categories = article.get('category', [])
                         category = 'GLOBAL'
+                        for ac in api_categories:
+                            ac = ac.lower()
+                            if ac == 'lifestyle': category = 'STYLE'
+                            elif ac in ('entertainment', 'fashion'): category = 'SHOWBIZ'
+                            elif ac == 'technology': category = 'FACTS' # Maps to Gaming/Facts
+                            elif ac == 'health': category = 'STYLE' # Maps to Fitness/Style
+                            elif ac == 'world': category = 'GLOBAL'
 
-                title = article.get('title') or "Untitled Article"
-                description = article.get('description')
-                content = article.get('content')
-                if not content or "ONLY AVAILABLE IN PAID PLANS" in content:
-                    content = description or ""
-                
-                # Format plain text content into HTML paragraphs if necessary
-                if content and not content.startswith('<'):
-                    paragraphs = content.split('\n\n')
-                    content = "".join(f"<p>{p.strip()}</p>" for p in paragraphs if p.strip())
+                        creators = article.get('creator') or []
+                        author = creators[0] if creators else "Staff Reporter"
+                        
+                        pub_date_str = article.get('pubDate')
+                        published_date = fields.Datetime.now()
+                        if pub_date_str:
+                            try:
+                                published_date = fields.Datetime.to_datetime(pub_date_str)
+                            except Exception:
+                                pass
 
-                creators = article.get('creator') or []
-                author = creators[0] if creators else "Staff Reporter"
-                
-                pub_date_str = article.get('pubDate')
-                published_date = fields.Datetime.now()
-                if pub_date_str:
-                    try:
-                        published_date = fields.Datetime.to_datetime(pub_date_str)
-                    except Exception:
-                        pass
+                        image_url = article.get('image_url')
+                        if not image_url or 'stimg.co' in image_url:
+                            continue
 
-                image_url = article.get('image_url')
-                # Standard high quality fallback image
-                if not image_url:
-                    image_url = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80"
+                        description = article.get('description') or ''
+                        content = article.get('content') or description or ''
+                        
+                        if content and not content.startswith('<'):
+                            paragraphs = content.split('\n\n')
+                            content = "".join(f"<p>{p.strip()}</p>" for p in paragraphs if p.strip())
 
-                source_url = article.get('link')
+                        vals = {
+                            'title': title,
+                            'description': description,
+                            'content': content,
+                            'category': category,
+                            'author': author,
+                            'published_date': published_date,
+                            'image_url': image_url,
+                            'source_url': article.get('link'),
+                            'api_article_id': article_id,
+                        }
 
-                self.create({
-                    'title': title,
-                    'description': description,
-                    'content': content,
-                    'category': category,
-                    'author': author,
-                    'published_date': published_date,
-                    'image_url': image_url,
-                    'source_url': source_url,
-                    'api_article_id': api_id,
-                })
-                _logger.info("NewsData.io sync: Created new article ID %s: %s", api_id, title)
-                synced_count += 1
-
-            _logger.info("Successfully synced %s news articles from NewsData.io", synced_count)
-
+                        if existing:
+                            existing.write(vals)
+                            articles_updated += 1
+                        else:
+                            self.create(vals)
+                            articles_created += 1
+                            
+                    next_page = data.get('nextPage')
+                    if not next_page:
+                        break
+                else:
+                    break
+                    
         except Exception as e:
             _logger.exception("Error syncing news from NewsData.io: %s", str(e))
+            
+        _logger.info("NewsData.io sync complete: Created %s, Updated %s.", articles_created, articles_updated)

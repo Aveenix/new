@@ -301,9 +301,21 @@ class AveenixWebsite(WebsiteSale):
                             min_price=min_price, max_price=max_price, tags=tags, **post)
 
     @http.route('/news', type='http', auth='public', website=True)
-    def news_home(self, **kwargs):
+    def news_home(self, category=None, **kwargs):
         # Fetch from local DB
-        db_records = request.env['aveenix.news'].sudo().search([], limit=50)
+        domain = []
+        if category:
+            cat_map = {
+                'global': 'GLOBAL',
+                'lifestyle': 'STYLE',
+                'fashion': 'SHOWBIZ',
+                'gaming': 'FACTS',
+                'fitness': 'STYLE'
+            }
+            db_cat = cat_map.get(category.lower(), category.upper())
+            domain.append(('category', '=', db_cat))
+            
+        db_records = request.env['aveenix.news'].sudo().search(domain, limit=50)
         articles_list = []
         for r in db_records:
             articles_list.append({
@@ -312,7 +324,7 @@ class AveenixWebsite(WebsiteSale):
                 'title': r.title,
                 'author': r.author or "Staff Reporter",
                 'date': r.published_date.strftime('%B %d, %Y') if r.published_date else "",
-                'image': r.image_url or "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                'image': r.image_url or "",
                 'url': f"/news/{r.id}",
                 'summary': r.description or "",
                 'content': r.content or "",
@@ -320,7 +332,15 @@ class AveenixWebsite(WebsiteSale):
             })
 
         # Fill remaining slots using mock data to keep the premium layout complete
-        all_articles = articles_list + [ARTICLES[k] for k in sorted(ARTICLES.keys())]
+        mock_articles = [ARTICLES[k] for k in sorted(ARTICLES.keys())]
+        if category:
+            mock_articles = [a for a in mock_articles if a.get('category', '').lower() == category.lower()]
+            
+        all_articles = articles_list + mock_articles
+        
+        # If no articles found for this category, provide fallback to avoid index errors
+        if not all_articles:
+            all_articles = [ARTICLES[k] for k in sorted(ARTICLES.keys())]
 
         # Extract segments
         hero_main = all_articles[0]
@@ -337,8 +357,6 @@ class AveenixWebsite(WebsiteSale):
             image_url = ""
             if b.av_blog_image:
                 image_url = f"/web/image/blog.blog/{b.id}/av_blog_image"
-            if not image_url:
-                image_url = "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80"
                 
             summary = b.subtitle or ""
             default_sub = "We are a team of passionate people whose goal is to improve everyone's life."
@@ -410,7 +428,7 @@ class AveenixWebsite(WebsiteSale):
             except Exception:
                 pass
         if not image_url:
-            image_url = "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80"
+            image_url = ""
             
         # Extract post data to pass to template
         post_list = []
@@ -457,7 +475,7 @@ class AveenixWebsite(WebsiteSale):
                 'title': r.title,
                 'author': r.author or "Staff Reporter",
                 'date': r.published_date.strftime('%B %d, %Y') if r.published_date else "",
-                'image': r.image_url or "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                'image': r.image_url or "",
                 'url': f"/news/{r.id}",
                 'summary': r.description or "",
                 'content': r.content or "",
@@ -479,7 +497,7 @@ class AveenixWebsite(WebsiteSale):
                 'title': pop_r.title,
                 'author': pop_r.author or "Staff Reporter",
                 'date': pop_r.published_date.strftime('%B %d, %Y') if pop_r.published_date else "",
-                'image': pop_r.image_url or "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                'image': pop_r.image_url or "",
                 'url': f"/news/{pop_r.id}",
                 'summary': pop_r.description or "",
                 'content': pop_r.content or "",
@@ -498,7 +516,46 @@ class AveenixWebsite(WebsiteSale):
         }
         return request.render('aveenix_website.news_detail_template', data)
 
+    @http.route('/news/article/<string:slug>', type='http', auth='public', website=True)
+    def news_read_dynamic(self, slug, **kwargs):
+        # The content is populated entirely via JavaScript from localStorage using the slug
+        # This route serves the empty skeleton structure.
+        return request.render('aveenix_website.news_dynamic_read_template', {
+            'is_news_page': True,
+            'article_slug': slug,
+        })
 
+    @http.route('/news/fetch_article_content', type='http', auth='public', website=True, csrf=False)
+    def fetch_article_content(self, url=None, **kwargs):
+        import json
+        import requests
+        import re
+        if not url:
+            return request.make_response(json.dumps({'error': 'No URL provided'}), headers=[('Content-Type', 'application/json')])
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            res = requests.get(url, headers=headers, timeout=6)
+            paragraphs = re.findall(r'<p[^>]*>(.*?)</p>', res.text, re.IGNORECASE | re.DOTALL)
+            clean_ps = [re.sub(r'<[^>]+>', '', p).strip() for p in paragraphs]
+            valid_ps = [p for p in clean_ps if len(p) > 60 and '{' not in p and 'function' not in p]
+            if not valid_ps:
+                fallback = [
+                    "This developing story continues to attract attention as more details emerge. Analysts are closely monitoring the situation to determine the broader implications of these events.",
+                    "While official sources have remained tight-lipped regarding specific timelines, insider reports suggest that key stakeholders are preparing for significant shifts in the coming days.",
+                    "The surrounding community and industry experts have expressed varied opinions. Some believe this marks a turning point, whereas others urge caution until a formal resolution is reached.",
+                    "We will continue to update this page with exclusive coverage and in-depth analysis. For the complete, unabridged original article, please refer to the primary publisher's website."
+                ]
+                return request.make_response(json.dumps({'content': fallback}), headers=[('Content-Type', 'application/json')])
+            
+            return request.make_response(json.dumps({'content': valid_ps[:15]}), headers=[('Content-Type', 'application/json')])
+        except Exception as e:
+            fallback = [
+                "This developing story continues to attract attention as more details emerge. Analysts are closely monitoring the situation to determine the broader implications of these events.",
+                "While official sources have remained tight-lipped regarding specific timelines, insider reports suggest that key stakeholders are preparing for significant shifts in the coming days.",
+                "The surrounding community and industry experts have expressed varied opinions. Some believe this marks a turning point, whereas others urge caution until a formal resolution is reached.",
+                "We will continue to update this page with exclusive coverage and in-depth analysis. For the complete, unabridged original article, please refer to the primary publisher's website."
+            ]
+            return request.make_response(json.dumps({'content': fallback}), headers=[('Content-Type', 'application/json')])
 
     @http.route('/', type='http', auth='public', website=True)
     def homepage(self, **kwargs):
@@ -1253,6 +1310,7 @@ class AveenixWebsite(WebsiteSale):
 
 class AveenixCart(Cart):
 
+    @http.route()
     def add_to_cart(self, product_template_id, product_id, **kwargs):
         tmpl = request.env['product.template'].sudo().browse(product_template_id).exists()
         if tmpl and tmpl.aveenix_product_type == 'affiliate':

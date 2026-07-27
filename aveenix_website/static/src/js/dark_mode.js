@@ -4,8 +4,9 @@
     var STORAGE_KEY = "av_theme";
 
     function applyTheme(toggle, html, dark) {
-        var icon  = toggle.querySelector(".av-toggle-icon");
-        var label = toggle.querySelector(".av-toggle-label");
+        var icon  = toggle ? toggle.querySelector(".av-toggle-icon") : null;
+        var label = toggle ? toggle.querySelector(".av-toggle-label") : null;
+        var nmToggle = document.getElementById("nm-theme-toggle");
         if (dark) {
             html.setAttribute("data-theme", "dark");
             html.setAttribute("data-bs-theme", "dark");
@@ -16,6 +17,7 @@
             html.style.setProperty("--bs-body-bg", "#181818");
             if (icon)  { icon.textContent  = "☀"; }
             if (label) { label.textContent = "Light"; }
+            if (nmToggle) { nmToggle.innerHTML = '<i class="fa fa-sun-o"></i>'; }
         } else {
             html.removeAttribute("data-theme");
             html.removeAttribute("data-bs-theme");
@@ -26,6 +28,7 @@
             html.style.removeProperty("--bs-body-bg");
             if (icon)  { icon.textContent  = "☾"; }
             if (label) { label.textContent = "Dark"; }
+            if (nmToggle) { nmToggle.innerHTML = '<i class="fa fa-moon-o"></i>'; }
         }
     }
 

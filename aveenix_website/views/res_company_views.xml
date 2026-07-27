@@ -10,6 +10,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='social_tiktok']" position="after">
                 <field name="social_pinterest"/>
+                <field name="social_whatsapp" placeholder="https://wa.me/1234567890"/>
             </xpath>
         </field>
     </record>

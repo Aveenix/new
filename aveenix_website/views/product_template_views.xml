@@ -41,6 +41,25 @@
                     <field name="affiliate_click_count" widget="statinfo" string="Aff. Clicks"/>
                 </button>
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="ai_description" string="AI Description">
+                    <button type="object" name="action_generate_ai_content" string="Generate AI Description" class="btn-primary mb-2" icon="fa-magic"/>
+                    <field name="desc_ai" nolabel="1" placeholder="AI generated description..."/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Server Action for mass AI generation -->
+    <record id="action_mass_generate_ai_desc" model="ir.actions.server">
+        <field name="name">Generate AI Descriptions</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_generate_ai_content()
         </field>
     </record>
 

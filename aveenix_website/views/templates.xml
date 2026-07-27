@@ -1860,7 +1860,7 @@
 
 
         <!-- Remove native "Clear Filters" from its default position. -->
-        <xpath expr="//div[contains(@class,'py-3') and contains(@class,'border-bottom')]" position="replace"/>
+        <xpath expr="//div[hasclass('py-3', 'border-bottom')]" position="replace"/>
 
         <!-- Re-inject "Clear Filters" ABOVE the category block (runs after the
              category xpath, so it lands directly before it in the final DOM). -->
@@ -2090,7 +2090,7 @@
         </xpath>
 
         <!-- Fix offcanvas Clear Filters: always visible, clears all custom filters too -->
-        <xpath expr="//div[contains(@class,'offcanvas-body') and contains(@class,'border-top')]" position="replace">
+        <xpath expr="//div[hasclass('offcanvas-body', 'border-top')]" position="replace">
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
                 <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2"
                    t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0, categ=0, brand=0, stock='')">
@@ -2320,6 +2320,10 @@
                                 Reviews (<t t-esc="av_review_count"/>)
                             </button>
                         </li>
+
+                        <li>
+                            <button type="button" class="av-tab-link" data-av-tab="images">Images</button>
+                        </li>
                         <li>
                             <button type="button" class="av-tab-link" data-av-tab="shipping">Shipping and Delivery</button>
                         </li>
@@ -2327,11 +2331,27 @@
 
                     <!-- Description panel -->
                     <div class="av-tab-panel active" data-av-panel="description">
-                        <t t-if="product.description_ecommerce">
-                            <div class="av-pdp-description-body" t-field="product.description_ecommerce"/>
+                        <t t-if="product.desc_ai">
+                            <div class="av-pdp-description-ai" t-field="product.desc_ai" style="color: #ddd; line-height: 1.8; font-size: 16px;"/>
                         </t>
                         <t t-else="">
-                            <p class="text-muted">No description available.</p>
+                            <p class="text-muted">No description available. Please generate AI description.</p>
+                        </t>
+                    </div>
+
+                    <!-- Images panel -->
+                    <div class="av-tab-panel" data-av-panel="images">
+                        <t t-if="product.product_template_image_ids">
+                            <div class="av-images-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                                <t t-foreach="product.product_template_image_ids" t-as="p_img">
+                                    <div class="av-image-card" style="background: #222; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #333;">
+                                        <img t-attf-src="/web/image/product.image/{{ p_img.id }}/image_1024" style="max-width: 100%; height: auto; border-radius: 4px; object-fit: contain; max-height: 250px;" alt="Product Image"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <p class="text-muted">No additional images available for this product.</p>
                         </t>
                     </div>
 
@@ -4545,217 +4565,254 @@
         <t t-set="is_news_page" t-value="True"/>
         <t t-call="website.layout">
             <t t-set="pageName" t-value="'news_home'"/>
-            <div id="wrap" class="av-news-page">
-                <!-- 1. Trending Bar (Clean, transparent styling) -->
-                <div class="av-news-trending-bar">
-                    <div class="av-container d-flex align-items-center">
-                        <span class="av-trending-badge">TRENDING NOW</span>
-                        <div class="av-trending-ticker ms-3">
-                            <span t-esc="trending_title"/>
+            <div id="wrap" class="av-news-page nm-news-page">
+                <!-- Inline CSS for the news theme -->
+                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=2"/>
+                
+                <!-- Removed Top Bar and Logo Area as per user request -->
+
+                <!-- Custom Nav Removed as per user request (they want to use the standard main Odoo header) -->
+
+                <!-- Trending Bar -->
+                <div class="nm-trending-bar">
+                    <div class="nm-nav-container nm-trending-container">
+                        <div class="nm-trending-label">TRENDING NOW</div>
+                        <div class="nm-trending-text" t-esc="trending_title"/>
+                        <div class="nm-trending-controls">
+                            <button class="nm-nav-btn"><i class="fa fa-chevron-left"></i></button>
+                            <button class="nm-nav-btn"><i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <div class="av-container py-4">
-                    <!-- 2. Hero Grid -->
-                    <div class="av-news-hero-grid mb-5">
-                        <!-- Main Large Post (Left) -->
-                        <div class="av-news-hero-main" t-att-style="'background-image: url(%s);' % hero_main['image']">
-                            <div class="av-news-overlay"/>
-                            <div class="av-news-content">
-                                <span class="av-news-cat-badge" t-esc="hero_main['category']"/>
-                                <h2 class="av-news-title mt-2">
-                                    <a t-att-href="hero_main['url']" t-esc="hero_main['title']"/>
-                                </h2>
-                                <div class="av-news-meta mt-2">
-                                    <span t-esc="hero_main['author']"/> <span class="mx-1">•</span> <span t-esc="hero_main['date']"/>
+                <main class="nm-main-content">
+                    <!-- Hero Section -->
+                    <section class="nm-hero-section" id="nm-hero-section">
+                        <article class="nm-hero-main" t-att-style="'background-image: url(%s);' % hero_main['image']">
+                            <div class="nm-overlay"></div>
+                            <div class="nm-article-content">
+                                <span class="nm-category-badge" style="background-color: #222;" t-esc="hero_main['category']"/>
+                                <h1 class="nm-article-title"><a t-att-href="hero_main['url']" style="color:white;" t-esc="hero_main['title']"/></h1>
+                                <div class="nm-article-meta">
+                                    <span class="nm-author" t-esc="hero_main['author']"/> - <span class="nm-date" t-esc="hero_main['date']"/>
                                 </div>
                             </div>
-                        </div>
+                        </article>
 
-                        <!-- 2x2 Grid of Small Posts (Right) -->
-                        <div class="av-news-hero-side-grid">
-                            <t t-foreach="hero_side" t-as="item">
-                                <div class="av-news-hero-side-item" t-att-style="'background-image: url(%s);' % item['image']">
-                                    <div class="av-news-overlay"/>
-                                    <div class="av-news-content">
-                                        <span class="av-news-cat-badge-small" t-esc="item['category']"/>
-                                        <h4 class="av-news-title-small mt-2">
-                                            <a t-att-href="item['url']" t-esc="item['title']"/>
-                                        </h4>
+                        <div class="nm-hero-grid">
+                            <t t-foreach="[1,2,3,4]" t-as="i">
+                                <article class="nm-hero-item" style="background-color: #222;">
+                                    <div class="nm-overlay"></div>
+                                    <div class="nm-article-content">
+                                        <span class="nm-category-badge" style="background-color: #555;">Loading...</span>
+                                        <h2 class="nm-article-title-small"><a href="#" style="color:white;">Fetching latest news...</a></h2>
                                     </div>
-                                </div>
+                                </article>
                             </t>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- 3. Two Columns: Global News vs Sidebar -->
-                    <div class="row">
-                        <!-- Left Column: Global News & Travel Guides -->
-                        <div class="col-lg-8">
-                            <!-- Global News section header -->
-                            <div class="av-news-section-header d-flex justify-content-between align-items-center mb-4">
-                                <h3 class="av-news-section-title">GLOBAL NEWS</h3>
-                                <a href="#" class="av-news-view-all">All <i class="fa fa-caret-down"/></a>
+                    <!-- TOP SECTION: Left Column + Right Sidebar -->
+                    <section class="nm-content-layout">
+                        <!-- Main Left Column -->
+                        <div class="nm-main-column">
+                            <!-- Global News -->
+                            <div class="nm-section-heading">
+                                <h2>GLOBAL NEWS</h2>
+                                <div class="nm-line" style="background-color: #3f51b5;"></div>
+                                <div class="nm-filter">All <i class="fa fa-angle-down"></i></div>
                             </div>
-
-                            <div class="row mb-5">
-                                <!-- Global Main Left Card -->
-                                <div class="col-md-6 mb-4 mb-md-0">
-                                    <div class="av-news-global-main-card">
-                                        <div class="av-news-img-wrap mb-3">
-                                            <img t-att-src="global_main['image']" class="img-fluid rounded" alt="Global Main"/>
-                                        </div>
-                                        <span class="av-news-cat-badge-text" t-esc="global_main['category']"/>
-                                        <h4 class="av-news-card-title mt-2">
-                                            <a t-att-href="global_main['url']" t-esc="global_main['title']"/>
-                                        </h4>
-                                        <div class="av-news-meta-text my-2">
-                                            <span t-esc="global_main['author']"/> <span class="mx-1">•</span> <span t-esc="global_main['date']"/>
-                                        </div>
-                                        <p class="av-news-summary text-muted" t-esc="global_main['summary']"/>
-                                    </div>
-                                </div>
-
-                                <!-- Global List Right List -->
-                                <div class="col-md-6">
-                                    <div class="av-news-global-list">
-                                        <t t-foreach="global_side" t-as="item">
-                                            <div class="av-news-list-item d-flex mb-3">
-                                                <div class="av-news-list-thumb me-3">
-                                                    <img t-att-src="item['image']" class="img-fluid rounded" alt="Thumb"/>
-                                                </div>
-                                                <div class="av-news-list-body">
-                                                    <h5 class="av-news-list-title">
-                                                        <a t-att-href="item['url']" t-esc="item['title']"/>
-                                                    </h5>
-                                                    <span class="av-news-list-date text-muted" t-esc="item['date']"/>
-                                                </div>
-                                            </div>
-                                        </t>
-                                    </div>
+                            
+                            <div class="nm-global-news-layout" id="nm-global-news">
+                                <div style="text-align: center; padding: 40px; width: 100%;">
+                                    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
                                 </div>
                             </div>
-
-                            <!-- Travel Guides section header -->
-                            <div class="av-news-section-header mb-4">
-                                <h3 class="av-news-section-title">TRAVEL GUIDES</h3>
-                            </div>
-
-                            <div class="row">
-                                <t t-foreach="travel_guides" t-as="item">
-                                    <div class="col-md-4 mb-4">
-                                        <div class="av-news-travel-card">
-                                            <div class="av-news-travel-img-wrap position-relative mb-2">
-                                                <img t-att-src="item['image']" class="img-fluid rounded" alt="Travel"/>
-                                                <span class="av-news-travel-badge" t-esc="item['category']"/>
-                                            </div>
-                                            <h5 class="av-news-travel-title mt-2">
-                                                <a t-att-href="item['url']" t-esc="item['title']"/>
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </t>
-                            </div>
-
                         </div>
 
-                        <!-- Right Column: Sidebar -->
-                        <div class="col-lg-4">
-                            <!-- Social Follow Widget -->
-                            <div class="av-news-sidebar-widget mb-5">
-                                <div class="row g-2">
-                                    <div class="col-4 text-center">
-                                        <div class="av-social-box av-fb">
-                                            <i class="fa fa-facebook fa-lg mb-2"/>
-                                            <div class="av-count">21,998</div>
-                                            <div class="av-label">Fans</div>
+                        <!-- Top Right Sidebar (First Section) -->
+                        <aside class="nm-sidebar">
+                            <div class="nm-widget mb-4">
+                                <!-- Social Follower Boxes -->
+                                <div class="nm-social-widget">
+                                    <a t-att-href="website.company_id.social_facebook or 'https://facebook.com'" target="_blank" class="nm-social-box nm-social-facebook text-decoration-none">
+                                        <div class="nm-social-icon-wrapper">
+                                            <i class="fa fa-facebook"></i>
                                         </div>
-                                    </div>
-                                    <div class="col-4 text-center">
-                                        <div class="av-social-box av-twitter">
-                                            <i class="fa fa-twitter fa-lg mb-2"/>
-                                            <div class="av-count">3,913</div>
-                                            <div class="av-label">Followers</div>
+                                        <div class="nm-social-details">
+                                            <strong>21,998</strong>
+                                            <span>Fans</span>
                                         </div>
-                                    </div>
-                                    <div class="col-4 text-center">
-                                        <div class="av-social-box av-youtube">
-                                            <i class="fa fa-youtube-play fa-lg mb-2"/>
-                                            <div class="av-count">22,900</div>
-                                            <div class="av-label">Subscribers</div>
+                                        <span class="nm-social-action">LIKE</span>
+                                    </a>
+                                    <a t-att-href="website.company_id.social_twitter or 'https://twitter.com'" target="_blank" class="nm-social-box nm-social-twitter text-decoration-none">
+                                        <div class="nm-social-icon-wrapper">
+                                            <i class="fa fa-twitter"></i>
                                         </div>
-                                    </div>
+                                        <div class="nm-social-details">
+                                            <strong>3,913</strong>
+                                            <span>Followers</span>
+                                        </div>
+                                        <span class="nm-social-action">FOLLOW</span>
+                                    </a>
+                                    <a t-att-href="website.company_id.social_youtube or 'https://youtube.com'" target="_blank" class="nm-social-box nm-social-youtube text-decoration-none">
+                                        <div class="nm-social-icon-wrapper">
+                                            <i class="fa fa-youtube-play"></i>
+                                        </div>
+                                        <div class="nm-social-details">
+                                            <strong>22,800</strong>
+                                            <span>Subscribers</span>
+                                        </div>
+                                        <span class="nm-social-action">SUBSCRIBE</span>
+                                    </a>
                                 </div>
                             </div>
-
                             <!-- Ad Banner Widget -->
-                            <div class="av-news-sidebar-widget text-center mb-5">
-                                <div class="av-news-ad-wrap">
-                                    <span class="av-ad-label d-block text-muted mb-1">- Advertisement -</span>
-                                    <img t-att-src="ad_image" class="img-fluid rounded" alt="Ad Banner"/>
+                            <div id="aveenix_news_ad_1" class="oe_structure">
+                                <div class="nm-widget text-center my-4">
+                                    <span class="td-adspot-title text-center text-muted d-block" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">- Advertisement -</span>
+                                    <a href="https://themeforest.net/item/newspaper/5489609" target="_blank" rel="noopener" class="d-inline-block text-center nm-ad-banner-link">
+                                        <img src="https://demo.tagdiv.com/newspaper_magazine_pro/wp-content/uploads/2020/06/rec300.png" class="img-fluid" alt="Advertisement Banner" style="max-width:300px; height:auto; display:inline-block;" />
+                                    </a>
+                                </div>
+                            </div>
+                        </aside>
+                    </section>
+
+                    <!-- SECOND SECTION: Travel Guides & Most Popular -->
+                    <section class="nm-content-layout">
+                        <div class="nm-main-column">
+
+                            <!-- Travel Guides -->
+                            <div class="nm-section-heading">
+                                <h2>TRAVEL GUIDES</h2>
+                                <div class="nm-line" style="background-color: #85c442;"></div>
+                            </div>
+                            <div class="nm-travel-guides-grid" id="nm-travel-guides">
+                                <div style="text-align: center; padding: 40px; width: 100%;">
+                                    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
                                 </div>
                             </div>
 
-                            <!-- Most Popular Widget -->
-                            <div class="av-news-sidebar-widget mb-5">
-                                <div class="av-news-section-header mb-4">
-                                    <h3 class="av-news-section-title">MOST POPULAR</h3>
+                            <!-- Gadgets & Recipes -->
+                            <div class="nm-two-col-layout">
+                                <div class="nm-col-half" id="nm-gadgets-section">
+                                    <div class="nm-section-heading">
+                                        <h2>GADGETS</h2>
+                                        <div class="nm-line" style="background-color: #9c27b0;"></div>
+                                    </div>
+                                    <!-- Dynamic -->
                                 </div>
-                                <div class="av-news-popular-list">
-                                    <t t-foreach="popular" t-as="item">
-                                        <div class="av-news-pop-item d-flex align-items-center mb-3">
-                                            <div class="av-news-pop-thumb me-3">
-                                                <img t-att-src="item['image']" class="img-fluid rounded-circle" alt="Pop Thumb"/>
-                                            </div>
-                                            <div class="av-news-pop-body">
-                                                <span class="av-news-cat-badge-text-small text-uppercase" t-esc="item['category']"/>
-                                                <h5 class="av-news-pop-title mt-1 mb-0">
-                                                    <a t-att-href="item['url']" t-esc="item['title']"/>
-                                                </h5>
+                                <div class="nm-col-half" id="nm-recipes-section">
+                                    <div class="nm-section-heading">
+                                        <h2>RECIPES</h2>
+                                        <div class="nm-line" style="background-color: #ff9800;"></div>
+                                    </div>
+                                    <!-- Dynamic -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Sidebar (Second Section) -->
+                        <aside class="nm-sidebar">
+                            <div class="nm-widget">
+                                <h3 class="nm-widget-title">MOST POPULAR <div class="nm-line"></div></h3>
+                                <div id="nm-popular-list">
+                                    <div style="text-align: center; padding: 20px;">
+                                        <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    </section>
+
+                    <!-- FULL WIDTH SECTION: 4 Col Grid -->
+                    <section class="nm-full-width-section" style="margin-bottom: 40px;">
+                        <div class="nm-four-col-grid" id="nm-four-col-grid">
+                            <!-- Dynamic -->
+                        </div>
+                    </section>
+
+                    <!-- FULL WIDTH SECTION: Fitness & Gaming -->
+                    <section class="nm-content-layout" style="margin-bottom: 40px;">
+                        <div class="nm-main-column">
+                            <div class="nm-section-heading">
+                                <h2>FITNESS</h2>
+                                <div class="nm-line" style="background-color: #478fe0;"></div>
+                                <div class="nm-filter" style="float: right;">All <i class="fa fa-angle-down"></i></div>
+                            </div>
+                            <div id="nm-fitness-section">
+                                <!-- Dynamic -->
+                            </div>
+                        </div>
+                        <aside class="nm-sidebar">
+                            <div class="nm-section-heading">
+                                <h2>GAMING</h2>
+                                <div class="nm-line" style="background-color: #e86aa1;"></div>
+                                <div class="nm-filter" style="float: right;">All <i class="fa fa-angle-down"></i></div>
+                            </div>
+                            <div id="nm-gaming-section">
+                                <!-- Dynamic -->
+                            </div>
+                        </aside>
+                    </section>
+
+                    <!-- Removed duplicate sidebar logic since it was moved up -->
+
+                    <!-- FULL WIDTH SECTION: Video -->
+                    <section class="nm-video-section" id="nm-youtube-section" style="background:#222; margin: 40px 0; width: 100%; clear: both;">
+                        <!-- Dynamic YouTube Playlist will be rendered here -->
+                    </section>
+
+                    <!-- BOTTOM SECTION: Latest Articles + Bottom Sidebar -->
+                    <section class="nm-content-layout">
+                        <!-- Main Column -->
+                        <div class="nm-main-column">
+                            <div class="nm-section-heading">
+                                <h2>LATEST ARTICLES</h2>
+                                <div class="nm-line" style="background-color: #008d7f;"></div>
+                            </div>
+                            <div id="nm-latest-articles">
+                                <!-- Dynamic API Content will load here -->
+                            </div>
+                        </div>
+
+                        <!-- Bottom Sidebar -->
+                        <aside class="nm-sidebar">
+                            <div class="nm-widget">
+                                <div class="nm-section-heading">
+                                    <h2>MUST READ</h2>
+                                    <div class="nm-line" style="background-color: #008d7f;"></div>
+                                </div>
+                                <div id="nm-must-read-list">
+                                    <t t-foreach="popular[:4]" t-as="item">
+                                        <div class="nm-text-post">
+                                            <span class="nm-category-text" t-esc="item['category']"/>
+                                            <h4 class="nm-small-title"><a t-att-href="item['url']" t-esc="item['title']"/></h4>
+                                            <div class="nm-article-meta nm-dark-meta">
+                                                <span class="nm-author" t-esc="item['author']"/> - <span class="nm-date" t-esc="item['date']"/>
                                             </div>
                                         </div>
                                     </t>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <!-- DYNAMIC BLOG SECTIONS (Full Width, 3 Columns) -->
-                    <t t-set="is_dark" t-value="True"/>
-                    <t t-foreach="blog_categories" t-as="bc">
-                        <div class="av-news-section-header mb-4 mt-5">
-                            <h3 class="av-news-section-title text-uppercase" t-esc="bc['name']"/>
-                        </div>
-                        <div class="row mb-5">
-                            <t t-foreach="bc['posts']" t-as="item">
-                                <div class="col-lg-4 col-md-6 mb-4">
-                                    <div t-attf-class="av-news-blog-card shadow-sm rounded overflow-hidden #{'bg-dark text-light border-0' if is_dark else 'bg-white text-dark'}" t-att-style="'transition: transform 0.3s ease;' + ('' if is_dark else ' border: 1px solid rgba(0,0,0,0.05);')">
-                                        <div class="av-news-blog-img-wrap position-relative" style="height: 220px; overflow: hidden;">
-                                            <a t-att-href="item['url']" class="d-block w-100 h-100">
-                                                <img t-att-src="item['image']" class="img-fluid w-100 h-100" style="object-fit: cover; transition: transform 0.5s ease;" alt="Blog Image" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
-                                            </a>
-                                            <span class="av-news-blog-badge position-absolute" t-att-style="'top: 15px; left: 15px; background: ' + ('var(--av-primary, #e23737)' if not is_dark else '#ffeb3b') + '; color: ' + ('#fff' if not is_dark else '#000') + '; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;'" t-esc="item['category']"/>
-                                        </div>
-                                        <div class="av-news-blog-body p-4">
-                                            <div t-attf-class="av-news-blog-meta mb-2 d-flex align-items-center #{'text-white-50' if is_dark else 'text-muted'}" style="font-size: 0.8rem; font-weight: 500;">
-                                                <span class="d-flex align-items-center me-3"><i t-attf-class="fa fa-user me-2 #{'text-warning' if is_dark else ''}" t-att-style="'color: var(--av-primary, #e23737);' if not is_dark else ''"/> <t t-esc="item['author']"/></span>
-                                                <span class="d-flex align-items-center"><i t-attf-class="fa fa-calendar me-2 #{'text-warning' if is_dark else ''}" t-att-style="'color: var(--av-primary, #e23737);' if not is_dark else ''"/> <t t-esc="item['date']"/></span>
-                                            </div>
-                                            <h4 class="av-news-blog-title mb-3" style="font-weight: 700; font-size: 1.2rem; line-height: 1.4;">
-                                                <a t-att-href="item['url']" t-attf-class="text-decoration-none hover-primary #{'text-light' if is_dark else 'text-dark'}" style="transition: color 0.2s;" t-esc="item['title']"/>
-                                            </h4>
-                                            <p t-attf-class="av-news-blog-summary mb-4 #{'text-white-50' if is_dark else 'text-muted'}" style="font-size: 0.95rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;" t-esc="item['summary']"/>
-                                            <a t-att-href="item['url']" t-attf-class="av-news-blog-read-more d-inline-flex align-items-center #{'text-warning' if is_dark else ''}" t-att-style="'color: var(--av-primary, #e23737);' if not is_dark else ''" style="font-weight: 700; font-size: 0.85rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
-                                                Read Article <i class="fa fa-arrow-right ms-2" style="transition: transform 0.3s ease;"/>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </t>
-                        </div>
-                    </t>
-                </div>
+
+                            <div class="nm-widget">
+                                <h3 class="nm-widget-title">CATEGORIES <div class="nm-line"></div></h3>
+                                <ul class="nm-category-list">
+                                    <li><a href="#">Fashion <span>10</span></a></li>
+                                    <li><a href="#">Facts <span>10</span></a></li>
+                                    <li><a href="#">Gaming <span>10</span></a></li>
+                                    <li><a href="#">Style <span>10</span></a></li>
+                                    <li><a href="#">Video <span>10</span></a></li>
+                                    <li><a href="#">Photography <span>10</span></a></li>
+                                </ul>
+                            </div>
+                        </aside>
+                    </section>
+</main>
+                
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=9"></script>
             </div>
         </t>
     </template>
@@ -4806,6 +4863,7 @@
 
     <template id="news_detail_template" name="Aveenix News Detail">
         <t t-set="is_news_page" t-value="True"/>
+        <t t-set="no_header" t-value="True"/>
         <t t-call="website.layout">
             <t t-set="pageName" t-value="'news_detail'"/>
             
@@ -4851,10 +4909,11 @@
 
                             <!-- Social Share Box -->
                             <div class="av-article-share-box d-flex align-items-center py-3 border-top border-bottom mb-5">
-                                <span class="fw-bold me-3">SHARE THIS ARTICLE:</span>
-                                <a href="https://facebook.com" target="_blank" class="btn btn-sm btn-outline-primary me-2"><i class="fa fa-facebook me-1"/>Facebook</a>
-                                <a href="https://twitter.com" target="_blank" class="btn btn-sm btn-outline-info me-2"><i class="fa fa-twitter me-1"/>Twitter</a>
-                                <a href="https://pinterest.com" target="_blank" class="btn btn-sm btn-outline-danger"><i class="fa fa-pinterest me-1"/>Pinterest</a>
+                                <span class="fw-bold me-3">FOLLOW US:</span>
+                                <a t-att-href="website.company_id.social_facebook or 'https://facebook.com'" target="_blank" class="btn btn-sm btn-outline-primary me-2"><i class="fa fa-facebook me-1"/>Facebook</a>
+                                <a t-att-href="website.company_id.social_twitter or 'https://twitter.com'" target="_blank" class="btn btn-sm btn-outline-info me-2"><i class="fa fa-twitter me-1"/>Twitter</a>
+                                <a t-att-href="website.company_id.social_pinterest or 'https://pinterest.com'" target="_blank" class="btn btn-sm btn-outline-danger me-2"><i class="fa fa-pinterest me-1"/>Pinterest</a>
+                                <a t-att-href="website.company_id.social_whatsapp or 'https://wa.me/1234567890'" target="_blank" class="btn btn-sm btn-outline-success"><i class="fa fa-whatsapp me-1"/>WhatsApp</a>
                             </div>
                         </div>
 
@@ -4892,7 +4951,274 @@
             </div>
         </t>
     </template>
+    <template id="news_dynamic_read_template" name="Aveenix News Read">
+        <t t-set="is_news_page" t-value="True"/>
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'news_read'"/>
+            
+            <div id="wrap">
+                <div class="nm-news-page av-news-detail-page">
+                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=3"/>
+                
+                <!-- Custom Nav Removed as per user request -->
 
+                <!-- Trending Bar -->
+                <div class="nm-trending-bar">
+                    <div class="nm-nav-container nm-trending-container">
+                        <div class="nm-trending-label">TRENDING NOW</div>
+                        <div class="nm-trending-text" id="dyn-trending-text">Loading trending news...</div>
+                        <div class="nm-trending-controls">
+                            <button class="nm-nav-btn"><i class="fa fa-chevron-left"></i></button>
+                            <button class="nm-nav-btn"><i class="fa fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <main class="nm-main-content">
+                    <!-- Breadcrumb Section -->
+                <div class="av-news-breadcrumb-bar py-3 mb-2">
+                    <div class="nm-nav-container">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0" style="background: transparent; padding: 0; font-size: 12px; text-transform: uppercase;">
+                                <li class="breadcrumb-item"><a href="/" class="text-muted text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/news" class="text-muted text-decoration-none">News</a></li>
+                                <li class="breadcrumb-item active text-muted" id="dyn-breadcrumb-cat" aria-current="page" t-att-data-slug="article_slug">Loading...</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="nm-nav-container py-2">
+                    <div class="row">
+                        <!-- Main Content (Left) -->
+                        <div class="col-lg-8 pe-lg-5">
+                            <!-- Article Header -->
+                            <div class="av-article-header mb-4">
+                                <span class="av-news-cat-badge mb-3 d-inline-block" id="dyn-category" style="font-size:11px; padding: 2px 0;">CATEGORY</span>
+                                <h1 class="av-article-title mb-4" id="dyn-title" style="font-weight: 700; font-size: 40px; line-height: 1.2; color: var(--heading-color);">Loading Title...</h1>
+                                <div class="av-article-meta d-flex align-items-center text-muted mb-4" style="font-size: 12px;">
+                                    <img src="https://ui-avatars.com/api/?name=Author&amp;background=random&amp;rounded=true" id="dyn-author-img" style="width:24px; height:24px; border-radius:50%; margin-right:10px;"/>
+                                    <span>By <strong style="color: var(--heading-color);" id="dyn-author">Author Name</strong></span>
+                                    <span class="mx-2">-</span>
+                                    <span id="dyn-date">Date</span>
+                                    <div class="ms-auto d-flex align-items-center">
+                                        <i class="fa fa-eye me-1"/> <span id="dyn-views" class="me-3">0</span>
+                                        <i class="fa fa-comments me-1"/> <span>0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Share Buttons -->
+                            <div class="nm-share-buttons d-flex gap-2 mb-4">
+                                <a t-att-href="website.company_id.social_facebook or 'https://facebook.com'" target="_blank" class="nm-share-btn fb"><i class="fa fa-facebook me-2"/> Facebook</a>
+                                <a t-att-href="website.company_id.social_twitter or 'https://twitter.com'" target="_blank" class="nm-share-btn tw"><i class="fa fa-twitter me-2"/> Twitter</a>
+                                <a t-att-href="website.company_id.social_pinterest or 'https://pinterest.com'" target="_blank" class="nm-share-btn pt"><i class="fa fa-pinterest me-2"/> Pinterest</a>
+                                <a t-att-href="website.company_id.social_whatsapp or 'https://wa.me/1234567890'" target="_blank" class="nm-share-btn wa"><i class="fa fa-whatsapp me-2"/> WhatsApp</a>
+                            </div>
+
+                            <!-- Featured Image -->
+                            <div class="av-article-featured-img mb-4">
+                                <img id="dyn-image" src="" class="img-fluid w-100" style="object-fit: cover; max-height:500px;" alt="Featured Image"/>
+                                <p class="text-muted mt-2" style="font-size:11px; font-style:italic;" id="dyn-caption"></p>
+                            </div>
+
+                            <!-- Article Content -->
+                            <div class="av-article-body mb-5" id="dyn-content" style="font-size: 17px; line-height: 1.8; color: var(--text-color);">
+                                <p>Loading content...</p>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar (Right) -->
+                        <div class="col-lg-4">
+                            <!-- Stay Connected -->
+                            <div class="nm-sidebar-widget mb-5">
+                                <div class="nm-section-header mb-4">
+                                    <h3 class="nm-section-title">STAY CONNECTED</h3>
+                                </div>
+                                <div class="nm-social-stats d-flex gap-2">
+                                    <a t-att-href="website.company_id.social_facebook or 'https://facebook.com'" target="_blank" class="nm-social-stat-box fb-box text-center p-3 border flex-fill text-decoration-none text-dark">
+                                        <i class="fa fa-facebook mb-2 fs-4" style="color:#3b5998;"/>
+                                        <div class="fw-bold fs-5">21,998</div>
+                                        <div class="text-muted" style="font-size:11px;">Fans</div>
+                                    </a>
+                                    <a t-att-href="website.company_id.social_twitter or 'https://twitter.com'" target="_blank" class="nm-social-stat-box tw-box text-center p-3 border flex-fill text-decoration-none text-dark">
+                                        <i class="fa fa-twitter mb-2 fs-4" style="color:#000;"/>
+                                        <div class="fw-bold fs-5">3,913</div>
+                                        <div class="text-muted" style="font-size:11px;">Followers</div>
+                                    </a>
+                                    <a t-att-href="website.company_id.social_youtube or 'https://youtube.com'" target="_blank" class="nm-social-stat-box yt-box text-center p-3 border flex-fill text-decoration-none text-dark">
+                                        <i class="fa fa-youtube-play mb-2 fs-4" style="color:#ff0000;"/>
+                                        <div class="fw-bold fs-5">22,800</div>
+                                        <div class="text-muted" style="font-size:11px;">Subscribers</div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Ad Banner -->
+                            <div id="aveenix_news_ad_2" class="oe_structure">
+                                <div class="nm-sidebar-widget mb-5 text-center">
+                                    <p class="text-muted mb-1" style="font-size:10px;">- Advertisement -</p>
+                                    <a href="https://themeforest.net/item/newspaper/5489609" target="_blank" rel="noopener">
+                                        <img src="https://demo.tagdiv.com/newspaper_magazine_pro/wp-content/uploads/2020/06/what-the-hex.png" class="img-fluid border" alt="Ad"/>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Latest Articles -->
+                            <div class="nm-sidebar-widget mb-5">
+                                <div class="nm-section-header mb-4">
+                                    <h3 class="nm-section-title">LATEST ARTICLES</h3>
+                                </div>
+                                <div class="nm-latest-list" id="dyn-latest-articles">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                <![CDATA[
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const slug = document.getElementById('dyn-breadcrumb-cat').getAttribute('data-slug');
+                        
+                        function renderArticle(article) {
+                            document.getElementById('dyn-breadcrumb-cat').innerText = (article.source && article.source.name) ? article.source.name : 'News';
+                            document.getElementById('dyn-category').innerText = (article.source && article.source.name) ? article.source.name : 'NEWS';
+                            document.getElementById('dyn-title').innerText = article.title;
+                            document.getElementById('dyn-author').innerText = article.author || 'Staff Reporter';
+                            
+                            document.getElementById('dyn-views').innerText = Math.floor(Math.random() * 50000) + 1000;
+
+                            const d = new Date(article.publishedAt);
+                            document.getElementById('dyn-date').innerText = isNaN(d) ? 'Just now' : d.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
+                            
+                            const img = document.getElementById('dyn-image');
+                            if(article.urlToImage) {
+                                img.src = article.urlToImage;
+                            } else {
+                                img.style.display = 'none';
+                            }
+                            
+                            document.getElementById('dyn-caption').innerText = article.title;
+                            
+                            let contentHTML = `<p class="lead mb-4" style="font-size:18px; line-height:1.8;"><strong>${article.description || ''}</strong></p>`;
+                            
+                            if (article.description) {
+                                let sentences = article.description.split('. ');
+                                let p1 = sentences.slice(0, Math.ceil(sentences.length/2)).join('. ');
+                                let p2 = sentences.slice(Math.ceil(sentences.length/2)).join('. ');
+                                if(p1.length > 0 && !p1.endsWith('.')) p1 += '.';
+                                if(p2.length > 0 && !p2.endsWith('.')) p2 += '.';
+                                
+                                if(p1) contentHTML += `<p style="font-size:16px; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p1}</p>`;
+                                if(p2) contentHTML += `<p style="font-size:16px; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p2}</p>`;
+                            }
+                            
+                            // Add a loading indicator for the full text
+                            contentHTML += `<div id="nm-full-text-loader" style="text-align:center; padding: 20px;"><i class="fa fa-spinner fa-spin fa-2x text-muted"></i><p class="text-muted mt-2">Extracting full article...</p></div>`;
+                            
+                            document.getElementById('dyn-content').innerHTML = contentHTML;
+                            
+                            // Fetch full article from our new backend scraper
+                            if (article.url) {
+                                fetch('/news/fetch_article_content?url=' + encodeURIComponent(article.url))
+                                .then(r => r.json())
+                                .then(data => {
+                                    const loader = document.getElementById('nm-full-text-loader');
+                                    if(loader) loader.remove();
+                                    
+                                    if(data && data.content && data.content.length > 0) {
+                                        let fullHTML = `<p class="lead mb-4" style="font-size:18px; line-height:1.8;"><strong>${article.description || ''}</strong></p>`;
+                                        data.content.forEach(p => {
+                                            fullHTML += `<p style="font-size:16px; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p}</p>`;
+                                        });
+                                        document.getElementById('dyn-content').innerHTML = fullHTML;
+                                    }
+                                }).catch(e => {
+                                    const loader = document.getElementById('nm-full-text-loader');
+                                    if(loader) loader.remove();
+                                });
+                            }
+                            
+                            // Fetch sidebar articles
+                            fetch(`https://newsdata.io/api/1/latest?apikey=pub_f6edd3f794a346e3adada5b038854104&country=us&language=en&category=business,education,entertainment,lifestyle,world&prioritydomain=top&removeduplicate=1`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if(data && data.status === 'success' && data.results) {
+                                        const mappedResults = data.results.map(r => ({
+                                            title: r.title,
+                                            url: r.link,
+                                            urlToImage: r.image_url,
+                                            publishedAt: r.pubDate,
+                                            author: (r.creator && r.creator.length > 0) ? r.creator[0] : 'Staff Reporter',
+                                            source: { name: r.source_name || 'News' },
+                                            description: r.description,
+                                            content: r.content
+                                        }));
+                                        const sideArts = mappedResults.filter(a => a.urlToImage && !a.urlToImage.includes('stimg.co') && a.title !== article.title).slice(0, 5);
+                                        let sideHTML = '';
+                                        sideArts.forEach(sa => {
+                                            let sideSlug = sa.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                                            if(!sideSlug) sideSlug = 'article';
+                                            
+                                            sideHTML += `
+                                            <div class="d-flex align-items-center mb-3">
+                                                <img src="${sa.urlToImage}" class="rounded-circle me-3" style="width:60px; height:60px; object-fit:cover;"/>
+                                                <div>
+                                                    <div style="font-size:10px; color:#008d7f;" class="text-uppercase fw-bold mb-1">${(sa.source && sa.source.name) ? sa.source.name : 'FACTS'}</div>
+                                                    <a href="${sa.url}" style="font-size:13px; font-weight:600; color:var(--heading-color); line-height:1.2; display:block;" onclick="localStorage.setItem('nm_article_${sideSlug}', decodeURIComponent('${encodeURIComponent(JSON.stringify(sa))}')); window.location.href='/news/article/${sideSlug}'; return false;">${sa.title}</a>
+                                                </div>
+                                            </div>
+                                            `;
+                                        });
+                                        document.getElementById('dyn-latest-articles').innerHTML = sideHTML;
+                                    }
+                                });
+                        }
+
+                        const articleData = localStorage.getItem('nm_article_' + slug);
+                        if(articleData) {
+                            renderArticle(JSON.parse(articleData));
+                        } else {
+                            // If direct link (no localStorage), fetch directly from API!
+                            fetch(`https://newsdata.io/api/1/latest?apikey=pub_f6edd3f794a346e3adada5b038854104&country=us&language=en&category=business,education,entertainment,lifestyle,world&prioritydomain=top&removeduplicate=1`)
+                            .then(r => r.json())
+                            .then(data => {
+                                if(data && data.status === 'success' && data.results) {
+                                    const mappedResults = data.results.map(r => ({
+                                        title: r.title,
+                                        url: r.link,
+                                        urlToImage: r.image_url,
+                                        publishedAt: r.pubDate,
+                                        author: (r.creator && r.creator.length > 0) ? r.creator[0] : 'Staff Reporter',
+                                        source: { name: r.source_name || 'News' },
+                                        description: r.description,
+                                        content: r.content
+                                    }));
+                                    const article = mappedResults.find(a => {
+                                        let s = a.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                                        return s === slug;
+                                    });
+                                    if (article) {
+                                        renderArticle(article);
+                                    } else {
+                                        document.getElementById('dyn-title').innerText = "Article not found";
+                                        document.getElementById('dyn-content').innerHTML = "<p>Please return to the news page and select an article.</p>";
+                                    }
+                                }
+                            }).catch(() => {
+                                document.getElementById('dyn-title').innerText = "Article not found";
+                                document.getElementById('dyn-content').innerHTML = "<p>Could not fetch from API.</p>";
+                            });
+                        }
+                    });
+                ]]>
+                </script>
+                </main>
+                </div>
+            </div>
+        </t>
+    </template>
 </odoo>
 
 

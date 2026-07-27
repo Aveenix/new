@@ -285,7 +285,26 @@
                 </div>
             </div>
 
-            <nav class="av-cat-nav">
+            <nav class="av-news-nav">
+                <div class="av-news-nav-inner">
+                    <ul class="av-news-menu">
+                        <li><a href="/news"><i class="fa fa-home me-1"/>Home</a></li>
+                        <li><a href="/news#nm-global-news"><i class="fa fa-globe"></i> Global</a></li>
+                        <li><a href="/news#nm-travel-guides"><i class="fa fa-bicycle"></i> Lifestyle</a></li>
+                        <li><a href="/news#nm-must-read-list"><i class="fa fa-female"></i> Fashion</a></li>
+                        <li><a href="/news#nm-gaming-section"><i class="fa fa-gamepad"></i> Gaming</a></li>
+                        <li><a href="/news#nm-fitness-section"><i class="fa fa-heartbeat"></i> Fitness</a></li>
+                    </ul>
+                    <div class="av-news-search">
+                        <form action="/news/search" method="get">
+                            <input type="text" name="search" placeholder="Search News..."/>
+                            <button type="submit"><i class="fa fa-search"/></button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+
+            <nav class="av-cat-nav" t-if="not is_news_page">
                 <div class="av-cat-nav-inner">
                     <div class="av-all-categories" t-att-id="'av-all-categories-btn'">
                         <i class="fa fa-bars"/>

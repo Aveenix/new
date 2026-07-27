@@ -8,6 +8,91 @@ _logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+
+    desc_ai = fields.Html('AI Description', sanitize=False)
+
+    def action_generate_ai_content(self):
+        import requests
+        from odoo.exceptions import UserError
+        import re
+        
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('aveenix.ai_endpoint', 'https://api.groq.com/openai/v1/chat/completions')
+        model = self.env['ir.config_parameter'].sudo().get_param('aveenix.ai_model', 'llama-3.3-70b-versatile').strip()
+        api_key = self.env['ir.config_parameter'].sudo().get_param('aveenix.ai_api_key')
+        
+        if api_key:
+            api_key = api_key.strip()
+            
+        if not api_key and 'groq' in endpoint:
+            raise UserError("Please configure your AI API Key in Settings -> Technical -> System Parameters.")
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+            
+        for record in self:
+            # We don't skip if already generated, because the user might have clicked the button to regenerate
+            # However, in cron we will only pass records that don't have desc_ai
+            prompt = f"Write an engaging, sales-driven, detailed, and SEO-friendly product description for '{record.name}'. "
+            if record.categ_id:
+                prompt += f"The product category is '{record.categ_id.name}'. "
+            if record.description_sale:
+                prompt += f"Additional info: {record.description_sale}. "
+            if record.description_ecommerce:
+                clean_ecommerce_desc = re.sub('<[^<]+>', ' ', record.description_ecommerce).replace('});', '').strip()
+                # Completely chop off the reviews and rankings from the raw data
+                clean_ecommerce_desc = clean_ecommerce_desc.split('Best Sellers Rank')[0].split('Customer Reviews')[0].strip()
+                if clean_ecommerce_desc:
+                    prompt += f"Key product details and features to incorporate: {clean_ecommerce_desc}. "
+                    prompt += "IMPORTANT: Do NOT include any 'Customer Reviews', star ratings, or 'Best Sellers Rank' information in your output, even if they appear in the provided details. "
+                
+            prompt += "Return ONLY valid HTML content suitable for an eCommerce website (use <p>, <h2>, <h3>, <ul>, <li>, <strong>, etc.), no markdown wrappers, no explanations. Make it detailed."
+
+            data = {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": "You are a professional eCommerce copywriter. Output only raw HTML code."},
+                    {"role": "user", "content": prompt}
+                ]
+            }
+            
+            try:
+                response = requests.post(endpoint, headers=headers, json=data, timeout=30)
+                response.raise_for_status()
+                result = response.json()
+                content = result.get('choices', [{}])[0].get('message', {}).get('content', '')
+                
+                if content.startswith('```html'):
+                    content = content[7:]
+                if content.endswith('```'):
+                    content = content[:-3]
+                    
+                record.desc_ai = content
+                # Commit if this is a large batch so we don't lose progress
+                if len(self) > 1:
+                    self.env.cr.commit()
+            except Exception as e:
+                _logger.warning(f"Failed to generate AI content for product {record.id}: {str(e)}")
+                if len(self) == 1:
+                    raise UserError(f"Failed to connect to AI: {str(e)}")
+
+    @api.model
+    def cron_generate_ai_content(self, limit=50):
+        # Find products without AI description
+        products = self.search([('desc_ai', '=', False)], limit=limit)
+        if products:
+            _logger.info(f"Generating AI descriptions for {len(products)} products...")
+            products.action_generate_ai_content()
+            
+            # Re-trigger cron if there are more
+            remaining = self.search_count([('desc_ai', '=', False)])
+            if remaining:
+                cron = self.env.ref('aveenix_website.cron_generate_ai_content', raise_if_not_found=False)
+                if cron:
+                    cron._trigger()
+
     available_country_ids = fields.Many2many(
         'res.country',
         'product_template_country_rel',
