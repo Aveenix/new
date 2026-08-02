@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_cj_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.cj.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']" position="inside">
+                <group string="CJ Dropshipping Configuration" name="cj_dropshipping_group">
+                    <group>
+                        <field name="is_cj_dropship" invisible="1"/>
+                        <field name="cj_pid"/>
+                        <field name="cj_cost_price" widget="monetary"/>
+                        <field name="cj_markup_percentage"/>
+                    </group>
+                    <group>
+                        <div>
+                            <button name="action_sync_cj_product"
+                                    string="Sync with CJ Dropshipping"
+                                    type="object"
+                                    class="btn-secondary mt-2"
+                                    icon="fa-refresh"
+                                    invisible="not cj_pid"/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_cj_inherit" model="ir.ui.view">
+        <field name="name">product.product.form.cj.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_general']" position="inside">
+                <field name="cj_vid"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action menu button to sync selected products from CJ Dropshipping -->
+    <record id="action_server_sync_cj_products" model="ir.actions.server">
+        <field name="name">Sync with CJ Dropshipping</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for rec in records:
+                if rec.cj_pid:
+                    rec.action_sync_cj_product()
+        </field>
+    </record>
+</odoo>

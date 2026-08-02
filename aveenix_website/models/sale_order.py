@@ -16,6 +16,10 @@ class SaleOrder(models.Model):
         compute='_compute_av_welcome_discount_eligible',
         help='Display text for the welcome discount (e.g. "$20 OFF").',
     )
+    av_tracking_link = fields.Char(
+        string='Order Tracking Link',
+        help='External tracking link fetched from WooCommerce for customers to track their order.',
+    )
 
     @api.depends('partner_id', 'state')
     def _compute_av_welcome_discount_eligible(self):

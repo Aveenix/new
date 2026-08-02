@@ -123,7 +123,7 @@
                                     </div>
                                 </div>
                                 <hr class="my-2" style="border-color: #eee;"/>
-                                <div class="text-muted fw-bold mb-2 px-1" style="font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase;">Popular</div>
+                                <div class="text-muted fw-bold mb-2 px-1" style="font-size: 10px; letter-spacing: 0.5px; text-transform: capitalize;">Popular</div>
                                 <div class="av-color-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
                                     <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#FFC107" data-name="Yellow"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #FFC107; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Yellow</span></div>
                                     <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#2196F3" data-name="Blue"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #2196F3; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Blue</span></div>
@@ -132,7 +132,7 @@
                                     <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#F44336" data-name="Red"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #F44336; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Red</span></div>
                                     <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-2 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#FF9800" data-name="Orange"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #FF9800; width: 44px; height: 44px; border-radius: 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label">Orange</span></div>
                                 </div>
-                                <div class="text-muted fw-bold mb-2 px-1" style="font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase;">Extended Palette</div>
+                                <div class="text-muted fw-bold mb-2 px-1" style="font-size: 10px; letter-spacing: 0.5px; text-transform: capitalize;">Extended Palette</div>
                                 <div class="av-color-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                     <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#009688" data-name="Teal"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #009688; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Teal</span></div>
                                     <div class="av-color-btn-wrapper d-flex flex-column align-items-center p-1 rounded" style="cursor: pointer; border: 1px solid transparent;" data-color="#3F51B5" data-name="Indigo"><div class="av-color-swatch d-flex align-items-center justify-content-center" style="background: #3F51B5; width: 36px; height: 36px; border-radius: 10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 14px; height: 14px; fill: #fff; opacity: 0.9;"><path d="M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg></div><span class="av-color-btn-label-small">Indigo</span></div>
@@ -159,16 +159,19 @@
             </div>
 
             <!-- ── Main header row ─────────────────────────────── -->
-            <!-- Client-side logic for news layout to bypass QWeb caching issues -->
+            <!-- Client-side logic for news layout: Switch logo to NEWS and hide action buttons on News pages -->
             <style>
-                body.is-news-page .av-default-logo-group { display: none !important; }
+                body.is-news-page .av-default-logo-group,
+                body.is-news-page .av-logo-express { display: none !important; }
                 body.is-news-page .av-logo-news { display: block !important; }
-                body.is-news-page #top_menu { display: none !important; }
+                body.is-news-page #top_menu,
+                body.is-news-page .av-header-actions,
                 body.is-news-page .av-cat-nav { display: none !important; }
+                body.is-news-page .av-news-nav { display: block !important; }
             </style>
             <script type="text/javascript">
                 document.addEventListener("DOMContentLoaded", function() {
-                    if (window.location.pathname.indexOf('/news') !== -1) {
+                    if (window.location.pathname.indexOf('/news') !== -1 || document.querySelector('.av-news-page') || document.querySelector('.nm-news-page')) {
                         document.body.classList.add('is-news-page');
                     }
                 });
@@ -285,22 +288,46 @@
                 </div>
             </div>
 
-            <nav class="av-news-nav">
-                <div class="av-news-nav-inner">
-                    <ul class="av-news-menu">
-                        <li><a href="/news"><i class="fa fa-home me-1"/>Home</a></li>
-                        <li><a href="/news#nm-global-news"><i class="fa fa-globe"></i> Global</a></li>
-                        <li><a href="/news#nm-travel-guides"><i class="fa fa-bicycle"></i> Lifestyle</a></li>
-                        <li><a href="/news#nm-must-read-list"><i class="fa fa-female"></i> Fashion</a></li>
-                        <li><a href="/news#nm-gaming-section"><i class="fa fa-gamepad"></i> Gaming</a></li>
-                        <li><a href="/news#nm-fitness-section"><i class="fa fa-heartbeat"></i> Fitness</a></li>
+            <nav class="av-cat-nav av-news-nav" t-if="is_news_page" style="display: block !important;">
+                <div class="av-cat-nav-inner">
+                    <ul class="av-cat-menu av-news-menu">
+                        <li>
+                            <a href="/news" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-home" style="font-size: 14px;"/>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news#nm-global-news" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-globe" style="font-size: 14px;"/>
+                                <span>Global</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news#nm-travel-guides" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-bicycle" style="font-size: 14px;"/>
+                                <span>Lifestyle</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news#nm-must-read-list" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-female" style="font-size: 14px;"/>
+                                <span>Fashion</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news#nm-gaming-section" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-gamepad" style="font-size: 14px;"/>
+                                <span>Gaming</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news#nm-fitness-section" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-heartbeat" style="font-size: 14px;"/>
+                                <span>Fitness</span>
+                            </a>
+                        </li>
                     </ul>
-                    <div class="av-news-search">
-                        <form action="/news/search" method="get">
-                            <input type="text" name="search" placeholder="Search News..."/>
-                            <button type="submit"><i class="fa fa-search"/></button>
-                        </form>
-                    </div>
                 </div>
             </nav>
 
@@ -340,9 +367,29 @@
                         </div>
                     </div>
                     <ul class="av-cat-menu">
-                        <li><a href="/shop">Shop</a></li>
+                        <li>
+                            <a href="/shop" style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fa fa-shopping-bag" style="font-size: 14px;"/>
+                                <span>Shop</span>
+                            </a>
+                        </li>
                         <t t-foreach="request.website.sudo().aveenix_header_menu_categ_ids" t-as="av_hm_cat">
-                            <li><a t-attf-href="/shop?category=#{av_hm_cat.id}"><t t-esc="av_hm_cat.name"/></a></li>
+                            <li>
+                                <a t-attf-href="/shop?category=#{av_hm_cat.id}" style="display: flex; align-items: center; gap: 6px;">
+                                    <span class="av-cat-dd-icon" style="width: 20px; height: 20px;">
+                                        <t t-if="av_hm_cat.av_ai_icon">
+                                            <t t-set="_hm_icon_uri" t-value="image_data_uri(av_hm_cat.av_ai_icon)"/>
+                                            <img t-att-src="_hm_icon_uri" t-att-alt="av_hm_cat.sudo().name" style="max-width:100%; max-height:100%; object-fit:contain;"/>
+                                            <span class="av-cat-dd-icon-mask"
+                                                  t-attf-style="--av-cat-mask:url('#{_hm_icon_uri}')"/>
+                                        </t>
+                                        <t t-else="">
+                                            <i class="fa fa-tag" style="font-size: 14px;"/>
+                                        </t>
+                                    </span>
+                                    <span><t t-esc="av_hm_cat.name"/></span>
+                                </a>
+                            </li>
                         </t>
                     </ul>
                     <!-- <div class="av-menu-btn">
@@ -387,6 +434,7 @@
                         <div class="av-footer-col">
                             <h4 class="av-footer-heading av-footer-toggle">Customer Service<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
+                                <li><a href="/">Home</a></li>
                                 <li><a href="http://aveenixdigital.com/">Digital</a></li>
                                 <li><a href="https://aveenixdomains.com/">Domains</a></li>
                                 <li><a href="/news">News</a></li>
