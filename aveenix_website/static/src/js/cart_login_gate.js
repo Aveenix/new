@@ -45,10 +45,20 @@ export class CartLoginGate extends Interaction {
             (ev) => {
                 const btn = ev.target.closest(
                     "#add_to_cart, #buy_now, .js_av_add_to_cart, " +
-                    ".av-affiliate-save-btn, " +
-                    'button.o_wsale_product_btn_primary[data-aveenix-affiliate="1"]'
+                    ".av-add-to-cart, .av-affiliate-save-btn, .av-affiliate-buy, " +
+                    ".o_wsale_product_btn, .o_wsale_product_btn_primary, " +
+                    "a.o_wsale_product_btn, button.o_wsale_product_btn, " +
+                    ".js_add_cart, .js_add_cart_json, " +
+                    ".a-submit, button.a-submit, a.a-submit, " +
+                    ".o_we_buy_now, " +
+                    "button[data-action='add-to-cart'], a[data-action='add-to-cart'], " +
+                    ".btn-add-to-cart, .btn-cart, " +
+                    "button[title*='Add to cart' i], a[title*='Add to cart' i], " +
+                    "button[aria-label*='Add to cart' i], a[aria-label*='Add to cart' i]"
                 );
                 if (!btn) return;
+                const href = btn.getAttribute("href") || "";
+                if (href.includes("/shop/cart") || href.includes("/my/orders")) return;
                 if (!this._isPublicUser()) return; // logged-in → normal flow
                 ev.preventDefault();
                 ev.stopPropagation();
@@ -68,13 +78,14 @@ export class CartLoginGate extends Interaction {
     }
 
     _savePendingFromButton(btn) {
-        // Product cards carry the ids as data attributes.
-        const productId = parseInt(btn.dataset.productId || "");
-        const productTemplateId = parseInt(btn.dataset.productTemplateId || "");
-        if (productId && productTemplateId) {
+        // Product cards carry the ids as data attributes on the button OR on a parent container.
+        const el = btn.closest("[data-product-id], [data-product-template-id], .oe_product_cart, .o_wsale_product_grid_item, form") || btn;
+        const productId = parseInt(btn.dataset.productId || el.dataset.productId || "");
+        const productTemplateId = parseInt(btn.dataset.productTemplateId || el.dataset.productTemplateId || "");
+        if (productId || productTemplateId) {
             rpc("/aveenix/cart/save_pending", {
-                product_template_id: productTemplateId,
-                product_id: productId,
+                product_template_id: productTemplateId || productId,
+                product_id: productId || productTemplateId,
                 quantity: 1,
             }).catch(() => {});
             return;

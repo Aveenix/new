@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+function initNewsPage() {
     // Clear old article cache to remove any stuck dummy data
     for (let i = localStorage.length - 1; i >= 0; i--) {
         const key = localStorage.key(i);
@@ -30,17 +30,210 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     }
 
-    // Handle nav link active state for the top red border
-    const navLinks = document.querySelectorAll('.nm-nav-links a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (this.getAttribute('href') === '#') {
-                e.preventDefault();
+    // Ensure news navigation bar is always visible on news pages
+    const newsNav = document.querySelector('.av-news-nav');
+    if (newsNav && (window.location.pathname.startsWith('/news') || document.querySelector('.nm-news-page'))) {
+        newsNav.style.display = 'block';
+    }
+
+    const categoryColors = {
+        '#nm-global-news': '#00a69c',     // Teal
+        '#nm-travel-guides': '#f39c12',   // Orange
+        '#nm-must-read-list': '#e84393',  // Pink/Purple
+        '#nm-gaming-section': '#e32636',  // Red
+        '#nm-fitness-section': '#27ae60'  // Green
+    };
+
+    // ScrollSpy: Dynamically change active navbar link and accent color as user scrolls down
+    function updateDynamicNavScroll() {
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        const navBar = document.querySelector('.av-news-nav');
+        if (!navBar) return;
+
+        // Dynamic Header glass/shadow effect on scroll
+        if (scrollY > 20) {
+            navBar.classList.add('nav-scrolled');
+            navBar.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.15)';
+        } else {
+            navBar.classList.remove('nav-scrolled');
+            navBar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.08)';
+        }
+
+        // Only run section highlight if we are on the main /news page
+        if (window.location.pathname !== '/news' && window.location.pathname !== '/news/') {
+            return;
+        }
+
+        const sections = [
+            { id: '#nm-global-news', el: document.querySelector('#nm-global-news') },
+            { id: '#nm-travel-guides', el: document.querySelector('#nm-travel-guides') },
+            { id: '#nm-must-read-list', el: document.querySelector('#nm-must-read-list') },
+            { id: '#nm-gaming-section', el: document.querySelector('#nm-gaming-section') },
+            { id: '#nm-fitness-section', el: document.querySelector('#nm-fitness-section') }
+        ];
+
+        let currentActiveId = null;
+        const headerOffset = 220;
+
+        for (let sec of sections) {
+            if (sec.el) {
+                const rect = sec.el.getBoundingClientRect();
+                if (rect.top <= headerOffset && rect.bottom > 80) {
+                    currentActiveId = sec.id;
+                }
             }
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
+        }
+
+        if (scrollY < 180 || !currentActiveId) {
+            currentActiveId = 'HOME';
+        }
+
+        const links = document.querySelectorAll('.av-news-menu a');
+        links.forEach(l => {
+            const href = l.getAttribute('href');
+            l.classList.remove('active');
+            l.style.color = '';
+            l.style.borderBottom = '';
+            l.style.background = '';
+
+            if (currentActiveId === 'HOME' && (href === '/news' || href === '/news/')) {
+                l.classList.add('active');
+                l.style.color = '#e32636';
+                l.style.borderBottom = '3px solid #e32636';
+                l.style.background = 'rgba(227, 38, 54, 0.08)';
+                navBar.style.borderBottomColor = '#e32636';
+            } else if (href && href.includes(currentActiveId)) {
+                l.classList.add('active');
+                const col = categoryColors[currentActiveId] || '#e32636';
+                l.style.color = col;
+                l.style.borderBottom = '3px solid ' + col;
+                l.style.background = col + '15';
+                navBar.style.borderBottomColor = col;
+            }
         });
+    }
+
+    window.addEventListener('scroll', updateDynamicNavScroll, { passive: true });
+    const wrapEl = document.getElementById('wrapwrap');
+    if (wrapEl) {
+        wrapEl.addEventListener('scroll', updateDynamicNavScroll, { passive: true });
+    }
+    setTimeout(updateDynamicNavScroll, 300);
+
+    // Smooth scrolling & active state for News navigation menu (.av-news-menu a, .nm-nav-links a) using Event Delegation
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('.av-news-menu a, .nm-nav-links a');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (!href) return;
+        
+        const hashIndex = href.indexOf('#');
+        if (hashIndex !== -1) {
+            const hash = href.substring(hashIndex);
+            if (hash && hash !== '#') {
+                const targetEl = document.querySelector(hash);
+                if (targetEl) {
+                    e.preventDefault();
+                    document.querySelectorAll('.av-news-menu a, .nm-nav-links a').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    // Ensure the URL remains /news without adding #hash to the address bar
+                    if (history.replaceState) {
+                        history.replaceState(null, null, '/news');
+                    }
+
+                    // 1. Scroll using scrollIntoView which respects CSS scroll-margin-top: 170px on any scrolling container
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+
+                    // 2. Also scroll #wrapwrap (Odoo's primary scrolling container) explicitly
+                    const headerOffset = 160;
+                    const wrapwrap = document.getElementById('wrapwrap');
+                    if (wrapwrap) {
+                        const wrapRect = wrapwrap.getBoundingClientRect();
+                        const targetRect = targetEl.getBoundingClientRect();
+                        const offset = targetRect.top - wrapRect.top + wrapwrap.scrollTop - headerOffset;
+                        wrapwrap.scrollTo({
+                            top: Math.max(0, offset),
+                            behavior: "smooth"
+                        });
+                    }
+                    window.scrollTo({
+                        top: Math.max(0, (targetEl.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0) - headerOffset)),
+                        behavior: "smooth"
+                    });
+
+                    targetEl.style.transition = 'box-shadow 0.5s ease';
+                    targetEl.style.boxShadow = '0 0 20px rgba(0, 141, 127, 0.4)';
+                    setTimeout(() => {
+                        targetEl.style.boxShadow = 'none';
+                    }, 1500);
+                    return;
+                }
+            }
+        } else if ((href === '/news' || href === '/news/' || href === '#' || href === '') && (window.location.pathname === '/news' || window.location.pathname === '/news/')) {
+            e.preventDefault();
+            document.querySelectorAll('.av-news-menu a, .nm-nav-links a').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            if (history.replaceState) {
+                history.replaceState(null, null, '/news');
+            }
+            // 1. Scroll the very top element (.av-topbar or #wrapwrap or body) into view
+            const topEl = document.querySelector('.av-topbar') || document.querySelector('#wrapwrap') || document.body;
+            if (topEl) {
+                topEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // 2. Also explicitly scroll all potential containers to 0
+            const wrapwrap = document.getElementById('wrapwrap');
+            if (wrapwrap) {
+                wrapwrap.scrollTo({ top: 0, behavior: "smooth" });
+            }
+            const main = document.querySelector('main');
+            if (main) {
+                main.scrollTo({ top: 0, behavior: "smooth" });
+            }
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+            document.documentElement.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+            document.body.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
     });
+
+    // Handle hash on initial page load
+    if (window.location.hash && window.location.hash !== '#') {
+        setTimeout(() => {
+            const targetEl = document.querySelector(window.location.hash);
+            if (targetEl) {
+                const headerOffset = 160;
+                const elementPosition = targetEl.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + (window.scrollY || window.pageYOffset || document.documentElement.scrollTop) - headerOffset;
+                window.scrollTo({
+                    top: Math.max(0, offsetPosition),
+                    behavior: "smooth"
+                });
+                targetEl.style.transition = 'box-shadow 0.5s ease';
+                targetEl.style.boxShadow = '0 0 20px rgba(0, 141, 127, 0.4)';
+                setTimeout(() => {
+                    targetEl.style.boxShadow = 'none';
+                }, 1500);
+                document.querySelectorAll('.av-news-menu a, .nm-nav-links a').forEach(link => {
+                    const href = link.getAttribute('href') || '';
+                    if (href.endsWith(window.location.hash)) {
+                        document.querySelectorAll('.av-news-menu a, .nm-nav-links a').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }, 300);
+    }
 
     // Intercept clicks on article links to open them dynamically with a slug
     document.addEventListener('click', function(e) {
@@ -62,7 +255,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     fetchNews();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNewsPage);
+} else {
+    initNewsPage();
+}
 
 async function fetchNews() {
     try {
@@ -102,7 +301,15 @@ async function fetchNews() {
             return true;
         });
 
-        // Duplication code removed, we now fetch enough articles from the backend
+        if (validArticles.length < 55) {
+            const defaults = getDefaultNewsArticles();
+            defaults.forEach(def => {
+                if (!uniqueTitles.has(def.title)) {
+                    uniqueTitles.add(def.title);
+                    validArticles.push(def);
+                }
+            });
+        }
 
         window.nmValidArticles = validArticles;
         // Render as many sections as we have articles for.
@@ -437,4 +644,104 @@ function renderYoutubePlaylist(containerId) {
     };
 
     render();
+}
+
+function getDefaultNewsArticles() {
+    const categories = ['GLOBAL', 'LIFESTYLE', 'FASHION', 'GAMING', 'FITNESS', 'GADGETS', 'RECIPES', 'POPULAR'];
+    const authors = ['Sarah Jenkins', 'Michael Chang', 'David Lee', 'Elena Rostova', 'Marcus Vance', 'Amina Diop', 'Lucas Wright', 'Jessica Alba'];
+    const images = [
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop'
+    ];
+    const titles = [
+        "Global Tech Leaders Assemble in Geneva for AI Summit 2026",
+        "Renewable Energy Milestones Shattered Across Europe This Season",
+        "Oceanic Conservation Project Reports Breakthrough in Reef Recovery",
+        "New High-Speed Rail Network Connects Major Scandinavian Hubs",
+        "Global Architecture Biennale Spotlights Eco-Friendly Skyscrapers",
+        "7 Minimalist Daily Habits for Serious Mental Clarity and Calm",
+        "Why Coastal Slow-Living is the Biggest Trend in Modern Home Design",
+        "The Ultimate Weekend Itinerary for Exploring Kyoto in Autumn",
+        "How Digital Nomads Are Redefining Work-Life Balance Globally",
+        "Autumn 2026 Couture: Elegant Silhouettes and Earthy Muted Tones",
+        "Sustainable Luxury: Why Heritage Brands Are Embracing Upcycling",
+        "The Return of Tailored Linens in Contemporary Urban Menswear",
+        "Next-Gen Virtual Reality Headset Redefines Immersion in RPGs",
+        "Indie Game Studio Wins Game of the Year with Emotional Narrative",
+        "Esports World Cup Sets New Viewership Record in Tokyo Finals",
+        "High-Intensity Interval Training vs. Low-Impact Pilates: New Study",
+        "The Role of Micro-Nutrients in Accelerating Post-Workout Recovery",
+        "Smart Wearables in 2026: Tracking Sleep Stages More Than Workouts",
+        "Hands-On with the Ultralight Solar-Powered Notebook for Travelers",
+        "Artisanal Sourdough: 5 Secret Techniques from Parisian Bakers",
+        "Exploring Hidden Glaciers: A Guide to Responsible Arctic Tourism",
+        "The Evolution of Smart Kitchen Appliances in Modern Homes",
+        "Top 10 Hidden Gem Destinations in the Mediterranean for 2026",
+        "How AI is Revolutionizing Personalized Nutrition and Health Plans",
+        "Vintage Fashion Revival: Collecting Timeless Wardrobe Pieces",
+        "Competitive Gaming Leagues Introduce Sustainable Tournament Venues",
+        "Mindfulness Meditation: Science-Backed Benefits for Daily Productivity",
+        "The Future of Electric Aviation: Short-Haul Flights Transformed",
+        "Mastering French Cuisine at Home: Simplified Classic Gourmet Recipes",
+        "Urban Rooftop Gardens: Transforming City Skylines with Greenery",
+        "Innovative Eco-Materials Dominating International Design Fairs",
+        "The Rise of Boutique Fitness Studios in Major Cosmopolitan Cities",
+        "Understanding Quantum Computing: What It Means for Consumer Tech",
+        "Weekend Getaways: Charming Countryside Retreats Near You",
+        "Essential Wardrobe Staples for Sustainable Seasonal Transitions",
+        "Deep-Sea Exploration: New Discoveries in Marine Biology",
+        "How Contemporary Artists Are Blending Traditional Crafts with Tech",
+        "The Science of Better Sleep: Ambient Temperature and Lighting",
+        "Zero-Waste Culinary Trends Revolutionizing Fine Dining",
+        "Next-Generation Smartphones: Foldables Reaching New Maturity",
+        "Historic Landmarks Restored Using Advanced 3D Laser Scanning",
+        "The Best Scenic Hiking Trails to Experience This Spring",
+        "The Psychology of Color in Interior Design for Serenity",
+        "Breakthroughs in Battery Tech Enable Days-Long Laptop Battery Life",
+        "Superfoods Explained: Separating Marketing Hype from Nutritional Fact",
+        "The Aesthetic Revival of Mid-Century Modern Furniture",
+        "Virtual Museums: Interactive Art Exhibitions Available Worldwide",
+        "Cross-Training Strategies for Injury-Free Marathon Preparation",
+        "Global Coffee Culture: From Farm to Specialty Artisan Roasts",
+        "Exploring Space Tourism: What the First Commercial Travelers Can Expect",
+        "How Smart Cities Are Redesigning Public Transit for Accessibility",
+        "The Renaissance of Vinyl Records in an Era of Digital Streaming",
+        "Architecture of Tomorrow: Floating Structures for Coastal Regions",
+        "Plant-Based Gastronomy Wins Acclaim at Michelin Star Awards",
+        "Minimalist Travel Packing: How to Travel for Weeks with One Carry-On",
+        "The Best Ergonomic Workspace Setups for Long-Term Spinal Health",
+        "Behind the Scenes of Motion Capture in AAA Video Game Production",
+        "Natural Skincare Ingredients Proven by Dermatological Science",
+        "How Solar Desalination Could Solve Clean Water Shortages",
+        "The Cultural Impact of Contemporary African Art on Global Galleries"
+    ];
+
+    return titles.map((title, index) => {
+        const cat = categories[index % categories.length];
+        const img = images[index % images.length];
+        const author = authors[index % authors.length];
+        const day = 28 - (index % 25);
+        return {
+            title: title,
+            url: 'https://aveenix.com/news/article/' + (index + 1),
+            urlToImage: img,
+            publishedAt: `2026-07-${day < 10 ? '0' + day : day}T10:00:00Z`,
+            author: author,
+            source: { name: cat },
+            description: `${title}. Comprehensive analysis, expert insights, and indepth coverage of the latest developments shaping ${cat.toLowerCase()} around the world today.`
+        };
+    });
 }

@@ -20,6 +20,9 @@
                     welcome discount on this first order.
                 </div>
             </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="av_tracking_link" widget="url"/>
+            </xpath>
         </field>
     </record>
 

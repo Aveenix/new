@@ -29,15 +29,16 @@ html[data-theme="dark"] body {
 body, #wrapwrap {
     font-family: 'Roboto', sans-serif;
     color: var(--text-color);
-    background: url('https://demo.tagdiv.com/newspaper_magazine_pro/wp-content/uploads/2020/06/what-the-hex.png') repeat !important;
+    background: var(--bg-color) !important;
+    background-image: none !important;
     line-height: 1.6;
 }
 
 .nm-news-page {
-    background-color: var(--bg-color) !important;
-    max-width: 1240px !important;
+    background-color: transparent !important;
+    max-width: 100% !important;
     margin: 0 auto !important;
-    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    box-shadow: none !important;
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow: hidden;
     padding-bottom: 40px;
@@ -104,7 +105,7 @@ ul { list-style: none; }
 .nm-nav-links { display: flex; gap: 20px; height: 50px; }
 .nm-nav-links li { display: flex; align-items: center; height: 100%; }
 .nm-nav-links a {
-    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    font-size: 13px; font-weight: 700; text-transform: capitalize;
     display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 100%;
     border-top: 3px solid transparent;
 }
@@ -164,7 +165,7 @@ ul { list-style: none; }
     display: flex; align-items: center; margin-bottom: 20px; margin-top: 30px;
 }
 .nm-section-heading h2 {
-    font-size: 15px; font-weight: 700; margin-right: 0; padding: 0 15px 0 0; background-color: transparent; color: #000; text-transform: uppercase;
+    font-size: 15px; font-weight: 700; margin-right: 0; padding: 0 15px 0 0; background-color: transparent; color: #000; text-transform: capitalize;
 }
 .nm-section-heading .nm-line { flex-grow: 1; height: 2px; background-color: var(--nm-primary); }
 .nm-section-heading .nm-filter { margin-left: 15px; font-size: 12px; color: var(--meta-color); cursor: pointer; font-weight: 700; }
@@ -183,7 +184,7 @@ ul { list-style: none; }
 .nm-gn-list-item img { width: 100px; height: 75px; object-fit: cover; }
 .nm-gn-list-content { flex: 1; }
 
-.nm-category-text { font-size: 11px; font-weight: 700; color: var(--nm-primary); display: block; margin-bottom: 5px; text-transform: uppercase; }
+.nm-category-text { font-size: 11px; font-weight: 700; color: var(--nm-primary); display: block; margin-bottom: 5px; text-transform: capitalize; }
 .nm-post-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; color: var(--heading-color); }
 .nm-post-title a:hover { color: var(--nm-primary); }
 .nm-gn-list-item .nm-post-title { font-size: 14px; margin-bottom: 5px; }
@@ -240,7 +241,7 @@ ul { list-style: none; }
 .nm-tg-info .nm-category-text {
     font-size: 11px;
     font-weight: 500;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: #ffffff;
     margin-bottom: 8px;
     display: block;
@@ -289,7 +290,7 @@ ul { list-style: none; }
 .nm-latest-grid-item .nm-post-title { font-size: 19px; font-weight: 500; line-height: 1.2; margin-bottom: 10px; }
 .nm-latest-grid-item .nm-post-title a { color: var(--heading-color); transition: color 0.2s; }
 .nm-latest-grid-item .nm-post-title a:hover { color: #008d7f !important; }
-.nm-latest-grid-item .nm-category-text { color: #008d7f; text-transform: uppercase; font-size: 11px; margin-bottom: 5px; display: inline-block; font-weight: 400; }
+.nm-latest-grid-item .nm-category-text { color: #008d7f; text-transform: capitalize; font-size: 11px; margin-bottom: 5px; display: inline-block; font-weight: 400; }
 
 /* Must Read Post */
 .nm-must-read-post { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
@@ -326,7 +327,7 @@ ul { list-style: none; }
 .nm-circle-post { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
 .nm-circle-post img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
 .nm-circle-post-info { flex: 1; }
-.nm-circle-post-info .nm-category-text { font-size: 11px; font-weight: 500; text-transform: uppercase; color: var(--text-color); display: block; margin-bottom: 5px; }
+.nm-circle-post-info .nm-category-text { font-size: 11px; font-weight: 500; text-transform: capitalize; color: var(--text-color); display: block; margin-bottom: 5px; }
 .nm-circle-post-info .nm-small-title { font-size: 15px; font-weight: 500; margin: 0; line-height: 1.2; }
 .nm-circle-post-info .nm-small-title a { color: var(--heading-color); text-decoration: none; }
 .nm-circle-post-info .nm-small-title a:hover { color: #dd3333; }
@@ -387,18 +388,18 @@ ul { list-style: none; }
 
 /* Missing Elements Added */
 body {
-    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-    background-color: #f7f7f7;
+    background-image: none !important;
+    background-color: #ffffff;
 }
 html[data-theme="dark"] body {
     background-color: #121212;
-    background-image: none;
+    background-image: none !important;
 }
 .nm-news-page {
-    background-color: var(--bg-color);
-    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    background-color: transparent !important;
+    box-shadow: none !important;
     margin: 0 auto;
-    max-width: 1200px;
+    max-width: 100% !important;
     padding-bottom: 50px;
 }
 .nm-social-widget {
@@ -451,7 +452,7 @@ html[data-theme="dark"] body {
 .nm-social-details span {
     font-size: 10px;
     font-weight: 600;
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: 0.5px;
     opacity: 0.9;
     color: rgba(255, 255, 255, 0.9) !important;
@@ -464,7 +465,7 @@ html[data-theme="dark"] body {
     background: rgba(255, 255, 255, 0.25);
     padding: 3px 8px;
     border-radius: 3px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: 0.5px;
 }
 
@@ -601,7 +602,7 @@ html[data-theme="dark"] body {
 .nm-share-btn.wa { color: #25D366; }
 
 .nm-section-header { display: flex; align-items: center; margin-bottom: 20px; }
-.nm-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; margin: 0; white-space: nowrap; color: var(--heading-color); }
+.nm-section-title { font-size: 13px; font-weight: 700; text-transform: capitalize; margin: 0; white-space: nowrap; color: var(--heading-color); }
 .nm-section-header::after { content: ""; flex-grow: 1; height: 3px; background-color: #008d7f; margin-left: 15px; }
 
 /* In the screenshot Stay Connected has a red line instead of teal */
@@ -611,3 +612,121 @@ html[data-theme="dark"] body {
 .nm-social-stat-box .fs-5 { font-size: 16px !important; color: var(--heading-color); }
 
 /* Hide Odoo footer on news page to keep it clean if desired, or keep it */
+
+#nm-hero-section,
+#nm-global-news,
+#nm-travel-guides,
+#nm-gadgets-section,
+#nm-recipes-section,
+#nm-popular-list,
+#nm-four-col-grid,
+#nm-fitness-section,
+#nm-gaming-section,
+#nm-youtube-section,
+#nm-latest-articles,
+#nm-must-read-list {
+    scroll-margin-top: 170px !important;
+}
+
+/* Dynamic Header & Sticky Navigation Bar (Matching Signature Dynamic Red Aveenix Navbar) */
+.av-cat-nav.av-news-nav {
+    background: var(--av-red) !important;
+    color: #000000 !important;
+    border-top: none !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.15) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1050 !important;
+    height: 56px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.is-news-page .av-header,
+body:has(.av-news-page) .av-header,
+body:has(.nm-news-page) .av-header,
+.news_home .av-header,
+.news_detail .av-header {
+    position: relative !important;
+}
+
+/* Dynamic Category Colors for Hover and Active States */
+.av-cat-nav.av-news-nav .av-cat-menu a,
+.av-cat-nav.av-news-nav .av-all-categories {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0.5px !important;
+    padding: 0 14px !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: all 0.25s ease !important;
+    border-bottom: 3px solid transparent;
+}
+
+.av-cat-nav.av-news-nav .av-cat-menu a[href="/news"]:hover,
+.av-cat-nav.av-news-nav .av-cat-menu a[href="/news"].active {
+    color: #ffffff !important;
+    border-bottom: 3px solid #ffffff !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-global-news"]:hover,
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-global-news"].active {
+    color: #ffffff !important;
+    border-bottom: 3px solid #00a69c !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-travel-guides"]:hover,
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-travel-guides"].active {
+    color: #ffffff !important;
+    border-bottom: 3px solid #f39c12 !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-must-read-list"]:hover,
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-must-read-list"].active {
+    color: #ffffff !important;
+    border-bottom: 3px solid #e84393 !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-gaming-section"]:hover,
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-gaming-section"].active {
+    color: #ffffff !important;
+    border-bottom: 3px solid #ffffff !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-fitness-section"]:hover,
+.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-fitness-section"].active {
+    color: #ffffff !important;
+    border-bottom: 3px solid #27ae60 !important;
+    background: rgba(0, 0, 0, 0.18) !important;
+}
+
+[data-theme="dark"] .av-cat-nav.av-news-nav {
+    background: var(--av-red) !important;
+    color: #000000 !important;
+    border-bottom-color: rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .av-cat-nav.av-news-nav .av-cat-menu a:hover,
+[data-theme="dark"] .av-cat-nav.av-news-nav .av-cat-menu a.active,
+[data-theme="dark"] .av-cat-nav.av-news-nav .av-all-categories:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Scrolled sticky state shadow */
+.av-cat-nav.av-news-nav.nav-scrolled {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22) !important;
+}
+[data-theme="dark"] .av-cat-nav.av-news-nav.nav-scrolled {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65) !important;
+}

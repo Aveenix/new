@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1. Add "Order Tracking" Card to My Account Portal Dashboard (/my) -->
+    <template id="portal_my_home_cj_tracking" name="CJ Order Tracking Card" inherit_id="portal.portal_my_home" priority="25">
+        <xpath expr="//div[@id='portal_client_category']" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
+                <t t-set="title">Order Tracking</t>
+                <t t-set="url" t-value="'/my/orders'"/>
+                <t t-set="text">Track shipments, carrier details, and live delivery status</t>
+                <t t-set="placeholder_count" t-value="'order_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- 2. Add "Tracking & Delivery Status" column to Orders List (/my/orders) -->
+    <template id="portal_my_orders_inherit_cj" name="CJ Order Tracking in Orders List" inherit_id="sale.portal_my_orders">
+        <xpath expr="//th[1]" position="after">
+            <th>Tracking &amp; Delivery Status</th>
+        </xpath>
+        <xpath expr="//td[1]" position="after">
+            <td>
+                <div class="d-flex flex-column gap-1 py-1">
+                    <t t-if="order.cj_tracking_number">
+                        <div>
+                            <span class="badge rounded-pill text-bg-success mb-1">
+                                <i class="fa fa-truck me-1"/> Shipped (<t t-out="order.cj_logistics_name or 'CJ'"/>)
+                            </span>
+                        </div>
+                        <div class="small fw-bold text-dark">
+                            # <t t-out="order.cj_tracking_number"/>
+                        </div>
+                    </t>
+                    <t t-elif="order.cj_order_status and order.cj_order_status != 'draft'">
+                        <div>
+                            <span class="badge rounded-pill text-bg-info">
+                                <i class="fa fa-box me-1"/> <t t-out="order.cj_order_status"/>
+                            </span>
+                        </div>
+                        <div class="small text-muted" style="font-size: 11px;">
+                            Warehouse Processing (<t t-out="order.cj_logistics_name or 'CJPacket'"/>)
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <span class="text-muted small">In Processing</span>
+                    </t>
+                    <!-- ALWAYS show a clickable Track Status button -->
+                    <div>
+                        <a t-att-href="order.cj_tracking_link or order.av_tracking_link or (order.cj_tracking_number and 'https://cjpacket.com/?tracking_number=' + order.cj_tracking_number) or 'https://www.cjdropshipping.com/tracking'" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-primary py-0 px-2 mt-1" 
+                           style="font-size: 11px;">
+                            <i class="fa fa-external-link me-1"/> Track Status Live
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </xpath>
+    </template>
+
+    <!-- 3. Add Live Tracking Banner and Table Rows to Order Detail Page (/my/orders/<id>) -->
+    <template id="sale_order_portal_content_inherit_cj" inherit_id="sale.sale_order_portal_content" name="CJ Dropshipping Portal Order Tracking">
+        <!-- Add an attractive Alert Banner at the top of the order page -->
+        <xpath expr="//div[@id='informations']" position="before">
+            <div t-if="sale_order.cj_tracking_number or (sale_order.cj_order_status and sale_order.cj_order_status != 'draft')" 
+                 class="alert alert-info d-flex align-items-center mb-4 shadow-sm" role="alert">
+                <i class="fa fa-truck fa-2x me-3 text-primary"/>
+                <div class="w-100">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <h5 class="alert-heading mb-1">
+                            Shipment Tracking &amp; Status: 
+                            <strong class="text-primary" t-out="sale_order.cj_order_status or 'Processing'"/>
+                        </h5>
+                        <a t-att-href="sale_order.cj_tracking_link or sale_order.av_tracking_link or (sale_order.cj_tracking_number and 'https://cjpacket.com/?tracking_number=' + sale_order.cj_tracking_number) or 'https://www.cjdropshipping.com/tracking'" 
+                           target="_blank" class="btn btn-sm btn-primary">
+                            <i class="fa fa-external-link me-1"/> Live Package Tracking
+                        </a>
+                    </div>
+                    <hr class="my-2"/>
+                    <p class="mb-0 small" t-if="sale_order.cj_tracking_number">
+                        Your package is being shipped via <strong><t t-out="sale_order.cj_logistics_name or 'CJ Dropshipping'"/></strong>.<br/>
+                        Tracking Number: <strong><t t-out="sale_order.cj_tracking_number"/></strong>
+                    </p>
+                    <p class="mb-0 small" t-else="">
+                        Your order has been sent to our dropshipping fulfillment warehouse (<strong t-out="sale_order.cj_logistics_name or 'CJPacket'"/>) and is currently being prepared for dispatch.
+                    </p>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Also add rows to the Sale Information table -->
+        <xpath expr="//tbody[@id='sale_info_table']" position="inside">
+            <tr t-if="sale_order.cj_order_status and sale_order.cj_order_status != 'draft'">
+                <th class="ps-0 pb-0">Fulfillment Status:</th>
+                <td class="w-100 pb-0 text-wrap">
+                    <span class="badge rounded-pill text-bg-info">
+                        <t t-out="sale_order.cj_order_status"/>
+                    </span>
+                </td>
+            </tr>
+            <tr t-if="sale_order.cj_tracking_number">
+                <th class="ps-0 pb-0">Tracking Number:</th>
+                <td class="w-100 pb-0 text-wrap">
+                    <strong t-field="sale_order.cj_tracking_number"/>
+                </td>
+            </tr>
+            <tr t-if="sale_order.cj_logistics_name">
+                <th class="ps-0 pb-0">Shipping Carrier:</th>
+                <td class="w-100 pb-0 text-wrap">
+                    <span t-field="sale_order.cj_logistics_name"/>
+                </td>
+            </tr>
+            <tr>
+                <th class="ps-0 pb-0">Track Package:</th>
+                <td class="w-100 pb-0 text-wrap">
+                    <a t-att-href="sale_order.cj_tracking_link or sale_order.av_tracking_link or (sale_order.cj_tracking_number and 'https://cjpacket.com/?tracking_number=' + sale_order.cj_tracking_number) or 'https://www.cjdropshipping.com/tracking'" 
+                       target="_blank" class="btn btn-sm btn-outline-primary py-0">
+                        <i class="fa fa-truck me-1"/> Track Online
+                    </a>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

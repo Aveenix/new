@@ -2,6 +2,18 @@
 
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
+
+// Prevent Odoo's native updateQuickReorderSidebar from crashing if quick_reorder_button is not in DOM
+const originalUpdateQuickReorderSidebar = wSaleUtils.updateQuickReorderSidebar;
+if (originalUpdateQuickReorderSidebar) {
+    wSaleUtils.updateQuickReorderSidebar = function (data) {
+        if (!document.getElementById("quick_reorder_button")) {
+            return;
+        }
+        return originalUpdateQuickReorderSidebar.apply(this, arguments);
+    };
+}
 
 // Product-card "Add to Cart" (.js_av_add_to_cart) on shop grids / rows.
 // Uses Odoo's native `cart` service so the product is added to the real cart

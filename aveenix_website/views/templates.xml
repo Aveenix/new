@@ -2332,7 +2332,7 @@
                     <!-- Description panel -->
                     <div class="av-tab-panel active" data-av-panel="description">
                         <t t-if="product.desc_ai">
-                            <div class="av-pdp-description-ai" t-field="product.desc_ai" style="color: #ddd; line-height: 1.8; font-size: 16px;"/>
+                            <div class="av-pdp-description-ai" t-field="product.desc_ai"/>
                         </t>
                         <t t-else="">
                             <p class="text-muted">No description available. Please generate AI description.</p>
@@ -4469,8 +4469,10 @@
         <xpath expr="//div[@id='shop_cart']" position="attributes">
             <attribute name="t-if">website_sale_order and website_sale_order.website_order_line</attribute>
         </xpath>
-        <!-- Remove the "Quick reorder" button entirely from the cart header. -->
-        <xpath expr="//t[@t-call='website_sale.quick_reorder_button']/.." position="replace"/>
+        <!-- Hide the "Quick reorder" button with d-none instead of removing it from DOM, so Odoo JS updateQuickReorderSidebar doesn't crash on null. -->
+        <xpath expr="//t[@t-call='website_sale.quick_reorder_button']/.." position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
     </template>
 
     <!-- =========================================================
@@ -4567,7 +4569,7 @@
             <t t-set="pageName" t-value="'news_home'"/>
             <div id="wrap" class="av-news-page nm-news-page">
                 <!-- Inline CSS for the news theme -->
-                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=2"/>
+                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=10"/>
                 
                 <!-- Removed Top Bar and Logo Area as per user request -->
 
@@ -4685,7 +4687,7 @@
 
                             <!-- Travel Guides -->
                             <div class="nm-section-heading">
-                                <h2>TRAVEL GUIDES</h2>
+                                <h2>LIFESTYLE</h2>
                                 <div class="nm-line" style="background-color: #85c442;"></div>
                             </div>
                             <div class="nm-travel-guides-grid" id="nm-travel-guides">
@@ -4781,7 +4783,7 @@
                         <aside class="nm-sidebar">
                             <div class="nm-widget">
                                 <div class="nm-section-heading">
-                                    <h2>MUST READ</h2>
+                                    <h2>FASHION</h2>
                                     <div class="nm-line" style="background-color: #008d7f;"></div>
                                 </div>
                                 <div id="nm-must-read-list">
@@ -4812,7 +4814,7 @@
                     </section>
 </main>
                 
-                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=9"></script>
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=17"></script>
             </div>
         </t>
     </template>
@@ -4958,7 +4960,7 @@
             
             <div id="wrap">
                 <div class="nm-news-page av-news-detail-page">
-                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=3"/>
+                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=10"/>
                 
                 <!-- Custom Nav Removed as per user request -->
 
@@ -5218,6 +5220,16 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="aveenix_sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_content" name="Aveenix: Order Tracking Link">
+        <xpath expr="//div[@id='intro_row']" position="inside">
+            <t t-if="sale_order.av_tracking_link">
+                <a t-att-href="sale_order.av_tracking_link" target="_blank" class="btn btn-primary ms-auto">
+                    <i class="fa fa-truck"/> Track Order
+                </a>
+            </t>
+        </xpath>
     </template>
 </odoo>
 
