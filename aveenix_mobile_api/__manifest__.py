@@ -4,7 +4,8 @@
     'summary': 'REST API for Aveenix Mobile App',
     'description': 'Provides JSON API endpoints for mobile application (Products, News, Blogs, etc.)',
     'category': 'Website',
-    'author': 'Aveenix',
+    'author': 'Anantam Innovision Private Limited',
+    'license': 'LGPL-3',
     'depends': ['base', 'website_sale', 'aveenix_website'],
     'data': [
     ],
