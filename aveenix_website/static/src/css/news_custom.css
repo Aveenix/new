@@ -657,61 +657,21 @@ body:has(.nm-news-page) .av-header,
     font-size: 14px !important;
     text-transform: capitalize !important;
     letter-spacing: 0.5px !important;
-        padding: 0px 0px !important;
     height: 100% !important;
     display: flex !important;
     align-items: center !important;
     gap: 6px !important;
     transition: all 0.25s ease !important;
-    border-bottom: 3px solid transparent;
-padding-right: 8mm !important;
-
 }
 
 .av-cat-nav.av-news-nav .av-cat-menu > li:first-child > a {
-    padding-left: 0 !important;
+    padding-left: 18px !important;
 }
 
-.av-cat-nav.av-news-nav .av-cat-menu a[href="/news"]:hover,
-.av-cat-nav.av-news-nav .av-cat-menu a[href="/news"].active {
+.av-cat-nav.av-news-nav .av-cat-menu a:hover {
     color: #ffffff !important;
-    border-bottom: 3px solid #ffffff !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-}
-
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-global-news"]:hover,
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-global-news"].active {
-    color: #ffffff !important;
-    border-bottom: 3px solid #00a69c !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-}
-
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-travel-guides"]:hover,
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-travel-guides"].active {
-    color: #ffffff !important;
-    border-bottom: 3px solid #f39c12 !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-}
-
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-must-read-list"]:hover,
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-must-read-list"].active {
-    color: #ffffff !important;
-    border-bottom: 3px solid #e84393 !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-}
-
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-gaming-section"]:hover,
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-gaming-section"].active {
-    color: #ffffff !important;
-    border-bottom: 3px solid #ffffff !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-}
-
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-fitness-section"]:hover,
-.av-cat-nav.av-news-nav .av-cat-menu a[href*="#nm-fitness-section"].active {
-    color: #ffffff !important;
-    border-bottom: 3px solid #27ae60 !important;
-    background: rgba(0, 0, 0, 0.18) !important;
+    background: transparent !important;
+    border-bottom: none !important;
 }
 
 [data-theme="dark"] .av-cat-nav.av-news-nav {
@@ -722,10 +682,9 @@ padding-right: 8mm !important;
 }
 
 [data-theme="dark"] .av-cat-nav.av-news-nav .av-cat-menu a:hover,
-[data-theme="dark"] .av-cat-nav.av-news-nav .av-cat-menu a.active,
 [data-theme="dark"] .av-cat-nav.av-news-nav .av-all-categories:hover {
     color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.2) !important;
+
 }
 
 /* Scrolled sticky state shadow */

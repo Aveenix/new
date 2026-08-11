@@ -330,7 +330,8 @@ class AveenixWebsite(WebsiteSale):
         # Quick check: if we have NO news for this country, trigger an on-the-fly fetch (max 1 time)
         if not request.env['aveenix.news'].sudo().search(['|', ('country_code', '=', country_code), ('country_code', '=', country_name)], limit=1):
             try:
-                request.env['aveenix.news'].sudo().sync_news_from_api(target_country=country_code)
+                with request.env.cr.savepoint():
+                    request.env['aveenix.news'].sudo().sync_news_from_api(target_country=country_code)
             except Exception as e:
                 import logging
                 logging.getLogger(__name__).warning("On the fly news fetch failed: %s", str(e))

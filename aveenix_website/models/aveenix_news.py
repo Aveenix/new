@@ -38,11 +38,17 @@ class AveenixNews(models.Model):
         # NewsData.io latest news endpoint
         url = "https://newsdata.io/api/1/news"
         
-        # Map active website currencies to News API country codes (max 5 for free tier)
+        # 1. Manual target_country
+        # 2. Configured countries in Website Settings
+        # 3. Currency-based fallback
+        print("\n\n\n--------target_country------",target_country)
+        website = self.env['website'].search([], limit=1)
         if target_country:
             country_codes = [target_country]
+        elif website and website.aveenix_newsdata_country_ids:
+            country_codes = [c.code.lower() for c in website.aveenix_newsdata_country_ids if c.code]
         else:
-            active_currencies = self.env['website'].search([], limit=1).get_currency_pricelist_options().mapped('currency_id.name') if self.env['website'].search([]) else []
+            active_currencies = website.get_currency_pricelist_options().mapped('currency_id.name') if website else []
             currency_map = {'USD': 'us', 'INR': 'in', 'GBP': 'gb', 'AUD': 'au', 'NZD': 'nz', 'JPY': 'jp', 'CAD': 'ca'}
             country_codes = list(set([currency_map[c] for c in active_currencies if c in currency_map]))
         
