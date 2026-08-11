@@ -541,6 +541,19 @@ class AveenixMobileAPI(http.Controller):
             }
             db_cat = cat_map.get(category.lower(), category.upper())
             domain.append(('category', '=', db_cat))
+            
+        user_country_id = request.session.get('av_user_country_id')
+        if user_country_id:
+            user_country = request.env['res.country'].sudo().browse(user_country_id)
+        else:
+            user_country = request.env.user.sudo().country_id or request.website.sudo().company_id.country_id
+            
+        country_code = user_country.code.lower() if user_country and user_country.code else 'us'
+        country_name = user_country.name.lower() if user_country and user_country.name else 'united states'
+        domain.append('|')
+        domain.append(('country_code', '=', country_code))
+        domain.append(('country_code', '=', country_name))
+            
         news = request.env['aveenix.news'].sudo().search(domain, limit=int(limit), offset=int(offset), order='published_date desc')
         data = []
         for n in news:

@@ -216,10 +216,7 @@
                             <t t-foreach="categories_best" t-as="cat">
                                 <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-card">
                                     <div class="av-cat-img-wrap">
-                                        <t t-if="cat.av_ai_icon">
-                                            <img t-attf-src="/web/image/product.public.category/#{cat.id}/av_ai_icon" t-att-alt="cat.sudo().name" class="av-cat-img"/>
-                                        </t>
-                                        <t t-elif="cat.image_128">
+                                        <t t-if="cat.image_128">
                                             <img t-attf-src="/web/image/product.public.category/#{cat.id}/image_128" t-att-alt="cat.sudo().name" class="av-cat-img"/>
                                         </t>
                                         <t t-else="">
@@ -236,10 +233,7 @@
                             <t t-foreach="categories_new" t-as="cat">
                                 <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-card">
                                     <div class="av-cat-img-wrap">
-                                        <t t-if="cat.av_ai_icon">
-                                            <img t-attf-src="/web/image/product.public.category/#{cat.id}/av_ai_icon" t-att-alt="cat.sudo().name" class="av-cat-img"/>
-                                        </t>
-                                        <t t-elif="cat.image_128">
+                                        <t t-if="cat.image_128">
                                             <img t-attf-src="/web/image/product.public.category/#{cat.id}/image_128" t-att-alt="cat.sudo().name" class="av-cat-img"/>
                                         </t>
                                         <t t-else="">
@@ -1125,10 +1119,7 @@
                         <t t-foreach="categories" t-as="cat">
                             <a t-attf-href="/shop?category=#{cat.id}" class="av-cat-page-card">
                                 <div class="av-cat-page-card-img">
-                                    <t t-if="cat.av_ai_icon">
-                                        <img t-attf-src="/web/image/product.public.category/#{cat.id}/av_ai_icon" t-att-alt="cat.name"/>
-                                    </t>
-                                    <t t-elif="cat.image_128">
+                                    <t t-if="cat.image_128">
                                         <img t-attf-src="/web/image/product.public.category/#{cat.id}/image_128" t-att-alt="cat.name"/>
                                     </t>
                                     <t t-else="">
@@ -5227,19 +5218,19 @@
                             }
                             
                             // Fetch sidebar articles
-                            fetch(`https://newsdata.io/api/1/latest?apikey=pub_f6edd3f794a346e3adada5b038854104&country=us&language=en&category=business,education,entertainment,lifestyle,world&prioritydomain=top&removeduplicate=1`)
+                            fetch('/api/v1/news?limit=10')
                                 .then(res => res.json())
                                 .then(data => {
-                                    if(data && data.status === 'success' && data.results) {
-                                        const mappedResults = data.results.map(r => ({
+                                    if(data && data.status === 'success' && data.data) {
+                                        const mappedResults = data.data.map(r => ({
                                             title: r.title,
                                             url: r.link,
                                             urlToImage: r.image_url,
-                                            publishedAt: r.pubDate,
-                                            author: (r.creator && r.creator.length > 0) ? r.creator[0] : 'Staff Reporter',
+                                            publishedAt: r.date,
+                                            author: r.author || 'Staff Reporter',
                                             source: { name: r.source_name || 'News' },
                                             description: r.description,
-                                            content: r.content
+                                            content: r.content || r.description
                                         }));
                                         const sideArts = mappedResults.filter(a => a.urlToImage && !a.urlToImage.includes('stimg.co') && a.title !== article.title).slice(0, 5);
                                         let sideHTML = '';
@@ -5267,19 +5258,19 @@
                             renderArticle(JSON.parse(articleData));
                         } else {
                             // If direct link (no localStorage), fetch directly from API!
-                            fetch(`https://newsdata.io/api/1/latest?apikey=pub_f6edd3f794a346e3adada5b038854104&country=us&language=en&category=business,education,entertainment,lifestyle,world&prioritydomain=top&removeduplicate=1`)
+                            fetch('/api/v1/news?limit=10')
                             .then(r => r.json())
                             .then(data => {
-                                if(data && data.status === 'success' && data.results) {
-                                    const mappedResults = data.results.map(r => ({
+                                if(data && data.status === 'success' && data.data) {
+                                    const mappedResults = data.data.map(r => ({
                                         title: r.title,
                                         url: r.link,
                                         urlToImage: r.image_url,
-                                        publishedAt: r.pubDate,
-                                        author: (r.creator && r.creator.length > 0) ? r.creator[0] : 'Staff Reporter',
+                                        publishedAt: r.date,
+                                        author: r.author || 'Staff Reporter',
                                         source: { name: r.source_name || 'News' },
                                         description: r.description,
-                                        content: r.content
+                                        content: r.content || r.description
                                     }));
                                     const article = mappedResults.find(a => {
                                         let s = a.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
