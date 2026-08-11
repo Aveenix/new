@@ -315,6 +315,25 @@ class AveenixWebsite(WebsiteSale):
             db_cat = cat_map.get(category.lower(), category.upper())
             domain.append(('category', '=', db_cat))
             
+        user_country_id = request.session.get('av_user_country_id')
+        if user_country_id:
+            user_country = request.env['res.country'].sudo().browse(user_country_id)
+        else:
+            user_country = request.env.user.sudo().country_id or request.website.sudo().company_id.country_id
+            
+        country_code = user_country.code.lower() if user_country and user_country.code else 'us'
+        country_name = user_country.name.lower() if user_country and user_country.name else 'united states'
+        domain.append('|')
+        domain.append(('country_code', '=', country_code))
+        domain.append(('country_code', '=', country_name))
+        
+        # Quick check: if we have NO news for this country, trigger an on-the-fly fetch (max 1 time)
+        if not request.env['aveenix.news'].sudo().search(['|', ('country_code', '=', country_code), ('country_code', '=', country_name)], limit=1):
+            try:
+                request.env['aveenix.news'].sudo().sync_news_from_api(target_country=country_code)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).warning("On the fly news fetch failed: %s", str(e))
         db_records = request.env['aveenix.news'].sudo().search(domain, limit=50)
         articles_list = []
         for r in db_records:

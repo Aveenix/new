@@ -413,6 +413,16 @@ body.modal-open {
     transition: border-color .2s;
 }
 
+body.is-news-page .av-search-form,
+body:has(.av-news-page) .av-search-form,
+body:has(.nm-news-page) .av-search-form,
+.news_home .av-search-form,
+.news_detail .av-search-form {
+    max-width: 750px !important;
+    margin-right: -136px;
+    margin-left: 98px;
+}
+
 .av-search-form:focus-within {
     border-color: var(--av-red);
 }
@@ -629,11 +639,11 @@ body.modal-open {
 .av-mobile-shop-btn { display: none; }
 .av-cat-nav .av-cat-nav-inner {
     max-width: 1500px;
-    margin: 0 auto;
     padding: 0 24px;
     display: flex;
     align-items: stretch;
     height: 100%;
+    margin: 0 auto;
 }
 .av-cat-nav .av-cat-menu a, .av-cat-nav .av-menu-btn, .av-cat-nav .av-all-categories {
     color: #000000 !important;
@@ -760,8 +770,8 @@ body.modal-open {
 }
 .av-cat-dropdown-list li a:hover .av-cat-dd-icon img,
 .av-cat-menu li a:hover .av-cat-dd-icon img { opacity: 0; }
-.av-cat-dropdown-list li a:hover .av-cat-dd-icon-mask,
-.av-cat-menu li a:hover .av-cat-dd-icon-mask { opacity: 1; }
+.av-cat-dropdown-list li a:hover .av-cat-dd-icon-mask { opacity: 1; }
+.av-cat-menu li a:hover .av-cat-dd-icon-mask { opacity: 1; background-color: #ffffff; }
 .av-cat-dropdown-footer {
     border-top: 1px solid var(--av-border);
     padding: 12px 20px;
@@ -8678,7 +8688,6 @@ a.av-affiliate-save-btn.av-affiliate-buy {
 /* ── NEWS PAGE CUSTOM STYLES ───────────────────────────────── */
 .av-news-page {
     background: transparent !important;
-    font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
     color: inherit !important;
 }
 
@@ -8811,6 +8820,50 @@ a.av-affiliate-save-btn.av-affiliate-buy {
     font-weight: 700;
     font-size: 15px;
     line-height: 1.3;
+}
+
+body.is-news-page .av-header-actions > *:not(.av-news-ad-container),
+body:has(.av-news-page) .av-header-actions > *:not(.av-news-ad-container),
+body:has(.nm-news-page) .av-header-actions > *:not(.av-news-ad-container),
+.news_home .av-header-actions > *:not(.av-news-ad-container),
+.news_detail .av-header-actions > *:not(.av-news-ad-container) {
+    display: none !important;
+}
+
+@media (max-width: 991px) {
+    body.is-news-page .av-header-actions,
+    body:has(.av-news-page) .av-header-actions,
+    body:has(.nm-news-page) .av-header-actions,
+    .news_home .av-header-actions,
+    .news_detail .av-header-actions {
+        flex-shrink: 1 !important;
+        min-width: 0;
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+.av-news-ad-container {
+    display: none;
+    width: 422px;
+    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+}
+
+@media (min-width: 992px) {
+    .av-news-ad-container img {
+        margin-left: 63mm;
+        height: 48px !important;
+    }
+}
+
+body.is-news-page .av-news-ad-container,
+body:has(.av-news-page) .av-news-ad-container,
+body:has(.nm-news-page) .av-news-ad-container,
+.news_home .av-news-ad-container,
+.news_detail .av-news-ad-container {
+    display: flex !important;
 }
 
 .av-news-title-small a:hover {
@@ -9011,19 +9064,11 @@ a.av-affiliate-save-btn.av-affiliate-buy {
 .av-news-pop-title a:hover {
     color: var(--av-red, #dc3545) !important;
 }
-/* Hide action buttons (Favourites, Wishlist, Compare, login, user menu, cart) and category navbar on the news page */
-body.is-news-page .av-header-actions,
-body.is-news-page #top_menu,
+/* Hide category navbar on the news page */
 body.is-news-page .av-cat-nav,
-body:has(.av-news-page) .av-header-actions,
-body:has(.av-news-page) #top_menu,
 body:has(.av-news-page) .av-cat-nav,
-body:has(.nm-news-page) .av-header-actions,
-body:has(.nm-news-page) #top_menu,
 body:has(.nm-news-page) .av-cat-nav,
-.news_home .av-header-actions,
 .news_home .av-cat-nav,
-.news_detail .av-header-actions,
 .news_detail .av-cat-nav {
     display: none !important;
 }
@@ -9228,7 +9273,6 @@ body:has(.nm-news-page) .av-header,
 
 /* --- NM PRO NEWS THEME REWRITE --- */
 .nm-news-page {
-    font-family: 'Roboto', sans-serif;
     color: #333;
     background-color: #fff;
     line-height: 1.6;

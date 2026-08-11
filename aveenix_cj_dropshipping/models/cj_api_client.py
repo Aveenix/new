@@ -275,6 +275,30 @@ class CjApiClient(models.AbstractModel):
                 json.dumps(res, indent=2),
             ))
 
+    def calculate_freight(self, start_country, end_country, products, zip_code=None):
+        """
+        Calculate freight from CJ API.
+        products: list of dicts {"vid": "...", "quantity": 1}
+        """
+        if not products:
+            return []
+            
+        payload = {
+            "startCountryCode": start_country,
+            "endCountryCode": end_country,
+            "products": products
+        }
+        if zip_code:
+            payload["zip"] = zip_code
+            
+        res = self._make_request("logistic/freightCalculate", method="POST", data=payload)
+        if res.get("code") == 200 and res.get("result"):
+            return res.get("data") or []
+        
+        # If simple mode fails or has no results, try freightCalculateTip or just return empty
+        # Usually freightCalculate works for standard routing.
+        return []
+
     # =========================================================================
     # 3. FETCH ORDER DETAILS & TRACKING LINK
     # =========================================================================

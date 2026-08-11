@@ -9,9 +9,25 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
             <!-- ── Top utility bar ─────────────────────────────── -->
-            <t t-set="tb_countries" t-value="request.env['res.country'].sudo().search([], order='name asc')"/>
+            <!-- Map active currencies to corresponding country codes -->
+            <t t-set="active_currency_names" t-value="request.env['res.currency'].sudo().search([('active', '=', True)]).mapped('name')"/>
+            <t t-set="mapped_country_codes" t-value="[]"/>
+            <t t-if="'USD' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['US']"/></t>
+            <t t-if="'INR' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['IN']"/></t>
+            <t t-if="'GBP' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['GB']"/></t>
+            <t t-if="'AUD' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['AU']"/></t>
+            <t t-if="'NZD' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['NZ']"/></t>
+            <t t-if="'JPY' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['JP']"/></t>
+            <t t-if="'CAD' in active_currency_names"><t t-set="mapped_country_codes" t-value="mapped_country_codes + ['CA']"/></t>
+            <t t-if="not mapped_country_codes"><t t-set="mapped_country_codes" t-value="['US', 'IN', 'GB', 'AU', 'NZ']"/></t>
+            
             <t t-set="tb_loc_country" t-value="request.env['res.country'].sudo().browse(request.session.get('av_user_country_id')) if request.session.get('av_user_country_id') else None"/>
             <t t-set="tb_user_country" t-value="tb_loc_country or request.env.user.sudo().country_id or request.website.sudo().company_id.country_id"/>
+            <t t-if="tb_user_country and tb_user_country.code not in mapped_country_codes">
+                <t t-set="mapped_country_codes" t-value="mapped_country_codes + [tb_user_country.code]"/>
+            </t>
+            
+            <t t-set="tb_countries" t-value="request.env['res.country'].sudo().search([('code', 'in', mapped_country_codes)], order='name asc')"/>
             <div class="av-topbar-utility" t-att-data-av-country="tb_user_country.code or 'US'">
                 <div class="av-topbar-utility-inner">
                     <t t-set="tb_langs" t-value="request.website.language_ids.sorted('name')"/>
@@ -164,8 +180,6 @@
                 body.is-news-page .av-default-logo-group,
                 body.is-news-page .av-logo-express { display: none !important; }
                 body.is-news-page .av-logo-news { display: block !important; }
-                body.is-news-page #top_menu,
-                body.is-news-page .av-header-actions,
                 body.is-news-page .av-cat-nav { display: none !important; }
                 body.is-news-page .av-news-nav { display: block !important; }
             </style>
@@ -179,7 +193,7 @@
             <div class="av-topbar">
                 <div class="av-topbar-inner">
 
-                    <a href="/" class="av-logo">
+                    <a t-attf-href="#{'/news' if is_news_page else '/'}" class="av-logo">
                         <div class="av-logo-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 769.99 143.18" class="av-logo-svg">
                               <defs>
@@ -214,7 +228,7 @@
                               <polygon fill="var(--av-logo-text, #231f20)" points="658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 686.03 85.24 658.55 85.24"/>
                               <polygon fill="var(--av-logo-text, #231f20)" points="712.71 34.39 690.08 13.15 662.44 13.15 698.99 47.27 712.71 34.39 712.71 34.39"/>
                               <polygon fill="var(--av-red, #d6292e)" points="726.48 47.31 735.22 39.12 735.22 39.12 762.91 13.15 735.32 13.15 721.64 26 721.64 26 715.49 31.77 712.71 34.39 712.71 34.39 698.99 47.27 658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 712.79 60.15 726.47 47.31 726.48 47.31"/>
-                              <text style="display: none;" x="622" y="127" fill="var(--av-logo-text, #58595b)" class="av-logo-news" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="28px" letter-spacing="1px">NEWS</text>
+                              <text style="display: none;" x="622" y="127" fill="var(--av-logo-text, #58595b)" class="av-logo-news" font-size="35px" font-family="Outfit, sans-serif"  letter-spacing="1px">News</text>
                             </svg>
                         </div>
                     </a>
@@ -283,6 +297,13 @@
                                 <span class="av-cart-badge my_cart_quantity badge rounded-pill bg-primary" t-att-data-order-id="website_sale_order and website_sale_order.id or ''" t-esc="website_sale_order.cart_quantity if website_sale_order else 0"/>
                             </a>
                         </li>
+                        
+                        <!-- News Page Advertisement -->
+                        <div class="av-news-ad-container">
+                            <a href="/shop" style="text-decoration:none; display: block; width: 100%; height: 100%;">
+                                <img src="/aveenix_website/static/src/img/news_ad_banner.png" alt="Advertisement" style="width: 100%; height: 40px; object-fit: cover; object-position: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"/>
+                            </a>
+                        </div>
                     </div>
 
                 </div>
@@ -290,7 +311,7 @@
 
             <nav class="av-cat-nav av-news-nav" t-if="is_news_page" style="display: block !important;">
                 <div class="av-cat-nav-inner">
-                    <ul class="av-cat-menu av-news-menu">
+                    <ul class="av-cat-menu">
                         <li>
                             <a href="/news" style="display: flex; align-items: center; gap: 6px;">
                                 <i class="fa fa-home" style="font-size: 14px;"/>
@@ -352,6 +373,11 @@
                                                      same image); fully dynamic via av-red. -->
                                                 <span class="av-cat-dd-icon-mask"
                                                       t-attf-style="--av-cat-mask:url('#{_icon_uri}')"/>
+                                            </t>
+                                            <t t-elif="c.image_128">
+                                                <img t-attf-src="/web/image/product.public.category/#{c.id}/image_128" t-att-alt="c.sudo().name"/>
+                                                <span class="av-cat-dd-icon-mask"
+                                                      t-attf-style="--av-cat-mask:url('/web/image/product.public.category/#{c.id}/image_128')"/>
                                             </t>
                                             <t t-else="">
                                                 <i class="fa fa-tag"/>
@@ -1321,7 +1347,7 @@
                     color: #ffffff !important;
                 }
                 @media (max-width: 767px) {
-                    .av-header-inner { height: 56px; padding: 0 14px !important; }
+                    .av-header-inner { height: 56px; padding: 0 0px !important; }
                     .av-logo-icon { height: 40px !important; width: auto !important; }
                     .av-promo-text-desktop { display: none !important; }
                 }
