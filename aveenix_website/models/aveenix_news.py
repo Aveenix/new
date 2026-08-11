@@ -24,9 +24,10 @@ class AveenixNews(models.Model):
     image_url = fields.Char(string='Image URL')
     source_url = fields.Char(string='Source URL')
     api_article_id = fields.Char(string='API Article ID', index=True)
+    country_code = fields.Char(string='Country Code', index=True, default='us')
 
     @api.model
-    def sync_news_from_api(self):
+    def sync_news_from_api(self, target_country=None):
         """Fetch latest news from NewsData.io and save them to the database."""
         _logger.info("NewsData.io sync: Starting news synchronization.")
         api_key = self.env['ir.config_parameter'].sudo().get_param('aveenix_website.newsdata_api_key')
@@ -37,11 +38,23 @@ class AveenixNews(models.Model):
         # NewsData.io latest news endpoint
         url = "https://newsdata.io/api/1/news"
         
+        # Map active website currencies to News API country codes (max 5 for free tier)
+        if target_country:
+            country_codes = [target_country]
+        else:
+            active_currencies = self.env['website'].search([], limit=1).get_currency_pricelist_options().mapped('currency_id.name') if self.env['website'].search([]) else []
+            currency_map = {'USD': 'us', 'INR': 'in', 'GBP': 'gb', 'AUD': 'au', 'NZD': 'nz', 'JPY': 'jp', 'CAD': 'ca'}
+            country_codes = list(set([currency_map[c] for c in active_currencies if c in currency_map]))
+        
+        # Free tier only allows up to 5 countries in one request
+        country_codes = country_codes[:5] if country_codes else ['us']
+        country_param = ','.join(country_codes)
+
         # Free tier query parameters
         params = {
             'apikey': api_key,
             'language': 'en',
-            'country': 'us',
+            'country': country_param,
             'category': 'world,lifestyle,entertainment,technology,health',
             'image': '1', # Only fetch articles with images!
             'removeduplicate': '1',
@@ -104,6 +117,9 @@ class AveenixNews(models.Model):
                         description = article.get('description') or ''
                         content = article.get('content') or description or ''
                         
+                        article_countries = article.get('country') or []
+                        country_code = article_countries[0].lower() if article_countries else 'us'
+                        
                         if content and not content.startswith('<'):
                             paragraphs = content.split('\n\n')
                             content = "".join(f"<p>{p.strip()}</p>" for p in paragraphs if p.strip())
@@ -118,6 +134,7 @@ class AveenixNews(models.Model):
                             'image_url': image_url,
                             'source_url': article.get('link'),
                             'api_article_id': article_id,
+                            'country_code': country_code,
                         }
 
                         if existing:

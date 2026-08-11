@@ -45,15 +45,19 @@ class ProductPublicCategory(models.Model):
         attachment=True,
     )
 
-    def _make_white_transparent(self, image_bytes, threshold=240):
+    def _make_white_transparent(self, image_bytes):
         img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
         data = img.getdata()
         new_data = []
         for r, g, b, a in data:
-            if r >= threshold and g >= threshold and b >= threshold:
-                new_data.append((r, g, b, 0))
+            lum = (r + g + b) / 3.0
+            if lum > 180:
+                new_data.append((0, 0, 0, 0))
+            elif lum > 50:
+                alpha = int(255 * (180 - lum) / 130.0)
+                new_data.append((0, 0, 0, alpha))
             else:
-                new_data.append((r, g, b, a))
+                new_data.append((0, 0, 0, 255))
         img.putdata(new_data)
         buf = io.BytesIO()
         img.save(buf, format="PNG")
@@ -76,7 +80,7 @@ class ProductPublicCategory(models.Model):
     def action_generate_ai_icon(self):
         for category in self:
             image_b64 = self._fetch_pollinations_image(
-                f"single line art icon representing {category.name}, minimal outline style, black lines only, transparent background, no fill, no color, no text, no shadow, centered, white background",
+                f"simple clean SVG style minimalist line-art icon of {category.name}, thin black strokes only, solid white background, flat 2d icon design, no shading, no colors, no text, UI icon",
                 width=128, height=128,
             )
             # sudo() required: server action runs as admin to write binary field on category

@@ -72,6 +72,15 @@ class SaleOrder(models.Model):
         compute='_compute_has_cj_dropship_lines',
         store=True,
     )
+    cj_shipping_rates_cache = fields.Text(
+        string='CJ Shipping Rates Cache',
+        help='JSON cache of live CJ shipping rates fetched for this order',
+        copy=False,
+    )
+    cj_shipping_rates_checksum = fields.Char(
+        string='CJ Rates Checksum',
+        copy=False,
+    )
 
     @api.depends('order_line.product_id.is_cj_dropship', 'order_line.product_id.cj_vid', 'order_line.product_id.cj_pid', 'order_line.product_id.default_code')
     def _compute_has_cj_dropship_lines(self):
@@ -120,6 +129,11 @@ class SaleOrder(models.Model):
         if not products_payload:
             raise UserError(_("No valid CJ Dropshipping items found on this order."))
 
+        # Determine correct logisticName based on customer's selected delivery method
+        selected_logistic = self.cj_logistics_name or default_carrier
+        if self.carrier_id and self.carrier_id.delivery_type == 'cj_dropshipping' and self.carrier_id.cj_logistic_name:
+            selected_logistic = self.carrier_id.cj_logistic_name
+
         payload = {
             "orderNumber": str(self.name),
             "shippingCountryCode": country_code,
@@ -133,7 +147,7 @@ class SaleOrder(models.Model):
             "shippingAddress2": address2,
             "email": partner.email or "",
             "remark": self.note or "Odoo Order",
-            "logisticName": self.cj_logistics_name or default_carrier,
+            "logisticName": selected_logistic,
             "fromCountryCode": "CN",
             "isSandbox": is_sandbox,
             "is_sandbox": is_sandbox,
@@ -302,3 +316,118 @@ class SaleOrder(models.Model):
                 if order.cj_tracking_link and not order.av_tracking_link:
                     order.av_tracking_link = order.cj_tracking_link
         return res
+
+    def _get_delivery_methods(self):
+        """Override to dynamically fetch CJ Dropshipping rates and create/inject carriers."""
+        import json
+        import hashlib
+        carriers = super()._get_delivery_methods()
+        
+        # Remove any CJ dropshipping carriers that might have been picked up by super()
+        # so they don't show up as 'Unavailable' in the UI. We will manually append the valid ones.
+        carriers = carriers.filtered(lambda c: c.delivery_type != 'cj_dropshipping')
+        
+        # We only do this if the order has CJ products and a shipping address
+        if self.has_cj_dropship_lines and self.partner_shipping_id:
+            partner = self.partner_shipping_id
+            end_country = partner.country_id.code if partner.country_id else 'US'
+            zip_code = partner.zip or ''
+            
+            # Prepare products for CJ Freight API
+            cj_products = []
+            for line in self.order_line:
+                if line.is_delivery:
+                    continue
+                product = line.product_id
+                vid_val = product.cj_vid or product.cj_pid or product.product_tmpl_id.cj_pid
+                # Fallback to sku if starts with CJ
+                if not vid_val and product.default_code and str(product.default_code).upper().startswith('CJ'):
+                    vid_val = product.default_code
+                    
+                if vid_val:
+                    cj_products.append({
+                        "quantity": int(line.product_uom_qty),
+                        "vid": str(vid_val)
+                    })
+                    
+            if cj_products:
+                # Generate a checksum based on destination and cart contents
+                checksum_data = f"{end_country}_{zip_code}_{json.dumps(cj_products, sort_keys=True)}"
+                current_checksum = hashlib.md5(checksum_data.encode('utf-8')).hexdigest()
+
+                # If we already fetched rates for this exact combination, use the cache
+                if self.cj_shipping_rates_checksum == current_checksum and self.cj_shipping_rates_cache:
+                    try:
+                        rates = json.loads(self.cj_shipping_rates_cache)
+                        cached_carrier_names = [f"CJ - {k}" for k in rates.keys()]
+                        if cached_carrier_names:
+                            cj_carriers = self.env['delivery.carrier'].sudo().search([
+                                ('name', 'in', cached_carrier_names),
+                                ('delivery_type', '=', 'cj_dropshipping')
+                            ])
+                            return carriers | cj_carriers
+                    except Exception:
+                        pass # fallback to fetching if cache is corrupted
+                
+                client = self.env['cj.api.client'].sudo()
+                try:
+                    freight_data = client.calculate_freight(
+                        start_country="CN",
+                        end_country=end_country,
+                        products=cj_products,
+                        zip_code=zip_code
+                    )
+                    
+                    if freight_data:
+                        # Cache the rates in the order
+                        rates_cache = {}
+                        dynamic_carrier_ids = []
+                        
+                        # Find or create a generic Service product for the carriers
+                        delivery_product = self.env.ref('aveenix_cj_dropshipping.product_product_cj_delivery', raise_if_not_found=False)
+                        if not delivery_product:
+                            delivery_product = self.env['product.product'].sudo().search([('default_code', '=', 'CJ_DELIVERY')], limit=1)
+                            if not delivery_product:
+                                delivery_product = self.env['product.product'].sudo().create({
+                                    'name': 'CJ Dropshipping Delivery',
+                                    'type': 'service',
+                                    'default_code': 'CJ_DELIVERY',
+                                    'list_price': 0.0,
+                                })
+
+                        # We will find or create delivery.carrier records for each CJ logistics method
+                        for option in freight_data:
+                            logistic_name = option.get('logisticName')
+                            price_usd = float(option.get('logisticPrice', 0.0))
+                            
+                            if logistic_name and price_usd > 0:
+                                rates_cache[logistic_name] = price_usd
+                                
+                                carrier_name = f"CJ - {logistic_name}"
+                                carrier = self.env['delivery.carrier'].sudo().search([
+                                    ('name', '=', carrier_name),
+                                    ('delivery_type', '=', 'cj_dropshipping')
+                                ], limit=1)
+                                
+                                if not carrier:
+                                    carrier = self.env['delivery.carrier'].sudo().create({
+                                        'name': carrier_name,
+                                        'delivery_type': 'cj_dropshipping',
+                                        'product_id': delivery_product.id,
+                                        'cj_logistic_name': logistic_name,
+                                        'is_published': True,
+                                    })
+                                
+                                dynamic_carrier_ids.append(carrier.id)
+                        
+                        # Save the cache and checksum
+                        self.cj_shipping_rates_cache = json.dumps(rates_cache)
+                        self.cj_shipping_rates_checksum = current_checksum
+                        
+                        if dynamic_carrier_ids:
+                            cj_carriers = self.env['delivery.carrier'].sudo().browse(dynamic_carrier_ids)
+                            carriers = carriers | cj_carriers
+                except Exception as e:
+                    _logger.error("Failed to fetch CJ freight rates: %s", str(e))
+        
+        return carriers
