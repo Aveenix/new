@@ -103,6 +103,7 @@ class AveenixMobileAPI(http.Controller):
             'rating_avg': getattr(tmpl, 'rating_avg', 0.0),
             'rating_count': getattr(tmpl, 'rating_count', 0),
             'affiliate_url': getattr(tmpl, 'affiliate_url', ''),
+            'aveenix_product_type': getattr(tmpl, 'aveenix_product_type', ''),
         }
 
     def _format_order(self, order, is_cart=False):
@@ -250,8 +251,15 @@ class AveenixMobileAPI(http.Controller):
             if not order.exists() or order.state not in ['draft', 'sent']:
                 order = None
 
-        if not order and hasattr(request, 'website') and request.website:
-            order = request.website.sale_get_order(force_create=False)
+        if not order:
+            if hasattr(request, 'website') and request.website:
+                order = request.website.sale_get_order(force_create=False)
+            else:
+                sale_order_id = request.session.get('sale_order_id')
+                if sale_order_id:
+                    order = request.env['sale.order'].sudo().browse(sale_order_id)
+                    if not order.exists() or order.state not in ['draft', 'sent']:
+                        order = None
 
         if not order:
             return self._success_response({
@@ -301,13 +309,21 @@ class AveenixMobileAPI(http.Controller):
             if hasattr(request, 'website') and request.website:
                 order = request.website.sale_get_order(force_create=True)
             else:
-                partner_id = request.env.user.partner_id.id
-                if request.env.user._is_public():
-                    partner_id = request.env.ref('base.public_partner').id
-                order = request.env['sale.order'].sudo().create({
-                    'partner_id': partner_id,
-                    'company_id': request.env.company.id,
-                })
+                sale_order_id = request.session.get('sale_order_id')
+                if sale_order_id:
+                    order = request.env['sale.order'].sudo().browse(sale_order_id)
+                    if not order.exists() or order.state not in ['draft', 'sent']:
+                        order = None
+                
+                if not order:
+                    partner_id = request.env.user.partner_id.id
+                    if request.env.user._is_public():
+                        partner_id = request.env.ref('base.public_partner').id
+                    order = request.env['sale.order'].sudo().create({
+                        'partner_id': partner_id,
+                        'company_id': request.env.company.id,
+                    })
+                    request.session['sale_order_id'] = order.id
 
         # Add item using Odoo 19 _cart_add
         order._cart_add(product_id=product.id, quantity=qty)
@@ -329,12 +345,19 @@ class AveenixMobileAPI(http.Controller):
             return self._error_response('Invalid line_id or quantity format', 400)
 
         order = None
-        if hasattr(request, 'website') and request.website:
-            order = request.website.sale_get_order(force_create=False)
-        if not order and params.get('order_id'):
+        if params.get('order_id'):
             order = request.env['sale.order'].sudo().browse(int(params.get('order_id')))
             if not order.exists() or order.state not in ['draft', 'sent']:
                 order = None
+        if not order:
+            if hasattr(request, 'website') and request.website:
+                order = request.website.sale_get_order(force_create=False)
+            else:
+                sale_order_id = request.session.get('sale_order_id')
+                if sale_order_id:
+                    order = request.env['sale.order'].sudo().browse(sale_order_id)
+                    if not order.exists() or order.state not in ['draft', 'sent']:
+                        order = None
         if not order:
             return self._error_response('Active cart not found', 404)
 
@@ -364,8 +387,15 @@ class AveenixMobileAPI(http.Controller):
             order = request.env['sale.order'].sudo().browse(int(params.get('order_id')))
             if not order.exists() or order.state not in ['draft', 'sent']:
                 order = None
-        if not order and hasattr(request, 'website') and request.website:
-            order = request.website.sale_get_order(force_create=False)
+        if not order:
+            if hasattr(request, 'website') and request.website:
+                order = request.website.sale_get_order(force_create=False)
+            else:
+                sale_order_id = request.session.get('sale_order_id')
+                if sale_order_id:
+                    order = request.env['sale.order'].sudo().browse(sale_order_id)
+                    if not order.exists() or order.state not in ['draft', 'sent']:
+                        order = None
 
         if not order or not order.order_line:
             return self._error_response('Cart is empty or order not found', 400)
@@ -546,7 +576,8 @@ class AveenixMobileAPI(http.Controller):
         if user_country_id:
             user_country = request.env['res.country'].sudo().browse(user_country_id)
         else:
-            user_country = request.env.user.sudo().country_id or request.website.sudo().company_id.country_id
+            website = self._get_current_website()
+            user_country = request.env.user.sudo().country_id or (website.company_id.country_id if website else False)
             
         country_code = user_country.code.lower() if user_country and user_country.code else 'us'
         country_name = user_country.name.lower() if user_country and user_country.name else 'united states'
