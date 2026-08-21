@@ -302,6 +302,7 @@ class AveenixWebsite(WebsiteSale):
 
     @http.route('/news', type='http', auth='public', website=True)
     def news_home(self, category=None, **kwargs):
+        import json
         # Fetch from local DB
         domain = []
         if category:
@@ -414,6 +415,20 @@ class AveenixWebsite(WebsiteSale):
             
         blog_categories = [{'name': 'OUR BLOGS', 'posts': blog_list}]
 
+        displayed_articles = [hero_main] + hero_side + [global_main] + global_side + popular + travel_guides
+        def count_cat(cat_name):
+            return sum(1 for a in displayed_articles if a and a.get('category') == cat_name)
+        
+        dynamic_categories = [
+            {'name': 'Fashion', 'count': count_cat('SHOWBIZ'), 'url': '/news?category=fashion'},
+            {'name': 'Facts', 'count': count_cat('FACTS'), 'url': '/news?category=gaming'},
+            {'name': 'Gaming', 'count': count_cat('FACTS'), 'url': '/news?category=gaming'},
+            {'name': 'Style', 'count': count_cat('STYLE'), 'url': '/news?category=lifestyle'},
+            {'name': 'Video', 'count': count_cat('VIDEO'), 'url': '/news'},
+            {'name': 'Photography', 'count': count_cat('PHOTOGRAPHY'), 'url': '/news'},
+        ]
+
+        from markupsafe import Markup
         data = {
             'trending_title': hero_main['title'],
             'hero_main': hero_main,
@@ -423,8 +438,10 @@ class AveenixWebsite(WebsiteSale):
             'popular': popular,
             'travel_guides': travel_guides,
             'blog_categories': blog_categories,
+            'dynamic_categories': dynamic_categories,
             'ad_image': NEWS_IMAGES['ad'],
             'is_news_page': True,
+            'trending_titles_json': Markup(json.dumps([a['title'] for a in ([global_main] + global_side) if a and a.get('title')])),
         }
         return request.render('aveenix_website.news_home_template', data)
 
@@ -1373,3 +1390,37 @@ class AveenixCart(Cart):
         values = super()._get_shop_payment_values(order, **kwargs)
         values['affiliate_cart_lines'] = self._affiliate_lines()
         return values
+
+from odoo.addons.website_sale.controllers.delivery import Delivery
+from odoo.exceptions import UserError
+
+class AveenixDelivery(Delivery):
+    @http.route('/shop/get_delivery_rate', type='jsonrpc', auth='public', methods=['POST'], website=True)
+    def shop_get_delivery_rate(self, dm_id):
+        try:
+            return super().shop_get_delivery_rate(dm_id)
+        except UserError as e:
+            if "compatible with your address" in str(e):
+                return {
+                    'success': False,
+                    'error_message': "Not available.",
+                }
+            raise e
+
+    @http.route('/shop/set_delivery_method', type='jsonrpc', auth='public', website=True)
+    def shop_set_delivery_method(self, dm_id=None, **kwargs):
+        result = super().shop_set_delivery_method(dm_id=dm_id, **kwargs)
+        # Force-refresh amount_delivery after CJ carrier set
+        # (ORM may cache stale 0.0 before delivery line is committed)
+        order = request.cart
+        if order and order.carrier_id and order.carrier_id.delivery_type == 'cj_dropshipping':
+            order.invalidate_recordset(['amount_delivery'])
+            Monetary = request.env['ir.qweb.field.monetary']
+            result['amount_delivery'] = Monetary.value_to_html(
+                order.amount_delivery, {'display_currency': order.currency_id}
+            )
+            result['amount_total'] = Monetary.value_to_html(
+                order.amount_total, {'display_currency': order.currency_id}
+            )
+            result['is_free_delivery'] = not bool(order.amount_delivery)
+        return result

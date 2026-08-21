@@ -359,15 +359,16 @@ class SaleOrder(models.Model):
                 if self.cj_shipping_rates_checksum == current_checksum and self.cj_shipping_rates_cache:
                     try:
                         rates = json.loads(self.cj_shipping_rates_cache)
-                        cached_carrier_names = [f"CJ - {k}" for k in rates.keys()]
-                        if cached_carrier_names:
+                        cached_logistic_names = list(rates.keys())
+                        if cached_logistic_names:
+                            # Match by cj_logistic_name — only carriers whose rate is in cache
                             cj_carriers = self.env['delivery.carrier'].sudo().search([
-                                ('name', 'in', cached_carrier_names),
+                                ('cj_logistic_name', 'in', cached_logistic_names),
                                 ('delivery_type', '=', 'cj_dropshipping')
                             ])
                             return carriers | cj_carriers
                     except Exception:
-                        pass # fallback to fetching if cache is corrupted
+                        pass  # fallback to fetching if cache is corrupted
                 
                 client = self.env['cj.api.client'].sudo()
                 try:

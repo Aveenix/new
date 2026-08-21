@@ -8,6 +8,32 @@ _logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    aveenix_product_type = fields.Selection([
+        ('regular', 'Regular Product'),
+        ('affiliate', 'Affiliate / Outbound'),
+        ('dropship', 'Dropshipping'),
+    ], string='Aveenix Type', default='regular', tracking=True)
+
+    imported_rating_count = fields.Integer(string="Imported Review Count", default=0,
+                                           help="Number of reviews imported from WooCommerce/Amazon.")
+    imported_rating_avg = fields.Float(string="Imported Review Average", default=0.0,
+                                       help="Average rating of imported reviews (out of 5).")
+
+    @api.depends('rating_ids.res_id', 'rating_ids.rating', 'imported_rating_count', 'imported_rating_avg')
+    def _compute_rating_stats(self):
+        super()._compute_rating_stats()
+        for record in self:
+            if record.imported_rating_count > 0:
+                native_count = record.rating_count
+                native_avg = record.rating_avg
+                imp_count = record.imported_rating_count
+                imp_avg = record.imported_rating_avg
+                
+                total_count = native_count + imp_count
+                total_avg = ((native_count * native_avg) + (imp_count * imp_avg)) / total_count if total_count else 0.0
+                
+                record.rating_count = total_count
+                record.rating_avg = total_avg
 
     desc_ai = fields.Html('AI Description', sanitize=False)
 
@@ -202,7 +228,36 @@ class ProductTemplate(models.Model):
         urls = self._get_external_image_list()
         return urls[0] if urls else False
 
+    def _extract_imported_rating(self, vals):
+        """Auto-extract WooCommerce rating and count from HTML description."""
+        text = vals.get('description_ecommerce')
+        if not text:
+            return
+        import re
+        match = re.search(r'([\d\.]+)\s+out of 5 stars', text, re.IGNORECASE)
+        if match:
+            try:
+                avg = float(match.group(1))
+                post_text = text[match.end():match.end()+100]
+                post_text_clean = re.sub(r'<[^>]+>', ' ', post_text)
+                count_match = re.search(r'\(?([\d,]+)\)?', post_text_clean)
+                if count_match:
+                    count = int(count_match.group(1).replace(',', ''))
+                    vals['imported_rating_avg'] = avg
+                    vals['imported_rating_count'] = count
+            except Exception:
+                pass
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'description_ecommerce' in vals:
+                self._extract_imported_rating(vals)
+        return super().create(vals_list)
+
     def write(self, vals):
+        if 'description_ecommerce' in vals:
+            self._extract_imported_rating(vals)
         res = super().write(vals)
         # When the external URL list changes, flag the product so the image
         # cron re-downloads only the ones that actually changed (delta only —

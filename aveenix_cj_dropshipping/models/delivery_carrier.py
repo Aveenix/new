@@ -21,32 +21,38 @@ class DeliveryCarrier(models.Model):
         multiple API calls for each individual carrier record.
         """
         self.ensure_one()
+
+        # Invalidate ORM cache so we always read the latest DB value.
+        # This is necessary because _get_delivery_methods() may have just written
+        # a fresh cache (after address change) in the same request, but the ORM
+        # still holds the old value in memory.
+        order.invalidate_recordset(['cj_shipping_rates_cache'])
         cache_str = order.cj_shipping_rates_cache
-        
+
         if not cache_str:
             return {
-                'success': False, 
-                'price': 0.0, 
-                'error_message': _('CJ Dropshipping rates are currently unavailable. Please try again.'), 
+                'success': False,
+                'price': 0.0,
+                'error_message': _('CJ Dropshipping rates are currently unavailable. Please try again.'),
                 'warning_message': False
             }
-        
+
         try:
             rates = json.loads(cache_str)
             if self.cj_logistic_name in rates:
                 price = float(rates[self.cj_logistic_name])
                 return {
-                    'success': True, 
-                    'price': price, 
-                    'error_message': False, 
+                    'success': True,
+                    'price': price,
+                    'error_message': False,
                     'warning_message': False
                 }
         except Exception:
             pass
-            
+
         return {
-            'success': False, 
-            'price': 0.0, 
-            'error_message': _('This shipping method is not available for your destination.'), 
+            'success': False,
+            'price': 0.0,
+            'error_message': _('This shipping method is not available for your destination.'),
             'warning_message': False
         }
