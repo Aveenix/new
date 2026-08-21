@@ -46,6 +46,14 @@
                     <button type="object" name="action_generate_ai_content" string="Generate AI Description" class="btn-primary mb-2" icon="fa-magic"/>
                     <field name="desc_ai" nolabel="1" placeholder="AI generated description..."/>
                 </page>
+                <page name="imported_reviews" string="Imported Reviews">
+                    <group>
+                        <group>
+                            <field name="imported_rating_count"/>
+                            <field name="imported_rating_avg" widget="float"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

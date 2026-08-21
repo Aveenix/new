@@ -24,7 +24,8 @@
                     </t>
                 </div>
                 <div class="av-prod-prices">
-                    <span class="av-prod-price" t-esc="'$%.2f' % product.list_price"/>
+                    <t t-set="combination_info" t-value="product._get_combination_info(only_template=True)"/>
+                    <span class="av-prod-price" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 </div>
                 <!-- Affiliate products never enter the real cart (see
                      AveenixCart.add_to_cart) — they use the same
@@ -2333,7 +2334,7 @@
               name="Aveenix: Product Tabs (Description / Reviews / Shipping)">
         <xpath expr="//section[@id='product_detail']" position="after">
             <t t-set="av_ratings" t-value="product.sudo().rating_ids.filtered(lambda r: r.rating &gt; 0 and r.consumed)"/>
-            <t t-set="av_review_count" t-value="len(av_ratings)"/>
+            <t t-set="av_review_count" t-value="product.rating_count"/>
             <section class="av-pdp-tabs" id="av-reviews">
                 <div class="av-container">
                     <!-- Tab strip -->
@@ -2437,6 +2438,19 @@
                             <div class="col-lg-6 av-reviews-list-col">
                                 <h3 class="av-reviews-heading">Reviews</h3>
                                 <t t-if="av_review_count">
+                                    <t t-if="product.imported_rating_count &gt; 0">
+                                        <div class="av-review-item">
+                                            <div class="av-review-stars mb-1">
+                                                <t t-foreach="range(1, 6)" t-as="av_s">
+                                                    <i t-attf-class="fa #{'fa-star' if av_s &lt;= int(round(product.rating_avg)) else 'fa-star-o'}"/>
+                                                </t>
+                                                <span class="ms-2 fw-bold"><t t-esc="'%.2f' % product.rating_avg"/> / 5</span>
+                                            </div>
+                                            <div class="av-review-text text-muted">
+                                                Based on <t t-esc="product.rating_count"/> ratings from all sources.
+                                            </div>
+                                        </div>
+                                    </t>
                                     <div class="av-review-item" t-foreach="av_ratings" t-as="av_r">
                                         <div class="av-review-stars">
                                             <t t-foreach="range(1, 6)" t-as="av_s">
@@ -2458,7 +2472,8 @@
                             <!-- Right: write a review -->
                             <div class="col-lg-6 av-review-form-col">
                                 <h3 class="av-reviews-heading">
-                                    Be the first to review “<t t-esc="product.name"/>”
+                                    <t t-if="av_review_count == 0">Be the first to review “<t t-esc="product.name"/>”</t>
+                                    <t t-else="">Add reviews for “<t t-esc="product.name"/>”</t>
                                 </h3>
                                 <t t-if="not request.env.user._is_public()">
                                     <form class="av-review-form" method="post"
@@ -4654,13 +4669,69 @@
                 <div class="nm-trending-bar">
                     <div class="nm-nav-container nm-trending-container">
                         <div class="nm-trending-label">TRENDING NOW</div>
-                        <div class="nm-trending-text" t-esc="trending_title"/>
+                        <div class="nm-trending-text" id="av-home-trending-text"><t t-esc="trending_title"/></div>
                         <div class="nm-trending-controls">
-                            <button class="nm-nav-btn"><i class="fa fa-chevron-left"></i></button>
-                            <button class="nm-nav-btn"><i class="fa fa-chevron-right"></i></button>
+                            <button class="nm-nav-btn" id="av-trend-prev"><i class="fa fa-chevron-left"></i></button>
+                            <button class="nm-nav-btn" id="av-trend-next"><i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var trendingTitles = <t t-out="trending_titles_json"/>;
+                        
+                        if (!trendingTitles || trendingTitles.length === 0) {
+                            trendingTitles = ["<t t-esc='trending_title'/>"];
+                        }
+                        
+                        var currentIndex = 0;
+                        var textEl = document.getElementById("av-home-trending-text");
+                        var prevBtn = document.getElementById("av-trend-prev");
+                        var nextBtn = document.getElementById("av-trend-next");
+                        var trendTimer;
+                        
+                        function updateText() {
+                            if (textEl &amp;&amp; trendingTitles.length > 0) {
+                                textEl.style.opacity = 0;
+                                setTimeout(function() {
+                                    textEl.textContent = trendingTitles[currentIndex];
+                                    textEl.style.opacity = 1;
+                                }, 300);
+                            }
+                        }
+                        
+                        function startTimer() {
+                            trendTimer = setInterval(function() {
+                                currentIndex = (currentIndex + 1) % trendingTitles.length;
+                                updateText();
+                            }, 4000);
+                        }
+                        
+                        if (textEl) {
+                            textEl.style.transition = "opacity 0.3s ease-in-out";
+                        }
+                        
+                        if (prevBtn) {
+                            prevBtn.addEventListener("click", function() {
+                                clearInterval(trendTimer);
+                                currentIndex = (currentIndex - 1 + trendingTitles.length) % trendingTitles.length;
+                                updateText();
+                                startTimer();
+                            });
+                        }
+                        
+                        if (nextBtn) {
+                            nextBtn.addEventListener("click", function() {
+                                clearInterval(trendTimer);
+                                currentIndex = (currentIndex + 1) % trendingTitles.length;
+                                updateText();
+                                startTimer();
+                            });
+                        }
+                        
+                        startTimer();
+                    });
+                </script>
 
                 <main class="nm-main-content">
                     <!-- Hero Section -->
@@ -4877,12 +4948,14 @@
                             <div class="nm-widget">
                                 <h3 class="nm-widget-title">CATEGORIES <div class="nm-line"></div></h3>
                                 <ul class="nm-category-list">
-                                    <li><a href="#">Fashion <span>10</span></a></li>
-                                    <li><a href="#">Facts <span>10</span></a></li>
-                                    <li><a href="#">Gaming <span>10</span></a></li>
-                                    <li><a href="#">Style <span>10</span></a></li>
-                                    <li><a href="#">Video <span>10</span></a></li>
-                                    <li><a href="#">Photography <span>10</span></a></li>
+                                    <t t-foreach="dynamic_categories" t-as="cat">
+                                        <li>
+                                            <a t-att-href="cat['url']">
+                                                <t t-esc="cat['name']"/>
+                                                <span><t t-esc="cat['count']"/></span>
+                                            </a>
+                                        </li>
+                                    </t>
                                 </ul>
                             </div>
                         </aside>
@@ -5045,8 +5118,8 @@
                         <div class="nm-trending-label">TRENDING NOW</div>
                         <div class="nm-trending-text" id="dyn-trending-text">Loading trending news...</div>
                         <div class="nm-trending-controls">
-                            <button class="nm-nav-btn"><i class="fa fa-chevron-left"></i></button>
-                            <button class="nm-nav-btn"><i class="fa fa-chevron-right"></i></button>
+                            <button class="nm-nav-btn" id="dyn-trend-prev"><i class="fa fa-chevron-left"></i></button>
+                            <button class="nm-nav-btn" id="dyn-trend-next"><i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -5249,6 +5322,55 @@
                                             `;
                                         });
                                         document.getElementById('dyn-latest-articles').innerHTML = sideHTML;
+                                        
+                                        // Trending Bar Logic
+                                        if (mappedResults.length > 0) {
+                                            const trendingTitles = mappedResults.map(a => a.title);
+                                            let currentTrendIdx = 0;
+                                            const trendTextEl = document.getElementById('dyn-trending-text');
+                                            const trendPrevBtn = document.getElementById('dyn-trend-prev');
+                                            const trendNextBtn = document.getElementById('dyn-trend-next');
+                                            let trendTimer2;
+                                            
+                                            function updateTrendText() {
+                                                if(trendTextEl && trendingTitles.length > 0) {
+                                                    trendTextEl.style.opacity = 0;
+                                                    setTimeout(function() {
+                                                        trendTextEl.textContent = trendingTitles[currentTrendIdx];
+                                                        trendTextEl.style.opacity = 1;
+                                                    }, 300);
+                                                }
+                                            }
+                                            
+                                            function startTrendTimer() {
+                                                trendTimer2 = setInterval(function() {
+                                                    currentTrendIdx = (currentTrendIdx + 1) % trendingTitles.length;
+                                                    updateTrendText();
+                                                }, 4000);
+                                            }
+                                            
+                                            if(trendTextEl) {
+                                                trendTextEl.style.transition = "opacity 0.3s ease-in-out";
+                                                updateTrendText();
+                                            }
+                                            if(trendPrevBtn) {
+                                                trendPrevBtn.addEventListener('click', function() {
+                                                    clearInterval(trendTimer2);
+                                                    currentTrendIdx = (currentTrendIdx - 1 + trendingTitles.length) % trendingTitles.length;
+                                                    updateTrendText();
+                                                    startTrendTimer();
+                                                });
+                                            }
+                                            if(trendNextBtn) {
+                                                trendNextBtn.addEventListener('click', function() {
+                                                    clearInterval(trendTimer2);
+                                                    currentTrendIdx = (currentTrendIdx + 1) % trendingTitles.length;
+                                                    updateTrendText();
+                                                    startTrendTimer();
+                                                });
+                                            }
+                                            startTrendTimer();
+                                        }
                                     }
                                 });
                         }
@@ -5338,5 +5460,253 @@
             </button>
         </xpath>
     </template>
-</odoo>
 
+    <!-- Swap Layout: Products on Left, Delivery on Right -->
+    <template id="av_checkout_right_column" inherit_id="website_sale.checkout_layout">
+        <!-- Hide products on the right / offcanvas during checkout -->
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.cart_summary_content']" position="attributes">
+            <attribute name="t-if">request.httprequest.path != '/shop/checkout'</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('offcanvas-body')]//t[@t-call='website_sale.cart_summary_content']" position="attributes">
+            <attribute name="t-if">request.httprequest.path != '/shop/checkout'</attribute>
+        </xpath>
+        
+        <!-- Add Delivery Method on right (Desktop) — JS mirror fills this -->
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.total']" position="before">
+            <t t-if="request.httprequest.path == '/shop/checkout' and website_sale_order and website_sale_order._has_deliverable_products()">
+                <div class="mb-4">
+                    <div id="av_deli_right" style="max-height: 280px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 6px; padding: 4px 0;">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Add Delivery Method in offcanvas (Mobile) — JS mirror fills this -->
+        <xpath expr="//div[hasclass('offcanvas-footer')]//t[@t-call='website_sale.total']" position="before">
+            <t t-if="request.httprequest.path == '/shop/checkout' and website_sale_order and website_sale_order._has_deliverable_products()">
+                <div class="mb-4 text-start">
+                    <div id="av_deli_mobile" style="max-height: 280px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 6px; padding: 4px 0;">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="av_checkout_left_column" inherit_id="website_sale.checkout">
+        <!-- Inject Products at the top of left column -->
+        <xpath expr="//div[@id='shop_checkout']" position="before">
+            <style>
+                #shop_checkout .o_delivery_form { display: none !important; }
+                #shop_checkout > t > div.mb-4:first-child { display: none !important; }
+
+                /* Dark mode: selected address card clearly visible */
+                .o_address_card.bg-400 {
+                    background-color: #cc000020 !important;
+                    border-color: #CC0000 !important;
+                    box-shadow: 0 0 0 2px #CC0000 !important;
+                }
+                /* Delivery method heading — center */
+                #av_deli_right h4,
+                #av_deli_mobile h4 {
+                    text-align: center;
+                    padding: 8px 0 4px;
+                    margin-bottom: 4px;
+                    border-bottom: 1px solid rgba(128,128,128,0.2);
+                }
+                /* Delivery method box inner padding and pointer cursor */
+                #av_deli_right [name="o_delivery_method"],
+                #av_deli_mobile [name="o_delivery_method"],
+                #av_deli_right .list-group-item,
+                #av_deli_mobile .list-group-item,
+                #av_deli_right .o_delivery_carrier_select,
+                #av_deli_mobile .o_delivery_carrier_select {
+                    padding: 8px 14px !important;
+                    cursor: pointer;
+                }
+                #av_deli_right .list-group-item + .list-group-item,
+                #av_deli_mobile .list-group-item + .list-group-item,
+                #av_deli_right [name="o_delivery_method"] + [name="o_delivery_method"],
+                #av_deli_mobile [name="o_delivery_method"] + [name="o_delivery_method"] {
+                    border-top: 1px solid rgba(128,128,128,0.2);
+                }
+            </style>
+            <script>
+                (function () {
+                    /* Mirror o_delivery_form -> right-column / mobile scroll boxes */
+                    function avSyncDelivery() {
+                        var src = document.getElementById('o_delivery_form');
+                        if (!src) return;
+
+                        var origChecked = src.querySelector('input[name="o_delivery_radio"]:checked') ||
+                                          src.querySelector('input[type="radio"]:checked');
+                        var checkedDmId = origChecked ? (origChecked.dataset.dmId || origChecked.value) : null;
+
+                        ['av_deli_right', 'av_deli_mobile'].forEach(function (id) {
+                            var dest = document.getElementById(id);
+                            if (!dest) return;
+                            var clone = src.cloneNode(true);
+                            clone.removeAttribute('id');
+                            clone.style.display = '';
+
+                            /* Remove "Not available." items */
+                            clone.querySelectorAll('[name="o_delivery_method"], li.list-group-item, .o_delivery_carrier_select').forEach(function (li) {
+                                var badge = li.querySelector('.o_wsale_delivery_price_badge, [name="price"], .o_delivery_price_badge');
+                                if (badge) {
+                                    var txt = badge.textContent.trim();
+                                    if (txt === 'Not available.' || txt.indexOf('not available') !== -1) {
+                                        li.parentNode &amp;&amp; li.parentNode.removeChild(li);
+                                    }
+                                }
+                            });
+
+                            /* Set unique radio names and ids to avoid DOM collisions and keep checked state */
+                            clone.querySelectorAll('input[type="radio"], input[name="o_delivery_radio"]').forEach(function (input) {
+                                var dmId = input.dataset.dmId || input.value;
+                                input.name = 'delivery_radio_' + id;
+                                input.removeAttribute('disabled');
+                                if (checkedDmId &amp;&amp; String(dmId) === String(checkedDmId)) {
+                                    input.checked = true;
+                                }
+                                if (input.id) {
+                                    var oldId = input.id;
+                                    var newId = oldId + '_' + id;
+                                    input.id = newId;
+                                    var lbl = clone.querySelector('label[for="' + oldId + '"]');
+                                    if (lbl) {
+                                        lbl.setAttribute('for', newId);
+                                    }
+                                }
+                            });
+
+                            dest.innerHTML = '';
+                            dest.appendChild(clone);
+                        });
+                    }
+
+                    function updateSummaryTotals(res) {
+                        if (!res) return;
+                        document.querySelectorAll('#o_cart_summary_offcanvas, div.o_total_card, .o_total_card').forEach(function (targetEl) {
+                            var amountDelivery = targetEl.querySelector('tr[name="o_order_delivery"] .monetary_field');
+                            var amountUntaxed = targetEl.querySelector('tr[name="o_order_total_untaxed"] .monetary_field');
+                            var amountTax = targetEl.querySelector('tr[name="o_order_total_taxes"] .monetary_field');
+                            var parent = targetEl.parentElement || targetEl;
+                            var amountTotal = parent.querySelectorAll('tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field');
+
+                            if (amountDelivery) {
+                                if (amountDelivery.classList.contains('d-none')) {
+                                    var noDmMsg = amountDelivery.querySelector('span[name="o_message_no_dm_set"]');
+                                    if (noDmMsg) noDmMsg.classList.add('d-none');
+                                    amountDelivery.classList.remove('d-none');
+                                }
+                                if (res.amount_delivery) amountDelivery.innerHTML = res.amount_delivery;
+                            }
+                            if (amountUntaxed &amp;&amp; res.amount_untaxed) amountUntaxed.innerHTML = res.amount_untaxed;
+                            if (amountTax &amp;&amp; res.amount_tax) amountTax.innerHTML = res.amount_tax;
+                            if (amountTotal &amp;&amp; res.amount_total) {
+                                amountTotal.forEach(function (el) { el.innerHTML = res.amount_total; });
+                            }
+                        });
+                    }
+
+                    function handleDeliverySelect(e) {
+                        var target = e.target;
+                        var container = target.closest &amp;&amp; target.closest('#av_deli_right, #av_deli_mobile');
+                        if (!container) return;
+
+                        var item = target.closest('[name="o_delivery_method"], li.list-group-item, .form-check, .o_delivery_carrier_select');
+                        if (!item) return;
+
+                        var radio = item.querySelector('input[type="radio"], input[name^="delivery_radio_"], input[name="o_delivery_radio"]');
+                        if (!radio) return;
+
+                        var dmId = radio.dataset.dmId || radio.value;
+                        if (!dmId &amp;&amp; radio.id) {
+                            var match = radio.id.match(/\d+/);
+                            if (match) dmId = match[0];
+                        }
+                        if (!dmId) return;
+
+                        // Check the radio in clicked container and sync others
+                        ['av_deli_right', 'av_deli_mobile'].forEach(function (id) {
+                            var dest = document.getElementById(id);
+                            if (dest) {
+                                dest.querySelectorAll('input[type="radio"]').forEach(function (r) {
+                                    var rDmId = r.dataset.dmId || r.value;
+                                    if (!rDmId &amp;&amp; r.id) {
+                                        var m = r.id.match(/\d+/);
+                                        if (m) rDmId = m[0];
+                                    }
+                                    r.checked = (String(rDmId) === String(dmId));
+                                });
+                            }
+                        });
+
+                        // Trigger Odoo's native handler on #o_delivery_form
+                        var src = document.getElementById('o_delivery_form');
+                        if (src) {
+                            var origRadio = src.querySelector('input[data-dm-id="' + dmId + '"]') ||
+                                            src.querySelector('#o_delivery_' + dmId) ||
+                                            src.querySelector('input[value="' + dmId + '"]');
+                            if (origRadio) {
+                                origRadio.removeAttribute('disabled');
+                                origRadio.checked = true;
+                                origRadio.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                                origRadio.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        }
+
+                        // Also directly call set_delivery_method RPC to guarantee totals update instantly
+                        fetch('/shop/set_delivery_method', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: { dm_id: parseInt(dmId) }
+                            })
+                        }).then(function (response) {
+                            return response.json();
+                        }).then(function (json) {
+                            if (json &amp;&amp; json.result) {
+                                updateSummaryTotals(json.result);
+                            }
+                        }).catch(function () {});
+                    }
+
+                    document.addEventListener('click', handleDeliverySelect, true);
+                    document.addEventListener('change', function (e) {
+                        var target = e.target;
+                        var container = target.closest &amp;&amp; target.closest('#av_deli_right, #av_deli_mobile');
+                        if (container &amp;&amp; target.matches &amp;&amp; target.matches('input[type="radio"]')) {
+                            handleDeliverySelect(e);
+                        }
+                    }, true);
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        /* Initial sync after page load */
+                        setTimeout(avSyncDelivery, 600);
+
+                        /* Watch the o_delivery_form PARENT for the innerHTML swap */
+                        var formParent = document.querySelector('#o_delivery_form')
+                                          ? document.querySelector('#o_delivery_form').parentElement
+                                          : document.getElementById('o_checkout_form');
+                        if (formParent) {
+                            new MutationObserver(function () {
+                                setTimeout(avSyncDelivery, 1000);
+                            }).observe(formParent, { childList: true, subtree: true, characterData: true });
+                        }
+                    });
+                })();
+            </script>
+            <div id="shop_cart" class="mb-4 mt-2">
+                <h4 class="mb-3">Order summary</h4>
+                <div class="card bg-white p-3 shadow-sm rounded">
+                    <t t-call="website_sale.cart_lines"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
