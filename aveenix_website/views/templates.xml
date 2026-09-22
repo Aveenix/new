@@ -134,7 +134,7 @@
                                 <div class="av-hero-overlay" style="background: linear-gradient(rgba(48, 63, 159, 0.75), rgba(48, 63, 159, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
                                 <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
                                     <div class="av-hero-text" style="color: #fff;">
-                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Summer Electronics Sale</h1>
+                                        <h2 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Summer Electronics Sale</h2>
                                         <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Up to 70% Off</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Get the latest gadgets at unbeatable prices</p>
                                         <div class="av-hero-btns">
@@ -151,7 +151,7 @@
                                 <div class="av-hero-overlay" style="background: linear-gradient(rgba(194, 24, 91, 0.75), rgba(194, 24, 91, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
                                 <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
                                     <div class="av-hero-text" style="color: #fff;">
-                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Fashion Week Special</h1>
+                                        <h2 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Fashion Week Special</h2>
                                         <h3 class="av-hero-sub" style="color: #CDEE3A; font-weight: 700; margin-bottom: 1.25rem;">New Arrivals</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Discover the latest trends in fashion</p>
                                         <div class="av-hero-btns">
@@ -168,7 +168,7 @@
                                 <div class="av-hero-overlay" style="background: linear-gradient(rgba(38, 166, 154, 0.75), rgba(38, 166, 154, 0.75)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"/>
                                 <div class="av-hero-content av-container" style="position: relative; z-index: 2;">
                                     <div class="av-hero-text" style="color: #fff;">
-                                        <h1 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Home &amp; Garden</h1>
+                                        <h2 class="av-hero-title" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; text-shadow: none;">Home &amp; Garden</h2>
                                         <h3 class="av-hero-sub" style="color: #FFC107; font-weight: 700; margin-bottom: 1.25rem;">Transform Your Space</h3>
                                         <p class="av-hero-subtitle" style="font-family: system-ui, -apple-system, sans-serif; font-weight: 400; opacity: 0.95; margin-bottom: 1.5rem;">Beautiful furniture and decor for every room</p>
                                         <div class="av-hero-btns">
@@ -4665,73 +4665,20 @@
 
                 <!-- Custom Nav Removed as per user request (they want to use the standard main Odoo header) -->
 
-                <!-- Trending Bar -->
+                <!-- Trending Bar — headlines run past on a rail (news_ticker.js) -->
                 <div class="nm-trending-bar">
                     <div class="nm-nav-container nm-trending-container">
                         <div class="nm-trending-label">TRENDING NOW</div>
-                        <div class="nm-trending-text" id="av-home-trending-text"><t t-esc="trending_title"/></div>
+                        <div class="nm-ticker" t-att-data-headlines="trending_items_json">
+                            <div class="nm-ticker-track"/>
+                            <div class="nm-ticker-fallback nm-trending-text"><t t-esc="trending_title"/></div>
+                        </div>
                         <div class="nm-trending-controls">
-                            <button class="nm-nav-btn" id="av-trend-prev"><i class="fa fa-chevron-left"></i></button>
-                            <button class="nm-nav-btn" id="av-trend-next"><i class="fa fa-chevron-right"></i></button>
+                            <button class="nm-nav-btn" data-nm-ticker="prev" type="button" aria-label="Previous headline"><i class="fa fa-chevron-left"></i></button>
+                            <button class="nm-nav-btn" data-nm-ticker="next" type="button" aria-label="Next headline"><i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
-                <script type="text/javascript">
-                    document.addEventListener("DOMContentLoaded", function() {
-                        var trendingTitles = <t t-out="trending_titles_json"/>;
-                        
-                        if (!trendingTitles || trendingTitles.length === 0) {
-                            trendingTitles = ["<t t-esc='trending_title'/>"];
-                        }
-                        
-                        var currentIndex = 0;
-                        var textEl = document.getElementById("av-home-trending-text");
-                        var prevBtn = document.getElementById("av-trend-prev");
-                        var nextBtn = document.getElementById("av-trend-next");
-                        var trendTimer;
-                        
-                        function updateText() {
-                            if (textEl &amp;&amp; trendingTitles.length > 0) {
-                                textEl.style.opacity = 0;
-                                setTimeout(function() {
-                                    textEl.textContent = trendingTitles[currentIndex];
-                                    textEl.style.opacity = 1;
-                                }, 300);
-                            }
-                        }
-                        
-                        function startTimer() {
-                            trendTimer = setInterval(function() {
-                                currentIndex = (currentIndex + 1) % trendingTitles.length;
-                                updateText();
-                            }, 4000);
-                        }
-                        
-                        if (textEl) {
-                            textEl.style.transition = "opacity 0.3s ease-in-out";
-                        }
-                        
-                        if (prevBtn) {
-                            prevBtn.addEventListener("click", function() {
-                                clearInterval(trendTimer);
-                                currentIndex = (currentIndex - 1 + trendingTitles.length) % trendingTitles.length;
-                                updateText();
-                                startTimer();
-                            });
-                        }
-                        
-                        if (nextBtn) {
-                            nextBtn.addEventListener("click", function() {
-                                clearInterval(trendTimer);
-                                currentIndex = (currentIndex + 1) % trendingTitles.length;
-                                updateText();
-                                startTimer();
-                            });
-                        }
-                        
-                        startTimer();
-                    });
-                </script>
 
                 <main class="nm-main-content">
                     <!-- Hero Section -->
@@ -4947,7 +4894,7 @@
 
                             <div class="nm-widget">
                                 <h3 class="nm-widget-title">CATEGORIES <div class="nm-line"></div></h3>
-                                <ul class="nm-category-list">
+                                <ul class="nm-category-list" t-att-data-totals="category_totals_json">
                                     <t t-foreach="dynamic_categories" t-as="cat">
                                         <li>
                                             <a t-att-href="cat['url']">
@@ -4962,7 +4909,8 @@
                     </section>
 </main>
                 
-                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=17"></script>
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=18"></script>
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_ticker.js?v=1"></script>
             </div>
         </t>
     </template>
@@ -5109,6 +5057,7 @@
             <div id="wrap">
                 <div class="nm-news-page av-news-detail-page">
                 <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=10"/>
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_ticker.js?v=1" defer="defer"></script>
                 
                 <!-- Custom Nav Removed as per user request -->
 
@@ -5116,10 +5065,15 @@
                 <div class="nm-trending-bar">
                     <div class="nm-nav-container nm-trending-container">
                         <div class="nm-trending-label">TRENDING NOW</div>
-                        <div class="nm-trending-text" id="dyn-trending-text">Loading trending news...</div>
+                        <!-- No server-side list here: news_ticker.js pulls the
+                             headlines from /api/v1/news. -->
+                        <div class="nm-ticker">
+                            <div class="nm-ticker-track"/>
+                            <div class="nm-ticker-fallback nm-trending-text">Latest headlines</div>
+                        </div>
                         <div class="nm-trending-controls">
-                            <button class="nm-nav-btn" id="dyn-trend-prev"><i class="fa fa-chevron-left"></i></button>
-                            <button class="nm-nav-btn" id="dyn-trend-next"><i class="fa fa-chevron-right"></i></button>
+                            <button class="nm-nav-btn" data-nm-ticker="prev" type="button" aria-label="Previous headline"><i class="fa fa-chevron-left"></i></button>
+                            <button class="nm-nav-btn" data-nm-ticker="next" type="button" aria-label="Next headline"><i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -5323,54 +5277,9 @@
                                         });
                                         document.getElementById('dyn-latest-articles').innerHTML = sideHTML;
                                         
-                                        // Trending Bar Logic
-                                        if (mappedResults.length > 0) {
-                                            const trendingTitles = mappedResults.map(a => a.title);
-                                            let currentTrendIdx = 0;
-                                            const trendTextEl = document.getElementById('dyn-trending-text');
-                                            const trendPrevBtn = document.getElementById('dyn-trend-prev');
-                                            const trendNextBtn = document.getElementById('dyn-trend-next');
-                                            let trendTimer2;
-                                            
-                                            function updateTrendText() {
-                                                if(trendTextEl && trendingTitles.length > 0) {
-                                                    trendTextEl.style.opacity = 0;
-                                                    setTimeout(function() {
-                                                        trendTextEl.textContent = trendingTitles[currentTrendIdx];
-                                                        trendTextEl.style.opacity = 1;
-                                                    }, 300);
-                                                }
-                                            }
-                                            
-                                            function startTrendTimer() {
-                                                trendTimer2 = setInterval(function() {
-                                                    currentTrendIdx = (currentTrendIdx + 1) % trendingTitles.length;
-                                                    updateTrendText();
-                                                }, 4000);
-                                            }
-                                            
-                                            if(trendTextEl) {
-                                                trendTextEl.style.transition = "opacity 0.3s ease-in-out";
-                                                updateTrendText();
-                                            }
-                                            if(trendPrevBtn) {
-                                                trendPrevBtn.addEventListener('click', function() {
-                                                    clearInterval(trendTimer2);
-                                                    currentTrendIdx = (currentTrendIdx - 1 + trendingTitles.length) % trendingTitles.length;
-                                                    updateTrendText();
-                                                    startTrendTimer();
-                                                });
-                                            }
-                                            if(trendNextBtn) {
-                                                trendNextBtn.addEventListener('click', function() {
-                                                    clearInterval(trendTimer2);
-                                                    currentTrendIdx = (currentTrendIdx + 1) % trendingTitles.length;
-                                                    updateTrendText();
-                                                    startTrendTimer();
-                                                });
-                                            }
-                                            startTrendTimer();
-                                        }
+                                        // The trending bar is driven by news_ticker.js
+                                        // (a continuous rail, shared with /news); the
+                                        // fade-swap that used to live here is gone.
                                     }
                                 });
                         }
@@ -5461,6 +5370,137 @@
         </xpath>
     </template>
 
+    <!-- =========================================================
+         PAYMENT PAGE
+
+         Same shape as /shop/checkout: a heading, the method box under it, and
+         the order summary card on the right lined up with that box.
+         ========================================================= -->
+
+    <!-- The checkout heading is a real <h4>; core renders this one as a <p>
+         carrying the .h4 class, which is why the two pages' section titles did
+         not look alike. Same element, same classes, so the typography matches
+         by construction rather than by a CSS patch. The h5/h4 swap for the
+         collapsed "Other payment methods" state is preserved. -->
+    <template id="av_payment_method_heading" inherit_id="payment.form"
+              name="Aveenix: Payment Method Heading">
+        <xpath expr="//div[@id='o_payment_methods']/p" position="replace">
+            <h4 t-attf-class="mb-3 {{collapse_payment_methods and 'h5' or 'h4'}}">
+                <t t-if="not collapse_payment_methods">Payment method</t>
+                <t t-else="">Other payment methods</t>
+                <t t-call="payment.availability_report_button"/>
+            </h4>
+        </xpath>
+    </template>
+
+    <!-- Move the payment form into the right-hand card, where /shop/checkout
+         puts the delivery form. It is rendered here rather than cloned or moved
+         with JS: #o_payment_form carries Odoo's payment JS (providers, tokens,
+         inline provider forms), and a second copy or a re-parented node is the
+         kind of thing that breaks quietly at the worst moment. Every value
+         payment.form needs is already in scope — the controller passes them to
+         website_sale.payment, which t-calls this layout.
+
+         The original is removed from the left column below, so the form is
+         rendered exactly once. -->
+    <template id="av_payment_right_column" inherit_id="website_sale.checkout_layout"
+              name="Aveenix: Payment Method in Summary Card">
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.total']" position="before">
+            <t t-if="request.httprequest.path == '/shop/payment' and not errors and website_sale_order.amount_total">
+                <div id="av_pay_right" class="mb-4">
+                    <t t-call="payment.form"/>
+                </div>
+            </t>
+        </xpath>
+        <!-- Items live in the left column on this page, as on /shop/checkout,
+             so the card is left holding the method, the totals and the CTA. -->
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.cart_summary_content']" position="attributes">
+            <attribute name="t-if">request.httprequest.path not in ('/shop/checkout', '/shop/payment')</attribute>
+        </xpath>
+    </template>
+
+    <template id="av_payment_left_column" inherit_id="website_sale.payment"
+              name="Aveenix: Payment Page Left Column">
+        <!-- Order summary + items, matching #shop_cart on /shop/checkout.
+             cart_summary_content rather than cart_lines: quantities should not
+             still be editable once the customer is on the payment step. -->
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div id="shop_cart" class="mb-4">
+                <h4 class="mb-3">Order summary</h4>
+                <div class="card bg-white p-3 shadow-sm rounded">
+                    <t t-call="website_sale.cart_summary_content"/>
+                </div>
+            </div>
+            <style>
+                /* The summary card is desktop-only in core (d-none d-lg-block),
+                   because on mobile the offcanvas and the sticky bar stand in
+                   for it. The payment form now lives in that card, so on this
+                   page it has to be visible on mobile too — and the offcanvas
+                   and sticky bar have to go, or the customer gets two order
+                   summaries and two Pay now buttons. */
+                @media (max-width: 991.98px) {
+                    .o_website_sale_checkout_container > .row > div:has(> .o_total_card) {
+                        display: block !important;
+                    }
+                    .o_website_sale_checkout_container .o_mobile_summary,
+                    #o_cart_summary_offcanvas {
+                        display: none !important;
+                    }
+                }
+
+                /* Provider inline forms have to fit the narrower card.
+
+                   The demo form (and others like it) lays its fields out with
+                   `col-md`, and Bootstrap's breakpoints answer to the VIEWPORT,
+                   not to the container — so on a wide screen it still split
+                   into two columns inside a card that is now about 40% of the
+                   row, and the "Payment Status" select clipped its own options.
+                   Stack them instead; there is no width here worth splitting. */
+                #av_pay_right .row > [class*="col-md"] {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                }
+                #av_pay_right .row {
+                    row-gap: 0.75rem;
+                }
+                /* Belt and braces for any provider that ships a wide field or
+                   an iframe of its own: keep it inside the card rather than
+                   letting it push the column open. */
+                #av_pay_right input,
+                #av_pay_right select,
+                #av_pay_right iframe {
+                    max-width: 100%;
+                }
+
+                /* Line the two columns up: "Order summary" sits on the page
+                   above its card, so drop the right-hand card by the height of
+                   that heading — an h4 line box plus its .mb-3 — less the
+                   card's own border. --av-h4-font mirrors Bootstrap's h4:
+                   fluid below 1200px (RFS), 1.5rem from there up. */
+                @media (min-width: 992px) {
+                    .o_total_card {
+                        --av-h4-font: calc(1.275rem + 0.3vw);   /* Bootstrap h4, below 1200px */
+                        --av-h4-line: 1.2;                      /* $headings-line-height     */
+                        --av-h4-gap:  1rem;                     /* .mb-3 on the heading      */
+
+                        margin-top: calc(var(--av-h4-font) * var(--av-h4-line)
+                                       + var(--av-h4-gap) - 1px) !important;
+                    }
+                }
+
+                @media (min-width: 1200px) {
+                    .o_total_card {
+                        --av-h4-font: 1.5rem;    /* $h4-font-size, above RFS */
+                    }
+                }
+            </style>
+        </xpath>
+
+        <!-- Rendered in the summary card instead; removed here so there is
+             exactly one #o_payment_form on the page. -->
+        <xpath expr="//div[@id='payment_method']" position="replace"/>
+    </template>
+
     <!-- Swap Layout: Products on Left, Delivery on Right -->
     <template id="av_checkout_right_column" inherit_id="website_sale.checkout_layout">
         <!-- Hide products on the right / offcanvas during checkout -->
@@ -5501,6 +5541,65 @@
                 #shop_checkout .o_delivery_form { display: none !important; }
                 #shop_checkout > t > div.mb-4:first-child { display: none !important; }
 
+                /* Line "Order summary" up with "Delivery method".
+
+                   "Order summary" sits flush at the top of the left column,
+                   while "Delivery method" is pushed down inside the right card
+                   by the card border, the card body's top padding and the
+                   delivery box's own border and padding. Offsetting the left
+                   title by that same total puts both titles on one line.
+
+                   Each term below maps to a real rule, so if one of them is
+                   ever retuned it is clear what has to move with it. Scoped to
+                   lg and up, which is the only place the right-hand card shows
+                   (it is d-none d-lg-block). */
+                @media (min-width: 992px) {
+                    /* Pull the card's own top padding in, so the delivery
+                       box starts just under the card's top edge rather than an
+                       inch below it. */
+                    .o_total_card > .card-body {
+                        padding-top: 8px !important;
+                    }
+                    #av_deli_right {
+                        padding-top: 0 !important;
+                    }
+
+                    /* Line the two BOXES up: the products card on the left
+                       and the delivery box on the right. "Order summary" stays
+                       where it is, as a heading above its card.
+
+                       So the delivery card drops by exactly the space that
+                       heading occupies — an h4 line box plus its .mb-3 — less
+                       the card's own border and top padding, since the delivery
+                       box sits that far inside the card:
+
+                           h4 line box + 1rem  -  (1px border + 8px card pad)
+
+                       Bootstrap sizes h4 with RFS, so --av-h4-font mirrors its
+                       own definition: fluid below 1200px, 1.5rem from there up
+                       ($h4-font-size), with $headings-line-height = 1.2. */
+                    #shop_cart {
+                        margin-top: 0 !important;
+                        padding-top: 0;
+                    }
+                    .o_total_card {
+                        --av-h4-font: calc(1.275rem + 0.3vw);  /* Bootstrap h4, below 1200px */
+                        --av-h4-line: 1.2;                     /* $headings-line-height  */
+                        --av-h4-gap:  1rem;                    /* .mb-3 on the heading   */
+                        --av-card-inset: 9px;                  /* 1px border + 8px pad   */
+
+                        margin-top: calc(var(--av-h4-font) * var(--av-h4-line)
+                                       + var(--av-h4-gap)
+                                       - var(--av-card-inset)) !important;
+                    }
+                }
+
+                @media (min-width: 1200px) {
+                    .o_total_card {
+                        --av-h4-font: 1.5rem;    /* $h4-font-size, above RFS */
+                    }
+                }
+
                 /* Dark mode: selected address card clearly visible */
                 .o_address_card.bg-400 {
                     background-color: #cc000020 !important;
@@ -5510,10 +5609,25 @@
                 /* Delivery method heading — center */
                 #av_deli_right h4,
                 #av_deli_mobile h4 {
-                    text-align: center;
-                    padding: 8px 0 4px;
+                    /* Left-aligned, like "Order summary" and "Payment method".
+                       The 14px inset matches the list rows below it. */
+                    text-align: left;
+                    padding: 8px 14px 4px;
                     margin-bottom: 4px;
                     border-bottom: 1px solid rgba(128,128,128,0.2);
+
+                    /* The box scrolls to whichever method is selected, which
+                       used to carry this title out of view and leave nothing at
+                       the top of the card for "Order summary" to line up with.
+                       Pin it so it always sits at the top of the box. */
+                    position: sticky;
+                    top: 0;
+                    z-index: 2;
+                    background-color: #fff;
+                }
+                [data-theme="dark"] #av_deli_right h4,
+                [data-theme="dark"] #av_deli_mobile h4 {
+                    background-color: #181818;   /* matches .o_total_card in dark */
                 }
                 /* Delivery method box inner padding and pointer cursor */
                 #av_deli_right [name="o_delivery_method"],
@@ -5525,11 +5639,33 @@
                     padding: 8px 14px !important;
                     cursor: pointer;
                 }
-                #av_deli_right .list-group-item + .list-group-item,
-                #av_deli_mobile .list-group-item + .list-group-item,
-                #av_deli_right [name="o_delivery_method"] + [name="o_delivery_method"],
-                #av_deli_mobile [name="o_delivery_method"] + [name="o_delivery_method"] {
-                    border-top: 1px solid rgba(128,128,128,0.2);
+                /* One hairline between rows, not two.
+
+                   Bootstrap already draws a border on each .list-group-item and
+                   zeroes the top border on every item after the first, so rows
+                   are separated by a single line on their own. Adding a
+                   border-top back put a second line directly under it. Keep
+                   Bootstrap's model, just recolour it and drop the frame around
+                   the list — #av_deli_right already provides the outer border. */
+                #av_deli_right .list-group,
+                #av_deli_mobile .list-group {
+                    border: 0;
+                    border-radius: 0;
+                }
+                #av_deli_right .list-group-item,
+                #av_deli_mobile .list-group-item {
+                    border-left: 0;
+                    border-right: 0;
+                    border-radius: 0;
+                    border-color: rgba(128,128,128,0.2);
+                }
+                #av_deli_right .list-group-item:first-child,
+                #av_deli_mobile .list-group-item:first-child {
+                    border-top: 0;
+                }
+                #av_deli_right .list-group-item:last-child,
+                #av_deli_mobile .list-group-item:last-child {
+                    border-bottom: 0;
                 }
             </style>
             <script>
@@ -5708,5 +5844,4 @@
             </div>
         </xpath>
     </template>
-
 </odoo>

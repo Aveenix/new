@@ -35,6 +35,15 @@ class ProductTemplate(models.Model):
                 record.rating_count = total_count
                 record.rating_avg = total_avg
 
+    @api.model
+    def cron_recalculate_product_ratings(self):
+        """Cron task to periodically recompute product review averages, totals, and sync review stats."""
+        _logger.info("Aveenix Review Cron: Syncing and recalculating product rating statistics.")
+        products = self.search([('website_published', '=', True)])
+        if products:
+            products._compute_rating_stats()
+        _logger.info("Aveenix Review Cron: Recalculated rating statistics for %s published products.", len(products))
+
     desc_ai = fields.Html('AI Description', sanitize=False)
 
     def action_generate_ai_content(self):

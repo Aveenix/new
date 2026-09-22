@@ -306,12 +306,21 @@ class AveenixWebsite(WebsiteSale):
         # Fetch from local DB
         domain = []
         if category:
+            # Section slugs map 1:1 onto aveenix.news.category. They used to be
+            # crossed over (fashion -> SHOWBIZ, gaming -> FACTS, fitness ->
+            # STYLE), which is why each section listed another one's articles.
             cat_map = {
                 'global': 'GLOBAL',
                 'lifestyle': 'STYLE',
-                'fashion': 'SHOWBIZ',
-                'gaming': 'FACTS',
-                'fitness': 'STYLE'
+                'style': 'STYLE',
+                'showbiz': 'SHOWBIZ',
+                'fashion': 'FASHION',
+                'fitness': 'FITNESS',
+                'gaming': 'GAMING',
+                'gadgets': 'GADGETS',
+                'recipes': 'RECIPES',
+                'travel': 'TRAVEL',
+                'facts': 'FACTS',
             }
             db_cat = cat_map.get(category.lower(), category.upper())
             domain.append(('category', '=', db_cat))
@@ -322,14 +331,20 @@ class AveenixWebsite(WebsiteSale):
         else:
             user_country = request.env.user.sudo().country_id or request.website.sudo().company_id.country_id
             
+        # aveenix.news.country_code holds a two-letter ISO code. This used to
+        # also try the country's display name, because the sync stored whatever
+        # name NewsData.io returned — and since that is "United States of
+        # America" where Odoo says "United States", neither leaf ever matched
+        # and the page silently fell back to placeholder articles.
         country_code = user_country.code.lower() if user_country and user_country.code else 'us'
-        country_name = user_country.name.lower() if user_country and user_country.name else 'united states'
-        domain.append('|')
-        domain.append(('country_code', '=', country_code))
-        domain.append(('country_code', '=', country_name))
-        
+        News = request.env['aveenix.news'].sudo()
+        # Falls back to every country when the visitor's own has too little
+        # news to fill the page — see _av_country_scope.
+        country_scope = News._av_country_scope(country_code)
+        domain += country_scope
+
         # Quick check: if we have NO news for this country, trigger an on-the-fly fetch (max 1 time)
-        if not request.env['aveenix.news'].sudo().search(['|', ('country_code', '=', country_code), ('country_code', '=', country_name)], limit=1):
+        if not request.env['aveenix.news'].sudo().search([('country_code', '=', country_code)], limit=1):
             try:
                 with request.env.cr.savepoint():
                     request.env['aveenix.news'].sudo().sync_news_from_api(target_country=country_code)
@@ -415,17 +430,41 @@ class AveenixWebsite(WebsiteSale):
             
         blog_categories = [{'name': 'OUR BLOGS', 'posts': blog_list}]
 
-        displayed_articles = [hero_main] + hero_side + [global_main] + global_side + popular + travel_guides
-        def count_cat(cat_name):
-            return sum(1 for a in displayed_articles if a and a.get('category') == cat_name)
-        
+        # Category totals for the sidebar widget. Counted over the whole table
+        # for this country, not over the 50 rows this page happens to load —
+        # that slice is the newest 50 articles, so a section with hundreds of
+        # articles but none in the last few hours was showing a count of 0.
+        # Blog posts are left out: their categories are free text ("OUR BLOGS")
+        # and mixing them in inflated whichever news section shared a name.
+        #
+        # Built from country_scope, the same leaves the article list uses, so
+        # the two can never describe different sets of articles. Deriving it by
+        # stripping leaves off `domain` instead would silently drift the moment
+        # another filter is added.
+        cat_counts = {
+            category: count
+            for category, count in News._read_group(
+                country_scope, groupby=['category'], aggregates=['__count'],
+            )
+        }
+
+        def get_count(*cat_names):
+            return sum(cat_counts.get(name.upper(), 0) for name in cat_names)
+
+        # One section, one bucket. Fashion used to be counted together with
+        # Showbiz and Gaming together with Facts, so the numbers next to those
+        # two never matched what the section actually showed.
         dynamic_categories = [
-            {'name': 'Fashion', 'count': count_cat('SHOWBIZ'), 'url': '/news?category=fashion'},
-            {'name': 'Facts', 'count': count_cat('FACTS'), 'url': '/news?category=gaming'},
-            {'name': 'Gaming', 'count': count_cat('FACTS'), 'url': '/news?category=gaming'},
-            {'name': 'Style', 'count': count_cat('STYLE'), 'url': '/news?category=lifestyle'},
-            {'name': 'Video', 'count': count_cat('VIDEO'), 'url': '/news'},
-            {'name': 'Photography', 'count': count_cat('PHOTOGRAPHY'), 'url': '/news'},
+            {'name': 'Fashion', 'count': get_count('FASHION'), 'url': '/news?category=fashion'},
+            {'name': 'Fitness', 'count': get_count('FITNESS'), 'url': '/news#nm-fitness-section'},
+            {'name': 'Gaming', 'count': get_count('GAMING'), 'url': '/news#nm-gaming-section'},
+            {'name': 'Style', 'count': get_count('STYLE'), 'url': '/news?category=style'},
+            {'name': 'Showbiz', 'count': get_count('SHOWBIZ'), 'url': '/news#nm-must-read-list'},
+            {'name': 'Travel', 'count': get_count('TRAVEL'), 'url': '/news#nm-travel-guides'},
+            {'name': 'Facts', 'count': get_count('FACTS'), 'url': '/news?category=facts'},
+            {'name': 'Gadgets', 'count': get_count('GADGETS'), 'url': '/news#nm-gadgets-section'},
+            {'name': 'Recipes', 'count': get_count('RECIPES'), 'url': '/news#nm-recipes-section'},
+            {'name': 'Global', 'count': get_count('GLOBAL'), 'url': '/news#nm-global-news'},
         ]
 
         from markupsafe import Markup
@@ -439,9 +478,20 @@ class AveenixWebsite(WebsiteSale):
             'travel_guides': travel_guides,
             'blog_categories': blog_categories,
             'dynamic_categories': dynamic_categories,
+            # Same totals as the sidebar, handed to news_script.js so its
+            # client-side re-render of the widget shows the table-wide count
+            # instead of counting only the articles it happened to fetch.
+            'category_totals_json': json.dumps(cat_counts),
             'ad_image': NEWS_IMAGES['ad'],
             'is_news_page': True,
-            'trending_titles_json': Markup(json.dumps([a['title'] for a in ([global_main] + global_side) if a and a.get('title')])),
+            # Headlines for the scrolling trending ticker. Sent as title+url
+            # pairs so each one is clickable as it goes past — it used to be
+            # titles only, rendered as plain text.
+            'trending_items_json': json.dumps([
+                {'title': a['title'], 'url': a.get('url') or '/news'}
+                for a in ([global_main] + global_side)
+                if a and a.get('title')
+            ]),
         }
         return request.render('aveenix_website.news_home_template', data)
 

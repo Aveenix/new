@@ -2734,6 +2734,47 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary th {
     font-weight: 700 !important;
 }
 
+/* ...but not the section titles inside it.
+
+   The rule above exists to make the money values pop, and it reaches every h4
+   in the card — which now includes "Delivery method" and "Payment method",
+   since both method boxes live inside the summary card. "Order summary" sits
+   out in the left column and never matched, so in dark mode the three titles
+   stopped matching: 700 against 500. Inter Tight ships no 700 face here, so
+   the browser synthesised one and the pair read as a different typeface as
+   well as a heavier one.
+
+   ID selectors, so this outranks the class-based rule above. */
+#shop_cart > h4,
+#av_deli_right h4,
+#av_deli_mobile h4,
+#av_pay_right h4,
+[data-theme="dark"] #av_deli_right h4,
+[data-theme="dark"] #av_deli_mobile h4,
+[data-theme="dark"] #av_pay_right h4 {
+    /* Pinned rather than left to inherit. All three are <h4 class="mb-3">, so
+       in principle they already share Bootstrap's heading type — but they sit
+       in three different containers, and the two inside the summary card were
+       coming out smaller and heavier than "Order summary". Setting the type
+       here, from the same Bootstrap values, is a no-op where it already
+       matched and a fix where it did not, so the three cannot drift again.
+
+       font-size mirrors Bootstrap's h4: RFS-fluid below 1200px, flat above
+       (see the media query underneath). */
+    font-size: calc(1.275rem + 0.3vw);
+    line-height: 1.2;              /* $headings-line-height */
+    font-weight: 500 !important;   /* $headings-font-weight, as "Order summary" */
+}
+
+@media (min-width: 1200px) {
+    #shop_cart > h4,
+    #av_deli_right h4,
+    #av_deli_mobile h4,
+    #av_pay_right h4 {
+        font-size: 1.5rem;         /* $h4-font-size, above RFS */
+    }
+}
+
 /* Cart products table rows */
 [data-theme="dark"] .o_cart_products_table,
 [data-theme="dark"] .o_cart_products_table tr,
@@ -9727,3 +9768,36 @@ body:has(.nm-news-page) .av-header,
         grid-template-columns: 1fr;
     }
 }
+
+/* ── Hide Google Translate Top Banner & Prevent Body Shift ── */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.VIpgJd-Z44Wfd-a9Bvf-wL021b,
+.VIpgJd-Z44Wfd-a9Bvf,
+.VIpgJd-Z44Wfd-a9Bvf-wL021b,
+#goog-gt-tt,
+#goog-gt-vt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover,
+div[id*="goog-gt-"],
+iframe[id*=":1.container"],
+iframe[id*=":2.container"],
+iframe[class*="goog-te-banner"],
+iframe[class*="VIpgJd"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+html, body {
+    top: 0px !important;
+    position: static !important;
+    margin-top: 0px !important;
+    padding-top: 0px !important;
+}
+

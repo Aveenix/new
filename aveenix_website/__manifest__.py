@@ -1,12 +1,12 @@
 {
     'name': 'Aveenix Website',
-    'version': '19.0.1.0.23',
+    'version': '19.0.1.0.41',
     'category': 'Website',
     'summary': 'Modern eCommerce website - red & gold design',
     'description': 'Modern eCommerce website - red & gold design',
     'author': 'Anantam Innovision Private Limited',
     'website': 'https://anantaminnovision.com/',
-    'depends': ['website', 'website_sale', 'website_crm', 'website_sale_wishlist', 'product_brand', 'account', 'aveenix_rewards', 'im_livechat', 'social_media', 'website_blog'],
+    'depends': ['website', 'website_sale', 'payment', 'website_crm', 'website_sale_wishlist', 'product_brand', 'account', 'aveenix_rewards', 'im_livechat', 'social_media', 'website_blog'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
@@ -47,6 +47,7 @@
             'aveenix_website/static/src/js/home_category_tabs.js',
             'aveenix_website/static/src/js/open_livechat.js',
             'aveenix_website/static/src/js/welcome_offer.js',
+            'aveenix_website/static/src/js/auto_translate.js',
         ],
         'web.assets_backend': [
             'aveenix_website/static/src/js/website_builder_patch.js',

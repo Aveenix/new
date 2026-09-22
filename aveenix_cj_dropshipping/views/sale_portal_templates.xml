@@ -24,7 +24,7 @@
                     <t t-if="order.cj_tracking_number">
                         <div>
                             <span class="badge rounded-pill text-bg-success mb-1">
-                                <i class="fa fa-truck me-1"/> Shipped (<t t-out="order.cj_logistics_name or 'CJ'"/>)
+                                <i class="fa fa-truck me-1"/> Shipped (<t t-out="order.cj_logistics_display or 'Courier'"/>)
                             </span>
                         </div>
                         <div class="small fw-bold text-dark">
@@ -38,7 +38,7 @@
                             </span>
                         </div>
                         <div class="small text-muted" style="font-size: 11px;">
-                            Warehouse Processing (<t t-out="order.cj_logistics_name or 'CJPacket'"/>)
+                            Warehouse Processing (<t t-out="order.cj_logistics_display or 'Courier'"/>)
                         </div>
                     </t>
                     <t t-else="">
@@ -78,11 +78,11 @@
                     </div>
                     <hr class="my-2"/>
                     <p class="mb-0 small" t-if="sale_order.cj_tracking_number">
-                        Your package is being shipped via <strong><t t-out="sale_order.cj_logistics_name or 'CJ Dropshipping'"/></strong>.<br/>
+                        Your package is being shipped via <strong><t t-out="sale_order.cj_logistics_display or 'our courier'"/></strong>.<br/>
                         Tracking Number: <strong><t t-out="sale_order.cj_tracking_number"/></strong>
                     </p>
                     <p class="mb-0 small" t-else="">
-                        Your order has been sent to our dropshipping fulfillment warehouse (<strong t-out="sale_order.cj_logistics_name or 'CJPacket'"/>) and is currently being prepared for dispatch.
+                        Your order has been sent to our dropshipping fulfillment warehouse (<strong t-out="sale_order.cj_logistics_display or 'our courier'"/>) and is currently being prepared for dispatch.
                     </p>
                 </div>
             </div>
@@ -104,10 +104,10 @@
                     <strong t-field="sale_order.cj_tracking_number"/>
                 </td>
             </tr>
-            <tr t-if="sale_order.cj_logistics_name">
+            <tr t-if="sale_order.cj_logistics_display">
                 <th class="ps-0 pb-0">Shipping Carrier:</th>
                 <td class="w-100 pb-0 text-wrap">
-                    <span t-field="sale_order.cj_logistics_name"/>
+                    <span t-field="sale_order.cj_logistics_display"/>
                 </td>
             </tr>
             <tr>
