@@ -1,5 +1,7 @@
 import logging
 from odoo import api, fields, models, _
+
+from .delivery_carrier import av_public_logistic_name
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -62,11 +64,23 @@ class SaleOrder(models.Model):
         ),
         help='Carrier / shipping method name in CJ Dropshipping',
     )
+    cj_logistics_display = fields.Char(
+        string='Shipping Method',
+        compute='_compute_cj_logistics_display',
+        help="Customer-facing shipping method name. cj_logistics_name keeps the "
+             "raw CJ value because it is sent back as logisticName when the "
+             "order is pushed; this is the version the customer is shown.",
+    )
     cj_error_message = fields.Text(
         string='CJ Error Log',
         copy=False,
         readonly=True,
     )
+
+    @api.depends('cj_logistics_name')
+    def _compute_cj_logistics_display(self):
+        for order in self:
+            order.cj_logistics_display = av_public_logistic_name(order.cj_logistics_name)
     has_cj_dropship_lines = fields.Boolean(
         string='Has CJ Dropship Lines',
         compute='_compute_has_cj_dropship_lines',
@@ -390,7 +404,7 @@ class SaleOrder(models.Model):
                             delivery_product = self.env['product.product'].sudo().search([('default_code', '=', 'CJ_DELIVERY')], limit=1)
                             if not delivery_product:
                                 delivery_product = self.env['product.product'].sudo().create({
-                                    'name': 'CJ Dropshipping Delivery',
+                                    'name': 'Shipping',
                                     'type': 'service',
                                     'default_code': 'CJ_DELIVERY',
                                     'list_price': 0.0,
@@ -404,15 +418,19 @@ class SaleOrder(models.Model):
                             if logistic_name and price_usd > 0:
                                 rates_cache[logistic_name] = price_usd
                                 
-                                carrier_name = f"CJ - {logistic_name}"
+                                # Match on cj_logistic_name, not on name: it is the
+                                # key CJ itself uses (payload + rate cache) and it
+                                # stays put even if the display name is edited.
                                 carrier = self.env['delivery.carrier'].sudo().search([
-                                    ('name', '=', carrier_name),
+                                    ('cj_logistic_name', '=', logistic_name),
                                     ('delivery_type', '=', 'cj_dropshipping')
                                 ], limit=1)
-                                
+
                                 if not carrier:
+                                    # Customer-facing label: the supplier's name
+                                    # is stripped out (see av_public_logistic_name).
                                     carrier = self.env['delivery.carrier'].sudo().create({
-                                        'name': carrier_name,
+                                        'name': av_public_logistic_name(logistic_name),
                                         'delivery_type': 'cj_dropshipping',
                                         'product_id': delivery_product.id,
                                         'cj_logistic_name': logistic_name,

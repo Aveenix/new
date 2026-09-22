@@ -562,15 +562,24 @@ class AveenixMobileAPI(http.Controller):
             return self._success_response({'cors': 'ok'})
         domain = []
         if category:
+            # Section slugs map 1:1 onto aveenix.news.category. Mixing buckets
+            # here (fashion + showbiz, gaming + facts, fitness + style) made
+            # each section serve another one's articles.
             cat_map = {
-                'global': 'GLOBAL',
-                'lifestyle': 'STYLE',
-                'fashion': 'SHOWBIZ',
-                'gaming': 'FACTS',
-                'fitness': 'STYLE'
+                'global': ['GLOBAL'],
+                'lifestyle': ['STYLE'],
+                'style': ['STYLE'],
+                'showbiz': ['SHOWBIZ'],
+                'fashion': ['FASHION'],
+                'gaming': ['GAMING'],
+                'fitness': ['FITNESS'],
+                'facts': ['FACTS'],
+                'gadgets': ['GADGETS'],
+                'recipes': ['RECIPES'],
+                'travel': ['TRAVEL'],
             }
-            db_cat = cat_map.get(category.lower(), category.upper())
-            domain.append(('category', '=', db_cat))
+            cats = cat_map.get(category.lower(), [category.upper()])
+            domain.append(('category', 'in', cats))
             
         user_country_id = request.session.get('av_user_country_id')
         if user_country_id:
@@ -579,12 +588,16 @@ class AveenixMobileAPI(http.Controller):
             website = self._get_current_website()
             user_country = request.env.user.sudo().country_id or (website.company_id.country_id if website else False)
             
+        # aveenix.news.country_code is a two-letter ISO code. Matching on the
+        # display name as well never worked: the sync stored NewsData.io's
+        # "United States of America" while Odoo's country is "United States".
         country_code = user_country.code.lower() if user_country and user_country.code else 'us'
-        country_name = user_country.name.lower() if user_country and user_country.name else 'united states'
-        domain.append('|')
-        domain.append(('country_code', '=', country_code))
-        domain.append(('country_code', '=', country_name))
-            
+        # Widens to all countries when the visitor's own has too little news to
+        # fill the page — otherwise news_script.js pads the layout with
+        # placeholder articles that no category count can ever match.
+        domain += request.env['aveenix.news'].sudo()._av_country_scope(country_code)
+
+
         news = request.env['aveenix.news'].sudo().search(domain, limit=int(limit), offset=int(offset), order='published_date desc')
         data = []
         for n in news:
@@ -594,6 +607,7 @@ class AveenixMobileAPI(http.Controller):
                 'description': n.description,
                 'image_url': n.image_url,
                 'link': n.source_url,
+                'category': n.category,
                 'date': str(n.published_date) if n.published_date else '',
             })
         return self._success_response(data)

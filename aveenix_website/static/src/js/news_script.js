@@ -113,7 +113,7 @@ function initNewsPage() {
 
     // Smooth scrolling & active state for News navigation menu (.av-news-nav .av-cat-menu a, .nm-nav-links a) using Event Delegation
     document.addEventListener('click', function(e) {
-        const link = e.target.closest('.av-news-nav .av-cat-menu a, .nm-nav-links a');
+        const link = e.target.closest('.av-news-nav .av-cat-menu a, .nm-nav-links a, .nm-category-list a');
         if (!link) return;
 
         const href = link.getAttribute('href');
@@ -126,7 +126,7 @@ function initNewsPage() {
                 const targetEl = document.querySelector(hash);
                 if (targetEl) {
                     e.preventDefault();
-                    document.querySelectorAll('.av-news-nav .av-cat-menu a, .nm-nav-links a').forEach(l => l.classList.remove('active'));
+                    document.querySelectorAll('.av-news-nav .av-cat-menu a, .nm-nav-links a, .nm-category-list a').forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
 
                     // Ensure the URL remains /news without adding #hash to the address bar
@@ -271,16 +271,23 @@ async function fetchNews() {
         if (res.ok) {
             const data = await res.json();
             if (data.status === 'success' && data.data) {
-                const mapped = data.data.map(r => ({
-                    title: r.title,
-                    url: r.link,
-                    urlToImage: r.image_url,
-                    publishedAt: r.date,
-                    author: 'Staff Reporter',
-                    source: { name: r.source || 'News' },
-                    description: r.description,
-                    content: r.description
-                }));
+                const mapped = data.data.map(r => {
+                    // /api/v1/news returns the section in `category`. It used
+                    // to be dropped here, so every section fell back to a
+                    // positional slice and every badge read "News".
+                    const section = (r.category || 'GLOBAL').toUpperCase();
+                    return {
+                        title: r.title,
+                        url: r.link,
+                        urlToImage: r.image_url,
+                        publishedAt: r.date,
+                        author: 'Staff Reporter',
+                        category: section,
+                        source: { name: section },
+                        description: r.description,
+                        content: r.description
+                    };
+                });
                 allArticles = mapped.filter(a => a.urlToImage && !a.urlToImage.includes('stimg.co') && a.title);
             }
         }
@@ -303,27 +310,60 @@ async function fetchNews() {
         }
 
         window.nmValidArticles = validArticles;
-        // Render as many sections as we have articles for.
-        // Safe length checks so we don't crash if length is less than expected
-        renderHero(validArticles.slice(0, 5));
-        renderGlobalNews(validArticles.slice(5, 10));
-        renderTravelGuides(validArticles.slice(10, 13));
-        
-        renderTwoCol(validArticles.slice(13, 17), 'nm-gadgets-section');
-        renderTwoCol(validArticles.slice(17, 21), 'nm-recipes-section');
-        renderFourCol(validArticles.slice(21, 25));
-        
-        renderFitnessList(validArticles.slice(25, 30), 'nm-fitness-section');
-        renderGamingMain(validArticles.slice(30, 31), 'nm-gaming-section');
-        
-        renderLatestArticles(validArticles.slice(31, 37));
-        
-        renderPopularList(validArticles.slice(37, 47), 'nm-popular-list');
-        
-        renderMustReadList(validArticles.slice(47, 52), 'nm-must-read-list');
-        
+
+        // Each section draws from its own category. This used to be a set of
+        // positional slices — slice(30, 31) for Gaming, slice(25, 30) for
+        // Fitness and so on — so whatever article happened to sit at that
+        // index ended up in the section, whatever it was about.
+        //
+        // take() hands out the next unused articles of a category and, only
+        // once those run out, tops the list up from whatever is left so a
+        // section never renders as an empty hole.
+        const used = new Set();
+        const take = (sections, count) => {
+            const wanted = Array.isArray(sections) ? sections : [sections];
+            const picked = [];
+            for (const section of wanted) {
+                for (const article of validArticles) {
+                    if (picked.length >= count) break;
+                    if (used.has(article) || article.category !== section) continue;
+                    used.add(article);
+                    picked.push(article);
+                }
+            }
+            for (const article of validArticles) {   // top-up, any category
+                if (picked.length >= count) break;
+                if (used.has(article)) continue;
+                used.add(article);
+                picked.push(article);
+            }
+            return picked;
+        };
+
+        // Hero and Global run first so the strongest world stories lead the page.
+        renderHero(take('GLOBAL', 5));
+        renderGlobalNews(take('GLOBAL', 5));
+
+        renderTravelGuides(take('TRAVEL', 3));
+
+        renderTwoCol(take('GADGETS', 4), 'nm-gadgets-section');
+        renderTwoCol(take('RECIPES', 4), 'nm-recipes-section');
+        renderFourCol(take('STYLE', 4));
+
+        renderFitnessList(take('FITNESS', 5), 'nm-fitness-section');
+        renderGamingMain(take('GAMING', 1), 'nm-gaming-section');
+
+        renderLatestArticles(take(['FACTS', 'GLOBAL'], 6));
+
+        renderPopularList(take(['SHOWBIZ', 'STYLE'], 10), 'nm-popular-list');
+
+        // "Must read" is the Fashion slot — the sidebar Fashion link points here.
+        renderMustReadList(take(['FASHION', 'SHOWBIZ'], 5), 'nm-must-read-list');
+
         renderYoutubePlaylist('nm-youtube-section');
-        
+
+        renderCategoriesWidget(validArticles);
+
     } catch (error) {
         console.error('Error fetching news:', error);
         // Remove spinners if there's a fatal error
@@ -331,6 +371,70 @@ async function fetchNews() {
             el.parentElement.innerHTML = '<div style="color:red; text-align:center;">Failed to load dynamic news.</div>';
         });
     }
+}
+
+function renderCategoriesWidget(validArticles) {
+    const categoryLists = document.querySelectorAll('.nm-category-list');
+    if (!categoryLists || categoryLists.length === 0) return;
+
+    // One row, one category. Fashion used to also count Showbiz and Gaming
+    // used to also count Facts, so those two numbers never described the
+    // section they linked to. Matching is exact for the same reason: with
+    // `includes`, "STYLE" counted every "LIFESTYLE" article too.
+    const catDefs = [
+        { name: 'Fashion', key: 'FASHION', anchor: '/news?category=fashion' },
+        { name: 'Fitness', key: 'FITNESS', anchor: '/news#nm-fitness-section' },
+        { name: 'Gaming', key: 'GAMING', anchor: '/news#nm-gaming-section' },
+        { name: 'Style', key: 'STYLE', anchor: '/news?category=style' },
+        { name: 'Showbiz', key: 'SHOWBIZ', anchor: '/news#nm-must-read-list' },
+        { name: 'Travel', key: 'TRAVEL', anchor: '/news#nm-travel-guides' },
+        { name: 'Facts', key: 'FACTS', anchor: '/news?category=facts' },
+        { name: 'Gadgets', key: 'GADGETS', anchor: '/news#nm-gadgets-section' },
+        { name: 'Recipes', key: 'RECIPES', anchor: '/news#nm-recipes-section' },
+        { name: 'Global', key: 'GLOBAL', anchor: '/news#nm-global-news' },
+    ];
+
+    const counts = {};
+    catDefs.forEach(c => counts[c.name] = 0);
+
+    // The controller puts the table-wide totals on the list element. Prefer
+    // them: counting the fetched articles only ever sees the newest 100, so a
+    // section with hundreds of articles but none published today read as 0.
+    let serverTotals = null;
+    try {
+        serverTotals = JSON.parse(categoryLists[0].dataset.totals || 'null');
+    } catch (e) {
+        serverTotals = null;
+    }
+
+    if (serverTotals) {
+        catDefs.forEach(c => counts[c.name] = serverTotals[c.key] || 0);
+    } else if (validArticles && validArticles.length > 0) {
+        validArticles.forEach(a => {
+            const catName = (a.category || (a.source && a.source.name) || '').toUpperCase();
+            const def = catDefs.find(d => d.key === catName);
+            if (def) {
+                counts[def.name]++;
+            }
+        });
+    }
+
+    let html = '';
+    catDefs.forEach(c => {
+        const count = counts[c.name] || 0;
+        html += `
+            <li>
+                <a href="${c.anchor}">
+                    ${c.name}
+                    <span>${count}</span>
+                </a>
+            </li>
+        `;
+    });
+
+    categoryLists.forEach(el => {
+        el.innerHTML = html;
+    });
 }
 
 function formatDate(dateString) {
@@ -637,8 +741,30 @@ function renderYoutubePlaylist(containerId) {
     render();
 }
 
+// Same idea as aveenix.news._av_classify_category on the server: decide the
+// section from the headline. The filler articles used to be labelled by array
+// position (categories[index % 8]), so a reef-recovery story was tagged
+// FASHION and a rail-network story LIFESTYLE.
+const NM_SECTION_KEYWORDS = [
+    ['GAMING', /\b(game|games|gaming|gamer|gamers|video game|esports|rpgs?|playstation|xbox|nintendo|motion capture)\b/i],
+    ['RECIPES', /\b(recipes?|cook|cooking|bake|bakers?|chef|cuisine|culinary|sourdough|gastronomy|coffee|kitchen|dining)\b/i],
+    ['TRAVEL', /\b(travel|travellers?|travelers?|tourism|itinerary|destinations?|getaways?|hiking|flights?|packing|retreats?)\b/i],
+    ['FASHION', /\b(fashion|couture|wardrobe|menswear|linens?|skincare|upcycling|vintage fashion)\b/i],
+    ['FITNESS', /\b(fitness|workouts?|training|pilates|nutrition|nutritional|superfoods|meditation|mindfulness|sleep|health|spinal|marathon)\b/i],
+    ['GADGETS', /\b(smartphones?|foldables?|laptop|wearables?|headset|battery|quantum computing|consumer tech|vinyl records|appliances)\b/i],
+    ['FACTS', /\b(study|research|discoveries|discovery|marine biology|deep-sea|desalination|scanning|conservation|science)\b/i],
+    ['STYLE', /\b(interior design|home design|minimalist|furniture|architecture|rooftop|design fairs|slow-living|habits)\b/i],
+    ['SHOWBIZ', /\b(artists?|art|galleries|museums?|exhibitions?|biennale)\b/i],
+];
+
+function nmClassify(title) {
+    for (const [section, pattern] of NM_SECTION_KEYWORDS) {
+        if (pattern.test(title)) return section;
+    }
+    return 'GLOBAL';
+}
+
 function getDefaultNewsArticles() {
-    const categories = ['GLOBAL', 'LIFESTYLE', 'FASHION', 'GAMING', 'FITNESS', 'GADGETS', 'RECIPES', 'POPULAR'];
     const authors = ['Sarah Jenkins', 'Michael Chang', 'David Lee', 'Elena Rostova', 'Marcus Vance', 'Amina Diop', 'Lucas Wright', 'Jessica Alba'];
     const images = [
         'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop',
@@ -721,7 +847,7 @@ function getDefaultNewsArticles() {
     ];
 
     return titles.map((title, index) => {
-        const cat = categories[index % categories.length];
+        const cat = nmClassify(title);
         const img = images[index % images.length];
         const author = authors[index % authors.length];
         const day = 28 - (index % 25);
@@ -731,6 +857,7 @@ function getDefaultNewsArticles() {
             urlToImage: img,
             publishedAt: `2026-07-${day < 10 ? '0' + day : day}T10:00:00Z`,
             author: author,
+            category: cat,
             source: { name: cat },
             description: `${title}. Comprehensive analysis, expert insights, and indepth coverage of the latest developments shaping ${cat.toLowerCase()} around the world today.`
         };

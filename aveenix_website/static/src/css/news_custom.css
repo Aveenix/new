@@ -121,11 +121,28 @@ ul { list-style: none; }
     padding: 10px 0; font-size: 13px;
 }
 .nm-trending-container { display: flex; align-items: center; gap: 15px; }
-.nm-trending-label { background-color: var(--nm-primary); color: #fff; padding: 3px 10px; font-weight: 700; }
+
+/* The label and the controls must never be squeezed: without flex-shrink:0 the
+   ticker's flex-grow pushed them down to their minimum, which broke "TRENDING
+   NOW" onto two lines and stacked the two arrows vertically. Only the ticker
+   in the middle gives up space. */
+.nm-trending-label {
+    background-color: var(--nm-primary); color: #fff; padding: 3px 10px; font-weight: 700;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
 .nm-trending-text { font-weight: 500; flex-grow: 1; }
+.nm-trending-controls {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
 .nm-trending-controls .nm-nav-btn {
     background: transparent; border: 1px solid var(--border-color); color: var(--meta-color);
     width: 25px; height: 25px; cursor: pointer; margin-left: 5px;
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0; line-height: 1;
 }
 .nm-trending-controls .nm-nav-btn:hover { background-color: var(--nav-hover); color: var(--text-color); }
 
@@ -693,4 +710,98 @@ body:has(.nm-news-page) .av-header,
 }
 [data-theme="dark"] .av-cat-nav.av-news-nav.nav-scrolled {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* =============================================================
+   TRENDING TICKER — headlines running past on a rail
+
+   The bar used to fade one headline out and the next one in, in
+   place. Now the whole list travels leftwards as one line.
+
+   .nm-ticker        the viewport; clips the rail
+   .nm-ticker-track  the rail — holds the headline list twice so
+                     the wrap is invisible (news_ticker.js moves it)
+   ============================================================= */
+.nm-ticker {
+    position: relative;
+    flex: 1 1 auto;
+    overflow: hidden;
+    min-width: 0;              /* let it shrink inside the flex row */
+
+    /* Fixed height, and both children taken out of flow below. The rail is
+       built by JS, so otherwise the bar is one height while the fallback
+       headline shows and another once the rail is in — and everything under
+       it, the breadcrumb included, jumps when the headlines arrive. */
+    height: 1.7rem;
+
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+            mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+
+/* Both layers fill the viewport and overlay each other, so swapping one for
+   the other costs no reflow. */
+.nm-ticker-track,
+.nm-ticker-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.nm-ticker-track {
+    width: max-content;
+    will-change: transform;
+}
+
+/* Shown until the JS has the headlines; hidden once the rail is running. */
+.nm-ticker-fallback {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.nm-ticker--ready .nm-ticker-fallback {
+    display: none;
+}
+
+.nm-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding-right: 2.5rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nm-ticker-item:hover,
+.nm-ticker-item:focus-visible {
+    color: var(--nm-primary);
+    text-decoration: underline;
+}
+
+/* Separator bullet between headlines so the line reads as a sequence. */
+.nm-ticker-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 0.75rem;
+    border-radius: 50%;
+    background-color: var(--nm-primary);
+    flex: 0 0 auto;
+}
+
+.nm-ticker--empty {
+    visibility: hidden;
+}
+
+/* Readers who ask for reduced motion get a still line they can step
+   through with the prev/next buttons instead of a moving one. */
+@media (prefers-reduced-motion: reduce) {
+    .nm-ticker-track {
+        will-change: auto;
+    }
 }

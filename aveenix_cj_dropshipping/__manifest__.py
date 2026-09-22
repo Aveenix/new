@@ -1,6 +1,6 @@
 {
     'name': 'Aveenix CJ Dropshipping Connector',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.2',
     'category': 'Connector',
     'summary': 'Direct integration between Odoo and CJ Dropshipping API v2 (Products, Sandbox Orders & Tracking)',
     'description': """
