@@ -4659,7 +4659,7 @@
             <t t-set="pageName" t-value="'news_home'"/>
             <div id="wrap" class="av-news-page nm-news-page">
                 <!-- Inline CSS for the news theme -->
-                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=11"/>
+                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=12"/>
                 
                 <!-- Removed Top Bar and Logo Area as per user request -->
 
@@ -4765,7 +4765,7 @@
                             <!-- Ad Banner Widget -->
                             <div id="aveenix_news_ad_1" class="oe_structure">
                                 <div class="nm-widget text-center my-4">
-                                    <span class="td-adspot-title text-center text-muted d-block" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">- Advertisement -</span>
+                                    <span class="td-adspot-title text-center text-muted d-block" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">- Advertisement -</span>
                                     <a href="https://themeforest.net/item/newspaper/5489609" target="_blank" rel="noopener" class="d-inline-block text-center nm-ad-banner-link">
                                         <img src="https://demo.tagdiv.com/newspaper_magazine_pro/wp-content/uploads/2020/06/rec300.png" class="img-fluid" alt="Advertisement Banner" style="max-width:300px; height:auto; display:inline-block;" />
                                     </a>
@@ -4778,12 +4778,14 @@
                     <section class="nm-content-layout">
                         <div class="nm-main-column">
 
-                            <!-- Travel Guides -->
+                            <!-- Lifestyle: the nav's "Lifestyle" link anchors here.
+                                 It used to be filled with Travel articles; Travel
+                                 has its own block further down. -->
                             <div class="nm-section-heading">
                                 <h2>LIFESTYLE</h2>
                                 <div class="nm-line" style="background-color: #85c442;"></div>
                             </div>
-                            <div class="nm-travel-guides-grid" id="nm-travel-guides">
+                            <div class="nm-travel-guides-grid" id="nm-lifestyle-section">
                                 <div style="text-align: center; padding: 40px; width: 100%;">
                                     <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
                                 </div>
@@ -4821,9 +4823,13 @@
                         </aside>
                     </section>
 
-                    <!-- FULL WIDTH SECTION: 4 Col Grid -->
+                    <!-- FULL WIDTH SECTION: Travel (4 Col Grid) -->
                     <section class="nm-full-width-section" style="margin-bottom: 40px;">
-                        <div class="nm-four-col-grid" id="nm-four-col-grid">
+                        <div class="nm-section-heading">
+                            <h2>TRAVEL</h2>
+                            <div class="nm-line" style="background-color: #f0932b;"></div>
+                        </div>
+                        <div class="nm-four-col-grid" id="nm-travel-section">
                             <!-- Dynamic -->
                         </div>
                     </section>
@@ -4854,9 +4860,31 @@
 
                     <!-- Removed duplicate sidebar logic since it was moved up -->
 
-                    <!-- FULL WIDTH SECTION: Video -->
-                    <section class="nm-video-section" id="nm-youtube-section" style="background:#222; margin: 40px 0; width: 100%; clear: both;">
-                        <!-- Dynamic YouTube Playlist will be rendered here -->
+                    <!-- VIDEO SECTION: player on the left, ad rail on the right.
+
+                         The player block used to span the whole content width
+                         with the 1140px container centred inside it, which left
+                         a dead band of #222 down each side. It is narrower now
+                         and the right-hand band is an ad slot.
+
+                         The ad is a sibling, not a child: news_script.js owns
+                         #nm-youtube-section and replaces its innerHTML on every
+                         video change, so anything nested inside would be wiped
+                         the first time a viewer picks a different video. -->
+                    <section class="nm-video-row">
+                        <div class="nm-video-section" id="nm-youtube-section">
+                            <!-- Dynamic YouTube Playlist will be rendered here -->
+                        </div>
+                        <div id="aveenix_news_ad_video" class="nm-video-ad oe_structure">
+                            <div class="nm-widget text-center">
+                                <span class="td-adspot-title text-center text-muted d-block" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">- Advertisement -</span>
+                                <a href="https://themeforest.net/item/newspaper/5489609" target="_blank" rel="noopener" class="d-inline-block text-center nm-ad-banner-link">
+                                    <!-- No max-width here: the rail is already capped at 300px, and an
+                                         inline cap would beat img-fluid and overflow a 320px phone. -->
+                                    <img src="https://demo.tagdiv.com/newspaper_magazine_pro/wp-content/uploads/2020/06/rec300.png" class="img-fluid" alt="Advertisement Banner" style="height:auto; display:inline-block;"/>
+                                </a>
+                            </div>
+                        </div>
                     </section>
 
                     <!-- BOTTOM SECTION: Latest Articles + Bottom Sidebar -->
@@ -4909,7 +4937,7 @@
                     </section>
 </main>
                 
-                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=18"></script>
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=19"></script>
                 <script type="text/javascript" src="/aveenix_website/static/src/js/news_ticker.js?v=1"></script>
             </div>
         </t>
@@ -4987,8 +5015,8 @@
                             <!-- Article Header -->
                             <div class="av-article-header mb-4">
                                 <span class="av-news-cat-badge mb-2 d-inline-block" t-esc="article['category']"/>
-                                <h1 class="av-article-title mt-2 mb-3" style="font-weight: 800; font-size: 36px; line-height: 1.2; color: inherit;" t-esc="article['title']"/>
-                                <div class="av-article-meta d-flex align-items-center text-muted" style="font-size: 14px;">
+                                <h1 class="av-article-title mt-2 mb-3" style="font-weight: 800; font-size: 2.25rem; line-height: 1.2; color: inherit;" t-esc="article['title']"/>
+                                <div class="av-article-meta d-flex align-items-center text-muted" style="font-size: 0.875rem;">
                                     <span class="fw-bold" style="color: var(--av-red, #dc3545);" t-esc="article['author']"/>
                                     <span class="mx-2">•</span>
                                     <span t-esc="article['date']"/>
@@ -5001,7 +5029,7 @@
                             </div>
 
                             <!-- Article Content -->
-                            <div class="av-article-body mb-5" style="font-size: 17px; line-height: 1.8; color: inherit;">
+                            <div class="av-article-body mb-5" style="font-size: 1.0625rem; line-height: 1.8; color: inherit;">
                                 <t t-out="article['content']"/>
                             </div>
 
@@ -5056,7 +5084,7 @@
             
             <div id="wrap">
                 <div class="nm-news-page av-news-detail-page">
-                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=10"/>
+                <link rel="stylesheet" href="/aveenix_website/static/src/css/news_custom.css?v=12"/>
                 <script type="text/javascript" src="/aveenix_website/static/src/js/news_ticker.js?v=1" defer="defer"></script>
                 
                 <!-- Custom Nav Removed as per user request -->
@@ -5083,7 +5111,7 @@
                 <div class="av-news-breadcrumb-bar py-3 mb-2">
                     <div class="nm-nav-container">
                         <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0" style="background: transparent; padding: 0; font-size: 12px; text-transform: uppercase;">
+                            <ol class="breadcrumb mb-0" style="background: transparent; padding: 0; font-size: 0.75rem; text-transform: uppercase;">
                                 <li class="breadcrumb-item"><a href="/" class="text-muted text-decoration-none">Home</a></li>
                                 <li class="breadcrumb-item"><a href="/news" class="text-muted text-decoration-none">News</a></li>
                                 <li class="breadcrumb-item active text-muted" id="dyn-breadcrumb-cat" aria-current="page" t-att-data-slug="article_slug">Loading...</li>
@@ -5098,9 +5126,9 @@
                         <div class="col-lg-8 pe-lg-5">
                             <!-- Article Header -->
                             <div class="av-article-header mb-4">
-                                <span class="av-news-cat-badge mb-3 d-inline-block" id="dyn-category" style="font-size:11px; padding: 2px 0;">CATEGORY</span>
-                                <h1 class="av-article-title mb-4" id="dyn-title" style="font-weight: 700; font-size: 40px; line-height: 1.2; color: var(--heading-color);">Loading Title...</h1>
-                                <div class="av-article-meta d-flex align-items-center text-muted mb-4" style="font-size: 12px;">
+                                <span class="av-news-cat-badge mb-3 d-inline-block" id="dyn-category" style="font-size:0.6875rem; padding: 2px 0;">CATEGORY</span>
+                                <h1 class="av-article-title mb-4" id="dyn-title" style="font-weight: 700; font-size: 2.5rem; line-height: 1.2; color: var(--heading-color);">Loading Title...</h1>
+                                <div class="av-article-meta d-flex align-items-center text-muted mb-4" style="font-size: 0.75rem;">
                                     <img src="https://ui-avatars.com/api/?name=Author&amp;background=random&amp;rounded=true" id="dyn-author-img" style="width:24px; height:24px; border-radius:50%; margin-right:10px;"/>
                                     <span>By <strong style="color: var(--heading-color);" id="dyn-author">Author Name</strong></span>
                                     <span class="mx-2">-</span>
@@ -5123,11 +5151,11 @@
                             <!-- Featured Image -->
                             <div class="av-article-featured-img mb-4">
                                 <img id="dyn-image" src="" class="img-fluid w-100" style="object-fit: cover; max-height:500px;" alt="Featured Image"/>
-                                <p class="text-muted mt-2" style="font-size:11px; font-style:italic;" id="dyn-caption"></p>
+                                <p class="text-muted mt-2" style="font-size:0.6875rem; font-style:italic;" id="dyn-caption"></p>
                             </div>
 
                             <!-- Article Content -->
-                            <div class="av-article-body mb-5" id="dyn-content" style="font-size: 17px; line-height: 1.8; color: var(--text-color);">
+                            <div class="av-article-body mb-5" id="dyn-content" style="font-size: 1.0625rem; line-height: 1.8; color: var(--text-color);">
                                 <p>Loading content...</p>
                             </div>
                         </div>
@@ -5143,24 +5171,24 @@
                                     <a t-att-href="website.company_id.social_facebook or 'https://facebook.com'" target="_blank" class="nm-social-stat-box fb-box text-center p-3 border flex-fill text-decoration-none text-dark">
                                         <i class="fa fa-facebook mb-2 fs-4" style="color:#3b5998;"/>
                                         <div class="fw-bold fs-5">21,998</div>
-                                        <div class="text-muted" style="font-size:11px;">Fans</div>
+                                        <div class="text-muted" style="font-size:0.6875rem;">Fans</div>
                                     </a>
                                     <a t-att-href="website.company_id.social_twitter or 'https://twitter.com'" target="_blank" class="nm-social-stat-box tw-box text-center p-3 border flex-fill text-decoration-none text-dark">
                                         <i class="fa fa-twitter mb-2 fs-4" style="color:#000;"/>
                                         <div class="fw-bold fs-5">3,913</div>
-                                        <div class="text-muted" style="font-size:11px;">Followers</div>
+                                        <div class="text-muted" style="font-size:0.6875rem;">Followers</div>
                                     </a>
                                     <a t-att-href="website.company_id.social_youtube or 'https://youtube.com'" target="_blank" class="nm-social-stat-box yt-box text-center p-3 border flex-fill text-decoration-none text-dark">
                                         <i class="fa fa-youtube-play mb-2 fs-4" style="color:#ff0000;"/>
                                         <div class="fw-bold fs-5">22,800</div>
-                                        <div class="text-muted" style="font-size:11px;">Subscribers</div>
+                                        <div class="text-muted" style="font-size:0.6875rem;">Subscribers</div>
                                     </a>
                                 </div>
                             </div>
                             <!-- Ad Banner -->
                             <div id="aveenix_news_ad_2" class="oe_structure">
                                 <div class="nm-sidebar-widget mb-5 text-center">
-                                    <p class="text-muted mb-1" style="font-size:10px;">- Advertisement -</p>
+                                    <p class="text-muted mb-1" style="font-size:0.625rem;">- Advertisement -</p>
                                     <a href="https://themeforest.net/item/newspaper/5489609" target="_blank" rel="noopener">
                                         <img src="https://demo.tagdiv.com/newspaper_magazine_pro/wp-content/uploads/2020/06/what-the-hex.png" class="img-fluid border" alt="Ad"/>
                                     </a>
@@ -5205,7 +5233,7 @@
                             
                             document.getElementById('dyn-caption').innerText = article.title;
                             
-                            let contentHTML = `<p class="lead mb-4" style="font-size:18px; line-height:1.8;"><strong>${article.description || ''}</strong></p>`;
+                            let contentHTML = `<p class="lead mb-4" style="font-size:1.125rem; line-height:1.8;"><strong>${article.description || ''}</strong></p>`;
                             
                             if (article.description) {
                                 let sentences = article.description.split('. ');
@@ -5214,8 +5242,8 @@
                                 if(p1.length > 0 && !p1.endsWith('.')) p1 += '.';
                                 if(p2.length > 0 && !p2.endsWith('.')) p2 += '.';
                                 
-                                if(p1) contentHTML += `<p style="font-size:16px; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p1}</p>`;
-                                if(p2) contentHTML += `<p style="font-size:16px; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p2}</p>`;
+                                if(p1) contentHTML += `<p style="font-size:1rem; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p1}</p>`;
+                                if(p2) contentHTML += `<p style="font-size:1rem; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p2}</p>`;
                             }
                             
                             // Add a loading indicator for the full text
@@ -5232,9 +5260,9 @@
                                     if(loader) loader.remove();
                                     
                                     if(data && data.content && data.content.length > 0) {
-                                        let fullHTML = `<p class="lead mb-4" style="font-size:18px; line-height:1.8;"><strong>${article.description || ''}</strong></p>`;
+                                        let fullHTML = `<p class="lead mb-4" style="font-size:1.125rem; line-height:1.8;"><strong>${article.description || ''}</strong></p>`;
                                         data.content.forEach(p => {
-                                            fullHTML += `<p style="font-size:16px; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p}</p>`;
+                                            fullHTML += `<p style="font-size:1rem; line-height:1.8; margin-bottom:20px; color:var(--text-color);">${p}</p>`;
                                         });
                                         document.getElementById('dyn-content').innerHTML = fullHTML;
                                     }
@@ -5269,8 +5297,8 @@
                                             <div class="d-flex align-items-center mb-3">
                                                 <img src="${sa.urlToImage}" class="rounded-circle me-3" style="width:60px; height:60px; object-fit:cover;"/>
                                                 <div>
-                                                    <div style="font-size:10px; color:#008d7f;" class="text-uppercase fw-bold mb-1">${(sa.source && sa.source.name) ? sa.source.name : 'FACTS'}</div>
-                                                    <a href="${sa.url}" style="font-size:13px; font-weight:600; color:var(--heading-color); line-height:1.2; display:block;" onclick="localStorage.setItem('nm_article_${sideSlug}', decodeURIComponent('${encodeURIComponent(JSON.stringify(sa))}')); window.location.href='/news/article/${sideSlug}'; return false;">${sa.title}</a>
+                                                    <div style="font-size:0.625rem; color:#008d7f;" class="text-uppercase fw-bold mb-1">${(sa.source && sa.source.name) ? sa.source.name : 'FACTS'}</div>
+                                                    <a href="${sa.url}" style="font-size:0.8125rem; font-weight:600; color:var(--heading-color); line-height:1.2; display:block;" onclick="localStorage.setItem('nm_article_${sideSlug}', decodeURIComponent('${encodeURIComponent(JSON.stringify(sa))}')); window.location.href='/news/article/${sideSlug}'; return false;">${sa.title}</a>
                                                 </div>
                                             </div>
                                             `;
@@ -5371,41 +5399,473 @@
     </template>
 
     <!-- =========================================================
-         CHECKOUT + PAYMENT LAYOUT
+         PAYMENT PAGE
 
-         /shop/checkout and /shop/payment share one shape: the method chooser
-         is the first box in the LEFT column, so its top edge lines up with the
-         Order Summary card in the RIGHT column.
-
-             left                        right
-             ┌──────────────────────┐    ┌──────────────────┐
-             │ Delivery Method      │    │ Order Summary    │
-             │  ○ Standard   $5.00  │    │ items / totals   │
-             └──────────────────────┘    │ [ Pay now ]      │
-             ┌──────────────────────┐    └──────────────────┘
-             │ Delivery address     │
-             │ Billing address      │
-             └──────────────────────┘
-
-         The delivery form is rendered natively in place — it is NOT mirrored
-         into the right-hand card any more. website_sale's own Checkout
-         interaction (selector '#shop_checkout') owns the radios, fetches the
-         rates and re-renders '#o_delivery_form', so there is no cloned DOM to
-         keep in sync.
-
-         Card chrome for all three boxes (.o_delivery_form, #payment_method,
-         .o_total_card) lives in theme.css under "CHECKOUT + PAYMENT BOXES" so
-         one set of rules covers both pages.
+         Same shape as /shop/checkout: a heading, the method box under it, and
+         the order summary card on the right lined up with that box.
          ========================================================= -->
-    <template id="av_checkout_right_column" inherit_id="website_sale.checkout_layout">
-        <!-- Name the right-hand card, desktop. -->
-        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.cart_summary_content']" position="before">
-            <h4 class="av-checkout-box-title">Order Summary</h4>
-        </xpath>
-        <!-- Same title in the mobile offcanvas so both read identically. -->
-        <xpath expr="//div[hasclass('offcanvas-body')]//t[@t-call='website_sale.cart_summary_content']" position="before">
-            <h4 class="av-checkout-box-title">Order Summary</h4>
+
+    <!-- The checkout heading is a real <h4>; core renders this one as a <p>
+         carrying the .h4 class, which is why the two pages' section titles did
+         not look alike. Same element, same classes, so the typography matches
+         by construction rather than by a CSS patch. The h5/h4 swap for the
+         collapsed "Other payment methods" state is preserved. -->
+    <template id="av_payment_method_heading" inherit_id="payment.form"
+              name="Aveenix: Payment Method Heading">
+        <xpath expr="//div[@id='o_payment_methods']/p" position="replace">
+            <h4 t-attf-class="mb-3 {{collapse_payment_methods and 'h5' or 'h4'}}">
+                <t t-if="not collapse_payment_methods">Payment method</t>
+                <t t-else="">Other payment methods</t>
+                <t t-call="payment.availability_report_button"/>
+            </h4>
         </xpath>
     </template>
 
+    <!-- Move the payment form into the right-hand card, where /shop/checkout
+         puts the delivery form. It is rendered here rather than cloned or moved
+         with JS: #o_payment_form carries Odoo's payment JS (providers, tokens,
+         inline provider forms), and a second copy or a re-parented node is the
+         kind of thing that breaks quietly at the worst moment. Every value
+         payment.form needs is already in scope — the controller passes them to
+         website_sale.payment, which t-calls this layout.
+
+         The original is removed from the left column below, so the form is
+         rendered exactly once. -->
+    <template id="av_payment_right_column" inherit_id="website_sale.checkout_layout"
+              name="Aveenix: Payment Method in Summary Card">
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.total']" position="before">
+            <t t-if="request.httprequest.path == '/shop/payment' and not errors and website_sale_order.amount_total">
+                <div id="av_pay_right" class="mb-4">
+                    <t t-call="payment.form"/>
+                </div>
+            </t>
+        </xpath>
+        <!-- Items live in the left column on this page, as on /shop/checkout,
+             so the card is left holding the method, the totals and the CTA. -->
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.cart_summary_content']" position="attributes">
+            <attribute name="t-if">request.httprequest.path not in ('/shop/checkout', '/shop/payment')</attribute>
+        </xpath>
+    </template>
+
+    <template id="av_payment_left_column" inherit_id="website_sale.payment"
+              name="Aveenix: Payment Page Left Column">
+        <!-- Order summary + items, matching #shop_cart on /shop/checkout.
+             cart_summary_content rather than cart_lines: quantities should not
+             still be editable once the customer is on the payment step. -->
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div id="shop_cart" class="mb-4">
+                <h4 class="mb-3">Order summary</h4>
+                <div class="card bg-white p-3 shadow-sm rounded">
+                    <t t-call="website_sale.cart_summary_content"/>
+                </div>
+            </div>
+            <style>
+                /* The summary card is desktop-only in core (d-none d-lg-block),
+                   because on mobile the offcanvas and the sticky bar stand in
+                   for it. The payment form now lives in that card, so on this
+                   page it has to be visible on mobile too — and the offcanvas
+                   and sticky bar have to go, or the customer gets two order
+                   summaries and two Pay now buttons. */
+                @media (max-width: 991.98px) {
+                    .o_website_sale_checkout_container > .row > div:has(> .o_total_card) {
+                        display: block !important;
+                    }
+                    /* Core hides the card's contents a SECOND time, on a
+                       .d-none.d-lg-block wrapper inside .card-body — unhiding
+                       only the column left the payment form (and the totals)
+                       invisible on mobile, with nothing but the Pay now button
+                       to show for the step. */
+                    .o_total_card .card-body > .d-none.d-lg-block {
+                        display: block !important;
+                    }
+                    .o_website_sale_checkout_container .o_mobile_summary,
+                    #o_cart_summary_offcanvas {
+                        display: none !important;
+                    }
+                }
+
+                /* Provider inline forms have to fit the narrower card.
+
+                   The demo form (and others like it) lays its fields out with
+                   `col-md`, and Bootstrap's breakpoints answer to the VIEWPORT,
+                   not to the container — so on a wide screen it still split
+                   into two columns inside a card that is now about 40% of the
+                   row, and the "Payment Status" select clipped its own options.
+                   Stack them instead; there is no width here worth splitting. */
+                #av_pay_right .row > [class*="col-md"] {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                }
+                #av_pay_right .row {
+                    row-gap: 0.75rem;
+                }
+                /* Belt and braces for any provider that ships a wide field or
+                   an iframe of its own: keep it inside the card rather than
+                   letting it push the column open. */
+                #av_pay_right input,
+                #av_pay_right select,
+                #av_pay_right iframe {
+                    max-width: 100%;
+                }
+
+                /* Line the two columns up: "Order summary" sits on the page
+                   above its card, so drop the right-hand card by the height of
+                   that heading — an h4 line box plus its .mb-3 — less the
+                   card's own border. --av-h4-font mirrors Bootstrap's h4:
+                   fluid below 1200px (RFS), 1.5rem from there up. */
+                @media (min-width: 992px) {
+                    .o_total_card {
+                        --av-h4-font: calc(1.275rem + 0.3vw);   /* Bootstrap h4, below 1200px */
+                        --av-h4-line: 1.2;                      /* $headings-line-height     */
+                        --av-h4-gap:  1rem;                     /* .mb-3 on the heading      */
+
+                        margin-top: calc(var(--av-h4-font) * var(--av-h4-line)
+                                       + var(--av-h4-gap) - 1px) !important;
+                    }
+                }
+
+                @media (min-width: 1200px) {
+                    .o_total_card {
+                        --av-h4-font: 1.5rem;    /* $h4-font-size, above RFS */
+                    }
+                }
+            </style>
+        </xpath>
+
+        <!-- Rendered in the summary card instead; removed here so there is
+             exactly one #o_payment_form on the page. -->
+        <xpath expr="//div[@id='payment_method']" position="replace"/>
+    </template>
+
+    <!-- Swap Layout: Products on Left, Delivery on Right -->
+    <template id="av_checkout_right_column" inherit_id="website_sale.checkout_layout">
+        <!-- Hide products on the right / offcanvas during checkout -->
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.cart_summary_content']" position="attributes">
+            <attribute name="t-if">request.httprequest.path != '/shop/checkout'</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('offcanvas-body')]//t[@t-call='website_sale.cart_summary_content']" position="attributes">
+            <attribute name="t-if">request.httprequest.path != '/shop/checkout'</attribute>
+        </xpath>
+        
+        <!-- Add Delivery Method on right (Desktop) — JS mirror fills this -->
+        <xpath expr="//div[hasclass('card-body')]//t[@t-call='website_sale.total']" position="before">
+            <t t-if="request.httprequest.path == '/shop/checkout' and website_sale_order and website_sale_order._has_deliverable_products()">
+                <div class="mb-4">
+                    <div id="av_deli_right" style="max-height: 280px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 6px; padding: 4px 0;">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="av_checkout_left_column" inherit_id="website_sale.checkout">
+        <!-- Inject Products at the top of left column -->
+        <xpath expr="//div[@id='shop_checkout']" position="before">
+            <style>
+                /* The delivery form is mirrored into the right-hand summary
+                   card, so hide the original — but only from lg up, which is
+                   the only place that card is rendered (it is d-none d-lg-block).
+                   Below lg the original IS the delivery selector, and hiding it
+                   left the customer with no way to choose a delivery method.
+                   Hide the whole .mb-4 wrapper, not just the form, so its
+                   bottom margin goes with it. */
+                @media (min-width: 992px) {
+                    #shop_checkout > div.mb-4:first-child { display: none !important; }
+                }
+
+                /* Line "Order summary" up with "Delivery method".
+
+                   "Order summary" sits flush at the top of the left column,
+                   while "Delivery method" is pushed down inside the right card
+                   by the card border, the card body's top padding and the
+                   delivery box's own border and padding. Offsetting the left
+                   title by that same total puts both titles on one line.
+
+                   Each term below maps to a real rule, so if one of them is
+                   ever retuned it is clear what has to move with it. Scoped to
+                   lg and up, which is the only place the right-hand card shows
+                   (it is d-none d-lg-block). */
+                @media (min-width: 992px) {
+                    /* Pull the card's own top padding in, so the delivery
+                       box starts just under the card's top edge rather than an
+                       inch below it. */
+                    .o_total_card > .card-body {
+                        padding-top: 8px !important;
+                    }
+                    #av_deli_right {
+                        padding-top: 0 !important;
+                    }
+
+                    /* Line the two BOXES up: the products card on the left
+                       and the delivery box on the right. "Order summary" stays
+                       where it is, as a heading above its card.
+
+                       So the delivery card drops by exactly the space that
+                       heading occupies — an h4 line box plus its .mb-3 — less
+                       the card's own border and top padding, since the delivery
+                       box sits that far inside the card:
+
+                           h4 line box + 1rem  -  (1px border + 8px card pad)
+
+                       Bootstrap sizes h4 with RFS, so --av-h4-font mirrors its
+                       own definition: fluid below 1200px, 1.5rem from there up
+                       ($h4-font-size), with $headings-line-height = 1.2. */
+                    #shop_cart {
+                        margin-top: 0 !important;
+                        padding-top: 0;
+                    }
+                    .o_total_card {
+                        --av-h4-font: calc(1.275rem + 0.3vw);  /* Bootstrap h4, below 1200px */
+                        --av-h4-line: 1.2;                     /* $headings-line-height  */
+                        --av-h4-gap:  1rem;                    /* .mb-3 on the heading   */
+                        --av-card-inset: 9px;                  /* 1px border + 8px pad   */
+
+                        margin-top: calc(var(--av-h4-font) * var(--av-h4-line)
+                                       + var(--av-h4-gap)
+                                       - var(--av-card-inset)) !important;
+                    }
+                }
+
+                @media (min-width: 1200px) {
+                    .o_total_card {
+                        --av-h4-font: 1.5rem;    /* $h4-font-size, above RFS */
+                    }
+                }
+
+                /* Dark mode: selected address card clearly visible */
+                .o_address_card.bg-400 {
+                    background-color: #cc000020 !important;
+                    border-color: #CC0000 !important;
+                    box-shadow: 0 0 0 2px #CC0000 !important;
+                }
+                /* Delivery method heading — center */
+                #av_deli_right h4 {
+                    /* Left-aligned, like "Order summary" and "Payment method".
+                       The 14px inset matches the list rows below it. */
+                    text-align: left;
+                    padding: 8px 14px 4px;
+                    margin-bottom: 4px;
+                    border-bottom: 1px solid rgba(128,128,128,0.2);
+
+                    /* The box scrolls to whichever method is selected, which
+                       used to carry this title out of view and leave nothing at
+                       the top of the card for "Order summary" to line up with.
+                       Pin it so it always sits at the top of the box. */
+                    position: sticky;
+                    top: 0;
+                    z-index: 2;
+                    background-color: #fff;
+                }
+                [data-theme="dark"] #av_deli_right h4 {
+                    background-color: #181818;   /* matches .o_total_card in dark */
+                }
+                /* Delivery method box inner padding and pointer cursor */
+                #av_deli_right [name="o_delivery_method"],
+                #av_deli_right .list-group-item,
+                #av_deli_right .o_delivery_carrier_select {
+                    padding: 8px 14px !important;
+                    cursor: pointer;
+                }
+                /* One hairline between rows, not two.
+
+                   Bootstrap already draws a border on each .list-group-item and
+                   zeroes the top border on every item after the first, so rows
+                   are separated by a single line on their own. Adding a
+                   border-top back put a second line directly under it. Keep
+                   Bootstrap's model, just recolour it and drop the frame around
+                   the list — #av_deli_right already provides the outer border. */
+                #av_deli_right .list-group {
+                    border: 0;
+                    border-radius: 0;
+                }
+                #av_deli_right .list-group-item {
+                    border-left: 0;
+                    border-right: 0;
+                    border-radius: 0;
+                    border-color: rgba(128,128,128,0.2);
+                }
+                #av_deli_right .list-group-item:first-child {
+                    border-top: 0;
+                }
+                #av_deli_right .list-group-item:last-child {
+                    border-bottom: 0;
+                }
+            </style>
+            <script>
+                (function () {
+                    /* Mirror o_delivery_form -> the right-column scroll box.
+                       Desktop only: below lg the right-hand card is hidden and
+                       the original form is shown in the page flow instead, with
+                       Odoo's own interaction driving it. */
+                    function avSyncDelivery() {
+                        var src = document.getElementById('o_delivery_form');
+                        if (!src) return;
+
+                        var origChecked = src.querySelector('input[name="o_delivery_radio"]:checked') ||
+                                          src.querySelector('input[type="radio"]:checked');
+                        var checkedDmId = origChecked ? (origChecked.dataset.dmId || origChecked.value) : null;
+
+                        var id = 'av_deli_right';
+                        var dest = document.getElementById(id);
+                        if (!dest) return;
+                        var clone = src.cloneNode(true);
+                        clone.removeAttribute('id');
+                        clone.style.display = '';
+
+                        /* Remove "Not available." items */
+                        clone.querySelectorAll('[name="o_delivery_method"], li.list-group-item, .o_delivery_carrier_select').forEach(function (li) {
+                            var badge = li.querySelector('.o_wsale_delivery_price_badge, [name="price"], .o_delivery_price_badge');
+                            if (badge) {
+                                var txt = badge.textContent.trim();
+                                if (txt === 'Not available.' || txt.indexOf('not available') !== -1) {
+                                    li.parentNode &amp;&amp; li.parentNode.removeChild(li);
+                                }
+                            }
+                        });
+
+                        /* Set unique radio names and ids to avoid DOM collisions and keep checked state */
+                        clone.querySelectorAll('input[type="radio"], input[name="o_delivery_radio"]').forEach(function (input) {
+                            var dmId = input.dataset.dmId || input.value;
+                            input.name = 'delivery_radio_' + id;
+                            input.removeAttribute('disabled');
+                            if (checkedDmId &amp;&amp; String(dmId) === String(checkedDmId)) {
+                                input.checked = true;
+                            }
+                            if (input.id) {
+                                var oldId = input.id;
+                                var newId = oldId + '_' + id;
+                                input.id = newId;
+                                var lbl = clone.querySelector('label[for="' + oldId + '"]');
+                                if (lbl) {
+                                    lbl.setAttribute('for', newId);
+                                }
+                            }
+                        });
+
+                        dest.innerHTML = '';
+                        dest.appendChild(clone);
+                    }
+
+                    function updateSummaryTotals(res) {
+                        if (!res) return;
+                        document.querySelectorAll('#o_cart_summary_offcanvas, div.o_total_card, .o_total_card').forEach(function (targetEl) {
+                            var amountDelivery = targetEl.querySelector('tr[name="o_order_delivery"] .monetary_field');
+                            var amountUntaxed = targetEl.querySelector('tr[name="o_order_total_untaxed"] .monetary_field');
+                            var amountTax = targetEl.querySelector('tr[name="o_order_total_taxes"] .monetary_field');
+                            var parent = targetEl.parentElement || targetEl;
+                            var amountTotal = parent.querySelectorAll('tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field');
+
+                            if (amountDelivery) {
+                                if (amountDelivery.classList.contains('d-none')) {
+                                    var noDmMsg = amountDelivery.querySelector('span[name="o_message_no_dm_set"]');
+                                    if (noDmMsg) noDmMsg.classList.add('d-none');
+                                    amountDelivery.classList.remove('d-none');
+                                }
+                                if (res.amount_delivery) amountDelivery.innerHTML = res.amount_delivery;
+                            }
+                            if (amountUntaxed &amp;&amp; res.amount_untaxed) amountUntaxed.innerHTML = res.amount_untaxed;
+                            if (amountTax &amp;&amp; res.amount_tax) amountTax.innerHTML = res.amount_tax;
+                            if (amountTotal &amp;&amp; res.amount_total) {
+                                amountTotal.forEach(function (el) { el.innerHTML = res.amount_total; });
+                            }
+                        });
+                    }
+
+                    function handleDeliverySelect(e) {
+                        var target = e.target;
+                        var container = target.closest &amp;&amp; target.closest('#av_deli_right');
+                        if (!container) return;
+
+                        var item = target.closest('[name="o_delivery_method"], li.list-group-item, .form-check, .o_delivery_carrier_select');
+                        if (!item) return;
+
+                        var radio = item.querySelector('input[type="radio"], input[name^="delivery_radio_"], input[name="o_delivery_radio"]');
+                        if (!radio) return;
+
+                        var dmId = radio.dataset.dmId || radio.value;
+                        if (!dmId &amp;&amp; radio.id) {
+                            var match = radio.id.match(/\d+/);
+                            if (match) dmId = match[0];
+                        }
+                        if (!dmId) return;
+
+                        // Reflect the choice on the mirror's own radios
+                        var dest = document.getElementById('av_deli_right');
+                        if (dest) {
+                            dest.querySelectorAll('input[type="radio"]').forEach(function (r) {
+                                var rDmId = r.dataset.dmId || r.value;
+                                if (!rDmId &amp;&amp; r.id) {
+                                    var m = r.id.match(/\d+/);
+                                    if (m) rDmId = m[0];
+                                }
+                                r.checked = (String(rDmId) === String(dmId));
+                            });
+                        }
+
+                        // Trigger Odoo's native handler on #o_delivery_form
+                        var src = document.getElementById('o_delivery_form');
+                        if (src) {
+                            var origRadio = src.querySelector('input[data-dm-id="' + dmId + '"]') ||
+                                            src.querySelector('#o_delivery_' + dmId) ||
+                                            src.querySelector('input[value="' + dmId + '"]');
+                            if (origRadio) {
+                                origRadio.removeAttribute('disabled');
+                                origRadio.checked = true;
+                                origRadio.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                                origRadio.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        }
+
+                        // Also directly call set_delivery_method RPC to guarantee totals update instantly
+                        fetch('/shop/set_delivery_method', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: { dm_id: parseInt(dmId) }
+                            })
+                        }).then(function (response) {
+                            return response.json();
+                        }).then(function (json) {
+                            if (json &amp;&amp; json.result) {
+                                updateSummaryTotals(json.result);
+                            }
+                        }).catch(function () {});
+                    }
+
+                    document.addEventListener('click', handleDeliverySelect, true);
+                    document.addEventListener('change', function (e) {
+                        var target = e.target;
+                        var container = target.closest &amp;&amp; target.closest('#av_deli_right');
+                        if (container &amp;&amp; target.matches &amp;&amp; target.matches('input[type="radio"]')) {
+                            handleDeliverySelect(e);
+                        }
+                    }, true);
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        /* Initial sync after page load */
+                        setTimeout(avSyncDelivery, 600);
+
+                        /* Watch the o_delivery_form PARENT for the innerHTML swap */
+                        var formParent = document.querySelector('#o_delivery_form')
+                                          ? document.querySelector('#o_delivery_form').parentElement
+                                          : document.getElementById('o_checkout_form');
+                        if (formParent) {
+                            new MutationObserver(function () {
+                                setTimeout(avSyncDelivery, 1000);
+                            }).observe(formParent, { childList: true, subtree: true, characterData: true });
+                        }
+                    });
+                })();
+            </script>
+            <div id="shop_cart" class="mb-4 mt-2">
+                <h4 class="mb-3">Order summary</h4>
+                <div class="card bg-white p-3 shadow-sm rounded">
+                    <t t-call="website_sale.cart_lines"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
 </odoo>

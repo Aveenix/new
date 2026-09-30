@@ -38,7 +38,7 @@ function initNewsPage() {
 
     const categoryColors = {
         '#nm-global-news': '#00a69c',     // Teal
-        '#nm-travel-guides': '#f39c12',   // Orange
+        '#nm-lifestyle-section': '#f39c12',   // Orange
         '#nm-must-read-list': '#e84393',  // Pink/Purple
         '#nm-gaming-section': '#e32636',  // Red
         '#nm-fitness-section': '#27ae60'  // Green
@@ -66,7 +66,7 @@ function initNewsPage() {
 
         const sections = [
             { id: '#nm-global-news', el: document.querySelector('#nm-global-news') },
-            { id: '#nm-travel-guides', el: document.querySelector('#nm-travel-guides') },
+            { id: '#nm-lifestyle-section', el: document.querySelector('#nm-lifestyle-section') },
             { id: '#nm-must-read-list', el: document.querySelector('#nm-must-read-list') },
             { id: '#nm-gaming-section', el: document.querySelector('#nm-gaming-section') },
             { id: '#nm-fitness-section', el: document.querySelector('#nm-fitness-section') }
@@ -262,10 +262,21 @@ async function fetchNews() {
         // Fetch directly from our local Odoo API (much faster, no rate limits!)
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
-        let url = `/api/v1/news?limit=100`;
-        if (category) {
-            url += `&category=${category}`;
-        }
+
+        // Every block on this page draws from its own section, so ask for the
+        // newest few of EVERY section rather than the newest 100 overall.
+        //
+        // Date order alone does not feed the page: of the 100 most recent
+        // articles, Gaming had none and Recipes one, while Gadgets and Showbiz
+        // had 25 each. The thin sections simply were not in the pool, and the
+        // blocks that ran dry were padded with whatever was left — which is
+        // how Recipes came to show phone reviews.
+        //
+        // 16 is the largest any one section is asked for below: Global feeds
+        // the hero (5), the Global block (5) and, behind Facts, Latest (6).
+        const url = category
+            ? `/api/v1/news?limit=100&category=${encodeURIComponent(category)}`
+            : `/api/v1/news?per_category=16`;
         const res = await fetch(url);
         
         if (res.ok) {
@@ -311,31 +322,33 @@ async function fetchNews() {
 
         window.nmValidArticles = validArticles;
 
-        // Each section draws from its own category. This used to be a set of
-        // positional slices — slice(30, 31) for Gaming, slice(25, 30) for
-        // Fitness and so on — so whatever article happened to sit at that
-        // index ended up in the section, whatever it was about.
+        // Each block draws from its own section — or, where two are named, from
+        // the second once the first runs out. What it does NOT do any more is
+        // top up from "whatever is left": that fallback is what put celebrity
+        // news under GAMING and gadget reviews under RECIPES. A block that has
+        // only two articles of its own now shows two.
         //
-        // take() hands out the next unused articles of a category and, only
-        // once those run out, tops the list up from whatever is left so a
-        // section never renders as an empty hole.
+        // /news?category=… is the one exception: there the whole page is a
+        // single category, so every block draws from that one pool.
         const used = new Set();
         const take = (sections, count) => {
-            const wanted = Array.isArray(sections) ? sections : [sections];
+            const wanted = category
+                ? null
+                : (Array.isArray(sections) ? sections : [sections]);
             const picked = [];
-            for (const section of wanted) {
+            const pass = section => {
                 for (const article of validArticles) {
-                    if (picked.length >= count) break;
-                    if (used.has(article) || article.category !== section) continue;
+                    if (picked.length >= count) return;
+                    if (used.has(article)) continue;
+                    if (section !== null && article.category !== section) continue;
                     used.add(article);
                     picked.push(article);
                 }
-            }
-            for (const article of validArticles) {   // top-up, any category
-                if (picked.length >= count) break;
-                if (used.has(article)) continue;
-                used.add(article);
-                picked.push(article);
+            };
+            if (wanted === null) {
+                pass(null);
+            } else {
+                wanted.forEach(pass);
             }
             return picked;
         };
@@ -344,11 +357,16 @@ async function fetchNews() {
         renderHero(take('GLOBAL', 5));
         renderGlobalNews(take('GLOBAL', 5));
 
-        renderTravelGuides(take('TRAVEL', 3));
+        // The block under the LIFESTYLE heading — the nav's "Lifestyle" link
+        // points at it — was fed TRAVEL, so it showed flight and hotel stories
+        // under a lifestyle title. Style is what the site's own slug map calls
+        // lifestyle (see cat_map in the controllers), so that is what it gets;
+        // Travel moves to the four-column block below, which now says so.
+        renderLifestyle(take('STYLE', 3));
 
         renderTwoCol(take('GADGETS', 4), 'nm-gadgets-section');
         renderTwoCol(take('RECIPES', 4), 'nm-recipes-section');
-        renderFourCol(take('STYLE', 4));
+        renderFourCol(take('TRAVEL', 4));
 
         renderFitnessList(take('FITNESS', 5), 'nm-fitness-section');
         renderGamingMain(take('GAMING', 1), 'nm-gaming-section');
@@ -358,7 +376,10 @@ async function fetchNews() {
         renderPopularList(take(['SHOWBIZ', 'STYLE'], 10), 'nm-popular-list');
 
         // "Must read" is the Fashion slot — the sidebar Fashion link points here.
-        renderMustReadList(take(['FASHION', 'SHOWBIZ'], 5), 'nm-must-read-list');
+        // Fashion only. Topping it up from Showbiz put actor and box-office
+        // stories under a FASHION heading, which is the same complaint as the
+        // silent top-up, just spelled out.
+        renderMustReadList(take('FASHION', 5), 'nm-must-read-list');
 
         renderYoutubePlaylist('nm-youtube-section');
 
@@ -385,9 +406,9 @@ function renderCategoriesWidget(validArticles) {
         { name: 'Fashion', key: 'FASHION', anchor: '/news?category=fashion' },
         { name: 'Fitness', key: 'FITNESS', anchor: '/news#nm-fitness-section' },
         { name: 'Gaming', key: 'GAMING', anchor: '/news#nm-gaming-section' },
-        { name: 'Style', key: 'STYLE', anchor: '/news?category=style' },
+        { name: 'Style', key: 'STYLE', anchor: '/news#nm-lifestyle-section' },
         { name: 'Showbiz', key: 'SHOWBIZ', anchor: '/news#nm-must-read-list' },
-        { name: 'Travel', key: 'TRAVEL', anchor: '/news#nm-travel-guides' },
+        { name: 'Travel', key: 'TRAVEL', anchor: '/news#nm-travel-section' },
         { name: 'Facts', key: 'FACTS', anchor: '/news?category=facts' },
         { name: 'Gadgets', key: 'GADGETS', anchor: '/news#nm-gadgets-section' },
         { name: 'Recipes', key: 'RECIPES', anchor: '/news#nm-recipes-section' },
@@ -510,11 +531,11 @@ function renderGlobalNews(articles) {
     container.innerHTML = mainHtml + listHtml;
 }
 
-function renderTravelGuides(articles) {
-    const container = document.getElementById('nm-travel-guides');
+function renderLifestyle(articles) {
+    const container = document.getElementById('nm-lifestyle-section');
     if(!container) return;
     if(!articles || articles.length === 0) {
-        container.innerHTML = '<p style="padding: 20px;">No travel guides available at the moment.</p>';
+        container.innerHTML = '<p style="padding: 20px;">No lifestyle articles available at the moment.</p>';
         return;
     }
     
@@ -522,7 +543,7 @@ function renderTravelGuides(articles) {
         <div class="nm-tg-item">
             <div class="nm-tg-img-wrap" style="background-image: url('${article.urlToImage}');"></div>
             <div class="nm-tg-info">
-                <span class="nm-category-text">${(article.source.name || 'TRAVEL').substring(0, 15)}</span>
+                <span class="nm-category-text">${(article.source.name || 'LIFESTYLE').substring(0, 15)}</span>
                 <h3 class="nm-post-title"><a href="${article.url}" target="_blank">${article.title}</a></h3>
             </div>
         </div>
@@ -561,7 +582,7 @@ function renderTwoCol(articles, containerId) {
 }
 
 function renderFourCol(articles) {
-    const container = document.getElementById('nm-four-col-grid');
+    const container = document.getElementById('nm-travel-section');
     if(!container) return;
     if(!articles || articles.length === 0) { container.innerHTML = '<p style="padding: 20px;">No articles available.</p>'; return; }
     
@@ -570,7 +591,7 @@ function renderFourCol(articles) {
             <div class="nm-overlay"></div>
             <div class="nm-article-content" style="padding: 15px;">
                 <span class="nm-category-badge" style="background-color: #222;">${(article.source.name || 'TREND').substring(0, 15)}</span>
-                <h3 class="nm-article-title-small" style="font-size: 13px;"><a href="${article.url}" style="color:white;" target="_blank">${article.title}</a></h3>
+                <h3 class="nm-article-title-small" style="font-size: 0.8125rem;"><a href="${article.url}" style="color:white;" target="_blank">${article.title}</a></h3>
             </div>
         </article>
     `).join('');
@@ -590,13 +611,13 @@ function renderFitnessList(articles, containerId) {
                 <div class="nm-article-meta nm-dark-meta" style="margin-bottom:5px;">
                     <a href="#" class="nm-category-text" style="color: #478fe0; margin-right:5px;">${(article.source.name || 'FITNESS').substring(0, 15)}</a>
                 </div>
-                <h3 class="nm-post-title" style="font-size:20px; font-weight:500; margin-bottom:10px; line-height:1.2;">
+                <h3 class="nm-post-title" style="font-size:1.25rem; font-weight:500; margin-bottom:10px; line-height:1.2;">
                     <a href="${article.url}" class="nm-fitness-link" target="_blank">${article.title}</a>
                 </h3>
-                <div class="nm-article-meta nm-dark-meta" style="margin-bottom:8px; font-size:11px;">
+                <div class="nm-article-meta nm-dark-meta" style="margin-bottom:8px; font-size:0.6875rem;">
                     <span class="nm-author">${article.author || 'David Lee'}</span> - <span class="nm-date">${formatDate(article.publishedAt)}</span>
                 </div>
-                <p class="nm-post-excerpt" style="font-size:13px; line-height:1.6; margin:0;">${(article.description || '').substring(0, 120)}...</p>
+                <p class="nm-post-excerpt" style="font-size:0.8125rem; line-height:1.6; margin:0;">${(article.description || '').substring(0, 120)}...</p>
             </div>
         </article>
     `).join('');
@@ -612,10 +633,10 @@ function renderGamingMain(articles, containerId) {
     const html = `
         <div class="nm-gn-main">
             <img src="${articles[0].urlToImage}" onerror="this.style.display='none';" alt="" style="width: 100%; height: auto; display: block; margin-bottom: 10px;">
-            <div class="nm-article-meta nm-dark-meta" style="margin-bottom: 5px; font-size: 11px;">
+            <div class="nm-article-meta nm-dark-meta" style="margin-bottom: 5px; font-size: 0.6875rem;">
                 <span class="nm-category-text" style="color: #e86aa1; margin-right:10px;">${(articles[0].source.name || 'GAMING').substring(0, 15)}</span>
             </div>
-            <h3 class="nm-post-title" style="font-size: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.2;">
+            <h3 class="nm-post-title" style="font-size: 1.25rem; margin-bottom: 10px; font-weight: 500; line-height: 1.2;">
                 <a href="${articles[0].url}" class="nm-gaming-link" target="_blank">${articles[0].title}</a>
             </h3>
         </div>
@@ -638,7 +659,7 @@ function renderLatestArticles(articles) {
             <div class="nm-post-info">
                 <a href="#" class="nm-category-text">${(article.source.name || 'LATEST').substring(0, 15)}</a>
                 <h3 class="nm-post-title"><a href="${article.url}" target="_blank">${article.title}</a></h3>
-                <div class="nm-article-meta nm-dark-meta" style="font-size: 11px;">
+                <div class="nm-article-meta nm-dark-meta" style="font-size: 0.6875rem;">
                     <span class="nm-author">${article.author || 'David Lee'}</span> - <span class="nm-date">${formatDate(article.publishedAt)}</span>
                 </div>
             </div>
@@ -676,7 +697,7 @@ function renderMustReadList(articles, containerId) {
             <div class="nm-post-info">
                 <a href="#" class="nm-category-text">${(article.source.name || 'READ').substring(0, 15)}</a>
                 <h4 class="nm-post-title"><a href="${article.url}" target="_blank">${article.title}</a></h4>
-                <div class="nm-article-meta nm-dark-meta" style="font-size: 11px;">
+                <div class="nm-article-meta nm-dark-meta" style="font-size: 0.6875rem;">
                     <span class="nm-date">${formatDate(article.publishedAt)}</span>
                 </div>
             </div>

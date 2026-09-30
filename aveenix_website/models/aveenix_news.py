@@ -19,15 +19,22 @@ _TITLE_HAS_WORDS = re.compile(r'[^\W\d_]{2,}.*[^\W\d_]{2,}', re.DOTALL)
 # (business, crime, domestic, education, entertainment, environment, food,
 # health, lifestyle, other, politics, science, sports, technology, top,
 # tourism, world) and no category at all for Gaming or Fashion. So an article
-# is placed in three passes:
+# is placed by the signals it has, strongest first:
 #
-#   1. keyword rules on the headline + summary — these decide the sections
-#      NewsData.io cannot express, and they also override a too-broad API
-#      category (a PlayStation story arrives as "technology" but belongs in
-#      Gaming, not Gadgets);
+#   1. keyword rules on the HEADLINE — what the article announces itself to be
+#      about, and the only text a reader sees under the section heading. These
+#      decide the sections NewsData.io cannot express, and they override a
+#      too-broad API category (a PlayStation story arrives as "technology" but
+#      belongs in Gaming, not Gadgets);
 #   2. the API category, walked in a fixed specific-to-general order so a
 #      multi-category article always lands in the same place;
-#   3. Global, as the catch-all.
+#   3. the same keyword rules on the SUMMARY, but only where it comes back to
+#      one subject at least twice. A summary is long enough that a single
+#      passing mention says nothing: a Ugly Betty cast retrospective the source
+#      had tagged `entertainment` was filed under Gadgets because its summary
+#      used the word "battery" once, and a Kyiv strike report went the same way.
+#      That is why the summary is weighed last, and on corroboration;
+#   4. Global, as the catch-all.
 #
 # Note that "sports" is deliberately absent from the map below. There is no
 # sports section, and mapping it onto Fitness is what filled Fitness with
@@ -279,13 +286,43 @@ class AveenixNews(models.Model):
     # ── Classification ───────────────────────────────────────────────────
 
     @api.model
+    def _av_best_section(self, text, min_hits):
+        """The section a piece of text is about, or None if it does not say.
+
+        Scores every section and keeps the one matching the most DISTINCT
+        terms, rather than the first pattern that happens to hit. Two things
+        fall out of that: a text that keeps returning to a subject beats one
+        that mentions it once, and the arbitrary win a narrow section used to
+        get purely by being declared first is gone. Ties still resolve in
+        _SECTION_PATTERNS order, which is what keeps a PlayStation story in
+        Gaming rather than Gadgets.
+
+        :param text: headline or summary.
+        :param min_hits: how many distinct terms the winner must match — 1 for
+            a headline, which is about its subject, and 2 for a summary, which
+            mentions plenty of things it is not about.
+        """
+        best_section, best_hits = None, 0
+        for section, pattern in _SECTION_PATTERNS:
+            hits = len({match.lower() for match in pattern.findall(text)})
+            if hits > best_hits:
+                best_section, best_hits = section, hits
+        return best_section if best_hits >= min_hits else None
+
+    @api.model
     def _av_classify_category(self, api_categories, title, description=None):
         """Pick the site section for one article.
+
+        Signals are taken strongest first — headline, then the category the
+        source itself gave the article, then the summary. The summary used to
+        be read at full strength alongside the headline and *ahead* of the
+        source's own category, which is what let one stray word in a paragraph
+        of prose overrule an explicit `entertainment` tag.
 
         :param api_categories: categories as returned by NewsData.io — a list,
             a comma-separated string, or falsy.
         :param title: the headline (carries most of the signal).
-        :param description: the summary, used as a weaker second signal.
+        :param description: the summary, the weakest of the three signals.
         :return: a value of the ``category`` selection field.
         """
         if isinstance(api_categories, str):
@@ -294,22 +331,24 @@ class AveenixNews(models.Model):
             (c or '').strip().lower() for c in (api_categories or [])
         }
 
-        # 1. Keyword rules. The headline alone decides first: a summary is
-        #    long enough that a passing mention ("...unlike the hotel industry")
-        #    would otherwise drag the article into the wrong section.
-        for text in (title, description):
-            if not text:
-                continue
-            for section, pattern in _SECTION_PATTERNS:
-                if pattern.search(text):
-                    return section
+        # 1. The headline.
+        if title:
+            section = self._av_best_section(title, 1)
+            if section:
+                return section
 
         # 2. The API category, most specific first.
         for api_category in _API_CATEGORY_PRIORITY:
             if api_category in api_categories:
                 return _API_CATEGORY_TO_SECTION[api_category]
 
-        # 3. Catch-all.
+        # 3. The summary, and only where it corroborates itself.
+        if description:
+            section = self._av_best_section(description, 2)
+            if section:
+                return section
+
+        # 4. Catch-all.
         return 'GLOBAL'
 
     def action_reclassify_category(self):

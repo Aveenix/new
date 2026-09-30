@@ -68,14 +68,27 @@ class SaleOrder(models.Model):
             )
         return result
 
-    def _action_confirm(self):
+    def action_confirm(self):
         """Drop affiliate lines before confirming so the real sale order,
         invoice and delivery only ever contain purchasable items. Affiliate
-        items are a redirect reminder in the cart, not something we sell."""
+        items are a redirect reminder in the cart, not something we sell.
+
+        This has to run here rather than in _action_confirm. Core's
+        action_confirm writes state='sale' (_prepare_confirmation_values) and
+        only then calls _action_confirm, so by that point the lines belong to a
+        confirmed order and sale.order.line._unlink_except_confirmed refuses to
+        delete them — "Once a sales order is confirmed, you can't remove one of
+        its lines". Every checkout of a cart holding an affiliate item failed
+        that way, on the website and on /api/v1/cart/checkout alike. Here the
+        order is still a quotation, which is when the lines can still go.
+        """
         for order in self:
             aff_lines = order.order_line.filtered('is_affiliate')
             if aff_lines:
                 aff_lines.unlink()
+        return super().action_confirm()
+
+    def _action_confirm(self):
         result = super()._action_confirm()
         for order in self:
             order._av_notify_customer(
