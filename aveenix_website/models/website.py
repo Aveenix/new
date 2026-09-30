@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -102,6 +102,21 @@ class Website(models.Model):
                     "You can select at most %s header menu categories — the "
                     "header bar has limited space." % self.AVEENIX_HEADER_MENU_MAX
                 )
+
+    def _get_product_sort_mapping(self):
+        """Offer "Latest Added" — products newest-first by id — and nothing else new.
+
+        Core's closest option is `publish_date desc`, which says nothing about
+        an imported catalogue: every product carries the import's own timestamp,
+        so the whole shop ties on one value and the real order is whatever the
+        database happens to return. `create_date` is no better for the same
+        reason. The id is the only column that actually records the order
+        products were added in, so it is what "last added" has to mean here.
+
+        Listed first so it heads the shop's sort dropdown, where it is also the
+        default (see the 19.0.1.0.42 migration).
+        """
+        return [('id desc', _("Latest Added"))] + super()._get_product_sort_mapping()
 
     def _product_domain(self):
         """Scope /shop and all website_sale product queries to this website's

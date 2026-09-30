@@ -718,10 +718,10 @@ class AveenixWebsite(WebsiteSale):
         best_sellers = non_sponsored.sorted(
             key=lambda p: p.sales_count, reverse=True
         )[:row_limit]
-        # New Arrivals: newest products first.
-        new_arrivals = non_sponsored.sorted(
-            key=lambda p: p.create_date or p.id, reverse=True
-        )[:row_limit]
+        # New Arrivals: last added first. Keyed on the id, not create_date —
+        # an imported catalogue shares one create_date across every product, so
+        # sorting on it tied the whole row and left the order to chance.
+        new_arrivals = non_sponsored.sorted(key=lambda p: p.id, reverse=True)[:row_limit]
 
         # ── Featured category rows (admin-selected in Website Settings) ──
         # Each selected category becomes one homepage row after New Arrivals,
@@ -762,9 +762,11 @@ class AveenixWebsite(WebsiteSale):
                 if prods:
                     featured_categories.append({
                         'category': cat,
-                        'products': prods.sorted(
-                            key=lambda p: p.sales_count, reverse=True
-                        )[:row_limit],
+                        # Last added first, same as /shop and every category
+                        # listing. These rows ranked by sales_count, so a
+                        # category's newest stock never showed on the homepage
+                        # until it had outsold what was already there.
+                        'products': prods.sorted(key=lambda p: p.id, reverse=True)[:row_limit],
                     })
 
         # Pass 8 categories: desktop shows 7 (the 8th card is hidden via CSS,

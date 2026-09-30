@@ -76,6 +76,30 @@ class AveenixMobileAPI(http.Controller):
             res['products_preview'] = [self._format_product(p) for p in products]
         return res
 
+    def _format_affiliate(self, tmpl, display_price):
+        """The affiliate block carried by every payload that names a product.
+
+        Affiliate products are bought on a partner's site, so their order lines
+        are held at price 0 and dropped at confirm (sale.order.action_confirm).
+        A caller reading only `price_unit` therefore cannot tell an affiliate
+        item from a free one. Every product-bearing response returns these four
+        keys from here, so the app branches on one contract instead of a
+        different shape per endpoint.
+
+        `display_price` is what the retailer charges: the template price for a
+        catalogue entry, the line's stored snapshot for a cart line. It is 0 for
+        non-affiliate products, matching sale.order.line.affiliate_display_price.
+        """
+        is_affiliate = (
+            tmpl.aveenix_product_type == 'affiliate' and bool(tmpl.affiliate_url)
+        )
+        return {
+            'aveenix_product_type': tmpl.aveenix_product_type or '',
+            'is_affiliate': is_affiliate,
+            'affiliate_url': tmpl.affiliate_url if is_affiliate else '',
+            'affiliate_display_price': display_price if is_affiliate else 0.0,
+        }
+
     def _format_product(self, p):
         tmpl = p if p._name == 'product.template' else p.product_tmpl_id
         variant_id = p.id if p._name == 'product.product' else (tmpl.product_variant_id.id if tmpl.product_variant_id else tmpl.id)
@@ -102,8 +126,7 @@ class AveenixMobileAPI(http.Controller):
             'in_stock': tmpl.qty_available > 0 if hasattr(tmpl, 'qty_available') else True,
             'rating_avg': getattr(tmpl, 'rating_avg', 0.0),
             'rating_count': getattr(tmpl, 'rating_count', 0),
-            'affiliate_url': getattr(tmpl, 'affiliate_url', ''),
-            'aveenix_product_type': getattr(tmpl, 'aveenix_product_type', ''),
+            **self._format_affiliate(tmpl, tmpl.list_price),
         }
 
     def _format_order(self, order, is_cart=False):
@@ -111,16 +134,18 @@ class AveenixMobileAPI(http.Controller):
         for line in order.order_line:
             if getattr(line, 'is_delivery', False) or getattr(line, 'display_type', False):
                 continue
+            tmpl = line.product_id.product_tmpl_id
             lines_data.append({
                 'line_id': line.id,
                 'product_id': line.product_id.id,
-                'product_template_id': line.product_id.product_tmpl_id.id,
+                'product_template_id': tmpl.id,
                 'name': line.name or line.product_id.display_name,
                 'quantity': line.product_uom_qty,
                 'price_unit': line.price_unit,
                 'price_subtotal': line.price_subtotal,
                 'price_total': line.price_total,
                 'image_url': f'/web/image/product.product/{line.product_id.id}/image_256',
+                **self._format_affiliate(tmpl, line.affiliate_display_price),
             })
         state_labels = dict(order._fields['state']._description_selection(order.env))
         res = {
@@ -557,10 +582,11 @@ class AveenixMobileAPI(http.Controller):
             return self._error_response(f'Registration failed: {str(e)}', 500)
 
     @http.route('/api/v1/news', type='http', auth='public', methods=['GET', 'OPTIONS'], csrf=False, cors='*')
-    def get_news(self, limit=20, offset=0, category=None, **kw):
+    def get_news(self, limit=20, offset=0, category=None, per_category=None, **kw):
         if request.httprequest.method == 'OPTIONS':
             return self._success_response({'cors': 'ok'})
         domain = []
+        sections = []
         if category:
             # Section slugs map 1:1 onto aveenix.news.category. Mixing buckets
             # here (fashion + showbiz, gaming + facts, fitness + style) made
@@ -578,8 +604,17 @@ class AveenixMobileAPI(http.Controller):
                 'recipes': ['RECIPES'],
                 'travel': ['TRAVEL'],
             }
-            cats = cat_map.get(category.lower(), [category.upper()])
-            domain.append(('category', 'in', cats))
+            # Comma-separated so a caller can ask for several sections at
+            # once; `per_category` below then returns that many of each.
+            sections = []
+            for token in category.split(','):
+                token = token.strip()
+                if not token:
+                    continue
+                for section in cat_map.get(token.lower(), [token.upper()]):
+                    if section not in sections:
+                        sections.append(section)
+            domain.append(('category', 'in', sections))
             
         user_country_id = request.session.get('av_user_country_id')
         if user_country_id:
@@ -595,10 +630,29 @@ class AveenixMobileAPI(http.Controller):
         # Widens to all countries when the visitor's own has too little news to
         # fill the page — otherwise news_script.js pads the layout with
         # placeholder articles that no category count can ever match.
-        domain += request.env['aveenix.news'].sudo()._av_country_scope(country_code)
+        News = request.env['aveenix.news'].sudo()
+        country_scope = News._av_country_scope(country_code)
+        domain += country_scope
 
-
-        news = request.env['aveenix.news'].sudo().search(domain, limit=int(limit), offset=int(offset), order='published_date desc')
+        if per_category:
+            # The newest N of EACH section, rather than the newest N overall.
+            #
+            # The /news page fills one block per section, and date order alone
+            # does not feed them: of the 100 most recent articles, Gaming had
+            # none and Recipes one, so those blocks had nothing of their own to
+            # show and were padded with whatever else was to hand. Asking per
+            # section is what makes the supply match the page.
+            if not sections:
+                sections = [key for key, _label in News._fields['category'].selection]
+            news = News.browse()
+            for section in sections:
+                news |= News.search(
+                    [('category', '=', section)] + country_scope,
+                    limit=int(per_category),
+                    order='published_date desc',
+                )
+        else:
+            news = News.search(domain, limit=int(limit), offset=int(offset), order='published_date desc')
         data = []
         for n in news:
             data.append({

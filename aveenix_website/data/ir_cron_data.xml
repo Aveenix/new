@@ -32,6 +32,22 @@
             <field name="interval_type">hours</field>
             <field name="active" eval="True"/>
         </record>
+        <!-- The classifier is the only thing that decides which section an
+             article appears in, so when its rules improve the articles already
+             stored have to be re-filed or the improvement never reaches the
+             site. action_reclassify_category has always existed for this; it
+             was simply never scheduled, which left 3,600 articles sitting in
+             whichever section an older rule had put them. Only rows whose
+             section actually changes are written. -->
+        <record id="cron_reclassify_news_categories" model="ir.cron">
+            <field name="name">Aveenix: Re-file News Articles by Section</field>
+            <field name="model_id" ref="aveenix_website.model_aveenix_news"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_reclassify_categories()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
         <record id="cron_generate_ai_content" model="ir.cron">
             <field name="name">Aveenix: Generate AI Descriptions for Products</field>
             <field name="model_id" ref="product.model_product_template"/>

@@ -33,6 +33,22 @@ body, #wrapwrap {
     line-height: 1.6;
 }
 
+/* Let the reader's own text-size setting through.
+
+   Bootstrap's reboot pins `-webkit-text-size-adjust: 100%` on body to stop iOS
+   reflowing text on rotation. The side effect on Android is that Chrome's
+   Accessibility → "Text scaling" slider stops reaching the page, so a reader
+   who has made text larger on their phone gets no change here.
+
+   `auto` is safe on this page: the automatic inflation that the Bootstrap rule
+   was guarding against only applies to pages without a mobile viewport, and
+   this one declares `width=device-width`. So nothing inflates on its own — the
+   only thing that moves is what the reader asked for. */
+body {
+    -webkit-text-size-adjust: auto;
+    text-size-adjust: auto;
+}
+
 .nm-news-page {
     background-color: transparent !important;
     max-width: 100% !important;
@@ -54,7 +70,7 @@ ul { list-style: none; }
 
 /* Top Bar */
 .nm-top-bar {
-    font-size: 11px;
+    font-size: 0.6875rem;
     border-bottom: 1px solid var(--border-color);
     padding: 5px 0;
 }
@@ -69,10 +85,10 @@ ul { list-style: none; }
     display: flex; justify-content: space-between; align-items: center;
     padding: 30px 15px;
 }
-.nm-logo-img { font-size: 40px; font-weight: 900; line-height: 1; display: flex; align-items: baseline; }
+.nm-logo-img { font-size: 2.5rem; font-weight: 900; line-height: 1; display: flex; align-items: baseline; }
 .nm-logo-nm { color: var(--nm-primary); }
-.nm-logo-pro { color: var(--heading-color); font-size: 28px; margin-left: 2px;}
-.nm-logo-text { font-size: 14px; letter-spacing: 2px; font-weight: 400; color: var(--text-color); }
+.nm-logo-pro { color: var(--heading-color); font-size: 1.75rem; margin-left: 2px;}
+.nm-logo-text { font-size: 0.875rem; letter-spacing: 2px; font-weight: 400; color: var(--text-color); }
 .nm-header-ad .nm-ad-placeholder {
     background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80') center/cover;
     position: relative;
@@ -86,8 +102,8 @@ ul { list-style: none; }
     background: rgba(0,0,0,0.6); border-radius: 4px; z-index: 1;
 }
 .nm-header-ad .nm-ad-placeholder > * { position: relative; z-index: 2; }
-.nm-ad-placeholder h3 { font-size: 24px; font-weight: 900; }
-.nm-ad-placeholder p { font-size: 12px; }
+.nm-ad-placeholder h3 { font-size: 1.5rem; font-weight: 900; }
+.nm-ad-placeholder p { font-size: 0.75rem; }
 .nm-ad-placeholder button { background: #fff; border: none; color: #000; padding: 5px 15px; cursor: pointer; font-weight: 700; border-radius: 3px; }
 
 /* Main Nav (Glass) */
@@ -104,7 +120,7 @@ ul { list-style: none; }
 .nm-nav-links { display: flex; gap: 20px; height: 50px; }
 .nm-nav-links li { display: flex; align-items: center; height: 100%; }
 .nm-nav-links a {
-    font-size: 13px; font-weight: 700; text-transform: capitalize;
+    font-size: 0.8125rem; font-weight: 700; text-transform: capitalize;
     display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 100%;
     border-top: 3px solid transparent;
 }
@@ -118,7 +134,7 @@ ul { list-style: none; }
 /* Trending */
 .nm-trending-bar {
     border-bottom: 1px solid var(--border-color);
-    padding: 10px 0; font-size: 13px;
+    padding: 10px 0; font-size: 0.8125rem;
 }
 .nm-trending-container { display: flex; align-items: center; gap: 15px; }
 
@@ -149,7 +165,7 @@ ul { list-style: none; }
 /* Hero Section */
 .nm-hero-section {
     display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
-    margin: 20px 0 40px; height: 500px;
+    margin: 20px 0 40px; height: auto; min-height: 500px;
 }
 .nm-hero-main {
     position: relative; background-size: cover; background-position: center;
@@ -169,22 +185,22 @@ ul { list-style: none; }
 .nm-article-content { position: relative; z-index: 2; padding: 30px; color: #fff; }
 .nm-hero-item .nm-article-content { padding: 20px; }
 .nm-category-badge {
-    color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px;
+    color: #fff; font-size: 0.625rem; font-weight: 700; padding: 2px 6px;
     margin-bottom: 10px; display: inline-block;
 }
-.nm-article-title { font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
-.nm-article-title-small { font-size: 16px; font-weight: 700; line-height: 1.3; }
-.nm-article-meta { font-size: 12px; color: #ddd; }
+.nm-article-title { font-size: 2rem; font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
+.nm-article-title-small { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+.nm-article-meta { font-size: 0.75rem; color: #ddd; }
 
 /* Sections */
 .nm-section-heading {
     display: flex; align-items: center; margin-bottom: 20px; margin-top: 30px;
 }
 .nm-section-heading h2 {
-    font-size: 15px; font-weight: 700; margin-right: 0; padding: 0 15px 0 0; background-color: transparent; color: #000; text-transform: capitalize;
+    font-size: 0.9375rem; font-weight: 700; margin-right: 0; padding: 0 15px 0 0; background-color: transparent; color: #000; text-transform: capitalize;
 }
 .nm-section-heading .nm-line { flex-grow: 1; height: 2px; background-color: var(--nm-primary); }
-.nm-section-heading .nm-filter { margin-left: 15px; font-size: 12px; color: var(--meta-color); cursor: pointer; font-weight: 700; }
+.nm-section-heading .nm-filter { margin-left: 15px; font-size: 0.75rem; color: var(--meta-color); cursor: pointer; font-weight: 700; }
 
 /* Layout */
 .nm-content-layout { display: flex; gap: 30px; }
@@ -200,13 +216,13 @@ ul { list-style: none; }
 .nm-gn-list-item img { width: 100px; height: 75px; object-fit: cover; }
 .nm-gn-list-content { flex: 1; }
 
-.nm-category-text { font-size: 11px; font-weight: 700; color: var(--nm-primary); display: block; margin-bottom: 5px; text-transform: capitalize; }
-.nm-post-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; color: var(--heading-color); }
+.nm-category-text { font-size: 0.6875rem; font-weight: 700; color: var(--nm-primary); display: block; margin-bottom: 5px; text-transform: capitalize; }
+.nm-post-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3; color: var(--heading-color); }
 .nm-post-title a:hover { color: var(--nm-primary); }
-.nm-gn-list-item .nm-post-title { font-size: 14px; margin-bottom: 5px; }
-.nm-dark-meta { color: var(--meta-color); font-size: 12px; margin-bottom: 10px; }
+.nm-gn-list-item .nm-post-title { font-size: 0.875rem; margin-bottom: 5px; }
+.nm-dark-meta { color: var(--meta-color); font-size: 0.75rem; margin-bottom: 10px; }
 .nm-dark-meta .nm-author { color: var(--heading-color); font-weight: 500; }
-.nm-post-excerpt { font-size: 14px; color: var(--text-color); }
+.nm-post-excerpt { font-size: 0.875rem; color: var(--text-color); }
 
 /* Travel Guides Grid - TagDiv Newspaper Format (Text Over Image) */
 .nm-travel-guides-grid {
@@ -255,7 +271,7 @@ ul { list-style: none; }
     z-index: 10;
 }
 .nm-tg-info .nm-category-text {
-    font-size: 11px;
+    font-size: 0.6875rem;
     font-weight: 500;
     text-transform: capitalize;
     color: #ffffff;
@@ -263,7 +279,7 @@ ul { list-style: none; }
     display: block;
 }
 .nm-tg-info .nm-post-title {
-    font-size: 15px;
+    font-size: 0.9375rem;
     font-weight: 500;
     line-height: 1.2;
     margin: 0;
@@ -303,19 +319,19 @@ ul { list-style: none; }
     object-fit: cover;
     margin-bottom: 10px;
 }
-.nm-latest-grid-item .nm-post-title { font-size: 19px; font-weight: 500; line-height: 1.2; margin-bottom: 10px; }
+.nm-latest-grid-item .nm-post-title { font-size: 1.1875rem; font-weight: 500; line-height: 1.2; margin-bottom: 10px; }
 .nm-latest-grid-item .nm-post-title a { color: var(--heading-color); transition: color 0.2s; }
 .nm-latest-grid-item .nm-post-title a:hover { color: #008d7f !important; }
-.nm-latest-grid-item .nm-category-text { color: #008d7f; text-transform: capitalize; font-size: 11px; margin-bottom: 5px; display: inline-block; font-weight: 400; }
+.nm-latest-grid-item .nm-category-text { color: #008d7f; text-transform: capitalize; font-size: 0.6875rem; margin-bottom: 5px; display: inline-block; font-weight: 400; }
 
 /* Must Read Post */
 .nm-must-read-post { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
 .nm-must-read-post img { width: 30%; height: auto; aspect-ratio: 4/3; object-fit: cover; flex-shrink: 0; }
 .nm-must-read-post .nm-post-info { flex-grow: 1; }
-.nm-must-read-post .nm-post-title { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 5px; }
+.nm-must-read-post .nm-post-title { font-size: 0.8125rem; font-weight: 500; line-height: 1.3; margin-bottom: 5px; }
 .nm-must-read-post .nm-post-title a { color: var(--heading-color); transition: color 0.2s; }
 .nm-must-read-post .nm-post-title a:hover { color: #008d7f !important; }
-.nm-must-read-post .nm-category-text { color: #008d7f; font-size: 11px; display: inline-block; margin-bottom: 2px; }
+.nm-must-read-post .nm-category-text { color: #008d7f; font-size: 0.6875rem; display: inline-block; margin-bottom: 2px; }
 
 /* Custom section links */
 .nm-fitness-link { color: var(--heading-color) !important; transition: color 0.2s; }
@@ -332,19 +348,19 @@ ul { list-style: none; }
 .social-box.fb { background-color: #3b5998; }
 .social-box.x { background-color: #111; }
 .social-box.yt { background-color: #c4302b; }
-.social-box i { font-size: 24px; margin-bottom: 10px; }
-.social-box strong { font-size: 18px; }
-.social-box span { font-size: 11px; opacity: 0.8; }
+.social-box i { font-size: 1.5rem; margin-bottom: 10px; }
+.social-box strong { font-size: 1.125rem; }
+.social-box span { font-size: 0.6875rem; opacity: 0.8; }
 .nm-sidebar-ad { text-align: center; margin-bottom: 40px; }
-.nm-sidebar-ad .ad-label { font-size: 11px; color: var(--meta-color); display: block; margin-bottom: 5px; }
+.nm-sidebar-ad .ad-label { font-size: 0.6875rem; color: var(--meta-color); display: block; margin-bottom: 5px; }
 .nm-sidebar-ad img { max-width: 100%; }
 
 /* Popular List (Round Image) */
 .nm-circle-post { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
 .nm-circle-post img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
 .nm-circle-post-info { flex: 1; }
-.nm-circle-post-info .nm-category-text { font-size: 11px; font-weight: 500; text-transform: capitalize; color: var(--text-color); display: block; margin-bottom: 5px; }
-.nm-circle-post-info .nm-small-title { font-size: 15px; font-weight: 500; margin: 0; line-height: 1.2; }
+.nm-circle-post-info .nm-category-text { font-size: 0.6875rem; font-weight: 500; text-transform: capitalize; color: var(--text-color); display: block; margin-bottom: 5px; }
+.nm-circle-post-info .nm-small-title { font-size: 0.9375rem; font-weight: 500; margin: 0; line-height: 1.2; }
 .nm-circle-post-info .nm-small-title a { color: var(--heading-color); text-decoration: none; }
 .nm-circle-post-info .nm-small-title a:hover { color: #dd3333; }
 
@@ -352,13 +368,13 @@ ul { list-style: none; }
 .must-read-item { display: flex; gap: 15px; margin-bottom: 20px; }
 .must-read-item img { width: 100px; height: 75px; object-fit: cover; }
 .must-read-content { flex: 1; }
-.must-read-content .nm-post-title { font-size: 14px; margin-bottom: 5px; }
+.must-read-content .nm-post-title { font-size: 0.875rem; margin-bottom: 5px; }
 
 /* Categories */
 .nm-category-list li { border-bottom: 1px dotted var(--border-color); }
 .nm-category-list a {
     display: flex; justify-content: space-between; padding: 10px 0;
-    font-size: 14px; font-weight: 500; color: var(--text-color);
+    font-size: 0.875rem; font-weight: 500; color: var(--text-color);
 }
 .nm-category-list a:hover { color: var(--nm-primary); }
 .nm-category-list span { font-weight: 700; color: var(--heading-color); }
@@ -368,7 +384,7 @@ ul { list-style: none; }
 .page-num { width: 35px; height: 35px; border: 1px solid var(--border-color); background: transparent; cursor: pointer; color: var(--text-color); }
 .page-num.active { background-color: var(--nm-primary); color: white; border-color: var(--nm-primary); }
 .page-num:hover:not(.active) { background-color: var(--nav-hover); }
-.page-info { margin-left: auto; font-size: 13px; color: var(--meta-color); }
+.page-info { margin-left: auto; font-size: 0.8125rem; color: var(--meta-color); }
 
 /* Footer */
 .main-footer {
@@ -377,9 +393,9 @@ ul { list-style: none; }
 }
 .footer-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1;}
 .footer-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 0 15px; }
-.footer-logo { font-size: 30px; font-weight: 900; margin-bottom: 10px; display: flex; justify-content: center; align-items: baseline; }
-.footer-desc { color: #aaa; font-size: 13px; margin-bottom: 20px; line-height: 1.8; }
-.footer-contact { margin-bottom: 20px; font-size: 14px; }
+.footer-logo { font-size: 1.875rem; font-weight: 900; margin-bottom: 10px; display: flex; justify-content: center; align-items: baseline; }
+.footer-desc { color: #aaa; font-size: 0.8125rem; margin-bottom: 20px; line-height: 1.8; }
+.footer-contact { margin-bottom: 20px; font-size: 0.875rem; }
 .footer-contact a { color: var(--nm-primary); }
 .social-links a {
     display: inline-flex; justify-content: center; align-items: center;
@@ -392,13 +408,29 @@ ul { list-style: none; }
     .nm-main-column, .nm-sidebar { width: 100%; }
     .nm-hero-section { grid-template-columns: 1fr; height: auto; }
     .nm-hero-grid { grid-template-columns: 1fr; }
-    .nm-hero-main { height: 300px; }
-    .nm-hero-item { height: 200px; }
+    .nm-hero-main { height: auto; min-height: 400px; }
+    .nm-hero-item { height: auto; min-height: 250px; }
     .nm-global-news-layout, .nm-two-col-layout { flex-direction: column; }
     .nm-gn-main, .nm-gn-list, .nm-col-half { width: 100%; }
     .nm-travel-guides-grid, .nm-four-col-grid { grid-template-columns: 1fr; }
     .nm-header-ad .nm-ad-placeholder { display: none; }
     .nm-logo-area { justify-content: center; }
+}
+
+/* Phones: the hero headline was set at the desktop size.
+
+   2rem at weight 900 across a 360px screen runs a normal headline to five
+   lines and pushes the rest of the page below the fold — the hero stopped
+   being a picture with a title on it and became a wall of text. These are the
+   only sizes that need a phone-specific value; everything else on the page is
+   small enough to carry over.
+
+   In rem, like the rest of the type, so they still follow the reader's own
+   font-size setting from here. */
+@media (max-width: 768px) {
+    .nm-article-title { font-size: 1.5rem; }
+    .nm-hero-main .nm-article-title { font-size: 1.375rem; }
+    .nm-hero-item .nm-article-title-small { font-size: 0.9375rem; }
 }
 
 
@@ -454,19 +486,19 @@ html[data-theme="dark"] body {
 }
 
 .nm-social-icon-wrapper i {
-    font-size: 22px;
+    font-size: 1.375rem;
     margin-bottom: 6px;
     color: #ffffff;
 }
 .nm-social-details strong {
     display: block;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 800;
     line-height: 1.1;
     color: #ffffff !important;
 }
 .nm-social-details span {
-    font-size: 10px;
+    font-size: 0.625rem;
     font-weight: 600;
     text-transform: capitalize;
     letter-spacing: 0.5px;
@@ -476,7 +508,7 @@ html[data-theme="dark"] body {
 .nm-social-action {
     display: inline-block;
     margin-top: 8px;
-    font-size: 9px;
+    font-size: 0.5625rem;
     font-weight: 800;
     background: rgba(255, 255, 255, 0.25);
     padding: 3px 8px;
@@ -489,16 +521,16 @@ html[data-theme="dark"] body {
     margin-bottom: 20px;
 }
 .nm-text-post .nm-category-text {
-    font-size: 10px;
+    font-size: 0.625rem;
     margin-bottom: 3px;
 }
 .nm-text-post .nm-small-title {
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-bottom: 5px;
     line-height: 1.3;
 }
 .nm-text-post .nm-dark-meta {
-    font-size: 11px;
+    font-size: 0.6875rem;
     margin-bottom: 0;
 }
 
@@ -582,20 +614,70 @@ html[data-theme="dark"] body {
     transform: scale(1.01);
 }
 
-/* YouTube Playlist Section */
-.nm-yt-container { display: flex; width: 100%; background: #222; max-width: 1140px; margin: 0 auto; }
+/* YouTube Playlist Section
+
+   The player block spanned the whole content width with the container centred
+   at 1140px inside it, so at 1440 there were two dead ~126px bands of #222,
+   one down each side. The row below spends the right-hand one: the player
+   block keeps what is left and a 300px ad rail sits beside it.
+
+   The container no longer needs its own cap — the section is what bounds it
+   now, and at the page's 1500px max width that section is 1128px, already
+   under the old 1140. */
+.nm-video-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin: 40px 0;
+    clear: both;
+}
+.nm-video-section {
+    flex: 1 1 auto;
+    min-width: 0;            /* .nm-yt-main is a % of this, so it must shrink */
+    background: #222;
+}
+.nm-video-ad {
+    flex: 0 0 300px;
+    max-width: 300px;
+}
+.nm-video-ad img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Under 1200 there is no spare width to give the rail — taking 324px off the
+   player there would leave a video narrower than its own playlist. The ad
+   drops below the block and centres instead. */
+@media (max-width: 1200px) {
+    .nm-video-row {
+        flex-direction: column;
+
+        /* flex-start is what top-aligns the ad against the player in the row
+           layout, but on this axis it shrink-wraps instead: the player block
+           took its content's min-content width — 713px on a 390px phone — and
+           ran off the screen. Only the ad wants to shrink-wrap here. */
+        align-items: stretch;
+    }
+    .nm-video-ad {
+        flex: 0 0 auto;
+        max-width: 100%;
+        align-self: center;
+    }
+}
+
+.nm-yt-container { display: flex; width: 100%; background: #222; }
 .nm-yt-main { width: 68%; background: #000; position: relative; }
 .nm-yt-main iframe { width: 100%; height: 100%; min-height: 480px; border: none; display: block; }
 .nm-yt-sidebar { width: 32%; background: #111; display: flex; flex-direction: column; max-height: 480px; }
-.nm-yt-controls { padding: 15px; background: #000; color: #fff; font-size: 13px; border-bottom: 1px solid #333; display: flex; align-items: center; }
+.nm-yt-controls { padding: 15px; background: #000; color: #fff; font-size: 0.8125rem; border-bottom: 1px solid #333; display: flex; align-items: center; }
 .nm-yt-list { flex-grow: 1; overflow-y: auto; padding: 0; margin: 0; list-style: none; }
 .nm-yt-list::-webkit-scrollbar { width: 6px; }
 .nm-yt-list::-webkit-scrollbar-thumb { background: #555; }
 .nm-yt-item { display: flex; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; transition: background 0.2s; align-items: flex-start; }
 .nm-yt-item:hover, .nm-yt-item.active { background: #2a2a2a; }
 .nm-yt-item img { width: 72px; height: 40px; object-fit: cover; margin-right: 15px; flex-shrink: 0; }
-.nm-yt-item-title { font-size: 13px; color: #fff; font-weight: 500; line-height: 1.4; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.nm-yt-item-time { font-size: 11px; color: #aaa; }
+.nm-yt-item-title { font-size: 0.8125rem; color: #fff; font-weight: 500; line-height: 1.4; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.nm-yt-item-time { font-size: 0.6875rem; color: #aaa; }
 @media (max-width: 768px) {
     .nm-yt-container { flex-direction: column; }
     .nm-yt-main, .nm-yt-sidebar { width: 100%; }
@@ -607,7 +689,7 @@ html[data-theme="dark"] body {
 .nm-share-btn {
     display: flex; align-items: center; justify-content: center;
     border: 1px solid var(--border-color);
-    padding: 6px 12px; font-size: 11px; font-weight: 600;
+    padding: 6px 12px; font-size: 0.6875rem; font-weight: 600;
     text-decoration: none !important;
     background: transparent; transition: background-color 0.2s;
 }
@@ -618,24 +700,24 @@ html[data-theme="dark"] body {
 .nm-share-btn.wa { color: #25D366; }
 
 .nm-section-header { display: flex; align-items: center; margin-bottom: 20px; }
-.nm-section-title { font-size: 13px; font-weight: 700; text-transform: capitalize; margin: 0; white-space: nowrap; color: var(--heading-color); }
+.nm-section-title { font-size: 0.8125rem; font-weight: 700; text-transform: capitalize; margin: 0; white-space: nowrap; color: var(--heading-color); }
 .nm-section-header::after { content: ""; flex-grow: 1; height: 3px; background-color: #008d7f; margin-left: 15px; }
 
 /* In the screenshot Stay Connected has a red line instead of teal */
 .nm-sidebar-widget:first-of-type .nm-section-header::after { background-color: #e32636; }
 
 .nm-social-stat-box { border-color: var(--border-color) !important; display: flex; flex-direction: column; justify-content: center; padding: 15px 5px !important; }
-.nm-social-stat-box .fs-5 { font-size: 16px !important; color: var(--heading-color); }
+.nm-social-stat-box .fs-5 { font-size: 1rem !important; color: var(--heading-color); }
 
 /* Hide Odoo footer on news page to keep it clean if desired, or keep it */
 
 #nm-hero-section,
 #nm-global-news,
-#nm-travel-guides,
+#nm-lifestyle-section,
 #nm-gadgets-section,
 #nm-recipes-section,
 #nm-popular-list,
-#nm-four-col-grid,
+#nm-travel-section,
 #nm-fitness-section,
 #nm-gaming-section,
 #nm-youtube-section,
@@ -671,7 +753,7 @@ body:has(.nm-news-page) .av-header,
 .av-cat-nav.av-news-nav .av-all-categories {
     color: #000000 !important;
     /* font-weight: 700 !important; */
-    font-size: 14px !important;
+    font-size: 0.875rem !important;
     text-transform: capitalize !important;
     letter-spacing: 0.5px !important;
     height: 100% !important;
@@ -796,6 +878,37 @@ body:has(.nm-news-page) .av-header,
 
 .nm-ticker--empty {
     visibility: hidden;
+}
+
+/* Phones: give the rail its own row.
+
+   The label and the arrows are both flex: 0 0 auto, so on a narrow screen the
+   ticker is the only thing that gives — and it gave everything. At 360px the
+   rail was down to a 106px slot, and with the 24px mask fade at each end only
+   about 58px of it was fully opaque: the headline read as a few letters
+   sliding past. The bar kept its desktop proportions on a phone.
+
+   So the rail wraps below them and takes the full width of the bar, which is
+   ~312px at 360 rather than 106. The label and arrows stay together on the
+   first row, arrows pushed to the far end. Explicit `order` is needed because
+   the ticker sits between them in the markup, and without it the arrows would
+   be carried onto a third row. */
+@media (max-width: 768px) {
+    .nm-trending-container {
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+    .nm-trending-label {
+        order: 0;
+    }
+    .nm-trending-controls {
+        order: 1;
+        margin-left: auto;
+    }
+    .nm-ticker {
+        order: 2;
+        flex: 1 0 100%;
+    }
 }
 
 /* Readers who ask for reduced motion get a still line they can step

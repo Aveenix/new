@@ -2734,6 +2734,44 @@ html[data-theme="dark"] .o_wsale_shorter_cart_summary th {
     font-weight: 700 !important;
 }
 
+/* ...but not the section titles inside it.
+
+   The rule above exists to make the money values pop, and it reaches every h4
+   in the card — which now includes "Delivery method" and "Payment method",
+   since both method boxes live inside the summary card. "Order summary" sits
+   out in the left column and never matched, so in dark mode the three titles
+   stopped matching: 700 against 500. Inter Tight ships no 700 face here, so
+   the browser synthesised one and the pair read as a different typeface as
+   well as a heavier one.
+
+   ID selectors, so this outranks the class-based rule above. */
+#shop_cart > h4,
+#av_deli_right h4,
+#av_pay_right h4,
+[data-theme="dark"] #av_deli_right h4,
+[data-theme="dark"] #av_pay_right h4 {
+    /* Pinned rather than left to inherit. All three are <h4 class="mb-3">, so
+       in principle they already share Bootstrap's heading type — but they sit
+       in three different containers, and the two inside the summary card were
+       coming out smaller and heavier than "Order summary". Setting the type
+       here, from the same Bootstrap values, is a no-op where it already
+       matched and a fix where it did not, so the three cannot drift again.
+
+       font-size mirrors Bootstrap's h4: RFS-fluid below 1200px, flat above
+       (see the media query underneath). */
+    font-size: calc(1.275rem + 0.3vw);
+    line-height: 1.2;              /* $headings-line-height */
+    font-weight: 500 !important;   /* $headings-font-weight, as "Order summary" */
+}
+
+@media (min-width: 1200px) {
+    #shop_cart > h4,
+    #av_deli_right h4,
+    #av_pay_right h4 {
+        font-size: 1.5rem;         /* $h4-font-size, above RFS */
+    }
+}
+
 /* Cart products table rows */
 [data-theme="dark"] .o_cart_products_table,
 [data-theme="dark"] .o_cart_products_table tr,
@@ -9760,150 +9798,3 @@ html, body {
     padding-top: 0px !important;
 }
 
-
-/* =============================================================
-   CHECKOUT + PAYMENT BOXES
-
-   /shop/checkout and /shop/payment share one shape: the method
-   chooser is the first box in the left column so its top edge
-   lines up with the Order Summary card on the right.
-
-     .o_delivery_form   Delivery Method  (/shop/checkout, left)
-     #payment_method    Payment Method   (/shop/payment,  left)
-     .o_total_card      Order Summary    (both pages,     right)
-
-   All three share the chrome below, so the two pages read the
-   same. Surfaces come from variables rather than a light rule
-   plus a dark override — the checkout dark-mode rules earlier in
-   this file already use !important, and a later !important would
-   otherwise win in both themes.
-   ============================================================= */
-:root {
-    --av-cbox-surface: #fff;
-    --av-cbox-border:  #e0e0e0;
-    --av-cbox-heading: #333;
-    --av-cbox-rule:    rgba(128, 128, 128, .2);
-    --av-cbox-shadow:  0 1px 3px rgba(0, 0, 0, .06);
-    --av-cbox-pad:     1.25rem;
-}
-
-[data-theme="dark"] {
-    /* #181818 is the surface the surrounding checkout dark rules use. */
-    --av-cbox-surface: #181818;
-    --av-cbox-border:  #333;
-    --av-cbox-heading: #e0e0e0;
-    --av-cbox-shadow:  0 1px 3px rgba(0, 0, 0, .4);
-}
-
-/* ── Shared card chrome ────────────────────────────────────── */
-#shop_checkout .o_delivery_form,
-.o_website_sale_checkout #payment_method,
-.o_website_sale_checkout .o_total_card {
-    background-color: var(--av-cbox-surface) !important;
-    border: 1px solid var(--av-cbox-border) !important;
-    border-radius: 8px !important;
-    box-shadow: var(--av-cbox-shadow) !important;
-}
-
-/* The left boxes pad themselves; the right card pads its body. */
-#shop_checkout .o_delivery_form,
-.o_website_sale_checkout #payment_method {
-    padding: var(--av-cbox-pad);
-}
-
-.o_website_sale_checkout .o_total_card > .card-body {
-    padding: var(--av-cbox-pad) !important;
-}
-
-/* ── Shared box title ──────────────────────────────────────────
-   "Delivery method" and "Payment method" are rendered by core
-   (an h4 and a p respectively); "Order Summary" is added by
-   aveenix_website.av_checkout_right_column.
-   ─────────────────────────────────────────────────────────── */
-#shop_checkout .o_delivery_form > h4,
-.o_website_sale_checkout #payment_method #o_payment_methods > p,
-.o_website_sale_checkout #payment_method #o_payment_tokens_heading,
-.av-checkout-box-title {
-    margin: 0 0 .75rem !important;
-    padding-bottom: .5rem;
-    border-bottom: 1px solid var(--av-cbox-rule);
-    color: var(--av-cbox-heading);
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 1.3;
-}
-
-/* ── Method lists: cap the height, scroll past it ──────────────
-   A store with many carriers or providers must not push the
-   addresses (or the page) down past the Order Summary card.
-   ─────────────────────────────────────────────────────────── */
-#shop_checkout .o_delivery_form #o_delivery_methods,
-.o_website_sale_checkout #payment_method #o_payment_methods > ul,
-.o_website_sale_checkout #payment_method #o_payment_tokens_heading ~ ul {
-    max-height: 320px;
-    overflow-y: auto;
-    margin-bottom: 0;
-}
-
-/* Rows sit inside the box border, separated by a rule instead. */
-#shop_checkout .o_delivery_form .list-group-item,
-.o_website_sale_checkout #payment_method .list-group-item {
-    background-color: transparent;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-    border-radius: 0;
-    border-bottom: 1px solid var(--av-cbox-rule);
-    cursor: pointer;
-}
-
-#shop_checkout .o_delivery_form .list-group-item:last-child,
-.o_website_sale_checkout #payment_method .list-group-item:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
-}
-
-#shop_checkout .o_delivery_form .list-group-item:first-child,
-.o_website_sale_checkout #payment_method .list-group-item:first-child {
-    padding-top: 0;
-}
-
-/* A carrier whose rate lookup failed is disabled by website_sale's
-   Checkout interaction — dim it so the pickable ones stand out. */
-#shop_checkout .o_delivery_form
-    .list-group-item:has(input[name="o_delivery_radio"]:disabled) {
-    cursor: default;
-    opacity: .55;
-}
-
-/* ── Keep the two columns starting on the same line ────────────
-   The right card must not be offset from the top of its column.
-   (The empty #oe_structure_website_sale_payment_1 above the payment
-   box is deliberately left alone: it is 0px tall in view mode, and
-   the editor gives it a drop-zone height that it needs to keep.)
-   ─────────────────────────────────────────────────────────── */
-.o_website_sale_checkout .o_total_card {
-    margin-top: 0 !important;
-}
-
-/* Payment rows: the dark rules above paint list-group items #242424, a
-   different shade from the box itself. Flatten them so a payment row and a
-   delivery row look the same. Needs the extra class + !important to outrank
-   `html[data-theme="dark"] #o_payment_methods .list-group-item`. */
-html[data-theme="dark"] .o_website_sale_checkout #payment_method .list-group-item,
-html[data-theme="dark"] .o_website_sale_checkout #payment_method [name="o_payment_option"] {
-    --bs-list-group-bg: transparent;
-    background: transparent !important;
-    background-color: transparent !important;
-    border-color: var(--av-cbox-rule) !important;
-}
-
-/* Selected address card — readable in both themes. Was an inline <style> in
-   av_checkout_left_column; moved here so it also covers the address cards on
-   /shop/payment. Outranks `html[data-theme="dark"] .o_address_card`. */
-.o_website_sale_checkout .o_address_card.bg-400,
-html[data-theme="dark"] .o_address_card.bg-400 {
-    background-color: #cc000020 !important;
-    border-color: var(--av-red) !important;
-    box-shadow: 0 0 0 2px var(--av-red) !important;
-}
