@@ -219,10 +219,10 @@
                               </g>
                               <rect fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="442.71" height="6" class="av-default-logo-group" />
                               <!-- Same 14.27 gap to the word as the Express rule leaves
-                                   (608.42 -> 622.69). "News" now starts at 665.94, so this
-                                   ends at 654.42. At width 495 it ran to 660.71 and left a
-                                   5.2 gap — half the Express one. -->
-                              <rect style="display: none;" fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="488.71" height="6" class="av-logo-news" />
+                                   (608.42 -> 622.69). "News" is 101.03 wide and is
+                                   right-aligned on 765.24, so it starts at 664.21 and
+                                   this rule ends at 649.94. -->
+                              <rect style="display: none;" fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="484.23" height="6" class="av-logo-news" />
                               <polygon fill="#fefefe" points="13.82 118.54 40.77 118.54 70.79 66.61 101.67 118.54 128.5 118.54 71.16 19.98 13.82 118.54"/>
                               <polygon fill="#fefefe" points="55.89 118.54 86.79 118.54 70.97 91.81 55.89 118.54"/>
                               <polygon fill="var(--av-logo-text, #231f20)" points="466.97 69.18 466.97 56.28 519.98 56.28 524.9 41.6 466.97 41.6 466.97 29.2 524.1 29.2 529.47 13.15 447.32 13.15 447.32 84.72 524.27 84.72 529.47 69.18 466.97 69.18"/>
@@ -238,28 +238,32 @@
                               <polygon fill="var(--av-logo-text, #231f20)" points="658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 686.03 85.24 658.55 85.24"/>
                               <polygon fill="var(--av-logo-text, #231f20)" points="712.71 34.39 690.08 13.15 662.44 13.15 698.99 47.27 712.71 34.39 712.71 34.39"/>
                               <polygon fill="var(--av-red, #d6292e)" points="726.48 47.31 735.22 39.12 735.22 39.12 762.91 13.15 735.32 13.15 721.64 26 721.64 26 715.49 31.77 712.71 34.39 712.71 34.39 698.99 47.27 658.55 85.24 658.55 85.24 686.03 85.24 693.95 77.81 712.79 60.15 726.47 47.31 726.48 47.31"/>
-                              <!-- "News" has to read as the same word-mark as "Express",
-                                   which is the outlined artwork in .av-logo-express above.
-                                   Every number here is measured off those outlines rather
-                                   than eyeballed:
+                              <!-- "News" is the same word-mark as "Express", so it is stored the
+                                   same way: as outlines, not as live text.
 
-                                     cap height   26.46  (the "E", y 100.26..126.72)
-                                     baseline     126.72
-                                     ink right    765.24
-                                     tracking     "Express" is 142.55 wide across 7 glyphs
+                                   "Express" turned out to be Montserrat Medium. It was
+                                   identified by rasterising each of its outlines against
+                                   every face Odoo ships: 96.5 per cent mean pixel overlap
+                                   across the seven glyphs, where the runner-up managed
+                                   82.7. At font-size 37.80px that face's cap height lands
+                                   on the artwork's 26.46, and with normal kerning and no
+                                   tracking every glyph sits within 0.04 units of where
+                                   Illustrator put it.
 
-                                   font-family was "Outfit", which is loaded nowhere on the
-                                   site — so it fell through to the platform's generic
-                                   sans-serif and the logo read differently on every OS, at
-                                   a cap height of 24 against the artwork's 26.46. Inter is
-                                   the face Odoo already ships, so it actually renders; 300
-                                   is its lightest weight and the nearest to the artwork's
-                                   hairline stems. 36.25px puts Inter's cap at 26.46, and
-                                   1.96px is the tracking that makes Inter set "Express" to
-                                   the artwork's own 142.55. x is the anchor that lands the
-                                   ink — not the advance — on 765.24, checked by scanning the
-                                   rendered pixels rather than trusting the metrics. -->
-                              <text style="display: none;" x="769.16" y="126.72" text-anchor="end" fill="var(--av-logo-text, #58595b)" class="av-logo-news" font-family="Inter, 'Odoo Unicode Support Noto', sans-serif" font-size="36.25px" font-weight="300" letter-spacing="1.96px">News</text>
+                                   The four paths below are that font's own N/e/w/s at
+                                   that size, baseline 126.72, right-aligned on the
+                                   artwork's ink edge 765.24. They are outlines because a
+                                   <text> element was the bug: it asked for Outfit, then
+                                   Inter, and neither is loaded on the frontend - Odoo 19
+                                   ships no Inter @font-face and the site adds none - so
+                                   "News" fell through to whatever sans-serif the viewer's
+                                   OS happened to have, while "Express" stayed Montserrat. -->
+                              <g style="display: none;" class="av-logo-news" fill="var(--av-logo-text, #58595b)">
+                                <path d="M686.96 100.26V126.72H683.86L667.99 106.99V126.72H664.21V100.26H667.31L683.18 119.99V100.26Z"/>
+                                <path d="M712.39 117.91H696.13Q696.47 120.56 698.46 122.17Q700.44 123.77 703.39 123.77Q706.98 123.77 709.18 121.35L711.18 123.7Q709.82 125.28 707.8 126.12Q705.77 126.95 703.28 126.95Q700.1 126.95 697.65 125.64Q695.19 124.34 693.85 122Q692.51 119.65 692.51 116.7Q692.51 113.79 693.81 111.45Q695.11 109.11 697.4 107.8Q699.69 106.5 702.56 106.5Q705.43 106.5 707.68 107.8Q709.93 109.11 711.2 111.45Q712.46 113.79 712.46 116.82Q712.46 117.23 712.39 117.91ZM696.13 115.3H708.99Q708.68 112.77 706.93 111.17Q705.17 109.56 702.56 109.56Q699.95 109.56 698.19 111.15Q696.44 112.73 696.13 115.3Z"/>
+                                <path d="M747.42 106.69 739.94 126.72H736.46L730.68 111.52L724.82 126.72H721.34L713.9 106.69H717.34L723.16 122.64L729.21 106.69H732.27L738.2 122.71L744.17 106.69Z"/>
+                                <path d="M748.3 124.6 749.81 121.73Q751.14 122.68 753.03 123.24Q754.92 123.81 756.85 123.81Q761.61 123.81 761.61 121.09Q761.61 120.18 760.97 119.65Q760.32 119.12 759.36 118.88Q758.4 118.63 756.62 118.33Q754.2 117.95 752.67 117.46Q751.14 116.97 750.04 115.8Q748.95 114.62 748.95 112.51Q748.95 109.79 751.21 108.14Q753.48 106.5 757.3 106.5Q759.3 106.5 761.31 106.99Q763.31 107.48 764.59 108.31L763.04 111.18Q760.59 109.6 757.26 109.6Q754.96 109.6 753.75 110.35Q752.54 111.11 752.54 112.36Q752.54 113.34 753.22 113.91Q753.9 114.47 754.9 114.74Q755.9 115 757.71 115.34Q760.13 115.76 761.63 116.23Q763.12 116.7 764.18 117.84Q765.24 118.97 765.24 121.01Q765.24 123.73 762.91 125.34Q760.59 126.95 756.58 126.95Q754.12 126.95 751.86 126.29Q749.59 125.62 748.3 124.6Z"/>
+                              </g>
                             </svg>
                         </div>
                     </a>
@@ -350,31 +354,31 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/news#nm-global-news" style="display: flex; align-items: center; gap: 6px;">
+                            <a href="/news/category/global" style="display: flex; align-items: center; gap: 6px;">
                                 <i class="fa fa-globe" style="font-size: 14px;"/>
                                 <span>Global</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/news#nm-lifestyle-section" style="display: flex; align-items: center; gap: 6px;">
+                            <a href="/news/category/style" style="display: flex; align-items: center; gap: 6px;">
                                 <i class="fa fa-bicycle" style="font-size: 14px;"/>
                                 <span>Lifestyle</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/news#nm-must-read-list" style="display: flex; align-items: center; gap: 6px;">
+                            <a href="/news/category/fashion" style="display: flex; align-items: center; gap: 6px;">
                                 <i class="fa fa-female" style="font-size: 14px;"/>
                                 <span>Fashion</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/news#nm-gaming-section" style="display: flex; align-items: center; gap: 6px;">
+                            <a href="/news/category/gaming" style="display: flex; align-items: center; gap: 6px;">
                                 <i class="fa fa-gamepad" style="font-size: 14px;"/>
                                 <span>Gaming</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/news#nm-fitness-section" style="display: flex; align-items: center; gap: 6px;">
+                            <a href="/news/category/fitness" style="display: flex; align-items: center; gap: 6px;">
                                 <i class="fa fa-heartbeat" style="font-size: 14px;"/>
                                 <span>Fitness</span>
                             </a>

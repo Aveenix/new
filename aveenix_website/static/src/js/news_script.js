@@ -260,9 +260,6 @@ async function fetchNews() {
         let nextPage = '';
         
         // Fetch directly from our local Odoo API (much faster, no rate limits!)
-        const urlParams = new URLSearchParams(window.location.search);
-        const category = urlParams.get('category');
-
         // Every block on this page draws from its own section, so ask for the
         // newest few of EVERY section rather than the newest 100 overall.
         //
@@ -274,10 +271,7 @@ async function fetchNews() {
         //
         // 16 is the largest any one section is asked for below: Global feeds
         // the hero (5), the Global block (5) and, behind Facts, Latest (6).
-        const url = category
-            ? `/api/v1/news?limit=100&category=${encodeURIComponent(category)}`
-            : `/api/v1/news?per_category=16`;
-        const res = await fetch(url);
+        const res = await fetch('/api/v1/news?per_category=16');
         
         if (res.ok) {
             const data = await res.json();
@@ -327,29 +321,20 @@ async function fetchNews() {
         // top up from "whatever is left": that fallback is what put celebrity
         // news under GAMING and gadget reviews under RECIPES. A block that has
         // only two articles of its own now shows two.
-        //
-        // /news?category=… is the one exception: there the whole page is a
-        // single category, so every block draws from that one pool.
         const used = new Set();
         const take = (sections, count) => {
-            const wanted = category
-                ? null
-                : (Array.isArray(sections) ? sections : [sections]);
+            const wanted = Array.isArray(sections) ? sections : [sections];
             const picked = [];
             const pass = section => {
                 for (const article of validArticles) {
                     if (picked.length >= count) return;
                     if (used.has(article)) continue;
-                    if (section !== null && article.category !== section) continue;
+                    if (article.category !== section) continue;
                     used.add(article);
                     picked.push(article);
                 }
             };
-            if (wanted === null) {
-                pass(null);
-            } else {
-                wanted.forEach(pass);
-            }
+            wanted.forEach(pass);
             return picked;
         };
 
@@ -369,7 +354,11 @@ async function fetchNews() {
         renderFourCol(take('TRAVEL', 4));
 
         renderFitnessList(take('FITNESS', 5), 'nm-fitness-section');
-        renderGamingMain(take('GAMING', 1), 'nm-gaming-section');
+        // Gaming sits beside the five-item Fitness list, so it asks for enough
+        // to fill the column. It used to ask for one article and render only
+        // that, which left most of the sidebar blank however many Gaming
+        // stories were in the feed.
+        renderTwoCol(take('GAMING', 6), 'nm-gaming-section');
 
         renderLatestArticles(take(['FACTS', 'GLOBAL'], 6));
 
@@ -383,8 +372,6 @@ async function fetchNews() {
 
         renderYoutubePlaylist('nm-youtube-section');
 
-        renderCategoriesWidget(validArticles);
-
     } catch (error) {
         console.error('Error fetching news:', error);
         // Remove spinners if there's a fatal error
@@ -392,70 +379,6 @@ async function fetchNews() {
             el.parentElement.innerHTML = '<div style="color:red; text-align:center;">Failed to load dynamic news.</div>';
         });
     }
-}
-
-function renderCategoriesWidget(validArticles) {
-    const categoryLists = document.querySelectorAll('.nm-category-list');
-    if (!categoryLists || categoryLists.length === 0) return;
-
-    // One row, one category. Fashion used to also count Showbiz and Gaming
-    // used to also count Facts, so those two numbers never described the
-    // section they linked to. Matching is exact for the same reason: with
-    // `includes`, "STYLE" counted every "LIFESTYLE" article too.
-    const catDefs = [
-        { name: 'Fashion', key: 'FASHION', anchor: '/news?category=fashion' },
-        { name: 'Fitness', key: 'FITNESS', anchor: '/news#nm-fitness-section' },
-        { name: 'Gaming', key: 'GAMING', anchor: '/news#nm-gaming-section' },
-        { name: 'Style', key: 'STYLE', anchor: '/news#nm-lifestyle-section' },
-        { name: 'Showbiz', key: 'SHOWBIZ', anchor: '/news#nm-must-read-list' },
-        { name: 'Travel', key: 'TRAVEL', anchor: '/news#nm-travel-section' },
-        { name: 'Facts', key: 'FACTS', anchor: '/news?category=facts' },
-        { name: 'Gadgets', key: 'GADGETS', anchor: '/news#nm-gadgets-section' },
-        { name: 'Recipes', key: 'RECIPES', anchor: '/news#nm-recipes-section' },
-        { name: 'Global', key: 'GLOBAL', anchor: '/news#nm-global-news' },
-    ];
-
-    const counts = {};
-    catDefs.forEach(c => counts[c.name] = 0);
-
-    // The controller puts the table-wide totals on the list element. Prefer
-    // them: counting the fetched articles only ever sees the newest 100, so a
-    // section with hundreds of articles but none published today read as 0.
-    let serverTotals = null;
-    try {
-        serverTotals = JSON.parse(categoryLists[0].dataset.totals || 'null');
-    } catch (e) {
-        serverTotals = null;
-    }
-
-    if (serverTotals) {
-        catDefs.forEach(c => counts[c.name] = serverTotals[c.key] || 0);
-    } else if (validArticles && validArticles.length > 0) {
-        validArticles.forEach(a => {
-            const catName = (a.category || (a.source && a.source.name) || '').toUpperCase();
-            const def = catDefs.find(d => d.key === catName);
-            if (def) {
-                counts[def.name]++;
-            }
-        });
-    }
-
-    let html = '';
-    catDefs.forEach(c => {
-        const count = counts[c.name] || 0;
-        html += `
-            <li>
-                <a href="${c.anchor}">
-                    ${c.name}
-                    <span>${count}</span>
-                </a>
-            </li>
-        `;
-    });
-
-    categoryLists.forEach(el => {
-        el.innerHTML = html;
-    });
 }
 
 function formatDate(dateString) {
@@ -564,7 +487,7 @@ function renderTwoCol(articles, containerId) {
         <div class="nm-gn-list" style="margin-top:20px;">
     `;
     
-    for (let i = 1; i < Math.min(articles.length, 4); i++) {
+    for (let i = 1; i < articles.length; i++) {
         html += `
             <div class="nm-gn-list-item">
                 <img src="${articles[i].urlToImage}" alt="">
@@ -621,26 +544,6 @@ function renderFitnessList(articles, containerId) {
             </div>
         </article>
     `).join('');
-    
-    container.innerHTML += html;
-}
-
-function renderGamingMain(articles, containerId) {
-    const container = document.getElementById(containerId);
-    if(!container) return;
-    if(!articles || articles.length === 0) { container.innerHTML = '<p style="padding: 20px;">No articles available.</p>'; return; }
-    
-    const html = `
-        <div class="nm-gn-main">
-            <img src="${articles[0].urlToImage}" onerror="this.style.display='none';" alt="" style="width: 100%; height: auto; display: block; margin-bottom: 10px;">
-            <div class="nm-article-meta nm-dark-meta" style="margin-bottom: 5px; font-size: 0.6875rem;">
-                <span class="nm-category-text" style="color: #e86aa1; margin-right:10px;">${(articles[0].source.name || 'GAMING').substring(0, 15)}</span>
-            </div>
-            <h3 class="nm-post-title" style="font-size: 1.25rem; margin-bottom: 10px; font-weight: 500; line-height: 1.2;">
-                <a href="${articles[0].url}" class="nm-gaming-link" target="_blank">${articles[0].title}</a>
-            </h3>
-        </div>
-    `;
     
     container.innerHTML += html;
 }

@@ -446,6 +446,19 @@ class SaleOrder(models.Model):
                         if dynamic_carrier_ids:
                             cj_carriers = self.env['delivery.carrier'].sudo().browse(dynamic_carrier_ids)
                             carriers = carriers | cj_carriers
+
+                    if not freight_data:
+                        # The cart holds CJ products but checkout is about to
+                        # offer only the non-CJ carriers. cj_api_client logs
+                        # why; name the order here so the two lines can be tied
+                        # together. Silence used to make a disabled CJ account
+                        # indistinguishable from a working shop.
+                        _logger.warning(
+                            "No CJ shipping methods for order %s (%s -> %s): "
+                            "checkout falls back to %s",
+                            self.name, "CN", end_country,
+                            ', '.join(carriers.mapped('name')) or _('no carrier at all'),
+                        )
                 except Exception as e:
                     _logger.error("Failed to fetch CJ freight rates: %s", str(e))
         

@@ -17,11 +17,18 @@ class CjApiClient(models.AbstractModel):
     _description = "CJ Dropshipping API Client v2"
 
     def _get_api_key(self):
+        # Settings -> CJ Dropshipping -> CJ API Key is the only source. A key
+        # used to be hardcoded here as the get_param default (and as the
+        # settings field's default), so clearing the field did not disable the
+        # integration: it silently authenticated as whoever that key belonged
+        # to, and the UserError below could never fire.
         ICP = self.env["ir.config_parameter"].sudo()
-        default_key = "CJ4647033@api@5e1ba4f458d84aa39921afd592149251"
-        api_key = ICP.get_param("aveenix_cj_dropshipping.cj_api_key", default=default_key)
+        api_key = ICP.get_param("aveenix_cj_dropshipping.cj_api_key")
         if not api_key:
-            raise UserError(_("Please configure your CJ Dropshipping API Key in General / Website Settings."))
+            raise UserError(_(
+                "Please configure your CJ Dropshipping API Key in "
+                "Settings -> CJ Dropshipping."
+            ))
         return api_key.strip()
 
     def get_access_token(self, force_refresh=False):
@@ -294,9 +301,18 @@ class CjApiClient(models.AbstractModel):
         res = self._make_request("logistic/freightCalculate", method="POST", data=payload)
         if res.get("code") == 200 and res.get("result"):
             return res.get("data") or []
-        
-        # If simple mode fails or has no results, try freightCalculateTip or just return empty
-        # Usually freightCalculate works for standard routing.
+
+        # Rates are optional at checkout — a failure here must not break the
+        # page, so it still returns []. But it used to do so silently, and the
+        # shop then just showed its non-CJ carriers: an account whose API
+        # access CJ had disabled (code 1600014) looked exactly like a
+        # destination CJ does not ship to, and like no integration at all. Say
+        # which it is, in CJ's own words.
+        _logger.warning(
+            "CJ freight calculation failed for %s -> %s (code %s): %s",
+            start_country, end_country, res.get("code"),
+            res.get("message") or _("no message returned"),
+        )
         return []
 
     # =========================================================================
