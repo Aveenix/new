@@ -284,6 +284,16 @@ ARTICLES = {
     }
 }
 
+# The CATEGORIES sidebar, in display order. Names come from the model's own
+# selection so the section taxonomy is spelled in exactly one place.
+_NEWS_SECTION_ORDER = (
+    'FASHION', 'FITNESS', 'GAMING', 'STYLE', 'SHOWBIZ',
+    'TRAVEL', 'FACTS', 'GADGETS', 'RECIPES', 'GLOBAL',
+)
+
+# Articles per page on a section listing: six rows of the two-column grid.
+_NEWS_SECTION_PPG = 12
+
 
 class AveenixWebsite(WebsiteSale):
 
@@ -300,44 +310,94 @@ class AveenixWebsite(WebsiteSale):
         return super().shop(page=page, category=category, search=search,
                             min_price=min_price, max_price=max_price, tags=tags, **post)
 
+    # ── News helpers ─────────────────────────────────────────────────
+
+    def _av_news_country_code(self):
+        """The two-letter country code the visitor's news is scoped to.
+
+        aveenix.news.country_code holds an ISO code. This used to also try the
+        country's display name, because the sync stored whatever name
+        NewsData.io returned — and since that is "United States of America"
+        where Odoo says "United States", neither leaf ever matched and the page
+        silently fell back to placeholder articles.
+        """
+        country_id = request.session.get(_LOCATION_SESSION_KEY)
+        if country_id:
+            country = request.env['res.country'].sudo().browse(country_id)
+        else:
+            country = (request.env.user.sudo().country_id
+                       or request.website.sudo().company_id.country_id)
+        return country.code.lower() if country and country.code else 'us'
+
+    def _av_news_section_counts(self, country_scope):
+        """{category: article total} over the whole table for this country.
+
+        Counted over the table, not over the rows a page happens to load: that
+        slice is the newest few articles, so a section with hundreds of them
+        but none in the last few hours used to show a count of 0. Blog posts
+        are left out — their categories are free text ("OUR BLOGS") and mixing
+        them in inflated whichever news section shared a name.
+        """
+        return {
+            category: count
+            for category, count in request.env['aveenix.news'].sudo()._read_group(
+                country_scope, groupby=['category'], aggregates=['__count'],
+            )
+        }
+
+    def _av_news_sidebar_categories(self, counts):
+        """Rows for the CATEGORIES widget: one section, one bucket, one link.
+
+        Every row points at that section's own listing page. They used to be a
+        mix of `?category=` reloads of the news home and `#anchors` into
+        whichever block of it carried similar articles, so "Showbiz" scrolled
+        to the Fashion widget and "Fitness" to a five-item teaser list instead
+        of opening the section.
+        """
+        News = request.env['aveenix.news'].sudo()
+        return [{
+            'name': News._av_category_label(section),
+            'count': counts.get(section, 0),
+            'url': '/news/category/%s' % section.lower(),
+        } for section in _NEWS_SECTION_ORDER]
+
+    def _av_news_article_vals(self, record):
+        """One aveenix.news record as the dict the news templates read."""
+        return {
+            'id': record.id,
+            'category': record.category,
+            'title': record.title,
+            'author': record.author or "Staff Reporter",
+            'date': record.published_date.strftime('%B %d, %Y') if record.published_date else "",
+            'image': record.image_url or "",
+            'url': f"/news/{record.id}",
+            'summary': record.description or "",
+            'content': record.content or "",
+            'is_db': True,
+        }
+
     @http.route('/news', type='http', auth='public', website=True)
     def news_home(self, category=None, **kwargs):
         import json
-        # Fetch from local DB
-        domain = []
-        if category:
-            # Section slugs map 1:1 onto aveenix.news.category. They used to be
-            # crossed over (fashion -> SHOWBIZ, gaming -> FACTS, fitness ->
-            # STYLE), which is why each section listed another one's articles.
-            cat_map = {
-                'global': 'GLOBAL',
-                'lifestyle': 'STYLE',
-                'style': 'STYLE',
-                'showbiz': 'SHOWBIZ',
-                'fashion': 'FASHION',
-                'fitness': 'FITNESS',
-                'gaming': 'GAMING',
-                'gadgets': 'GADGETS',
-                'recipes': 'RECIPES',
-                'travel': 'TRAVEL',
-                'facts': 'FACTS',
-            }
-            db_cat = cat_map.get(category.lower(), category.upper())
-            domain.append(('category', '=', db_cat))
-            
-        user_country_id = request.session.get('av_user_country_id')
-        if user_country_id:
-            user_country = request.env['res.country'].sudo().browse(user_country_id)
-        else:
-            user_country = request.env.user.sudo().country_id or request.website.sudo().company_id.country_id
-            
-        # aveenix.news.country_code holds a two-letter ISO code. This used to
-        # also try the country's display name, because the sync stored whatever
-        # name NewsData.io returned — and since that is "United States of
-        # America" where Odoo says "United States", neither leaf ever matched
-        # and the page silently fell back to placeholder articles.
-        country_code = user_country.code.lower() if user_country and user_country.code else 'us'
         News = request.env['aveenix.news'].sudo()
+
+        # A single section is a listing, not a filtered front page. This layout
+        # fills its blocks from fixed slices of one list — all_articles[5],
+        # [6:10], [10:13] — so asking it for a section thinner than that raised
+        # IndexError and served a 500: Gaming has three articles in GB and
+        # Fashion four in NZ. Section links now go to /news/category/<slug>,
+        # which renders however many there are; this redirect keeps the old
+        # ?category= links (bookmarks, search results) working.
+        if category:
+            db_category = News._av_category_from_slug(category)
+            if not db_category:
+                return request.not_found()
+            return request.redirect(
+                '/news/category/%s' % db_category.lower(), code=301,
+            )
+
+        domain = []
+        country_code = self._av_news_country_code()
         # Falls back to every country when the visitor's own has too little
         # news to fill the page — see _av_country_scope.
         country_scope = News._av_country_scope(country_code)
@@ -351,27 +411,11 @@ class AveenixWebsite(WebsiteSale):
             except Exception as e:
                 import logging
                 logging.getLogger(__name__).warning("On the fly news fetch failed: %s", str(e))
-        db_records = request.env['aveenix.news'].sudo().search(domain, limit=50)
-        articles_list = []
-        for r in db_records:
-            articles_list.append({
-                'id': r.id,
-                'category': r.category,
-                'title': r.title,
-                'author': r.author or "Staff Reporter",
-                'date': r.published_date.strftime('%B %d, %Y') if r.published_date else "",
-                'image': r.image_url or "",
-                'url': f"/news/{r.id}",
-                'summary': r.description or "",
-                'content': r.content or "",
-                'is_db': True,
-            })
+        db_records = News.search(domain, limit=50)
+        articles_list = [self._av_news_article_vals(r) for r in db_records]
 
         # Fill remaining slots using mock data to keep the premium layout complete
         mock_articles = [ARTICLES[k] for k in sorted(ARTICLES.keys())]
-        if category:
-            mock_articles = [a for a in mock_articles if a.get('category', '').lower() == category.lower()]
-            
         all_articles = articles_list + mock_articles
         
         # If no articles found for this category, provide fallback to avoid index errors
@@ -430,42 +474,12 @@ class AveenixWebsite(WebsiteSale):
             
         blog_categories = [{'name': 'OUR BLOGS', 'posts': blog_list}]
 
-        # Category totals for the sidebar widget. Counted over the whole table
-        # for this country, not over the 50 rows this page happens to load —
-        # that slice is the newest 50 articles, so a section with hundreds of
-        # articles but none in the last few hours was showing a count of 0.
-        # Blog posts are left out: their categories are free text ("OUR BLOGS")
-        # and mixing them in inflated whichever news section shared a name.
-        #
         # Built from country_scope, the same leaves the article list uses, so
         # the two can never describe different sets of articles. Deriving it by
         # stripping leaves off `domain` instead would silently drift the moment
         # another filter is added.
-        cat_counts = {
-            category: count
-            for category, count in News._read_group(
-                country_scope, groupby=['category'], aggregates=['__count'],
-            )
-        }
-
-        def get_count(*cat_names):
-            return sum(cat_counts.get(name.upper(), 0) for name in cat_names)
-
-        # One section, one bucket. Fashion used to be counted together with
-        # Showbiz and Gaming together with Facts, so the numbers next to those
-        # two never matched what the section actually showed.
-        dynamic_categories = [
-            {'name': 'Fashion', 'count': get_count('FASHION'), 'url': '/news?category=fashion'},
-            {'name': 'Fitness', 'count': get_count('FITNESS'), 'url': '/news#nm-fitness-section'},
-            {'name': 'Gaming', 'count': get_count('GAMING'), 'url': '/news#nm-gaming-section'},
-            {'name': 'Style', 'count': get_count('STYLE'), 'url': '/news?category=style'},
-            {'name': 'Showbiz', 'count': get_count('SHOWBIZ'), 'url': '/news#nm-must-read-list'},
-            {'name': 'Travel', 'count': get_count('TRAVEL'), 'url': '/news#nm-travel-guides'},
-            {'name': 'Facts', 'count': get_count('FACTS'), 'url': '/news?category=facts'},
-            {'name': 'Gadgets', 'count': get_count('GADGETS'), 'url': '/news#nm-gadgets-section'},
-            {'name': 'Recipes', 'count': get_count('RECIPES'), 'url': '/news#nm-recipes-section'},
-            {'name': 'Global', 'count': get_count('GLOBAL'), 'url': '/news#nm-global-news'},
-        ]
+        cat_counts = self._av_news_section_counts(country_scope)
+        dynamic_categories = self._av_news_sidebar_categories(cat_counts)
 
         from markupsafe import Markup
         data = {
@@ -478,10 +492,6 @@ class AveenixWebsite(WebsiteSale):
             'travel_guides': travel_guides,
             'blog_categories': blog_categories,
             'dynamic_categories': dynamic_categories,
-            # Same totals as the sidebar, handed to news_script.js so its
-            # client-side re-render of the widget shows the table-wide count
-            # instead of counting only the articles it happened to fetch.
-            'category_totals_json': json.dumps(cat_counts),
             'ad_image': NEWS_IMAGES['ad'],
             'is_news_page': True,
             # Headlines for the scrolling trending ticker. Sent as title+url
@@ -494,6 +504,49 @@ class AveenixWebsite(WebsiteSale):
             ]),
         }
         return request.render('aveenix_website.news_home_template', data)
+
+    @http.route([
+        '/news/category/<string:slug>',
+        '/news/category/<string:slug>/page/<int:page>',
+    ], type='http', auth='public', website=True)
+    def news_category(self, slug, page=1, **kwargs):
+        """One section's own page: every article in it, newest first.
+
+        The news home is a magazine front page — each block shows a handful of
+        one section and then stops. This is where "Fashion 4" in the sidebar
+        actually leads: the four articles, paged, each linking to its own
+        /news/<id> page rather than out to the original publisher.
+        """
+        News = request.env['aveenix.news'].sudo()
+        db_category = News._av_category_from_slug(slug)
+        if not db_category:
+            return request.not_found()
+
+        # Same country scope as the news home, so a section's page and the
+        # count the sidebar showed for it always describe the same articles.
+        country_scope = News._av_country_scope(self._av_news_country_code())
+        domain = [('category', '=', db_category)] + country_scope
+
+        total = News.search_count(domain)
+        pager = request.website.pager(
+            url='/news/category/%s' % db_category.lower(),
+            total=total, page=page, step=_NEWS_SECTION_PPG, scope=5,
+        )
+        records = News.search(
+            domain, limit=_NEWS_SECTION_PPG, offset=pager['offset'],
+        )
+
+        counts = self._av_news_section_counts(country_scope)
+        return request.render('aveenix_website.news_category_template', {
+            'category_name': News._av_category_label(db_category),
+            'category_slug': db_category.lower(),
+            'articles': [self._av_news_article_vals(r) for r in records],
+            'total_articles': total,
+            'pager': pager,
+            'dynamic_categories': self._av_news_sidebar_categories(counts),
+            'ad_image': NEWS_IMAGES['ad'],
+            'is_news_page': True,
+        })
 
     @http.route('/news/blog/<int:blog_id>', type='http', auth='public', website=True)
     def news_blog_category(self, blog_id, **kwargs):

@@ -251,6 +251,14 @@ _COUNTRY_NAME_ALIASES = {
 }
 
 
+# A section's URL spelling is its selection value lowercased — FASHION is at
+# /news/category/fashion. Only 'lifestyle' needs an entry here: it is the word
+# the header and the older ?category= links use for the Style section.
+_SECTION_SLUG_ALIASES = {
+    'lifestyle': 'STYLE',
+}
+
+
 class AveenixNews(models.Model):
     _name = 'aveenix.news'
     _description = 'Aveenix News Article'
@@ -282,6 +290,29 @@ class AveenixNews(models.Model):
         help="Comma-separated categories exactly as NewsData.io returned them. "
              "Kept so articles can be re-classified later without re-fetching.",
     )
+
+    # ── Sections ─────────────────────────────────────────────────────────
+
+    @api.model
+    def _av_category_from_slug(self, slug):
+        """The ``category`` value a URL slug names, or None if it names none.
+
+        Validated against the selection rather than upper-cased blindly, so an
+        unknown slug gives a 404 instead of a listing page that is empty
+        because no article could ever carry that category.
+        """
+        key = (slug or '').strip().lower()
+        if not key:
+            return None
+        if key in _SECTION_SLUG_ALIASES:
+            return _SECTION_SLUG_ALIASES[key]
+        value = key.upper()
+        return value if value in dict(self._fields['category'].selection) else None
+
+    @api.model
+    def _av_category_label(self, value):
+        """The human name of a ``category`` value ('FASHION' -> 'Fashion')."""
+        return dict(self._fields['category'].selection).get(value, value or '')
 
     # ── Classification ───────────────────────────────────────────────────
 

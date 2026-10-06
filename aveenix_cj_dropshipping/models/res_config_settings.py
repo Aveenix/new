@@ -10,7 +10,6 @@ class ResConfigSettings(models.TransientModel):
     cj_api_key = fields.Char(
         string='CJ API Key',
         config_parameter='aveenix_cj_dropshipping.cj_api_key',
-        default='CJ4647033@api@5e1ba4f458d84aa39921afd592149251',
         help='API Key from CJ Dropshipping Personal Center -> API -> API Key',
     )
     cj_is_sandbox = fields.Boolean(

@@ -200,7 +200,8 @@ ul { list-style: none; }
     font-size: 0.9375rem; font-weight: 700; margin-right: 0; padding: 0 15px 0 0; background-color: transparent; color: #000; text-transform: capitalize;
 }
 .nm-section-heading .nm-line { flex-grow: 1; height: 2px; background-color: var(--nm-primary); }
-.nm-section-heading .nm-filter { margin-left: 15px; font-size: 0.75rem; color: var(--meta-color); cursor: pointer; font-weight: 700; }
+.nm-section-heading .nm-filter { margin-left: 15px; font-size: 0.75rem; color: var(--meta-color); cursor: pointer; font-weight: 700; text-decoration: none; }
+.nm-section-heading a.nm-filter:hover { color: var(--nm-primary); text-decoration: none; }
 
 /* Layout */
 .nm-content-layout { display: flex; gap: 30px; }
@@ -208,10 +209,15 @@ ul { list-style: none; }
 .nm-sidebar { width: 32%; }
 
 /* Global News */
+/* The lead card + compact list pair is reused by the Gadgets, Recipes and
+   Gaming blocks, so only the 55/45 split is scoped to the Global News block
+   itself. Unscoped, it squeezed the Gaming card into 55% of an already narrow
+   sidebar and left the rest of the column empty. */
 .nm-global-news-layout { display: flex; gap: 20px; margin-bottom: 40px; }
-.nm-gn-main { width: 55%; }
+.nm-global-news-layout .nm-gn-main { width: 55%; }
+.nm-global-news-layout .nm-gn-list { width: 45%; }
 .nm-gn-main img { width: 100%; height: 250px; object-fit: cover; margin-bottom: 15px; }
-.nm-gn-list { width: 45%; display: flex; flex-direction: column; gap: 15px; }
+.nm-gn-list { display: flex; flex-direction: column; gap: 15px; }
 .nm-gn-list-item { display: flex; gap: 15px; }
 .nm-gn-list-item img { width: 100px; height: 75px; object-fit: cover; }
 .nm-gn-list-content { flex: 1; }
@@ -296,8 +302,7 @@ ul { list-style: none; }
 /* 2 Col Layout */
 .nm-two-col-layout { display: flex; gap: 30px; margin-bottom: 40px; }
 .nm-col-half { width: 50%; }
-.nm-col-half .nm-gn-main { width: 100%; }
-.nm-col-half .nm-gn-list { width: 100%; margin-top: 15px; }
+.nm-col-half .nm-gn-list { margin-top: 15px; }
 
 /* 4 Col Grid */
 .nm-four-col-grid {
@@ -411,7 +416,7 @@ ul { list-style: none; }
     .nm-hero-main { height: auto; min-height: 400px; }
     .nm-hero-item { height: auto; min-height: 250px; }
     .nm-global-news-layout, .nm-two-col-layout { flex-direction: column; }
-    .nm-gn-main, .nm-gn-list, .nm-col-half { width: 100%; }
+    .nm-global-news-layout .nm-gn-main, .nm-global-news-layout .nm-gn-list, .nm-col-half { width: 100%; }
     .nm-travel-guides-grid, .nm-four-col-grid { grid-template-columns: 1fr; }
     .nm-header-ad .nm-ad-placeholder { display: none; }
     .nm-logo-area { justify-content: center; }
