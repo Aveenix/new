@@ -1,6 +1,6 @@
 import json
 from odoo import http, _
-from odoo.http import request
+from odoo.http import request, root
 
 
 class AveenixMobileAPI(http.Controller):
@@ -303,26 +303,46 @@ class AveenixMobileAPI(http.Controller):
 
     @http.route(['/api/v1/cart/add'], type='http', auth='public', methods=['POST', 'OPTIONS'], csrf=False, cors='*')
     def add_to_cart(self, **kw):
-        """6. Add to Cart"""
+        """6. Add to Cart
+
+        ``product_id`` is a product.template id - the ``id`` that /api/v1/products
+        and /api/v1/product/<id> publish. Pass ``variant_id`` (the listing's
+        ``variant_id``, a product.product) to pick a specific variant.
+
+        It used to browse product.product with ``product_id`` first and only fall
+        back to product.template when no variant carried that id. The two id
+        spaces overlap, so a template id that also existed as a variant id
+        silently added a different product: template 953 arrived and variant 953
+        went into the cart, which belongs to template 933.
+        """
         if request.httprequest.method == 'OPTIONS':
             return self._success_response({'cors': 'ok'})
         params = self._get_request_data(kw)
         product_id = params.get('product_id')
-        if not product_id:
+        variant_id = params.get('variant_id')
+        if not product_id and not variant_id:
             return self._error_response('product_id is required', 400)
         try:
-            product_id = int(product_id)
+            product_id = int(product_id) if product_id else None
+            variant_id = int(variant_id) if variant_id else None
             qty = float(params.get('quantity', 1.0))
         except (ValueError, TypeError):
             return self._error_response('Invalid product_id or quantity format', 400)
 
-        product = request.env['product.product'].sudo().browse(product_id)
-        if not product.exists():
-            tmpl = request.env['product.template'].sudo().browse(product_id)
-            if tmpl.exists() and tmpl.product_variant_id:
-                product = tmpl.product_variant_id
-            else:
+        if variant_id:
+            product = request.env['product.product'].sudo().browse(variant_id).exists()
+            if not product:
                 return self._error_response('Product not found', 404)
+            if product_id and product.product_tmpl_id.id != product_id:
+                return self._error_response(
+                    'variant_id %s does not belong to product_id %s' % (variant_id, product_id), 400)
+        else:
+            tmpl = request.env['product.template'].sudo().browse(product_id).exists()
+            if not tmpl:
+                return self._error_response('Product not found', 404)
+            product = tmpl.product_variant_id
+            if not product:
+                return self._error_response('Product has no sellable variant', 404)
 
         order = None
         if params.get('order_id'):
@@ -531,6 +551,14 @@ class AveenixMobileAPI(http.Controller):
 
             uid = auth_info.get('uid')
             if uid:
+                # authenticate() only flags the session for rotation; the new sid
+                # is minted later, while the response is saved. Reading the sid
+                # here handed the client the one the session is about to stop
+                # using - the Set-Cookie header carried the rotated value - so a
+                # client that stores this field instead of following the cookie
+                # authenticated as nobody and saw an empty /api/v1/orders.
+                if request.session.should_rotate:
+                    root.session_store.rotate(request.session, request.env)
                 user = request.env['res.users'].browse(uid)
                 session_id = request.session.sid
                 return self._success_response({

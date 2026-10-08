@@ -4744,6 +4744,22 @@
                                     <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
                                 </div>
                             </div>
+
+                            <!-- Local News: the visitor's own country. Global
+                                 above it reads every country, so this is where
+                                 the headlines that block used to carry now
+                                 live, under a heading that says so. -->
+                            <div class="nm-section-heading">
+                                <h2>LOCAL NEWS</h2>
+                                <div class="nm-line" style="background-color: #00a69c;"></div>
+                                <a class="nm-filter" href="/news/local">All <i class="fa fa-angle-down"></i></a>
+                            </div>
+
+                            <div class="nm-global-news-layout" id="nm-local-news">
+                                <div style="text-align: center; padding: 40px; width: 100%;">
+                                    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Top Right Sidebar (First Section) -->
@@ -4946,7 +4962,7 @@
                     </section>
 </main>
                 
-                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=19"></script>
+                <script type="text/javascript" src="/aveenix_website/static/src/js/news_script.js?v=20"></script>
                 <script type="text/javascript" src="/aveenix_website/static/src/js/news_ticker.js?v=1"></script>
             </div>
         </t>

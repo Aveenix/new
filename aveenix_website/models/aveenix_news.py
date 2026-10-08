@@ -451,6 +451,25 @@ class AveenixNews(models.Model):
             return leaves
         return []
 
+    # The world section. Every other section is a topic within the visitor's
+    # own country, so the country scope belongs on it. GLOBAL is different:
+    # NewsData.io's `top`/`breaking`/`world` co-tags land here, so scoping it
+    # to one country turned the page's "GLOBAL NEWS" block into that country's
+    # headlines - an M6 traffic jam for GB, a regional semi-final for US - under
+    # a heading promising the world. GLOBAL reads the whole feed; the visitor's
+    # own country gets its own Local block instead.
+    AV_WORLD_SECTION = 'GLOBAL'
+
+    @api.model
+    def _av_section_scope(self, section, country_scope):
+        """The country leaves one section's listing should carry.
+
+        One place, because the block, the section page and the sidebar count
+        all have to agree: a count filtered differently from the list it
+        describes is the bug this module keeps coming back to.
+        """
+        return [] if section == self.AV_WORLD_SECTION else country_scope
+
     @api.model
     def _av_resolve_country_code(self, country_names, fallback='us'):
         """Turn NewsData.io's country names into a two-letter ISO code.
