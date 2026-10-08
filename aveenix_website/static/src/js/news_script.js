@@ -340,7 +340,12 @@ async function fetchNews() {
 
         // Hero and Global run first so the strongest world stories lead the page.
         renderHero(take('GLOBAL', 5));
-        renderGlobalNews(take('GLOBAL', 5));
+        renderGlobalNews(take('GLOBAL', 5), 'nm-global-news', 'global');
+
+        // Local is a second request, not a slice of the one above: /api/v1/news
+        // serves the world section unscoped now, so the visitor's own country
+        // is not in `validArticles` at all unless it is asked for by name.
+        renderLocalNews();
 
         // The block under the LIFESTYLE heading — the nav's "Lifestyle" link
         // points at it — was fed TRAVEL, so it showed flight and hotel stories
@@ -417,11 +422,13 @@ function renderHero(articles) {
     }
 }
 
-function renderGlobalNews(articles) {
-    const container = document.getElementById('nm-global-news');
+// Lead card + four-item list. Global and Local are the same block shape over
+// different scopes, so they share this rather than keeping two copies in step.
+function renderGlobalNews(articles, containerId, emptyLabel) {
+    const container = document.getElementById(containerId || 'nm-global-news');
     if (!container) return;
     if (!articles || articles.length === 0) {
-        container.innerHTML = '<p style="padding: 20px;">No global news available at the moment.</p>';
+        container.innerHTML = '<p style="padding: 20px;">No ' + (emptyLabel || 'global') + ' news available at the moment.</p>';
         return;
     }
 
@@ -452,6 +459,31 @@ function renderGlobalNews(articles) {
     listHtml += '</div>';
     
     container.innerHTML = mainHtml + listHtml;
+}
+
+async function renderLocalNews() {
+    try {
+        const res = await fetch('/api/v1/news?category=global&scope=local&per_category=5');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.status !== 'success' || !data.data) return;
+        const articles = data.data
+            .filter(r => r.image_url && !r.image_url.includes('stimg.co') && r.title)
+            .map(r => ({
+                title: r.title,
+                url: r.link,
+                urlToImage: r.image_url,
+                publishedAt: r.date,
+                author: 'Staff Reporter',
+                category: 'LOCAL',
+                source: { name: 'LOCAL' },
+                description: r.description,
+                content: r.description
+            }));
+        renderGlobalNews(articles, 'nm-local-news', 'local');
+    } catch (e) {
+        console.error('Local news fetch failed', e);
+    }
 }
 
 function renderLifestyle(articles) {
