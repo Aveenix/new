@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        New-user welcome discount.
+
+        A "promotion" loyalty program that auto-applies a fixed discount to a
+        customer's order at checkout (trigger=auto, no code to enter). The
+        "first order only" restriction is enforced in code
+        (sale_order._program_check_compute_points), and once_per_customer /
+        limit gives a hard backstop.
+
+        The discount amount and the active flag are driven from
+        Settings → Website (res.config.settings), which writes onto the reward
+        below — so the $20 is fully configurable from the backend with no code
+        change. Ships inactive; enabling + setting an amount in Settings turns
+        it on.
+    -->
+    <record id="loyalty_program_welcome_discount" model="loyalty.program">
+        <field name="name">New User Welcome Discount</field>
+        <field name="program_type">promotion</field>
+        <field name="applies_on">current</field>
+        <field name="trigger">auto</field>
+        <field name="portal_visible">False</field>
+        <field name="ecommerce_ok">True</field>
+        <field name="limit_usage">True</field>
+        <field name="max_usage">1</field>
+        <field name="active">False</field>
+    </record>
+
+    <!--
+        Rule: one point per order, no minimum spend / quantity, so the program
+        is eligible on any first order. reward_point_mode=order → 1 pt/order,
+        matched by the reward's required_points=1.
+    -->
+    <record id="loyalty_rule_welcome_discount" model="loyalty.rule">
+        <field name="program_id" ref="loyalty_program_welcome_discount"/>
+        <field name="reward_point_amount">1</field>
+        <field name="reward_point_mode">order</field>
+        <field name="minimum_qty">1</field>
+        <field name="minimum_amount">0</field>
+    </record>
+
+    <!--
+        Reward: fixed per-order discount. `discount` is the seed default (20);
+        Settings overwrites it with the configured welcome amount on save.
+    -->
+    <record id="loyalty_reward_welcome_discount" model="loyalty.reward">
+        <field name="program_id" ref="loyalty_program_welcome_discount"/>
+        <field name="reward_type">discount</field>
+        <field name="discount_mode">per_order</field>
+        <field name="discount">20</field>
+        <field name="discount_applicability">order</field>
+        <field name="required_points">1</field>
+    </record>
+</odoo>

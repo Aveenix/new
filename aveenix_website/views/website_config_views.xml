@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_website_form_aveenix_colors" model="ir.ui.view">
+        <field name="name">website.form.aveenix.colors</field>
+        <field name="model">website</field>
+        <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Aveenix Theme" name="page_aveenix_theme">
+                    <group string="Brand Colors">
+                        <group>
+                            <field name="aveenix_primary_color"
+                                   string="Primary Color"
+                                   help="Main brand color — header, search button, badges, nav bar. Hex value e.g. #CC0000"/>
+                            <field name="aveenix_accent_color"
+                                   string="Accent Color"
+                                   help="Accent / CTA color — Shop Now button, Add to Cart, stars. Hex value e.g. #FFB300"/>
+                        </group>
+                        <group>
+                            <div class="text-muted" colspan="2">
+                                Enter a hex color value (e.g. <code>#CC0000</code>). Changes apply on the next page load.
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Product form: Available Countries field -->
+    <record id="view_product_template_aveenix_location" model="ir.ui.view">
+        <field name="name">product.template.aveenix.location</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='extra_info']" position="inside">
+                <field name="available_country_ids"
+                       widget="many2many_tags"
+                       string="Available In Countries"
+                       help="Leave empty to show everywhere. Select countries to restrict to those locations."/>
+                <field name="is_sponsored"/>
+                <field name="sponsor_rank" invisible="not is_sponsored"/>
+            </xpath>
+            <xpath expr="//page[@name='sales']" position="after">
+                <page string="Shipping &amp; Delivery" name="av_shipping_delivery">
+                    <group>
+                        <field name="av_shipping_info" nolabel="1" placeholder="Add shipping &amp; delivery content shown in the product page tab..."/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- reCAPTCHA v2 keys in Website Settings -->
+    <record id="res_config_settings_aveenix_recaptcha" model="ir.ui.view">
+        <field name="name">res.config.settings.aveenix.recaptcha</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='website_info_settings']" position="after">
+                <block title="Order Notifications (Aveenix)" name="aveenix_order_notify_block">
+                    <setting string="Order Notification Email"
+                             help="Comma-separated admin email address(es) that receive a separate internal notification when a website order is placed. Leave empty to disable.">
+                        <field name="aveenix_order_admin_cc" placeholder="admin@aveenix.com, sales@aveenix.com"/>
+                    </setting>
+                </block>
+                <block title="New-User Welcome Discount (Aveenix)" name="aveenix_welcome_discount_block">
+                    <setting string="Enable Welcome Discount" type="boolean"
+                             help="Give first-time customers a fixed discount on their first order, applied automatically at checkout.">
+                        <field name="aveenix_welcome_discount_enabled"/>
+                    </setting>
+                    <setting string="Discount Amount"
+                             invisible="not aveenix_welcome_discount_enabled"
+                             help="Fixed amount taken off the customer's first order. Granted once per new account.">
+                        <div class="content-group mt16">
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="aveenix_welcome_discount_amount"/>
+                                <field name="aveenix_welcome_discount_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" invisible="1"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+                <block title="NewsData.io Integration (Aveenix)" name="aveenix_newsdata_block">
+                    <setting string="NewsData.io API Key"
+                             help="Your API Key from NewsData.io to fetch live news articles.">
+                        <field name="aveenix_newsdata_api_key" placeholder="pub_..."/>
+                    </setting>
+                    <setting string="NewsData.io Countries"
+                             help="Select the target countries to fetch news from. Leave empty for global/all news.">
+                        <field name="aveenix_newsdata_country_ids" widget="many2many_tags" placeholder="Select countries..."/>
+                    </setting>
+                </block>
+                <block title="Homepage Featured Categories (Aveenix)" name="aveenix_home_categ_block">
+                    <setting string="Featured Categories"
+                             help="Categories featured on the homepage after New Arrivals. Each shows a product row with a View All link to the shop filtered by that category.">
+                        <field name="aveenix_home_categ_ids" widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Select categories to feature on the homepage..."/>
+                    </setting>
+                </block>
+                <block title="Header Menu Categories (Aveenix)" name="aveenix_header_menu_categ_block">
+                    <setting string="Header Menu Categories"
+                             help="Categories shown as menu links in the header, right after the Shop link.">
+                        <field name="aveenix_header_menu_categ_ids" widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Select categories to show in the header menu..."/>
+                    </setting>
+                </block>
+                <block title="Auto-publish After Image Download (Aveenix)" name="aveenix_auto_publish_block">
+                    <setting string="Affiliate Products" type="boolean"
+                             help="Automatically publish affiliate products to the website once their image is successfully downloaded.">
+                        <field name="aveenix_auto_publish_affiliate"/>
+                    </setting>
+                    <setting string="Dropship Products" type="boolean"
+                             help="Automatically publish dropship products to the website once their image is successfully downloaded.">
+                        <field name="aveenix_auto_publish_dropship"/>
+                    </setting>
+                    <setting string="Regular Products" type="boolean"
+                             help="Automatically publish regular (non-affiliate, non-dropship) products to the website once their image is downloaded.">
+                        <field name="aveenix_auto_publish_regular"/>
+                    </setting>
+                </block>
+                <block title="reCAPTCHA v2 (Aveenix Forms)" name="aveenix_recaptcha_block">
+                    <setting string="Enable Website Captcha" type="boolean"
+                             help="Show and validate reCAPTCHA v2 on contact, login, signup and reset-password forms. Turn off to disable captcha site-wide.">
+                        <field name="aveenix_recaptcha_v2_enabled"/>
+                    </setting>
+                    <setting string="reCAPTCHA v2 Keys"
+                             invisible="not aveenix_recaptcha_v2_enabled"
+                             help="Get free keys at https://www.google.com/recaptcha/admin (reCAPTCHA v2 'I'm not a robot' checkbox).">
+                        <div class="content-group mt16">
+                            <div class="row mb8">
+                                <label class="col-lg-4 o_light_label" for="aveenix_recaptcha_v2_site_key"/>
+                                <field name="aveenix_recaptcha_v2_site_key" placeholder="6Lc... (site key)"/>
+                            </div>
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="aveenix_recaptcha_v2_secret_key"/>
+                                <field name="aveenix_recaptcha_v2_secret_key" password="True" placeholder="6Lc... (secret key)"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+            <xpath expr="//block[@name='aveenix_recaptcha_block']" position="after">
+                <block title="Advertisement Banners (News)" name="aveenix_advertisement_block">
+                    <setting string="Ad Banner 1 Image" help="Upload an image for the first advertisement banner in the news sidebar.">
+                        <field name="aveenix_news_ad1_image" widget="image" options="{'size': [150, 150]}"/>
+                    </setting>
+                    <setting string="Ad Banner 1 URL" help="URL to redirect to when the first ad is clicked.">
+                        <field name="aveenix_news_ad1_url" placeholder="https://..."/>
+                    </setting>
+                    <setting string="Ad Banner 2 Image" help="Upload an image for the second advertisement banner in the news sidebar.">
+                        <field name="aveenix_news_ad2_image" widget="image" options="{'size': [150, 150]}"/>
+                    </setting>
+                    <setting string="Ad Banner 2 URL" help="URL to redirect to when the second ad is clicked.">
+                        <field name="aveenix_news_ad2_url" placeholder="https://..."/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    
+
+</odoo>

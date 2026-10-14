@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_reward_config_manager,reward.config.manager,model_aveenix_reward_config,group_reward_manager,1,1,1,1
+access_reward_config_user,reward.config.user,model_aveenix_reward_config,group_reward_user,1,0,0,0
+access_reward_dist_rule_manager,reward.dist.rule.manager,model_aveenix_reward_distribution_rule,group_reward_manager,1,1,1,1
+access_reward_dist_rule_user,reward.dist.rule.user,model_aveenix_reward_distribution_rule,group_reward_user,1,0,0,0
+access_reward_record_manager,reward.record.manager,model_aveenix_reward_record,group_reward_manager,1,1,1,1
+access_reward_record_user,reward.record.user,model_aveenix_reward_record,group_reward_user,1,0,0,0
+access_reward_redemption_manager,reward.redemption.manager,model_aveenix_reward_redemption,group_reward_manager,1,1,1,1
+access_reward_redemption_user,reward.redemption.user,model_aveenix_reward_redemption,group_reward_user,1,1,1,0
+access_bulk_approve_wizard,bulk.approve.wizard,model_aveenix_reward_bulk_approve,group_reward_manager,1,1,1,1
+access_payment_gateway_config_manager,payment.gateway.config.manager,model_aveenix_payment_gateway_config,aveenix_rewards.group_reward_manager,1,1,1,1
+access_reward_redemption_portal,reward.redemption.portal,model_aveenix_reward_redemption,base.group_portal,1,1,1,0
+access_reject_redemption_wizard,reject.redemption.wizard,model_aveenix_reject_redemption,aveenix_rewards.group_reward_manager,1,1,1,1

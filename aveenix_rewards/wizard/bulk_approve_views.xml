@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bulk_approve_form" model="ir.ui.view">
+        <field name="name">aveenix.reward.bulk.approve.form</field>
+        <field name="model">aveenix.reward.bulk.approve</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Approve Rewards">
+                <sheet>
+                    <group>
+                        <field name="reward_ids" widget="many2many_tags"
+                               domain="[('state','=','pending')]"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_approve_all" string="Approve Selected"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bulk_approve_wizard" model="ir.actions.act_window">
+        <field name="name">Bulk Approve Rewards</field>
+        <field name="res_model">aveenix.reward.bulk.approve</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_bulk_approve"
+              name="Bulk Approve"
+              parent="aveenix_rewards.menu_aveenix_rewards_records"
+              action="action_bulk_approve_wizard"
+              sequence="30"
+              groups="aveenix_rewards.group_reward_manager"/>
+</odoo>

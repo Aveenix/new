@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cron_auto_update_currency_rates" model="ir.cron">
+        <field name="name">Aveenix: Auto-Update Currency Rates</field>
+        <field name="model_id" ref="base.model_res_currency"/>
+        <field name="state">code</field>
+        <field name="code">model.av_cron_update_currency_rates()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="action_update_currency_rates" model="ir.actions.server">
+        <field name="name">Update Live Currency Rates</field>
+        <field name="model_id" ref="base.model_res_currency"/>
+        <field name="binding_model_id" ref="base.model_res_currency"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">model.av_cron_update_currency_rates()</field>
+    </record>
+</odoo>

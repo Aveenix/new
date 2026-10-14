@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Backend indicator for internal users: flag on the partner form when a
+         customer still qualifies for the new-user welcome discount (enabled +
+         no confirmed order yet). Mirrors the sale.order form notice. -->
+    <record id="view_partner_form_aveenix_welcome_discount" model="ir.ui.view">
+        <field name="name">res.partner.form.aveenix.welcome.discount</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="av_welcome_discount_eligible" invisible="1"/>
+                <div class="alert alert-success mb-0" role="status"
+                     invisible="not av_welcome_discount_eligible">
+                    <i class="fa fa-gift me-2" title="Welcome discount"/>
+                    Eligible for the
+                    <field name="av_welcome_discount_label" class="fw-bold d-inline"
+                           nolabel="1" readonly="1"/>
+                    new-user welcome discount (no confirmed order yet).
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

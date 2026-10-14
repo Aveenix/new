@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Create the Aveenix eWallet loyalty program.
+        program_type=ewallet  → Odoo treats this as a cash wallet
+        portal_visible=True   → customer sees balance at /my/loyalty
+        No loyalty.rule records → we bypass Odoo rule engine entirely
+        and write points directly on approval.
+    -->
+    <record id="aveenix_ewallet_program" model="loyalty.program">
+        <field name="name">Aveenix eWallet</field>
+        <field name="program_type">ewallet</field>
+        <field name="portal_visible">True</field>
+        <field name="portal_point_name">₹</field>
+        <field name="active">True</field>
+    </record>
+
+    <!--
+        Platform Voucher program: coupon-type, trigger=with_code.
+        1 point = 1 unit of company currency (per_point, discount=1).
+        card.points is set to points_to_redeem at issuance so the
+        discount value always matches the redeemed amount exactly.
+        Customer enters the code at checkout → Odoo applies the discount.
+    -->
+    <record id="aveenix_voucher_program" model="loyalty.program">
+        <field name="name">Aveenix Platform Vouchers</field>
+        <field name="program_type">coupons</field>
+        <field name="applies_on">current</field>
+        <field name="trigger">with_code</field>
+        <field name="portal_visible">False</field>
+        <field name="portal_point_name">Points</field>
+        <field name="active">True</field>
+        <field name="ecommerce_ok">True</field>
+    </record>
+
+    <record id="aveenix_voucher_reward" model="loyalty.reward">
+        <field name="program_id" ref="aveenix_voucher_program"/>
+        <field name="reward_type">discount</field>
+        <field name="discount_mode">per_point</field>
+        <field name="discount">1</field>
+        <field name="discount_applicability">order</field>
+        <field name="required_points">1</field>
+        <field name="description">Aveenix Reward Voucher</field>
+    </record>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cj_product_import_wizard_form" model="ir.ui.view">
+        <field name="name">cj.product.import.wizard.form</field>
+        <field name="model">cj.product.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import CJ Dropshipping Products">
+                <sheet>
+                    <group>
+                        <field name="import_mode" widget="radio"/>
+                        <field name="limit_count" invisible="import_mode != 'by_limit'"/>
+                        <field name="category_id_str" invisible="import_mode != 'by_limit'" placeholder="Optional Category ID (leave empty for all)"/>
+                        <field name="cj_pid_or_sku" invisible="import_mode != 'by_pid'" required="import_mode == 'by_pid'" placeholder="e.g. 1392053744945991680 or CJ-..."/>
+                        <field name="markup_percentage"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_import_product" string="Import Products" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cj_product_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import CJ Products</field>
+        <field name="res_model">cj.product.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_cj_product_import"
+              name="Import CJ Products"
+              action="action_cj_product_import_wizard"
+              parent="sale.product_menu_catalog"
+              sequence="90"/>
+</odoo>

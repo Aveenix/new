@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_cj" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cj</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="CJ Dropshipping" string="CJ Dropshipping" name="aveenix_cj_dropshipping">
+                    <block title="CJ Dropshipping API Configuration" name="cj_api_setting_container">
+                        <setting id="cj_api_key_setting" string="CJ API Key" help="Your API Key from CJ Personal Center -> API -> API Key">
+                            <field name="cj_api_key"/>
+                        </setting>
+                        <setting id="cj_sandbox_setting" string="Sandbox Mode (Test Orders)" help="When enabled, orders pushed to CJ will include isSandbox=1 so you can test without real payment.">
+                            <field name="cj_is_sandbox"/>
+                        </setting>
+                        <setting id="cj_test_connection_setting" string="Connection Test &amp; One-Click Store Sync" help="Test API Key, generate access token, or one-click sync your store wishlist products in English.">
+                            <div>
+                                <button name="action_test_cj_connection" type="object" string="Test CJ API Connection" class="btn-secondary"/>
+                                <button name="action_sync_my_cj_products" type="object" string="Sync All My Store Products (in English)" class="btn-primary ms-2"/>
+                                <button name="action_debug_cj_api_print" type="object" string="Print / Debug CJ API Report" class="btn-info ms-2"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Price Rule &amp; Order Push Settings" name="cj_order_setting_container">
+                        <setting id="cj_markup_setting" string="Default Markup Percentage (%)" help="Default percentage added to CJ cost price to compute sale price.">
+                            <field name="cj_default_markup_percentage"/>
+                        </setting>
+                        <setting id="cj_auto_push_setting" string="Auto-Push Orders on Confirmation" help="Automatically push dropship orders to CJ when confirmed in Odoo.">
+                            <field name="cj_auto_push_order"/>
+                        </setting>
+                        <setting id="cj_default_logistics_setting" string="Default Logistics Carrier" help="Default shipping method used when pushing orders to CJ Dropshipping.">
+                            <field name="cj_default_logistics"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

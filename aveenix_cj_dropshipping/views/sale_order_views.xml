@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_cj_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.cj.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field name="has_cj_dropship_lines" invisible="1"/>
+                <button name="action_push_to_cj"
+                        string="Push to CJ Dropshipping"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not has_cj_dropship_lines or cj_order_status != 'draft'"/>
+                <button name="action_fetch_cj_tracking"
+                        string="Fetch CJ Tracking"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not cj_order_id"/>
+            </header>
+            <xpath expr="//notebook" position="inside">
+                <page string="CJ Dropshipping" name="cj_dropshipping_page" invisible="not has_cj_dropship_lines">
+                    <group>
+                        <group string="CJ Order Information">
+                            <field name="cj_order_id" readonly="1"/>
+                            <field name="cj_order_number" readonly="1"/>
+                            <field name="cj_order_status" readonly="1"/>
+                            <field name="cj_logistics_name"/>
+                        </group>
+                        <group string="Tracking Details">
+                            <field name="cj_tracking_number"/>
+                            <field name="cj_tracking_link" widget="url"/>
+                        </group>
+                    </group>
+                    <group string="Error Log" invisible="not cj_error_message">
+                        <field name="cj_error_message" nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_push_orders_to_cj_server" model="ir.actions.server">
+        <field name="name">Push to CJ Dropshipping</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_push_to_cj()
+        </field>
+    </record>
+</odoo>

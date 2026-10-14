@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- White background so icon is visible on light sidebar -->
+  <rect width="128" height="128" rx="16" ry="16" fill="#ffffff"/>
+
+  <!-- Wallet body -->
+  <rect x="18" y="46" width="80" height="52" rx="10" ry="10" fill="#C0392B"/>
+  <rect x="18" y="46" width="80" height="18" rx="10" ry="10" fill="#E74C3C"/>
+
+  <!-- Wallet pocket -->
+  <rect x="74" y="56" width="26" height="24" rx="6" ry="6" fill="#1a1a2e"/>
+  <circle cx="87" cy="68" r="8" fill="#F39C12"/>
+  <text x="83" y="73" font-family="Arial" font-weight="bold" font-size="11" fill="#1a1a2e">₹</text>
+
+  <!-- Gold reward star -->
+  <polygon points="64,6 68,22 84,18 74,30 88,36 72,38 74,54 64,44 54,54 56,38 40,36 54,30 44,18 60,22"
+           fill="#F39C12"/>
+
+  <!-- Upward arrow in wallet -->
+  <line x1="38" y1="78" x2="38" y2="62" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <polyline points="30,70 38,62 46,70" stroke="white" stroke-width="4" fill="none"
+            stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Participant dots -->
+  <circle cx="56" cy="82" r="4" fill="white" opacity="0.8"/>
+  <circle cx="56" cy="68" r="4" fill="white" opacity="0.5"/>
+</svg>

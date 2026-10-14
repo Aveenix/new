@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_template_rewards_tab" model="ir.ui.view">
+        <field name="name">product.template.rewards.tab</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Aveenix Rewards" name="aveenix_rewards">
+                    <group>
+                        <group string="Reward Settings">
+                            <field name="aveenix_product_type"/>
+                            <field name="reward_pool_perc"
+                                   help="% of margin (dropship/standard) or commission received (affiliate) that becomes the reward pool for this product. Set to 0 to disable rewards for this product."/>
+                        </group>
+                    </group>
+                    <div class="o_setting_box mt-3">
+                        <div class="text-muted mb-1"><strong>How It Works</strong></div>
+                        <ul class="mb-0">
+                            <li><strong>Dropship / Standard:</strong> reward_pool = margin × pool%</li>
+                            <li><strong>Affiliate:</strong> reward_pool = commission_received × pool%</li>
+                            <li>Pool is split among participants per the active Reward Agreement.</li>
+                        </ul>
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

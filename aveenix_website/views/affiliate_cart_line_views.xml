@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_affiliate_cart_line_list" model="ir.ui.view">
+        <field name="name">affiliate.cart.line.list</field>
+        <field name="model">affiliate.cart.line</field>
+        <field name="arch" type="xml">
+            <list string="Affiliate Cart Lines" create="false">
+                <field name="create_date" string="Added On"/>
+                <field name="product_id"/>
+                <field name="user_id" string="User"/>
+                <field name="session_id" optional="show"/>
+                <field name="affiliate_display_price" string="Price" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="affiliate_url" widget="url" optional="hide"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_affiliate_cart_line_form" model="ir.ui.view">
+        <field name="name">affiliate.cart.line.form</field>
+        <field name="model">affiliate.cart.line</field>
+        <field name="arch" type="xml">
+            <form string="Affiliate Cart Line" create="false">
+                <sheet>
+                    <group>
+                        <group string="Product">
+                            <field name="product_id"/>
+                            <field name="affiliate_display_price" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id"/>
+                            <field name="affiliate_url" widget="url"/>
+                        </group>
+                        <group string="Visitor">
+                            <field name="user_id"/>
+                            <field name="session_id"/>
+                            <field name="create_date" string="Added On"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_affiliate_cart_line_search" model="ir.ui.view">
+        <field name="name">affiliate.cart.line.search</field>
+        <field name="model">affiliate.cart.line</field>
+        <field name="arch" type="xml">
+            <search string="Affiliate Cart Lines">
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="session_id"/>
+                <filter name="logged_in" string="Logged-in Users" domain="[('user_id','!=',False)]"/>
+                <filter name="anonymous" string="Anonymous / Guest" domain="[('user_id','=',False)]"/>
+                <separator/>
+                <filter name="today" string="Added Today"
+                        domain="[('create_date','&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                <group>
+                    <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_date" string="Date Added" context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_affiliate_cart_line" model="ir.actions.act_window">
+        <field name="name">Affiliate Cart Lines</field>
+        <field name="res_model">affiliate.cart.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_affiliate_cart_line_search"/>
+        <field name="context">{'search_default_group_product': 1}</field>
+    </record>
+
+    <menuitem id="menu_affiliate_cart_line"
+              name="Affiliate Cart Lines"
+              parent="website.menu_reporting"
+              action="action_affiliate_cart_line"
+              sequence="41"
+              groups="base.group_system,website.group_website_designer"/>
+
+</odoo>

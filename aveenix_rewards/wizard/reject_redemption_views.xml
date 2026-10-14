@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_reject_redemption_form" model="ir.ui.view">
+        <field name="name">aveenix.reject.redemption.form</field>
+        <field name="model">aveenix.reject.redemption</field>
+        <field name="arch" type="xml">
+            <form string="Reject Redemption Request">
+                <field name="redemption_id" invisible="1"/>
+                <div class="o_field_widget mb-3">
+                    <div class="alert alert-warning mb-0">
+                        Rejecting this request will refund
+                        <strong><field name="redemption_id" readonly="1" nolabel="1"/></strong>
+                        points back to the customer's wallet.
+                    </div>
+                </div>
+                <group>
+                    <field name="reason"
+                           placeholder="Explain why this request is being rejected. The customer will see this reason."
+                           nolabel="1"
+                           style="min-height: 100px;"/>
+                </group>
+                <footer>
+                    <button string="Reject Request"
+                            name="action_confirm_reject"
+                            type="object"
+                            class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reject_redemption_wizard" model="ir.actions.act_window">
+        <field name="name">Reject Request</field>
+        <field name="res_model">aveenix.reject.redemption</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_redemption_id': active_id}</field>
+    </record>
+</odoo>
