@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_affiliate_offer_list" model="ir.ui.view">
+        <field name="name">affiliate.offer.list</field>
+        <field name="model">affiliate.offer</field>
+        <field name="arch" type="xml">
+            <list string="Affiliate Offers" decoration-muted="state == 'rejected'"
+                  decoration-warning="state == 'draft'">
+                <field name="name"/>
+                <field name="network"/>
+                <field name="advertiser_id"/>
+                <field name="section_ids" widget="many2many_tags" optional="show"/>
+                <field name="keywords" optional="hide"/>
+                <field name="source" optional="hide"/>
+                <field name="price" optional="hide"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="placement_count" string="Placed"/>
+                <field name="click_count" string="Clicks"/>
+                <field name="revenue_total" string="Revenue" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_affiliate_offer_form" model="ir.ui.view">
+        <field name="name">affiliate.offer.form</field>
+        <field name="model">affiliate.offer</field>
+        <field name="arch" type="xml">
+            <form string="Affiliate Offer">
+                <header>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-primary" invisible="state == 'approved'"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            invisible="state == 'rejected'"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="Back to Pending" invisible="state == 'draft'"/>
+                    <button name="action_build_hoplink" type="object"
+                            string="Build HopLink"
+                            invisible="network != 'clickbank'"
+                            help="Fill the affiliate link from your ClickBank nickname and this vendor's nickname."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Acme Whey Protein 2kg"/></h1>
+                    </div>
+                    <group>
+                        <group string="Offer">
+                            <field name="network"/>
+                            <field name="advertiser_id"
+                                   domain="[('network','=',network)]"
+                                   context="{'default_network': network}"/>
+                            <field name="source"/>
+                            <field name="external_id" readonly="source != 'manual'"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Commercials">
+                            <label for="price"/>
+                            <div class="o_row">
+                                <field name="price"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
+                            </div>
+                            <field name="commission_note"/>
+                            <field name="click_count"/>
+                            <field name="revenue_total"/>
+                        </group>
+                    </group>
+                    <group string="Matching">
+                        <field name="section_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="keywords"
+                               placeholder="whey protein, muscle, strength training"/>
+                    </group>
+                    <group string="Link">
+                        <field name="target_url" widget="url"
+                               placeholder="https://hop.clickbank.net/?affiliate=...&amp;vendor=..."/>
+                        <field name="image_url" widget="url"/>
+                    </group>
+                    <div class="alert alert-info" role="status">
+                        The link must be an <b>https</b> URL on the network's own click
+                        domain — a CJ redirector, or <code>hop.clickbank.net</code>.
+                        Anything else is refused on save and again at click time, so
+                        no unverified link can ever reach a reader.
+                    </div>
+                    <notebook>
+                        <page string="Description" name="description_page">
+                            <field name="description" placeholder="Shown with the recommendation."/>
+                        </page>
+                        <page string="Placements" name="placements_page">
+                            <field name="placement_ids" readonly="1">
+                                <list>
+                                    <field name="news_id"/>
+                                    <field name="category"/>
+                                    <field name="position"/>
+                                    <field name="score"/>
+                                    <field name="matched_keywords"/>
+                                    <field name="click_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Commissions" name="commissions_page">
+                            <field name="commission_ids" readonly="1">
+                                <list>
+                                    <field name="event_date"/>
+                                    <field name="external_id"/>
+                                    <field name="news_id"/>
+                                    <field name="sale_amount"/>
+                                    <field name="commission_amount"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_affiliate_offer_search" model="ir.ui.view">
+        <field name="name">affiliate.offer.search</field>
+        <field name="model">affiliate.offer</field>
+        <field name="arch" type="xml">
+            <search string="Affiliate Offers">
+                <field name="name"/>
+                <field name="keywords"/>
+                <field name="advertiser_id"/>
+                <field name="section_ids"/>
+                <filter name="pending" string="Pending Approval"
+                        domain="[('state','=','draft')]"/>
+                <filter name="approved" string="Approved"
+                        domain="[('state','=','approved')]"/>
+                <filter name="rejected" string="Rejected"
+                        domain="[('state','=','rejected')]"/>
+                <separator/>
+                <filter name="cj" string="CJ Affiliate" domain="[('network','=','cj')]"/>
+                <filter name="clickbank" string="ClickBank"
+                        domain="[('network','=','clickbank')]"/>
+                <separator/>
+                <filter name="unplaced" string="Never Placed"
+                        domain="[('placement_ids','=',False)]"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+                <group>
+                    <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
+                    <filter name="group_network" string="Network" context="{'group_by':'network'}"/>
+                    <filter name="group_advertiser" string="Advertiser"
+                            context="{'group_by':'advertiser_id'}"/>
+                    <filter name="group_source" string="Source" context="{'group_by':'source'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_affiliate_offer" model="ir.actions.act_window">
+        <field name="name">Offers</field>
+        <field name="res_model">affiliate.offer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_affiliate_offer_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No offers yet.</p>
+            <p>
+                CJ offers appear here on their own once the CJ credentials are set:
+                the matcher searches CJ when no stored offer suits an article, and
+                keeps what it finds.
+            </p>
+            <p>
+                ClickBank offers are added here by hand. Give the offer its vendor,
+                keywords and sections, use <b>Build HopLink</b> to generate the link,
+                then <b>Approve</b> it — the matcher ignores offers that are still
+                pending.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_affiliate_offer_pending" model="ir.actions.act_window">
+        <field name="name">Pending Approval</field>
+        <field name="res_model">affiliate.offer</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+        <field name="search_view_id" ref="view_affiliate_offer_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing waiting for approval.</p>
+            <p>
+                Offers land here when they need a human decision: every ClickBank
+                offer, and any CJ offer whose link arrived on a domain the engine
+                does not recognise.
+            </p>
+        </field>
+    </record>
+
+</odoo>

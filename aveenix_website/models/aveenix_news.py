@@ -341,6 +341,27 @@ class AveenixNews(models.Model):
         return best_section if best_hits >= min_hits else None
 
     @api.model
+    def _av_keyword_terms(self, text):
+        """Every section keyword that appears in `text`, lowercased and deduped.
+
+        The same vocabulary _av_best_section classifies with, exposed as the
+        terms themselves rather than as a verdict. Classification asks which
+        section a text belongs to; the affiliate engine asks what it is *about*
+        — "headphones", "protein", "hotel" — because those are the terms a
+        product search can actually use.
+
+        Kept here rather than in the affiliate module because _SECTION_PATTERNS
+        lives here: one vocabulary, read two ways, so adding a term improves
+        both filing and monetisation at once.
+        """
+        if not text:
+            return []
+        terms = set()
+        for _section, pattern in _SECTION_PATTERNS:
+            terms.update(match.lower() for match in pattern.findall(text))
+        return sorted(terms)
+
+    @api.model
     def _av_classify_category(self, api_categories, title, description=None):
         """Pick the site section for one article.
 

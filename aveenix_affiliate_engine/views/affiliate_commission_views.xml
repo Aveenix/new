@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_affiliate_commission_list" model="ir.ui.view">
+        <field name="name">affiliate.commission.list</field>
+        <field name="model">affiliate.commission</field>
+        <field name="arch" type="xml">
+            <list string="Commissions" create="false">
+                <field name="event_date"/>
+                <field name="network"/>
+                <field name="advertiser_id"/>
+                <field name="news_id" string="Article"/>
+                <field name="offer_id" optional="show"/>
+                <field name="sale_amount" sum="Sales"/>
+                <field name="commission_amount" sum="Commission"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="status"/>
+                <field name="external_id" optional="hide"/>
+                <field name="tracking_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_affiliate_commission_form" model="ir.ui.view">
+        <field name="name">affiliate.commission.form</field>
+        <field name="model">affiliate.commission</field>
+        <field name="arch" type="xml">
+            <form string="Commission" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="Network">
+                            <field name="network"/>
+                            <field name="external_id"/>
+                            <field name="order_id_external"/>
+                            <field name="advertiser_id"/>
+                            <field name="status"/>
+                            <field name="action_type"/>
+                            <field name="event_date"/>
+                        </group>
+                        <group string="Attribution">
+                            <field name="tracking_id"/>
+                            <field name="click_id"/>
+                            <field name="news_id"/>
+                            <field name="placement_id"/>
+                            <field name="offer_id"/>
+                        </group>
+                    </group>
+                    <group string="Amounts">
+                        <field name="sale_amount"/>
+                        <field name="commission_amount"/>
+                        <field name="currency_id"/>
+                    </group>
+                    <div class="text-muted" invisible="click_id != False">
+                        No click matched this commission. That is normal for traffic
+                        sent before the engine was installed, or for a network report
+                        that came back without the tracking id.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_affiliate_commission_search" model="ir.ui.view">
+        <field name="name">affiliate.commission.search</field>
+        <field name="model">affiliate.commission</field>
+        <field name="arch" type="xml">
+            <search string="Commissions">
+                <field name="external_id"/>
+                <field name="news_id"/>
+                <field name="advertiser_id"/>
+                <field name="tracking_id"/>
+                <filter name="attributed" string="Attributed to an Article"
+                        domain="[('news_id','!=',False)]"/>
+                <filter name="unattributed" string="Unattributed"
+                        domain="[('news_id','=',False)]"/>
+                <group>
+                    <filter name="group_article" string="Article" context="{'group_by':'news_id'}"/>
+                    <filter name="group_advertiser" string="Advertiser"
+                            context="{'group_by':'advertiser_id'}"/>
+                    <filter name="group_month" string="Event Month"
+                            context="{'group_by':'event_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_affiliate_commission" model="ir.actions.act_window">
+        <field name="name">Commissions</field>
+        <field name="res_model">affiliate.commission</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_affiliate_commission_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No commissions imported yet.</p>
+            <p>
+                CJ commissions are pulled nightly and traced back to the click that
+                earned them, which is what makes revenue per article answerable.
+                ClickBank reports sales in its own dashboard — the engine sends it
+                the article, campaign and placement so its reports break down the
+                same way.
+            </p>
+        </field>
+    </record>
+
+</odoo>

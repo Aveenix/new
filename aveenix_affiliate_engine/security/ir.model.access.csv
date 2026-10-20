@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_affiliate_section_user,affiliate.section.user,model_affiliate_section,base.group_user,1,1,1,1
+access_affiliate_advertiser_user,affiliate.advertiser.user,model_affiliate_advertiser,base.group_user,1,1,1,1
+access_affiliate_offer_user,affiliate.offer.user,model_affiliate_offer,base.group_user,1,1,1,1
+access_affiliate_offer_placement_user,affiliate.offer.placement.user,model_affiliate_offer_placement,base.group_user,1,1,1,1
+access_affiliate_commission_user,affiliate.commission.user,model_affiliate_commission,base.group_user,1,1,1,1

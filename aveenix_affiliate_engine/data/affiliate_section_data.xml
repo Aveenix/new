@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- One section per aveenix.news category. Archiving a section is how a
+         category is taken out of affiliate placement; noupdate keeps a module
+         upgrade from switching a deliberately archived section back on. -->
+    <data noupdate="1">
+        <record id="section_style" model="affiliate.section">
+            <field name="code">STYLE</field>
+            <field name="name">Style</field>
+        </record>
+        <record id="section_travel" model="affiliate.section">
+            <field name="code">TRAVEL</field>
+            <field name="name">Travel</field>
+        </record>
+        <record id="section_showbiz" model="affiliate.section">
+            <field name="code">SHOWBIZ</field>
+            <field name="name">Showbiz</field>
+        </record>
+        <record id="section_fashion" model="affiliate.section">
+            <field name="code">FASHION</field>
+            <field name="name">Fashion</field>
+        </record>
+        <record id="section_fitness" model="affiliate.section">
+            <field name="code">FITNESS</field>
+            <field name="name">Fitness</field>
+        </record>
+        <record id="section_gaming" model="affiliate.section">
+            <field name="code">GAMING</field>
+            <field name="name">Gaming</field>
+        </record>
+        <record id="section_gadgets" model="affiliate.section">
+            <field name="code">GADGETS</field>
+            <field name="name">Gadgets</field>
+        </record>
+        <record id="section_recipes" model="affiliate.section">
+            <field name="code">RECIPES</field>
+            <field name="name">Recipes</field>
+        </record>
+        <record id="section_facts" model="affiliate.section">
+            <field name="code">FACTS</field>
+            <field name="name">Facts</field>
+        </record>
+        <!-- Global is hard news with no commercial angle, so it ships
+             disabled. Turn it on deliberately rather than discovering an
+             affiliate card under a disaster report. -->
+        <record id="section_global" model="affiliate.section">
+            <field name="code">GLOBAL</field>
+            <field name="name">Global</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Engine defaults, seeded so the Settings page opens with real
+             values rather than empty fields on a fresh install. -->
+        <record id="param_affiliate_enabled" model="ir.config_parameter">
+            <field name="key">aveenix_affiliate.enabled</field>
+            <field name="value">True</field>
+        </record>
+        <record id="param_affiliate_cj_discovery" model="ir.config_parameter">
+            <field name="key">aveenix_affiliate.cj_discovery_enabled</field>
+            <field name="value">True</field>
+        </record>
+        <record id="param_affiliate_min_relevance" model="ir.config_parameter">
+            <field name="key">aveenix_affiliate.min_relevance</field>
+            <field name="value">35</field>
+        </record>
+        <record id="param_affiliate_max_offers" model="ir.config_parameter">
+            <field name="key">aveenix_affiliate.max_offers_per_article</field>
+            <field name="value">2</field>
+        </record>
+        <record id="param_affiliate_disclosure" model="ir.config_parameter">
+            <field name="key">aveenix_affiliate.disclosure</field>
+            <field name="value">Disclosure: this article contains affiliate links. Aveenix may earn a commission if you buy through them, at no extra cost to you.</field>
+        </record>
+    </data>
+</odoo>

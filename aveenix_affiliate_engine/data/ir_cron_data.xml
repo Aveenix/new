@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Matching runs hourly in small batches rather than nightly in one
+             sweep: the news sync adds articles through the day, and a fresh
+             article is the one readers are arriving on. The batch size bounds
+             both AI and CJ calls per run. -->
+        <record id="cron_match_affiliate_offers" model="ir.cron">
+            <field name="name">Aveenix Affiliate: Match Offers to Articles</field>
+            <field name="model_id" ref="aveenix_website.model_aveenix_news"/>
+            <field name="state">code</field>
+            <field name="code">model._av_cron_match_offers(batch_size=40)</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Joined programs change rarely; once a day is plenty and keeps the
+             advertiser enable/disable list honest. -->
+        <record id="cron_sync_cj_advertisers" model="ir.cron">
+            <field name="name">Aveenix Affiliate: Sync CJ Advertisers</field>
+            <field name="model_id" ref="model_affiliate_advertiser"/>
+            <field name="state">code</field>
+            <field name="code">model._av_cron_sync_cj_advertisers()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- CJ posts commissions days after the click and corrects them later,
+             so this re-reads a trailing week every night; commission ids are
+             unique, so re-reading updates rather than duplicates. -->
+        <record id="cron_import_cj_commissions" model="ir.cron">
+            <field name="name">Aveenix Affiliate: Import CJ Commissions</field>
+            <field name="model_id" ref="model_affiliate_commission"/>
+            <field name="state">code</field>
+            <field name="code">model._av_cron_import_cj_commissions()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_affiliate_root"
+              name="Affiliate"
+              sequence="55"
+              groups="website.group_website_designer"/>
+
+    <!-- Offers first: it is the queue an editor works from, and the one place
+         where a pending ClickBank offer is approved. -->
+    <menuitem id="menu_affiliate_offers"
+              name="Offers"
+              parent="menu_affiliate_root"
+              action="action_affiliate_offer"
+              sequence="10"/>
+
+    <menuitem id="menu_affiliate_offers_pending"
+              name="Pending Approval"
+              parent="menu_affiliate_root"
+              action="action_affiliate_offer_pending"
+              sequence="20"/>
+
+    <menuitem id="menu_affiliate_advertisers"
+              name="Advertisers"
+              parent="menu_affiliate_root"
+              action="action_affiliate_advertiser"
+              sequence="30"/>
+
+    <menuitem id="menu_affiliate_reporting"
+              name="Reporting"
+              parent="menu_affiliate_root"
+              sequence="40"/>
+
+    <menuitem id="menu_affiliate_placements"
+              name="Placements"
+              parent="menu_affiliate_reporting"
+              action="action_affiliate_placement"
+              sequence="10"/>
+
+    <menuitem id="menu_affiliate_clicks"
+              name="Offer Clicks"
+              parent="menu_affiliate_reporting"
+              action="action_affiliate_offer_clicks"
+              sequence="20"/>
+
+    <menuitem id="menu_affiliate_commissions"
+              name="Commissions"
+              parent="menu_affiliate_reporting"
+              action="action_affiliate_commission"
+              sequence="30"/>
+
+    <menuitem id="menu_affiliate_configuration"
+              name="Configuration"
+              parent="menu_affiliate_root"
+              sequence="90"/>
+
+    <menuitem id="menu_affiliate_sections"
+              name="Categories"
+              parent="menu_affiliate_configuration"
+              action="action_affiliate_section"
+              sequence="10"/>
+
+</odoo>

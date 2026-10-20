@@ -10,9 +10,11 @@ class AffiliateClickLog(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.template',
         string='Product',
-        required=True,
         index=True,
         ondelete='cascade',
+        help='Set for clicks on an outbound product link. Empty for clicks on '
+             'an affiliate offer placed in a news article, which record '
+             'offer_id instead (see aveenix_affiliate_engine).',
     )
     timestamp = fields.Datetime(
         string='Clicked On',

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- The site's click log now carries offer clicks too, so the existing
+         views gain the article/offer columns rather than a second log appearing
+         beside them. -->
+    <record id="view_affiliate_click_log_list_engine" model="ir.ui.view">
+        <field name="name">affiliate.click.log.list.engine</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="inherit_id" ref="aveenix_website.view_affiliate_click_log_list"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="offer_id" optional="show"/>
+                <field name="news_id" string="Article" optional="show"/>
+                <field name="network" optional="hide"/>
+                <field name="position" string="Slot" optional="hide"/>
+                <field name="tracking_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_affiliate_click_log_form_engine" model="ir.ui.view">
+        <field name="name">affiliate.click.log.form.engine</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="inherit_id" ref="aveenix_website.view_affiliate_click_log_form"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="offer_id"/>
+                <field name="news_id"/>
+                <field name="placement_id"/>
+                <field name="network"/>
+                <field name="tracking_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_affiliate_click_log_search_engine" model="ir.ui.view">
+        <field name="name">affiliate.click.log.search.engine</field>
+        <field name="model">affiliate.click.log</field>
+        <field name="inherit_id" ref="aveenix_website.view_affiliate_click_log_search"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="offer_id"/>
+                <field name="news_id"/>
+                <field name="tracking_id"/>
+            </field>
+            <filter name="anonymous" position="after">
+                <separator/>
+                <filter name="offer_clicks" string="Offer Clicks"
+                        domain="[('offer_id','!=',False)]"/>
+                <filter name="product_clicks" string="Product Clicks"
+                        domain="[('product_id','!=',False)]"/>
+            </filter>
+            <filter name="group_product" position="after">
+                <filter name="group_offer" string="Offer" context="{'group_by':'offer_id'}"/>
+                <filter name="group_article" string="Article" context="{'group_by':'news_id'}"/>
+                <filter name="group_network" string="Network" context="{'group_by':'network'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="action_affiliate_offer_clicks" model="ir.actions.act_window">
+        <field name="name">Offer Clicks</field>
+        <field name="res_model">affiliate.click.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('offer_id','!=',False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No offer clicks yet.</p>
+            <p>
+                Every click on an in-article recommendation is logged here with the
+                article, the placement and the tracking id sent to the network.
+            </p>
+        </field>
+    </record>
+
+</odoo>
