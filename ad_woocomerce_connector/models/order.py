@@ -206,6 +206,22 @@ class WooOrder(models.Model):
             "note": record.get("customer_note", ""),
             "company_id": backend.company_id.id,
         }
+        print("\n\n------record",record)
+
+        # Extract tracking link if available
+        tracking_link = record.get("tracking_link") or record.get("tracking_url")
+        if not tracking_link:
+            for meta in record.get("meta_data", []):
+                key = meta.get("key", "")
+                if key in ("_tracking_link", "tracking_link", "_tracking_url", "tracking_url", "_ast_tracking_link", "ast_tracking_link"):
+                    tracking_link = meta.get("value")
+                    break
+                    
+        if tracking_link:
+            _logger.info("[WC TRACKING FOUND] Order %s tracking link extracted: %s", ext_id, tracking_link)
+            order_vals["av_tracking_link"] = tracking_link
+        else:
+            _logger.info("[WC TRACKING MISSING] No tracking link found in API response for Order %s", ext_id)
 
         binding_vals = {
             "wc_order_number": record.get("number", 0),

@@ -605,10 +605,24 @@ class WooBackend(models.Model):
                 self.allowed_order_status_ids.mapped("code")
             )
         results = {"created": 0, "updated": 0, "skipped": 0, "failed": 0, "errors": []}
-        for page in client.get_all_pages("orders", params):
+        # Optimize: request fewer orders per page so slow servers don't hit 504 Gateway Timeout
+        for page in client.get_all_pages("orders", params, per_page=20):
             res = self.env["wc.order"].syncing_from_wc(self, page, force)
             merge_sync_results(results, res)
         return results
+
+    def _do_pull_single_order(self, wc_order_id, force=False):
+        if not wc_order_id:
+            return {"created": 0, "updated": 0, "skipped": 0, "failed": 0, "errors": ["No Order ID provided."]}
+        client = self.get_api_client()
+        try:
+            result = client.get("orders/%s" % wc_order_id)
+            record = result.get("data")
+            if not record:
+                return {"created": 0, "updated": 0, "skipped": 0, "failed": 1, "errors": ["Order not found."]}
+            return self.env["wc.order"].syncing_from_wc(self, [record], force)
+        except Exception as exc:
+            return {"created": 0, "updated": 0, "skipped": 0, "failed": 1, "errors": [str(exc)]}
 
     def _pull_shipping_methods(self):
         client = self.get_api_client()
@@ -951,6 +965,7 @@ class WooBackend(models.Model):
             try:
                 backend._do_pull_orders()
                 backend.orders_last_sync = datetime.now() - timedelta(seconds=SYNC_DELTA)
+                print("\n\n-------------backend----",backend,backend.orders_last_sync)
             except Exception as exc:
                 _logger.exception("Cron: order pull failed for %s: %s", backend.name, exc)
 

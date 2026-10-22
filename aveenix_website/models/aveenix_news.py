@@ -477,19 +477,49 @@ class AveenixNews(models.Model):
     # NewsData.io's `top`/`breaking`/`world` co-tags land here, so scoping it
     # to one country turned the page's "GLOBAL NEWS" block into that country's
     # headlines - an M6 traffic jam for GB, a regional semi-final for US - under
-    # a heading promising the world. GLOBAL reads the whole feed; the visitor's
-    # own country gets its own Local block instead.
+    # a heading promising the world. The visitor's own country gets its own
+    # Local block instead, and GLOBAL is what is left: everywhere else.
     AV_WORLD_SECTION = 'GLOBAL'
 
     @api.model
-    def _av_section_scope(self, section, country_scope):
+    def _av_local_scope(self, country_code):
+        """Leaves for the visitor's own country, with no fallback.
+
+        The counterpart to _av_section_scope's world half, and deliberately
+        NOT _av_country_scope: that one drops the country when there is too
+        little news in it to fill the magazine blocks, which is right for a
+        front page and wrong for a block headed LOCAL NEWS. Dropping it there
+        served the world under that heading, so an Australian visitor - twelve
+        articles, well under the minimum - got the same Seattle and Dallas
+        stories the Global block above was already showing. A thin country
+        now shows its handful, or nothing.
+        """
+        return [('country_code', '=', country_code)] if country_code else []
+
+    @api.model
+    def _av_section_scope(self, section, country_code):
         """The country leaves one section's listing should carry.
 
         One place, because the block, the section page and the sidebar count
         all have to agree: a count filtered differently from the list it
         describes is the bug this module keeps coming back to.
+
+        The world section is the complement of the visitor's country, not the
+        whole table. Reading the whole table made it a superset of the Local
+        block: the newest world articles ARE the newest Indian ones for a
+        visitor in India, so the hero and the GLOBAL block showed the same
+        five stories the LOCAL block did, with US regional news filling what
+        was left. Together with _av_local_scope this partitions the section, so
+        no article can appear under both headings.
+
+        The complement does not go through _av_country_scope's minimum: a
+        country too thin to scope a topical section to is still worth holding
+        out of the world section, and withholding a dozen articles out of
+        thousands cannot leave the Global block short.
         """
-        return [] if section == self.AV_WORLD_SECTION else country_scope
+        if section == self.AV_WORLD_SECTION:
+            return [('country_code', '!=', country_code)] if country_code else []
+        return self._av_country_scope(country_code)
 
     @api.model
     def _av_resolve_country_code(self, country_names, fallback='us'):

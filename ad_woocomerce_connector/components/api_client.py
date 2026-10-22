@@ -32,7 +32,7 @@ class WooRESTClient:
     # (connect, read) timeout. Short values so a stalled connection or a
     # server that accepts the request but never responds fails fast instead
     # of hanging the worker until the request watchdog kills it.
-    _TIMEOUT = (10, 45)
+    _TIMEOUT = (20, 120)
 
     def __init__(self, location: WooStoreLocation):
         self._location = location

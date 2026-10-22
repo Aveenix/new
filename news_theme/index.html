@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Magazine Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="nav-container top-bar-inner">
+            <div class="top-bar-left">
+                <span>23.4° New York</span>
+                <span>Thursday, July 23, 2026</span>
+                <a href="#">Sign in / Join</a>
+                <a href="#">Blog</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                <a href="#">Buy now &rarr;</a>
+            </div>
+            <div class="top-bar-right">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logo Area -->
+    <div class="logo-area nav-container">
+        <div class="logo">
+            <div class="logo-img">
+                <span class="logo-nm">NM</span>
+                <span class="logo-pro">PRO</span>
+            </div>
+            <div class="logo-text">NEWS MAGAZINE</div>
+        </div>
+        <div class="header-ad">
+            <div class="ad-placeholder">
+                <div style="flex:1;">
+                    <h3 style="margin-bottom:5px;">NEWSPAPER</h3>
+                    <p style="margin:0; opacity:0.8;">The art of publishing</p>
+                </div>
+                <button>BUY NOW &rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="main-header">
+        <div class="top-nav">
+            <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center; height: 50px;">
+                <ul class="nav-links">
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-globe"></i> Global <i class="fas fa-angle-down"></i></a></li>
+                    <li><a href="#"><i class="fas fa-bicycle"></i> Lifestyle <i class="fas fa-angle-down"></i></a></li>
+                    <li><a href="#"><i class="fas fa-tshirt"></i> Fashion</a></li>
+                    <li><a href="#"><i class="fas fa-gamepad"></i> Gaming</a></li>
+                    <li><a href="#"><i class="fas fa-heartbeat"></i> Fitness</a></li>
+                    <li><a href="#"><i class="fas fa-video"></i> Video</a></li>
+                    <li><a href="#">More <i class="fas fa-angle-down"></i></a></li>
+                </ul>
+                <div class="nav-actions">
+                    <div id="theme-toggle" style="cursor: pointer; font-size: 16px;"><i class="fas fa-moon"></i></div>
+                    <div class="search-icon"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Trending Bar -->
+    <div class="trending-bar">
+        <div class="nav-container trending-container">
+            <div class="trending-label">TRENDING NOW</div>
+            <div class="trending-text">The Weirdest Places Ashes Have Been Scattered in South America</div>
+            <div class="trending-controls">
+                <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero-section">
+            <article class="hero-main">
+                <div class="overlay"></div>
+                <div class="article-content">
+                    <span class="category-badge" style="background-color: #222;">STYLE</span>
+                    <h1 class="article-title">What Makeup to Wear Daily, No Matter What You've Got Planned</h1>
+                    <div class="article-meta">
+                        <span class="author">David Lee</span> - <span class="date">June 3, 2020</span>
+                    </div>
+                </div>
+            </article>
+
+            <div class="hero-grid">
+                <article class="hero-item">
+                    <div class="overlay"></div>
+                    <div class="article-content">
+                        <span class="category-badge" style="background-color: #555;">TRAVEL</span>
+                        <h2 class="article-title-small">Work Out as Much as Possible During Your All Inclusive Vacations</h2>
+                    </div>
+                </article>
+                <article class="hero-item">
+                    <div class="overlay"></div>
+                    <div class="article-content">
+                        <span class="category-badge" style="background-color: #444;">STYLE</span>
+                        <h2 class="article-title-small">Expert Advice: The Best Cheap Retro Chic Fashion for this Fall</h2>
+                    </div>
+                </article>
+                <article class="hero-item">
+                    <div class="overlay"></div>
+                    <div class="article-content">
+                        <span class="category-badge" style="background-color: #777;">SHOWBIZ</span>
+                        <h2 class="article-title-small">Bloggers Hijacked the Industry, Cutting a Piece of Earnings</h2>
+                    </div>
+                </article>
+                <article class="hero-item">
+                    <div class="overlay"></div>
+                    <div class="article-content">
+                        <span class="category-badge" style="background-color: #111;">FACTS</span>
+                        <h2 class="article-title-small">The Weirdest Places Ashes Have Been Scattered in South America</h2>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="content-layout">
+            <!-- Main Column -->
+            <div class="main-column">
+                
+                <!-- Global News -->
+                <div class="section-heading">
+                    <h2>GLOBAL NEWS</h2>
+                    <div class="line"></div>
+                    <div class="filter">All <i class="fas fa-angle-down"></i></div>
+                </div>
+                
+                <div class="global-news-layout" id="global-news">
+                    <!-- Dynamic Content -->
+                </div>
+
+                <!-- Travel Guides -->
+                <div class="section-heading">
+                    <h2>TRAVEL GUIDES</h2>
+                    <div class="line"></div>
+                </div>
+                <div class="travel-guides-grid" id="travel-guides">
+                    <!-- Dynamic -->
+                </div>
+
+                <!-- 2 Col: Gadgets & Recipes -->
+                <div class="two-col-layout">
+                    <div class="col-half" id="gadgets-section">
+                        <div class="section-heading">
+                            <h2>GADGETS</h2>
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                    <div class="col-half" id="recipes-section">
+                        <div class="section-heading">
+                            <h2>RECIPES</h2>
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 4 Col Grid -->
+                <div class="four-col-grid" id="four-col-grid">
+                    <!-- Dynamic -->
+                </div>
+
+                <!-- 2 Col: Fitness & Gaming -->
+                <div class="two-col-layout">
+                    <div class="col-half" id="fitness-section">
+                        <div class="section-heading">
+                            <h2>FITNESS</h2>
+                            <div class="line"></div>
+                            <div class="filter">All <i class="fas fa-angle-down"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-half" id="gaming-section">
+                        <div class="section-heading">
+                            <h2>GAMING</h2>
+                            <div class="line"></div>
+                            <div class="filter">All <i class="fas fa-angle-down"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest Articles -->
+                <div class="section-heading">
+                    <h2>LATEST ARTICLES</h2>
+                    <div class="line"></div>
+                </div>
+                <div class="latest-articles-list" id="latest-articles">
+                    <!-- Dynamic -->
+                </div>
+                
+                <div class="pagination">
+                    <button class="page-num active">1</button>
+                    <button class="page-num">2</button>
+                    <button class="page-num">3</button>
+                    <span class="dots">...</span>
+                    <button class="page-num">15</button>
+                    <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    <span class="page-info">Page 1 of 15</span>
+                </div>
+                
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Social Follow -->
+                <div class="social-followers">
+                    <div class="social-box fb"><i class="fab fa-facebook-f"></i><br><strong>21,998</strong><br><span>Fans</span></div>
+                    <div class="social-box x"><i class="fab fa-twitter"></i><br><strong>3,913</strong><br><span>Followers</span></div>
+                    <div class="social-box yt"><i class="fab fa-youtube"></i><br><strong>22,800</strong><br><span>Subscribers</span></div>
+                </div>
+
+                <!-- Ad -->
+                <div class="sidebar-ad">
+                    <span class="ad-label">- Advertisement -</span>
+                    <div style="background-color: #222; color: #fff; padding: 20px; border-radius: 4px;">
+                        <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 5px;">NEWSPAPER</h3>
+                        <p style="font-size: 11px; margin-bottom: 10px;">The Most Popular NEWS MAGAZINE WordPress Theme</p>
+                        <button style="background: #fff; color: #000; padding: 5px 15px; border: none; font-weight: 700;">BUY NOW ></button>
+                    </div>
+                </div>
+
+                <!-- Most Popular -->
+                <div class="widget">
+                    <div class="section-heading">
+                        <h2>MOST POPULAR</h2>
+                        <div class="line"></div>
+                    </div>
+                    <div class="popular-list" id="popular-list">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+
+                <!-- Most Popular Alt (List) -->
+                <div class="widget">
+                    <div class="section-heading">
+                        <h2>MUST READ</h2>
+                        <div class="line"></div>
+                    </div>
+                    <div class="must-read-list" id="must-read-list">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+                
+                <!-- Categories -->
+                <div class="widget">
+                    <div class="section-heading">
+                        <h2>CATEGORIES</h2>
+                        <div class="line"></div>
+                    </div>
+                    <ul class="category-list">
+                        <li><a href="#">Fashion <span>10</span></a></li>
+                        <li><a href="#">Facts <span>10</span></a></li>
+                        <li><a href="#">Gaming <span>10</span></a></li>
+                        <li><a href="#">Style <span>10</span></a></li>
+                        <li><a href="#">Video <span>10</span></a></li>
+                        <li><a href="#">Photography <span>10</span></a></li>
+                    </ul>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-overlay"></div>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-nm">NM</span>
+                <span class="logo-pro">PRO</span>
+                <div class="logo-text">NEWS MAGAZINE</div>
+            </div>
+            <p class="footer-desc">
+                Newspaper is your news, entertainment, music fashion website. We provide you with the latest breaking news and videos straight from the entertainment industry. Fashion fades, only style remains the same. Fashion never stops. There are always projects, opportunities. Clothes mean nothing until someone lives in them.
+            </p>
+            <p class="footer-contact">Contact us: <a href="mailto:contact@yoursite.com">contact@yoursite.com</a></p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -329,7 +329,7 @@ class AveenixWebsite(WebsiteSale):
                        or request.website.sudo().company_id.country_id)
         return country.code.lower() if country and country.code else 'us'
 
-    def _av_news_section_counts(self, country_scope):
+    def _av_news_section_counts(self, country_code):
         """{category: article total} over the whole table for this country.
 
         Counted over the table, not over the rows a page happens to load: that
@@ -337,19 +337,23 @@ class AveenixWebsite(WebsiteSale):
         but none in the last few hours used to show a count of 0. Blog posts
         are left out — their categories are free text ("OUR BLOGS") and mixing
         them in inflated whichever news section shared a name.
+
+        Each section is counted under the scope its own listing uses
+        (_av_section_scope), so the world section's number describes the rest
+        of the world — which is what /news/category/global now shows — rather
+        than the whole table.
         """
         News = request.env['aveenix.news'].sudo()
         counts = {
             category: count
             for category, count in News._read_group(
-                country_scope, groupby=['category'], aggregates=['__count'],
+                News._av_country_scope(country_code),
+                groupby=['category'], aggregates=['__count'],
             )
         }
-        # The world section ignores the country scope (_av_section_scope), so
-        # its count has to as well or the sidebar advertises a number the page
-        # never shows.
-        counts[News.AV_WORLD_SECTION] = News.search_count(
-            [('category', '=', News.AV_WORLD_SECTION)]
+        world = News.AV_WORLD_SECTION
+        counts[world] = News.search_count(
+            [('category', '=', world)] + News._av_section_scope(world, country_code)
         )
         return counts
 
@@ -482,11 +486,11 @@ class AveenixWebsite(WebsiteSale):
             
         blog_categories = [{'name': 'OUR BLOGS', 'posts': blog_list}]
 
-        # Built from country_scope, the same leaves the article list uses, so
-        # the two can never describe different sets of articles. Deriving it by
+        # Built from the visitor's country code, so each count comes out of
+        # the same scope its own section's listing uses. Deriving it by
         # stripping leaves off `domain` instead would silently drift the moment
         # another filter is added.
-        cat_counts = self._av_news_section_counts(country_scope)
+        cat_counts = self._av_news_section_counts(country_code)
         dynamic_categories = self._av_news_sidebar_categories(cat_counts)
 
         from markupsafe import Markup
@@ -532,9 +536,9 @@ class AveenixWebsite(WebsiteSale):
 
         # Same country scope as the news home, so a section's page and the
         # count the sidebar showed for it always describe the same articles.
-        country_scope = News._av_country_scope(self._av_news_country_code())
+        country_code = self._av_news_country_code()
         domain = [('category', '=', db_category)] + News._av_section_scope(
-            db_category, country_scope)
+            db_category, country_code)
 
         total = News.search_count(domain)
         pager = request.website.pager(
@@ -545,7 +549,7 @@ class AveenixWebsite(WebsiteSale):
             domain, limit=_NEWS_SECTION_PPG, offset=pager['offset'],
         )
 
-        counts = self._av_news_section_counts(country_scope)
+        counts = self._av_news_section_counts(country_code)
         return request.render('aveenix_website.news_category_template', {
             'category_name': News._av_category_label(db_category),
             'category_slug': db_category.lower(),
@@ -565,16 +569,15 @@ class AveenixWebsite(WebsiteSale):
         """The visitor's own country, under its own name.
 
         The counterpart to /news/category/global. Both read the world section -
-        that is where NewsData.io's top/breaking/world articles are filed - but
-        this one keeps the country scope the section page drops, so the two
-        pages answer "what is happening here" and "what is happening
-        everywhere" instead of both claiming to be the second.
+        that is where NewsData.io's top/breaking/world articles are filed - and
+        between them they partition it: this page is the visitor's country,
+        that one is every other. So the two answer "what is happening here" and
+        "what is happening everywhere else", and no article answers both.
         """
         News = request.env['aveenix.news'].sudo()
         section = News.AV_WORLD_SECTION
         country_code = self._av_news_country_code()
-        country_scope = News._av_country_scope(country_code)
-        domain = [('category', '=', section)] + country_scope
+        domain = [('category', '=', section)] + News._av_local_scope(country_code)
 
         total = News.search_count(domain)
         pager = request.website.pager(
@@ -594,7 +597,7 @@ class AveenixWebsite(WebsiteSale):
             'total_articles': total,
             'pager': pager,
             'dynamic_categories': self._av_news_sidebar_categories(
-                self._av_news_section_counts(country_scope)),
+                self._av_news_section_counts(country_code)),
             'ad_image': NEWS_IMAGES['ad'],
             'is_news_page': True,
         })

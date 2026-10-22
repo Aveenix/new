@@ -610,7 +610,8 @@ class AveenixMobileAPI(http.Controller):
             return self._error_response(f'Registration failed: {str(e)}', 500)
 
     @http.route('/api/v1/news', type='http', auth='public', methods=['GET', 'OPTIONS'], csrf=False, cors='*')
-    def get_news(self, limit=20, offset=0, category=None, per_category=None, **kw):
+    def get_news(self, limit=20, offset=0, category=None, per_category=None,
+                 scope=None, **kw):
         if request.httprequest.method == 'OPTIONS':
             return self._success_response({'cors': 'ok'})
         domain = []
@@ -674,8 +675,18 @@ class AveenixMobileAPI(http.Controller):
                 sections = [key for key, _label in News._fields['category'].selection]
             news = News.browse()
             for section in sections:
+                # The world section reads every country BUT the visitor's own
+                # (_av_section_scope), so the page's GLOBAL block is the rest of
+                # the world rather than their own headlines. `scope=local` asks
+                # for the other half of that split - the visitor's country -
+                # which is how the page fills its Local block without repeating
+                # anything the GLOBAL block already carries.
+                scope_leaves = (
+                    News._av_local_scope(country_code) if scope == 'local'
+                    else News._av_section_scope(section, country_code)
+                )
                 news |= News.search(
-                    [('category', '=', section)] + country_scope,
+                    [('category', '=', section)] + scope_leaves,
                     limit=int(per_category),
                     order='published_date desc',
                 )

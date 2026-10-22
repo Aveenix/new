@@ -42,7 +42,7 @@
                     <t t-set="tb_cur_currency" t-value="request.website.sudo().currency_id"/>
                     <div class="av-topbar-left">
                         <!-- Country -->
-                        <div class="av-tb-dropdown" data-storage-key="av_country">
+                        <div class="av-tb-dropdown" data-av-select="country">
                             <span class="av-topbar-flag av-tb-trigger">
                                 <t t-esc="tb_user_country.code or 'US'"/>
                                 <i class="fa fa-chevron-down" style="font-size:9px; margin-left:3px;"/>
@@ -819,22 +819,18 @@
             <script>
             (function(){
                 // Topbar dropdowns — country, language, currency
-                // Restore saved values on load using data-storage-key on wrapper div
-                document.querySelectorAll('.av-tb-dropdown[data-storage-key]').forEach(function(dd){
-                    var key = dd.getAttribute('data-storage-key');
-                    var saved = localStorage.getItem(key);
-                    if(!saved) return;
-                    var trigger = dd.querySelector('.av-tb-trigger');
-                    if(!trigger) return;
-                    // update trigger text (first text node)
-                    var textNode = trigger.firstChild;
-                    if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = saved + ' ';
-                    // mark selected item
-                    dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(item){
-                        item.classList.remove('av-tb-selected');
-                        if(item.getAttribute('data-val') === saved) item.classList.add('av-tb-selected');
-                    });
-                });
+                //
+                // The selected country is NOT cached client-side. It lives in
+                // the session (av_user_country_id), which is what scopes the
+                // news, the pricelist and the prices, and the server renders it
+                // into the trigger and the selected item above. A localStorage
+                // copy used to be restored over that on every load, so the two
+                // could disagree: the header read "IN India" from the cache
+                // while the server, whose session had no country, scoped the
+                // page to the company's US fallback and the Local news block
+                // filled with Seattle and Dallas stories. One source of truth,
+                // and a pick that fails to reach the server now self-corrects
+                // on the next load instead of being remembered as if it had.
 
                 // Wire up all tb-dropdowns
                 document.querySelectorAll('.av-tb-dropdown').forEach(function(dd){
@@ -850,8 +846,8 @@
                             if(sel) setTimeout(function(){ sel.scrollIntoView({block:'nearest'}); }, 50);
                         }
                     });
-                    // item selection — save to localStorage and sync mobile
-                    var storageKey = dd.getAttribute('data-storage-key');
+                    // item selection — apply server-side and sync mobile
+                    var selectKind = dd.getAttribute('data-av-select');
                     dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(item){
                         item.addEventListener('click', function(e){
                             if(item.tagName === 'A') {
@@ -872,10 +868,8 @@
                             // update trigger label
                             var textNode = trigger.firstChild;
                             if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = val + ' ';
-                            // persist (country only — currency uses pricelist links)
-                            if(storageKey) localStorage.setItem(storageKey, val);
                             // sync mobile country val display
-                            if(storageKey === 'av_country') {
+                            if(selectKind === 'country') {
                                 var mobileValEl = document.getElementById('av-country-val');
                                 if(mobileValEl) mobileValEl.textContent = val;
                                 var mobileDd = document.getElementById('av-country-dropdown');
@@ -1197,30 +1191,18 @@
                 // Settings dropdowns: country, language, currency
                 (function(){
                     var pairs = [
-                        ['av-country-row', 'av-country-dropdown', 'av_country'],
+                        ['av-country-row', 'av-country-dropdown', 'country'],
                         ['av-lang-row',    'av-lang-dropdown',    null],
                         ['av-currency-row','av-currency-dropdown', null]
                     ];
 
-                    // Restore saved country value into mobile display
-                    pairs.forEach(function(pair){
-                        if(!pair[2]) return;
-                        var saved = localStorage.getItem(pair[2]);
-                        if(!saved) return;
-                        var row = document.getElementById(pair[0]);
-                        var dd  = document.getElementById(pair[1]);
-                        if(!row || !dd) return;
-                        var valEl = row.querySelector('.av-settings-val');
-                        if(valEl) valEl.textContent = saved;
-                        dd.querySelectorAll('.av-settings-dropdown-item').forEach(function(item){
-                            item.classList.remove('selected');
-                            if(item.getAttribute('data-val') === saved) item.classList.add('selected');
-                        });
-                    });
+                    // No restore step: the server renders the session's country
+                    // into this row and marks its item selected. See the topbar
+                    // block above for why it is not cached client-side.
                     pairs.forEach(function(pair){
                         var row = document.getElementById(pair[0]);
                         var dd  = document.getElementById(pair[1]);
-                        var storageKey = pair[2];
+                        var selectKind = pair[2];
                         if(!row || !dd) return;
                         var valEl = row.querySelector('.av-settings-val');
 
@@ -1250,26 +1232,29 @@
                                 item.classList.add('selected');
                                 var val = item.getAttribute('data-val') || item.querySelector('.av-dd-name').textContent;
                                 if(valEl) valEl.textContent = val;
-                                if(storageKey) localStorage.setItem(storageKey, val);
-                                // sync desktop topbar trigger label + selected state
-                                if(storageKey) {
-                                    var tbDd = document.querySelector('.av-tb-dropdown[data-storage-key="' + storageKey + '"]');
+                                // sync desktop topbar trigger label + selected
+                                // state. The topbar is keyed on the ISO code
+                                // ("IN"); this row's own value is "IN India",
+                                // so match on data-code or nothing lines up.
+                                var tbVal = item.getAttribute('data-code') || val;
+                                if(selectKind) {
+                                    var tbDd = document.querySelector('.av-tb-dropdown[data-av-select="' + selectKind + '"]');
                                     if(tbDd) {
                                         var tbTrigger = tbDd.querySelector('.av-tb-trigger');
                                         if(tbTrigger) {
                                             var tn = tbTrigger.firstChild;
-                                            if(tn &amp;&amp; tn.nodeType === 3) tn.textContent = val + ' ';
+                                            if(tn &amp;&amp; tn.nodeType === 3) tn.textContent = tbVal + ' ';
                                         }
                                         tbDd.querySelectorAll('.av-tb-dropdown-item').forEach(function(i){
                                             i.classList.remove('av-tb-selected');
-                                            if(i.getAttribute('data-val') === val) i.classList.add('av-tb-selected');
+                                            if(i.getAttribute('data-val') === tbVal) i.classList.add('av-tb-selected');
                                         });
                                     }
                                 }
                                 // Country pick → apply its currency + pricelist
                                 // site-wide (data-code carries the ISO code that
                                 // location/set expects). Reloads once applied.
-                                if(storageKey === 'av_country') {
+                                if(selectKind === 'country') {
                                     var code = item.getAttribute('data-code');
                                     if(code &amp;&amp; window.avSetLocationSession) {
                                         window.avSetLocationSession(code, true);
