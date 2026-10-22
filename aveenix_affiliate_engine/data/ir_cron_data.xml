@@ -41,5 +41,17 @@
             <field name="active" eval="True"/>
         </record>
 
+        <!-- Feeds change price and stock through the day; every six hours
+             keeps the shop honest without pulling whole catalogues hourly. -->
+        <record id="cron_import_cj_shop_products" model="ir.cron">
+            <field name="name">Aveenix Affiliate: Sync CJ Shop Products</field>
+            <field name="model_id" ref="model_affiliate_advertiser"/>
+            <field name="state">code</field>
+            <field name="code">model._av_cron_import_shop_products()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 </odoo>

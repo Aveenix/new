@@ -7,6 +7,10 @@
         <field name="arch" type="xml">
             <list string="Affiliate Offers" decoration-muted="state == 'rejected'"
                   decoration-warning="state == 'draft'">
+                <header>
+                    <button name="action_publish_to_shop" type="object"
+                            string="Publish to Shop"/>
+                </header>
                 <field name="name"/>
                 <field name="network"/>
                 <field name="advertiser_id"/>
@@ -15,7 +19,9 @@
                 <field name="source" optional="hide"/>
                 <field name="price" optional="hide"/>
                 <field name="currency_id" column_invisible="True"/>
+                <field name="availability" optional="hide"/>
                 <field name="placement_count" string="Placed"/>
+                <field name="shop_product_count" string="In Shop" optional="show"/>
                 <field name="click_count" string="Clicks"/>
                 <field name="revenue_total" string="Revenue" optional="show"/>
                 <field name="state" widget="badge"
@@ -43,10 +49,22 @@
                             string="Build HopLink"
                             invisible="network != 'clickbank'"
                             help="Fill the affiliate link from your ClickBank nickname and this vendor's nickname."/>
+                    <button name="action_publish_to_shop" type="object"
+                            string="Publish to Shop"
+                            invisible="state != 'approved' or shop_product_count"
+                            help="List this offer on Aveenix as an affiliate product with a Buy on Partner Site button."/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,approved"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_affiliate_shop_products)d" type="action"
+                                class="oe_stat_button" icon="fa-shopping-bag"
+                                context="{'search_default_affiliate_offer_id': id}"
+                                invisible="not shop_product_count">
+                            <field name="shop_product_count" widget="statinfo" string="In Shop"/>
+                        </button>
+                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
                             invisible="active"/>
                     <div class="oe_title">
@@ -69,6 +87,7 @@
                                 <field name="price"/>
                                 <field name="currency_id" options="{'no_create': True}"/>
                             </div>
+                            <field name="availability"/>
                             <field name="commission_note"/>
                             <field name="click_count"/>
                             <field name="revenue_total"/>
@@ -149,6 +168,8 @@
                 <separator/>
                 <filter name="unplaced" string="Never Placed"
                         domain="[('placement_ids','=',False)]"/>
+                <filter name="in_shop" string="In Shop"
+                        domain="[('product_tmpl_ids','!=',False)]"/>
                 <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                 <group>
                     <filter name="group_state" string="Status" context="{'group_by':'state'}"/>

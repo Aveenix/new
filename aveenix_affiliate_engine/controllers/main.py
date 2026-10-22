@@ -1,4 +1,4 @@
-"""Public endpoints: the tracked redirect, and placements for the article page."""
+"""Public endpoints: the tracked redirects, and placements for the article page."""
 
 import logging
 
@@ -125,5 +125,42 @@ class AveenixAffiliateEngine(AveenixWebsite):
         })
         click.tracking_id = 'av%s' % click.id
         outbound = offer._av_outbound_url(click, placement)
+        click.affiliate_url = outbound
+        return request.redirect(outbound, local=False)
+
+    @http.route()
+    def affiliate_redirect(self, product_id, **kw):
+        """Buy on Partner Site for a shop product published from an offer.
+
+        Hand-made affiliate products keep the parent behaviour (retailer URL
+        plus Amazon tag). A product backed by an offer goes out through the
+        offer's network link instead, with the same checks and tracking id as
+        an article click — so the commission CJ reports for it joins back to
+        this click, and an Amazon tag never lands on a CJ link.
+        """
+        product = request.env['product.template'].sudo().browse(product_id)
+        offer = product.exists() and product.affiliate_offer_id
+        if not offer:
+            return super().affiliate_redirect(product_id, **kw)
+        # Same login gate as the parent route: the Buy button is member-only.
+        if request.env.user._is_public():
+            return request.redirect('/web/login')
+        if not offer._av_is_placeable() or not verify_target_url(offer.network, offer.target_url):
+            _logger.warning(
+                'Refusing shop redirect: product %s offer %s is not clickable (%s).',
+                product.id, offer.id, offer.target_url,
+            )
+            return request.redirect('/shop')
+
+        click = request.env['affiliate.click.log'].sudo().create({
+            'product_id': product.id,
+            'offer_id': offer.id,
+            'network': offer.network,
+            'user_id': request.env.user.id,
+            'session_id': request.session.sid,
+            'referrer_url': (request.httprequest.referrer or '')[:2000],
+        })
+        click.tracking_id = 'av%s' % click.id
+        outbound = offer._av_outbound_url(click)
         click.affiliate_url = outbound
         return request.redirect(outbound, local=False)

@@ -9,7 +9,7 @@ where CJ actually offers it rather than forcing one style:
 
   * GraphQL (``Authorization: Bearer <PAT>``, POST a document)
       - ``shoppingProducts``        product discovery, on ads.api.cj.com
-      - ``promotionalProperties``   the property id Link Search needs
+      - ``promotionalProperties``   the property id links need, on accounts.api.cj.com
       - ``publisherCommissions``    revenue, on commissions.api.cj.com
   * REST v2, XML responses — the long-stable publisher endpoints
       - ``/v2/advertiser-lookup``   which programs we have joined
@@ -47,6 +47,7 @@ PARAM_COMMISSION_ENDPOINT = 'aveenix_affiliate.cj_commission_endpoint'
 
 DEFAULT_ADS_ENDPOINT = 'https://ads.api.cj.com/query'
 DEFAULT_COMMISSION_ENDPOINT = 'https://commissions.api.cj.com/query'
+ACCOUNTS_ENDPOINT = 'https://accounts.api.cj.com/graphql'
 ADVERTISER_LOOKUP_URL = 'https://advertiser-lookup.api.cj.com/v2/advertiser-lookup'
 LINK_SEARCH_URL = 'https://link-search.api.cj.com/v2/link-search'
 
@@ -55,9 +56,13 @@ _TIMEOUT = 30
 # Entities and network lookups are off: the payload is parsed, not trusted.
 _XML_PARSER = etree.XMLParser(resolve_entities=False, no_network=True)
 
+# `link` is the merchant's own product URL and earns nothing; the tracked CJ
+# click URL comes from `linkCode`, which needs the promotional property id.
+# partnerStatus JOINED keeps out feeds from programs we may not promote — CJ
+# otherwise returns the whole network's catalogue.
 _PRODUCTS_QUERY = """
-query AveenixShoppingProducts($companyId: ID!, $keywords: [String!], $partnerIds: [ID!], $limit: Int, $offset: Int) {
-  shoppingProducts(companyId: $companyId, keywords: $keywords, partnerIds: $partnerIds, limit: $limit, offset: $offset) {
+query AveenixShoppingProducts($companyId: ID!, $pid: ID!, $keywords: [String!], $partnerIds: [ID!], $limit: Int, $offset: Int) {
+  shoppingProducts(companyId: $companyId, partnerStatus: JOINED, keywords: $keywords, partnerIds: $partnerIds, limit: $limit, offset: $offset) {
     totalCount
     count
     resultList {
@@ -67,7 +72,7 @@ query AveenixShoppingProducts($companyId: ID!, $keywords: [String!], $partnerIds
       brand
       title
       description
-      link
+      linkCode(pid: $pid) { clickUrl }
       imageLink
       availability
       price { amount currency }
@@ -77,24 +82,21 @@ query AveenixShoppingProducts($companyId: ID!, $keywords: [String!], $partnerIds
 }
 """
 
-# `companyId` is the argument shoppingProducts documents; if CJ names it
-# `publisherId` here instead, the errors array says so on the first run.
+# Served by the accounts API, not the ads API, and keyed on `publisherId`.
 _PROPERTIES_QUERY = """
-query AveenixPromotionalProperties($companyId: ID!) {
-  promotionalProperties(companyId: $companyId) {
+query AveenixPromotionalProperties($publisherId: ID!) {
+  promotionalProperties(publisherId: $publisherId) {
     resultList {
       id
       name
-      type
       status
-      url
     }
   }
 }
 """
 
 _COMMISSIONS_QUERY = """
-query AveenixPublisherCommissions($publisherIds: [String!]!, $since: Timestamp!, $before: Timestamp!) {
+query AveenixPublisherCommissions($publisherIds: [String!]!, $since: String!, $before: String!) {
   publisherCommissions(forPublishers: $publisherIds, sincePostingDate: $since, beforePostingDate: $before) {
     count
     payloadComplete
@@ -242,16 +244,27 @@ class AffiliateCjClient(models.AbstractModel):
 
     @api.model
     def _av_search_products(self, keywords, advertiser_ids=None, limit=20):
-        """Shopping products matching `keywords`, as normalised offer dicts."""
+        """Shopping products matching `keywords`, as normalised offer dicts.
+
+        Either filter is enough on its own: article discovery searches by
+        keywords across every joined feed, while the shop import pulls one
+        advertiser's feed with keywords optional.
+        """
         creds = self._av_credentials()
-        if not creds['company_id'] or not keywords:
+        if not creds['company_id'] or not (keywords or advertiser_ids):
+            return []
+        if not creds['website_id']:
+            _logger.info('CJ shoppingProducts skipped: no Promotional Property ID '
+                         'configured, so no tracked link could be built.')
             return []
         variables = {
             'companyId': creds['company_id'],
-            'keywords': list(keywords)[:10],
+            'pid': creds['website_id'],
             'limit': limit,
             'offset': 0,
         }
+        if keywords:
+            variables['keywords'] = list(keywords)[:10]
         # Omitted entirely when empty: CJ reads "no partnerIds" as "every feed
         # I am joined to", which is what article-driven discovery wants.
         if advertiser_ids:
@@ -265,7 +278,7 @@ class AffiliateCjClient(models.AbstractModel):
         result = (data.get('shoppingProducts') or {}).get('resultList') or []
         offers = []
         for row in result:
-            link = (row.get('link') or '').strip()
+            link = ((row.get('linkCode') or {}).get('clickUrl') or '').strip()
             if not link:
                 continue
             amount, currency = _money(row.get('salePrice') or row.get('price'))
@@ -279,6 +292,7 @@ class AffiliateCjClient(models.AbstractModel):
                 'target_url': link,
                 'price': amount,
                 'currency_code': currency,
+                'availability': (row.get('availability') or '').strip().lower(),
                 'advertiser_external_id': str(row.get('advertiserId') or '').strip(),
                 'advertiser_name': (row.get('advertiserName') or '').strip(),
                 'keywords': ', '.join(
@@ -336,10 +350,14 @@ class AffiliateCjClient(models.AbstractModel):
 
     @api.model
     def _av_list_advertisers(self, limit=100):
-        """Advertisers whose programs Aveenix has joined."""
+        """Advertisers whose programs Aveenix has joined.
+
+        None when the call failed, [] when it worked and nothing is joined yet,
+        so the settings button can tell a credentials problem from a new account.
+        """
         creds = self._av_credentials()
         if not creds['company_id']:
-            return []
+            return None
         root = self._av_rest_xml(ADVERTISER_LOOKUP_URL, {
             'requestor-cid': creds['company_id'],
             'advertiser-ids': 'joined',
@@ -347,7 +365,7 @@ class AffiliateCjClient(models.AbstractModel):
             'page-number': 1,
         }, 'advertiser-lookup')
         if root is None:
-            return []
+            return None
         advertisers = []
         for node in root.iter('advertiser'):
             external_id = _text(node, 'advertiser-id')
@@ -381,9 +399,8 @@ class AffiliateCjClient(models.AbstractModel):
                 'in Website Settings before loading promotional properties.'
             ))
         data = self._av_graphql(
-            self._av_endpoint(PARAM_ADS_ENDPOINT, DEFAULT_ADS_ENDPOINT),
-            _PROPERTIES_QUERY, {'companyId': creds['company_id']},
-            'promotionalProperties',
+            ACCOUNTS_ENDPOINT, _PROPERTIES_QUERY,
+            {'publisherId': creds['company_id']}, 'promotionalProperties',
         )
         if not data:
             return []

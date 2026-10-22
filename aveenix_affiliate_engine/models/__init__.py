@@ -7,5 +7,6 @@ from . import affiliate_offer
 from . import affiliate_placement
 from . import affiliate_commission
 from . import affiliate_click_log
+from . import product_template
 from . import aveenix_news
 from . import res_config_settings

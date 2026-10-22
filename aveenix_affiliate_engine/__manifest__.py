@@ -13,6 +13,9 @@ networks, rather than two separate integrations:
 * **CJ Affiliate (Commission Junction)** — automated discovery through the
   publisher APIs: Product Feed, Link Search, Advertiser Lookup, Promotional
   Properties, and Commission Detail for revenue.
+  Products from advertisers marked "Import Products to Shop" are also listed
+  in /shop as affiliate products, with a CJ-tracked Buy on Partner Site link,
+  and kept in step with the feed (price, link, availability) by a cron.
 * **ClickBank** — an approved-offer database of HopLinks, entered and approved
   by Aveenix staff before the matcher may use them.
 
@@ -41,6 +44,7 @@ CJdropshipping.com, which is a product supplier handled by the separate
         'data/ir_cron_data.xml',
         'views/affiliate_section_views.xml',
         'views/affiliate_advertiser_views.xml',
+        'views/product_template_views.xml',
         'views/affiliate_offer_views.xml',
         'views/affiliate_placement_views.xml',
         'views/affiliate_commission_views.xml',

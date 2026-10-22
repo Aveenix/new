@@ -3,6 +3,8 @@
 import logging
 import re
 
+from markupsafe import Markup, escape
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -67,6 +69,11 @@ class AffiliateOffer(models.Model):
     thousands of items Aveenix does not sell, and admitting them to the product
     catalogue would put them in /shop, in pricelists and in stock valuation.
     An offer is an editorial recommendation, not a thing Aveenix sells.
+
+    The ones that *should* be in /shop are published there explicitly (see
+    `action_publish_to_shop`), as an affiliate-type product linked back to the
+    offer. The offer stays the single source of truth for the link, price and
+    availability; the product is a storefront copy kept in step by the sync.
     """
 
     _name = 'affiliate.offer'
@@ -113,6 +120,11 @@ class AffiliateOffer(models.Model):
         default=lambda self: self.env.company.currency_id,
         ondelete='restrict',
     )
+    availability = fields.Char(
+        string='Availability',
+        help='Stock status as the CJ product feed reports it, e.g. "in stock" '
+             'or "out of stock". An out-of-stock offer is taken off the shop.',
+    )
     commission_note = fields.Char(string='Commission')
     external_id = fields.Char(string='Network Offer ID', index=True)
     source = fields.Selection(
@@ -147,6 +159,15 @@ class AffiliateOffer(models.Model):
     click_count = fields.Integer(string='Clicks', compute='_compute_click_count')
     commission_ids = fields.One2many(
         'affiliate.commission', 'offer_id', string='Commissions',
+    )
+    # One2many for the inverse only: the UNIQUE constraint on the product side
+    # keeps it to at most one shop product per offer.
+    product_tmpl_ids = fields.One2many(
+        'product.template', 'affiliate_offer_id', string='Shop Product',
+        context={'active_test': False},
+    )
+    shop_product_count = fields.Integer(
+        string='In Shop', compute='_compute_shop_product_count',
     )
     revenue_total = fields.Monetary(
         string='Revenue', currency_field='currency_id', compute='_compute_revenue_total',
@@ -208,6 +229,11 @@ class AffiliateOffer(models.Model):
         for offer in self:
             offer.click_count = counts.get(offer.id, 0)
 
+    @api.depends('product_tmpl_ids')
+    def _compute_shop_product_count(self):
+        for offer in self:
+            offer.shop_product_count = len(offer.product_tmpl_ids)
+
     @api.depends('commission_ids.commission_amount')
     def _compute_revenue_total(self):
         for offer in self:
@@ -215,16 +241,21 @@ class AffiliateOffer(models.Model):
 
     # ── The link trust boundary ──────────────────────────────────────────
 
-    @api.constrains('target_url', 'network')
+    @api.constrains('target_url', 'network', 'state')
     def _check_target_url(self):
-        """Refuse any link that is not an https URL on the network's own domains.
+        """Refuse an approved offer whose link is not on the network's own domains.
 
         This is the write-time half of the "only verified affiliate links" rule;
         the redirect route re-checks at click time, so a link that was somehow
         written around this constraint still cannot be served.
+
+        Drafts are exempt so discovery can park a link on a host our allowlist
+        does not know yet for review (see `_av_store_discovered`) instead of one
+        such row failing the whole batch. Approval is what makes a link
+        servable, and approving re-runs this check.
         """
         for offer in self:
-            if not offer.target_url:
+            if not offer.target_url or offer.state != 'approved':
                 continue
             if not verify_target_url(offer.network, offer.target_url):
                 raise ValidationError(_(
@@ -348,8 +379,11 @@ class AffiliateOffer(models.Model):
 
     # ── Outbound link ────────────────────────────────────────────────────
 
-    def _av_outbound_url(self, click, placement):
-        """The tracked network URL for one click on one placement.
+    def _av_outbound_url(self, click, placement=None):
+        """The tracked network URL for one click, from an article or the shop.
+
+        `placement` is the article slot that was clicked; a click on the shop
+        product page has none, and is reported as shop traffic instead.
 
         Built from `target_url` and nothing else — no part of this link comes
         from an AI response, a request parameter or a template. Attribution
@@ -362,16 +396,19 @@ class AffiliateOffer(models.Model):
         if self.network == NETWORK_CLICKBANK:
             # ClickBank gives each attribution dimension its own parameter, so
             # nothing has to be packed into tid beyond the click id itself.
+            # Empty values are dropped by apply_params, so a shop click simply
+            # carries fewer of them.
+            placement = placement or self.env['affiliate.offer.placement']
             return apply_params(self.target_url, {
                 'tid': tracking_id,
-                'traffic_source': 'aveenix_news',
+                'traffic_source': 'aveenix_news' if placement else 'aveenix_shop',
                 'campaign': sanitize_token(placement.news_id.category or '', 100),
                 'offer': sanitize_token(
                     self.advertiser_id.external_id or self.external_id or '', 100,
                 ),
-                'creative': sanitize_token(placement.position, 150),
-                'aff_sub1': sanitize_token(placement.news_id.id, 100),
-                'aff_sub2': sanitize_token(placement.id, 100),
+                'creative': sanitize_token(placement.position or '', 150),
+                'aff_sub1': sanitize_token(placement.news_id.id or '', 100),
+                'aff_sub2': sanitize_token(placement.id or '', 100),
             })
         if self.network == NETWORK_CJ:
             # CJ carries publisher sub-tracking in a single `sid`; the rest of
@@ -427,6 +464,9 @@ class AffiliateOffer(models.Model):
                 'price': row.get('price') or 0.0,
                 'currency_id': self._av_currency(row.get('currency_code')).id,
             }
+            # Link Search rows carry no stock status; leave the stored one be.
+            if 'availability' in row:
+                vals['availability'] = row['availability'] or False
             existing = self.with_context(active_test=False).search([
                 ('network', '=', network),
                 ('external_id', '=', row.get('external_id') or False),
@@ -480,3 +520,86 @@ class AffiliateOffer(models.Model):
         if not rows:
             return self.browse()
         return self._av_store_discovered(rows)
+
+    # ── Shop ─────────────────────────────────────────────────────────────
+
+    def _av_is_in_stock(self):
+        """False only when the feed explicitly says the item cannot be bought.
+
+        An empty status means the network did not say — Link Search never
+        does — and is treated as available rather than hiding every link offer.
+        """
+        self.ensure_one()
+        return (self.availability or '').replace('_', ' ') not in ('out of stock', 'discontinued')
+
+    def _av_shop_vals(self):
+        """Storefront fields for this offer's affiliate product.
+
+        Price is converted into the company currency because `list_price` is
+        held in it; the website pricelist converts it back for the visitor.
+        """
+        self.ensure_one()
+        company = self.env.company
+        price = self.currency_id._convert(
+            self.price or 0.0, company.currency_id, company, fields.Date.context_today(self),
+        ) if self.currency_id else (self.price or 0.0)
+        vals = {
+            'name': self.name,
+            'aveenix_product_type': 'affiliate',
+            'affiliate_url': self.target_url,
+            'list_price': price,
+            'sale_ok': True,
+            'external_image_urls': self.image_url or False,
+        }
+        if self.description:
+            # CJ sends plain text; escape it so feed content cannot inject markup.
+            vals['description_ecommerce'] = Markup('<p>%s</p>') % escape(self.description)
+        return vals
+
+    def action_publish_to_shop(self):
+        """Create or refresh the affiliate shop product for each offer.
+
+        One product per offer, enforced by the database, so publishing twice or
+        a sync racing a click updates the same product instead of duplicating
+        it. The product is created unpublished with its image queued; the
+        existing image cron downloads it and publishes per the "auto publish
+        affiliate products" setting, the same path every other import takes.
+        """
+        Product = self.env['product.template'].with_context(active_test=False)
+        for offer in self:
+            if not offer._av_is_placeable():
+                raise UserError(_(
+                    'Offer "%s" must be approved, active and have a verified link '
+                    'before it can be published to the shop.', offer.name,
+                ))
+            vals = offer._av_shop_vals()
+            product = offer.product_tmpl_ids[:1]
+            if product:
+                product.write(vals)
+            else:
+                vals.update({
+                    'affiliate_offer_id': offer.id,
+                    'website_published': False,
+                    'external_image_fetch_state': 'pending',
+                })
+                Product.create(vals)
+        return True
+
+    def _av_sync_shop_products(self):
+        """Bring linked shop products in line with their offers.
+
+        Refreshes link, price and images from the offer, and unpublishes any
+        product whose offer can no longer be clicked or is out of stock — the
+        redirect would refuse it anyway, so leaving it listed only produces a
+        dead Buy button. Republishing stays a human (or auto-publish) decision.
+        """
+        products = self.with_context(active_test=False).product_tmpl_ids
+        for product in products:
+            offer = product.affiliate_offer_id
+            if offer._av_is_placeable():
+                product.write(offer._av_shop_vals())
+            if product.website_published and not (
+                offer._av_is_placeable() and offer._av_is_in_stock()
+            ):
+                product.website_published = False
+        return products

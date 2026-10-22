@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Next to the affiliate URL the product already shows, so it is clear
+         that URL is maintained by the offer sync and not edited here. -->
+    <record id="view_product_template_affiliate_offer_form" model="ir.ui.view">
+        <field name="name">product.template.affiliate.offer.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="aveenix_website.view_product_template_affiliate_rewards_tab"/>
+        <field name="arch" type="xml">
+            <field name="affiliate_url" position="after">
+                <field name="affiliate_offer_id"
+                       invisible="aveenix_product_type != 'affiliate'"/>
+                <field name="affiliate_network"
+                       invisible="not affiliate_offer_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_affiliate_shop_product_list" model="ir.ui.view">
+        <field name="name">product.template.affiliate.shop.list</field>
+        <field name="model">product.template</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list string="Affiliate Shop Products">
+                <field name="name"/>
+                <field name="affiliate_offer_id"/>
+                <field name="affiliate_network" optional="show"/>
+                <field name="list_price" widget="monetary"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="affiliate_click_count" string="Clicks"/>
+                <field name="external_image_fetch_state" string="Image" optional="show"/>
+                <field name="website_published" string="Published" widget="boolean_toggle"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_affiliate_shop_product_search" model="ir.ui.view">
+        <field name="name">product.template.affiliate.shop.search</field>
+        <field name="model">product.template</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <search string="Affiliate Shop Products">
+                <field name="name"/>
+                <field name="affiliate_offer_id"/>
+                <filter name="published" string="Published"
+                        domain="[('website_published','=',True)]"/>
+                <filter name="unpublished" string="Not Published"
+                        domain="[('website_published','=',False)]"/>
+                <filter name="image_error" string="Image Failed"
+                        domain="[('external_image_fetch_state','=','error')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_affiliate_shop_products" model="ir.actions.act_window">
+        <field name="name">Shop Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('affiliate_offer_id','!=',False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_affiliate_shop_product_list')}),
+            (0, 0, {'view_mode': 'form'})]"/>
+        <field name="search_view_id" ref="view_affiliate_shop_product_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No affiliate products in the shop yet.</p>
+            <p>
+                Open a CJ advertiser, tick <b>Import Products to Shop</b> and press
+                <b>Import Products Now</b> — or use <b>Publish to Shop</b> on any
+                approved offer. Products appear here unpublished until their image
+                is downloaded, then follow the auto-publish setting for affiliate
+                products.
+            </p>
+        </field>
+    </record>
+
+</odoo>

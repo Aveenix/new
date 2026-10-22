@@ -125,23 +125,40 @@ class ResConfigSettings(models.TransientModel):
         lines = '\n'.join(
             '  %s  —  %s (%s)' % (
                 prop.get('id') or '?', prop.get('name') or '?',
-                prop.get('status') or prop.get('type') or '',
+                prop.get('status') or '',
             )
             for prop in properties
         )
-        raise UserError(_(
-            'CJ promotional properties:\n\n%s\n\nCopy the id for aveenix.com '
-            'into "CJ Promotional Property ID".', lines,
-        ))
+        # A successful lookup is not an error, so it is shown as a sticky
+        # notification rather than through UserError's "Invalid Operation".
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('CJ promotional properties'),
+                'message': _(
+                    '%s\n\nCopy the id for aveenix.com into "CJ Promotional '
+                    'Property ID".', lines,
+                ),
+                'type': 'success',
+                'sticky': True,
+            },
+        }
 
     def action_av_sync_cj_advertisers(self):
         self.ensure_one()
         count = self.env['affiliate.advertiser']._av_cron_sync_cj_advertisers()
-        if not count:
+        if count is None:
             raise UserError(_(
-                'CJ returned no joined advertisers. Check the token and '
+                'Could not read advertisers from CJ. Check the token and '
                 'Publisher ID, then look in the server log for the exact reply '
                 'from CJ.'
+            ))
+        if not count:
+            raise UserError(_(
+                'CJ is reachable, but no advertiser has approved Aveenix yet.\n\n'
+                'In the CJ dashboard, apply to programs under Partners → '
+                'Advertisers. Once an advertiser approves you, sync again.'
             ))
         return {
             'type': 'ir.actions.act_window',

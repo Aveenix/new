@@ -12,6 +12,9 @@
                 <field name="commission_note" optional="show"/>
                 <field name="offer_count" string="Offers"/>
                 <field name="approved_offer_count" string="Approved"/>
+                <field name="shop_import" string="To Shop" widget="boolean_toggle" optional="show"/>
+                <field name="shop_last_sync" optional="hide"/>
+                <field name="shop_sync_message" optional="show"/>
                 <field name="active" widget="boolean_toggle"/>
             </list>
         </field>
@@ -22,11 +25,21 @@
         <field name="model">affiliate.advertiser</field>
         <field name="arch" type="xml">
             <form string="Advertiser">
+                <header>
+                    <button name="action_import_shop_products" type="object"
+                            string="Import Products Now" class="btn-primary"
+                            invisible="network != 'cj' or not shop_import"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_offers" type="object"
                                 class="oe_stat_button" icon="fa-tags">
                             <field name="offer_count" widget="statinfo" string="Offers"/>
+                        </button>
+                        <button name="action_view_shop_products" type="object"
+                                class="oe_stat_button" icon="fa-shopping-bag"
+                                invisible="network != 'cj'">
+                            <field name="shop_product_count" widget="statinfo" string="In Shop"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
@@ -45,6 +58,17 @@
                             <field name="commission_note"/>
                             <field name="program_url" widget="url"/>
                             <field name="approved_offer_count"/>
+                        </group>
+                    </group>
+                    <group string="Shop Import" invisible="network != 'cj'">
+                        <group>
+                            <field name="shop_import"/>
+                            <field name="shop_keywords" invisible="not shop_import"
+                                   placeholder="e.g. running shoes, fitness tracker"/>
+                        </group>
+                        <group>
+                            <field name="shop_last_sync"/>
+                            <field name="shop_sync_message"/>
                         </group>
                     </group>
                     <div class="text-muted">
@@ -66,6 +90,8 @@
                 <filter name="cj" string="CJ Affiliate" domain="[('network','=','cj')]"/>
                 <filter name="clickbank" string="ClickBank" domain="[('network','=','clickbank')]"/>
                 <separator/>
+                <filter name="shop_import" string="Importing to Shop"
+                        domain="[('shop_import','=',True)]"/>
                 <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                 <group>
                     <filter name="group_network" string="Network" context="{'group_by':'network'}"/>

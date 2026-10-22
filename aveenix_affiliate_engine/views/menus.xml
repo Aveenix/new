@@ -20,6 +20,12 @@
               action="action_affiliate_offer_pending"
               sequence="20"/>
 
+    <menuitem id="menu_affiliate_shop_products"
+              name="Shop Products"
+              parent="menu_affiliate_root"
+              action="action_affiliate_shop_products"
+              sequence="25"/>
+
     <menuitem id="menu_affiliate_advertisers"
               name="Advertisers"
               parent="menu_affiliate_root"
