@@ -206,7 +206,6 @@ class WooOrder(models.Model):
             "note": record.get("customer_note", ""),
             "company_id": backend.company_id.id,
         }
-        print("\n\n------record",record)
 
         # Extract tracking link if available
         tracking_link = record.get("tracking_link") or record.get("tracking_url")

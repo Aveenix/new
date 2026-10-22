@@ -965,7 +965,6 @@ class WooBackend(models.Model):
             try:
                 backend._do_pull_orders()
                 backend.orders_last_sync = datetime.now() - timedelta(seconds=SYNC_DELTA)
-                print("\n\n-------------backend----",backend,backend.orders_last_sync)
             except Exception as exc:
                 _logger.exception("Cron: order pull failed for %s: %s", backend.name, exc)
 
