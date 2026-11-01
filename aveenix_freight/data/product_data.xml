@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The line every freight invoice is billed on (Shipment > Create Invoice). -->
+    <data noupdate="1">
+        <record id="product_freight_charges" model="product.product">
+            <field name="name">Freight Charges</field>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0</field>
+        </record>
+    </data>
+</odoo>

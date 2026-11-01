@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_freight_port_list" model="ir.ui.view">
+        <field name="name">freight.port.list</field>
+        <field name="model">freight.port</field>
+        <field name="arch" type="xml">
+            <list string="Ports &amp; Airports" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="port_type"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_freight_port_search" model="ir.ui.view">
+        <field name="name">freight.port.search</field>
+        <field name="model">freight.port</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="country_id"/>
+                <filter name="sea" string="Seaports" domain="[('port_type', '=', 'sea')]"/>
+                <filter name="air" string="Airports" domain="[('port_type', '=', 'air')]"/>
+                <filter name="inland" string="Inland" domain="[('port_type', '=', 'inland')]"/>
+                <separator/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'port_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_freight_port" model="ir.actions.act_window">
+        <field name="name">Ports &amp; Airports</field>
+        <field name="res_model">freight.port</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A starter set of major hubs, editable under Freight > Configuration.
+         noupdate so edits and archived entries survive module upgrades. -->
+    <data noupdate="1">
+        <record id="port_innsa" model="freight.port"><field name="name">Nhava Sheva (JNPT)</field><field name="code">INNSA</field><field name="port_type">sea</field><field name="city">Navi Mumbai</field><field name="country_id" ref="base.in"/></record>
+        <record id="port_inmun" model="freight.port"><field name="name">Mundra</field><field name="code">INMUN</field><field name="port_type">sea</field><field name="city">Mundra</field><field name="country_id" ref="base.in"/></record>
+        <record id="port_inmaa" model="freight.port"><field name="name">Chennai</field><field name="code">INMAA</field><field name="port_type">sea</field><field name="city">Chennai</field><field name="country_id" ref="base.in"/></record>
+        <record id="port_inpav" model="freight.port"><field name="name">Pipavav</field><field name="code">INPAV</field><field name="port_type">sea</field><field name="city">Pipavav</field><field name="country_id" ref="base.in"/></record>
+        <record id="port_inamd_icd" model="freight.port"><field name="name">ICD Ahmedabad (Khodiyar)</field><field name="code">INSAU</field><field name="port_type">inland</field><field name="city">Ahmedabad</field><field name="country_id" ref="base.in"/></record>
+        <record id="port_cnsha" model="freight.port"><field name="name">Shanghai</field><field name="code">CNSHA</field><field name="port_type">sea</field><field name="city">Shanghai</field><field name="country_id" ref="base.cn"/></record>
+        <record id="port_cnngb" model="freight.port"><field name="name">Ningbo-Zhoushan</field><field name="code">CNNGB</field><field name="port_type">sea</field><field name="city">Ningbo</field><field name="country_id" ref="base.cn"/></record>
+        <record id="port_sgsin" model="freight.port"><field name="name">Singapore</field><field name="code">SGSIN</field><field name="port_type">sea</field><field name="city">Singapore</field><field name="country_id" ref="base.sg"/></record>
+        <record id="port_aejea" model="freight.port"><field name="name">Jebel Ali</field><field name="code">AEJEA</field><field name="port_type">sea</field><field name="city">Dubai</field><field name="country_id" ref="base.ae"/></record>
+        <record id="port_nlrtm" model="freight.port"><field name="name">Rotterdam</field><field name="code">NLRTM</field><field name="port_type">sea</field><field name="city">Rotterdam</field><field name="country_id" ref="base.nl"/></record>
+        <record id="port_deham" model="freight.port"><field name="name">Hamburg</field><field name="code">DEHAM</field><field name="port_type">sea</field><field name="city">Hamburg</field><field name="country_id" ref="base.de"/></record>
+        <record id="port_gbfxt" model="freight.port"><field name="name">Felixstowe</field><field name="code">GBFXT</field><field name="port_type">sea</field><field name="city">Felixstowe</field><field name="country_id" ref="base.uk"/></record>
+        <record id="port_uslax" model="freight.port"><field name="name">Los Angeles</field><field name="code">USLAX</field><field name="port_type">sea</field><field name="city">Los Angeles</field><field name="country_id" ref="base.us"/></record>
+        <record id="port_usnyc" model="freight.port"><field name="name">New York / New Jersey</field><field name="code">USNYC</field><field name="port_type">sea</field><field name="city">New York</field><field name="country_id" ref="base.us"/></record>
+        <record id="port_auakl" model="freight.port"><field name="name">Auckland</field><field name="code">NZAKL</field><field name="port_type">sea</field><field name="city">Auckland</field><field name="country_id" ref="base.nz"/></record>
+        <record id="port_ausyd" model="freight.port"><field name="name">Sydney</field><field name="code">AUSYD</field><field name="port_type">sea</field><field name="city">Sydney</field><field name="country_id" ref="base.au"/></record>
+        <record id="air_bom" model="freight.port"><field name="name">Mumbai Chhatrapati Shivaji Intl.</field><field name="code">BOM</field><field name="port_type">air</field><field name="city">Mumbai</field><field name="country_id" ref="base.in"/></record>
+        <record id="air_del" model="freight.port"><field name="name">Delhi Indira Gandhi Intl.</field><field name="code">DEL</field><field name="port_type">air</field><field name="city">New Delhi</field><field name="country_id" ref="base.in"/></record>
+        <record id="air_amd" model="freight.port"><field name="name">Ahmedabad Sardar Vallabhbhai Patel Intl.</field><field name="code">AMD</field><field name="port_type">air</field><field name="city">Ahmedabad</field><field name="country_id" ref="base.in"/></record>
+        <record id="air_dxb" model="freight.port"><field name="name">Dubai Intl.</field><field name="code">DXB</field><field name="port_type">air</field><field name="city">Dubai</field><field name="country_id" ref="base.ae"/></record>
+        <record id="air_sin" model="freight.port"><field name="name">Singapore Changi</field><field name="code">SIN</field><field name="port_type">air</field><field name="city">Singapore</field><field name="country_id" ref="base.sg"/></record>
+        <record id="air_hkg" model="freight.port"><field name="name">Hong Kong Intl.</field><field name="code">HKG</field><field name="port_type">air</field><field name="city">Hong Kong</field><field name="country_id" ref="base.hk"/></record>
+        <record id="air_lhr" model="freight.port"><field name="name">London Heathrow</field><field name="code">LHR</field><field name="port_type">air</field><field name="city">London</field><field name="country_id" ref="base.uk"/></record>
+        <record id="air_fra" model="freight.port"><field name="name">Frankfurt</field><field name="code">FRA</field><field name="port_type">air</field><field name="city">Frankfurt</field><field name="country_id" ref="base.de"/></record>
+        <record id="air_jfk" model="freight.port"><field name="name">New York JFK</field><field name="code">JFK</field><field name="port_type">air</field><field name="city">New York</field><field name="country_id" ref="base.us"/></record>
+        <record id="air_akl" model="freight.port"><field name="name">Auckland Intl.</field><field name="code">AKL</field><field name="port_type">air</field><field name="city">Auckland</field><field name="country_id" ref="base.nz"/></record>
+    </data>
+</odoo>
