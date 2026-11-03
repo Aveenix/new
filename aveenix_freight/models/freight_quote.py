@@ -1,12 +1,14 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+# In display order: the website quote form and home widget list them as-is
+# and preselect the first.
 FREIGHT_MODES = [
+    ('air', 'Air Freight'),
     ('ocean_fcl', 'Ocean Freight – FCL'),
     ('ocean_lcl', 'Ocean Freight – LCL'),
-    ('air', 'Air Freight'),
-    ('road', 'Road Freight'),
     ('rail', 'Rail Freight'),
+    ('road', 'Road Freight'),
 ]
 
 CONTAINER_TYPES = [
@@ -24,6 +26,7 @@ _CARGO_FIELDS = (
     'destination_address', 'incoterm_id', 'commodity', 'packages',
     'weight_kg', 'volume_cbm', 'container_type', 'container_qty',
     'is_hazardous', 'needs_customs', 'needs_insurance',
+    'road_service_id', 'max_item_weight_kg', 'site_access',
 )
 
 
@@ -31,7 +34,7 @@ class FreightQuote(models.Model):
     """A request for a freight price, usually from the website quote form."""
 
     _name = 'freight.quote'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'freight.road.cargo.mixin']
     _description = 'Freight Quote Request'
     _order = 'create_date desc, id desc'
 
@@ -196,9 +199,7 @@ class FreightQuote(models.Model):
         if self.state not in ('quoted', 'in_progress', 'won'):
             raise UserError(_('Only a quote in progress or quoted can be booked.'))
         partner = self._find_or_create_partner()
-        vals = {field: self[field] for field in _CARGO_FIELDS}
-        for field in ('origin_port_id', 'destination_port_id', 'incoterm_id'):
-            vals[field] = vals[field].id
+        vals = self._convert_to_write({field: self[field] for field in _CARGO_FIELDS})
         vals.update({
             'partner_id': partner.id,
             'quote_id': self.id,

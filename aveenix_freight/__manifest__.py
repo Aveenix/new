@@ -1,6 +1,6 @@
 {
     'name': 'Aveenix Freight',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.0.3',
     'category': 'Inventory/Freight',
     'summary': 'Aveenix Freight website (quotes, tracking, services) and '
                'freight management backend',
@@ -24,6 +24,8 @@ Backend (Freight menu)
 * Shipments: modes, ports, carrier, containers, ETD / ETA, milestones
 * Tracking events published to the website tracker
 * Ports & airports master data, with a starter set of major hubs
+* Road services (FCL / LCL trucks, Hiab, linehaul, courier), managed by the
+  team and offered on the website when a customer picks Road Freight
 * Invoices from shipments, paid online from the customer portal
 
 Customer portal (My Account)
@@ -49,9 +51,11 @@ Customer portal (My Account)
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'data/freight_port_data.xml',
+        'data/freight_road_service_data.xml',
         'data/product_data.xml',
         'data/mail_template_data.xml',
         'views/freight_port_views.xml',
+        'views/freight_road_service_views.xml',
         'views/freight_quote_views.xml',
         'views/freight_shipment_views.xml',
         'views/menus.xml',

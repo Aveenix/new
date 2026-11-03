@@ -8,29 +8,6 @@ from ..models.freight_shipment import SHIPMENT_STATES
 # one table, and `mode` pre-selects the matching option on the quote form.
 SERVICES = [
     {
-        'slug': 'ocean-freight',
-        'mode': 'ocean_fcl',
-        'icon': 'fa-ship',
-        'title': 'Ocean Freight',
-        'nav': 'Ocean',
-        'tagline': 'FCL and LCL sailings on every major trade lane.',
-        'intro': 'Move full containers or share space on consolidated sailings. '
-                 'We book with leading carriers, handle the paperwork end to end '
-                 'and keep you posted at every port call.',
-        'features': [
-            ('fa-cube', 'Full Container Load (FCL)', "20', 40' and 40' High Cube dry boxes, plus reefers for temperature-controlled cargo."),
-            ('fa-cubes', 'Less than Container Load (LCL)', 'Pay only for the cubic metres you use, with weekly consolidations from major hubs.'),
-            ('fa-calendar-check-o', 'Fixed sailing schedules', 'Weekly departures with carrier space allocations, even in peak season.'),
-            ('fa-file-text-o', 'Bills of lading', 'Original, telex-release and sea waybill documentation handled for you.'),
-        ],
-        'specs': [
-            ("20' Standard", '33 CBM · up to 28 t'),
-            ("40' Standard", '67 CBM · up to 26.7 t'),
-            ("40' High Cube", '76 CBM · up to 26.5 t'),
-            ("Reefer 20' / 40'", '-30 °C to +30 °C'),
-        ],
-    },
-    {
         'slug': 'air-freight',
         'mode': 'air',
         'icon': 'fa-plane',
@@ -54,8 +31,33 @@ SERVICES = [
         ],
     },
     {
+        'slug': 'ocean-freight',
+        'mode': 'ocean_fcl',
+        'icon': 'fa-ship',
+        'title': 'Ocean Freight',
+        'nav': 'Ocean',
+        'tagline': 'FCL and LCL sailings on every major trade lane.',
+        'intro': 'Move full containers or share space on consolidated sailings. '
+                 'We book with leading carriers, handle the paperwork end to end '
+                 'and keep you posted at every port call.',
+        'features': [
+            ('fa-cube', 'Full Container Load (FCL)', "20', 40' and 40' High Cube dry boxes, plus reefers for temperature-controlled cargo."),
+            ('fa-cubes', 'Less than Container Load (LCL)', 'Pay only for the cubic metres you use, with weekly consolidations from major hubs.'),
+            ('fa-calendar-check-o', 'Fixed sailing schedules', 'Weekly departures with carrier space allocations, even in peak season.'),
+            ('fa-file-text-o', 'Bills of lading', 'Original, telex-release and sea waybill documentation handled for you.'),
+        ],
+        'specs': [
+            ("20' Standard", '33 CBM · up to 28 t'),
+            ("40' Standard", '67 CBM · up to 26.7 t'),
+            ("40' High Cube", '76 CBM · up to 26.5 t'),
+            ("Reefer 20' / 40'", '-30 °C to +30 °C'),
+        ],
+    },
+    {
         'slug': 'road-rail',
         'mode': 'road',
+        # Lists the team's road services (freight.road.service) on the page.
+        'road_services': True,
         'icon': 'fa-truck',
         'title': 'Road & Rail Freight',
         'nav': 'Road & Rail',
@@ -137,6 +139,7 @@ class AveenixFreight(http.Controller):
         page, so the header swaps its logo and nav (see views/layout.xml)."""
         values.update({
             'is_freight_page': True,
+            'av_site_home': '/freight',
             'freight_services': SERVICES,
             'freight_modes': FREIGHT_MODES,
         })
@@ -155,8 +158,12 @@ class AveenixFreight(http.Controller):
             raise request.not_found()
         return request.render('aveenix_freight.freight_service', self._freight_values(
             service=service,
+            road_services=self._road_services() if service.get('road_services') else None,
             active_nav=slug,
         ))
+
+    def _road_services(self):
+        return request.env['freight.road.service'].sudo().search([])
 
     # ── Quote request ────────────────────────────────────────────────────
 
@@ -167,6 +174,7 @@ class AveenixFreight(http.Controller):
             errors=errors or {},
             active_nav='quote',
             container_types=CONTAINER_TYPES,
+            road_services=self._road_services(),
             ports=env['freight.port'].sudo().search([]),
             incoterms=env['account.incoterms'].sudo().search([]),
             countries=env['res.country'].sudo().search([]),
@@ -177,7 +185,8 @@ class AveenixFreight(http.Controller):
     def freight_quote(self, **kwargs):
         # The home widget and the service pages link here with mode / origin /
         # destination prefilled; anything else in the query string is ignored.
-        form = {k: kwargs[k] for k in ('mode', 'origin_address', 'destination_address') if kwargs.get(k)}
+        form = {k: kwargs[k] for k in ('mode', 'road_service_id', 'origin_address', 'destination_address')
+                if kwargs.get(k)}
         user = request.env.user
         if not user._is_public():
             form.setdefault('contact_name', user.name)
@@ -251,6 +260,11 @@ class AveenixFreight(http.Controller):
         container_type = post.get('container_type')
         if container_type not in dict(CONTAINER_TYPES):
             container_type = False
+        # Road service: only an active one, and only for road freight.
+        road_service = request.env['freight.road.service'].sudo().browse(
+            record('freight.road.service', 'road_service_id') if mode == 'road' else [])
+        is_container_load = mode == 'ocean_fcl' or road_service.cargo_type == 'container'
+        is_heavy_lift = road_service.cargo_type == 'heavy_lift'
 
         vals = {
             'source': 'website',
@@ -266,7 +280,8 @@ class AveenixFreight(http.Controller):
             'destination_port_id': record('freight.port', 'destination_port_id'),
             'incoterm_id': record('account.incoterms', 'incoterm_id'),
             'commodity': text('commodity'),
-            'container_type': container_type if mode == 'ocean_fcl' else False,
+            'road_service_id': road_service.id,
+            'container_type': container_type if is_container_load else False,
             'container_qty': number('container_qty', int) or 1,
             'packages': number('packages', int),
             'weight_kg': number('weight_kg', float),
@@ -274,6 +289,8 @@ class AveenixFreight(http.Controller):
             'is_hazardous': bool(post.get('is_hazardous')),
             'needs_customs': bool(post.get('needs_customs')),
             'needs_insurance': bool(post.get('needs_insurance')),
+            'max_item_weight_kg': number('max_item_weight_kg', float) if is_heavy_lift else 0,
+            'site_access': text('site_access', _MAX_NOTES) if is_heavy_lift else False,
             'notes': text('notes', _MAX_NOTES),
         }
         ready = (post.get('ready_date') or '').strip()

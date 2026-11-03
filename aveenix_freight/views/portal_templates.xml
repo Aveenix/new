@@ -134,7 +134,7 @@
                         <div class="col-md-6">
                             <h5>Route</h5>
                             <dl class="row mb-0">
-                                <dt class="col-5">Mode</dt><dd class="col-7"><span t-field="quote.mode"/></dd>
+                                <dt class="col-5">Mode</dt><dd class="col-7" t-out="quote._mode_label()"/>
                                 <dt class="col-5">From</dt><dd class="col-7"><t t-out="quote.origin_address"/><div t-if="quote.origin_port_id" class="text-muted" t-out="quote.origin_port_id.display_name"/></dd>
                                 <dt class="col-5">To</dt><dd class="col-7"><t t-out="quote.destination_address"/><div t-if="quote.destination_port_id" class="text-muted" t-out="quote.destination_port_id.display_name"/></dd>
                                 <t t-if="quote.ready_date"><dt class="col-5">Ready date</dt><dd class="col-7"><span t-field="quote.ready_date"/></dd></t>
@@ -145,7 +145,7 @@
                             <h5>Cargo</h5>
                             <dl class="row mb-0">
                                 <t t-if="quote.commodity"><dt class="col-5">Commodity</dt><dd class="col-7" t-out="quote.commodity"/></t>
-                                <t t-if="quote.mode == 'ocean_fcl'"><dt class="col-5">Containers</dt><dd class="col-7"><t t-out="quote.container_qty"/> × <span t-field="quote.container_type"/></dd></t>
+                                <t t-if="quote.is_container_load"><dt class="col-5">Containers</dt><dd class="col-7"><t t-out="quote.container_qty"/> × <span t-field="quote.container_type"/></dd></t>
                                 <t t-if="quote.weight_kg"><dt class="col-5">Weight</dt><dd class="col-7"><t t-out="quote.weight_kg"/> kg</dd></t>
                                 <t t-if="quote.volume_cbm"><dt class="col-5">Volume</dt><dd class="col-7"><t t-out="quote.volume_cbm"/> CBM</dd></t>
                                 <dt class="col-5">Services</dt>
@@ -184,7 +184,7 @@
                         <div class="col-md-6">
                             <h5>Route</h5>
                             <dl class="row mb-0">
-                                <dt class="col-5">Mode</dt><dd class="col-7"><span t-field="shipment.mode"/></dd>
+                                <dt class="col-5">Mode</dt><dd class="col-7" t-out="shipment._mode_label()"/>
                                 <dt class="col-5">From</dt><dd class="col-7" t-out="shipment.origin_port_id.display_name or shipment.origin_address or '—'"/>
                                 <dt class="col-5">To</dt><dd class="col-7" t-out="shipment.destination_port_id.display_name or shipment.destination_address or '—'"/>
                                 <t t-if="shipment.etd"><dt class="col-5">ETD</dt><dd class="col-7"><span t-field="shipment.etd"/></dd></t>

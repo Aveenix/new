@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Starter road services; the team edits, archives or adds more from
+         Freight > Configuration > Road Services. -->
+    <record id="road_service_fcl" model="freight.road.service">
+        <field name="name">FCL Trucks</field>
+        <field name="sequence">10</field>
+        <field name="icon">fa-truck</field>
+        <field name="cargo_type">container</field>
+        <field name="description">Full container cartage between the port, container depots and your site.</field>
+    </record>
+    <record id="road_service_lcl" model="freight.road.service">
+        <field name="name">LCL Trucks</field>
+        <field name="sequence">20</field>
+        <field name="icon">fa-cubes</field>
+        <field name="cargo_type">loose</field>
+        <field name="description">Part loads and pallets on shared trucks, so you pay only for the space your freight takes.</field>
+    </record>
+    <record id="road_service_hiab" model="freight.road.service">
+        <field name="name">Hiab Trucks</field>
+        <field name="sequence">30</field>
+        <field name="icon">fa-arrows-v</field>
+        <field name="cargo_type">heavy_lift</field>
+        <field name="description">Crane trucks that lift heavy or bulky items on and off, where there is no forklift on site.</field>
+    </record>
+    <record id="road_service_linehaul" model="freight.road.service">
+        <field name="name">Linehaul Service</field>
+        <field name="sequence">40</field>
+        <field name="icon">fa-road</field>
+        <field name="cargo_type">loose</field>
+        <field name="description">Regular long-distance runs between cities and depots.</field>
+    </record>
+    <record id="road_service_courier" model="freight.road.service">
+        <field name="name">Courier Service</field>
+        <field name="sequence">50</field>
+        <field name="icon">fa-paper-plane</field>
+        <field name="cargo_type">loose</field>
+        <field name="description">Fast door-to-door delivery for documents, parcels and small consignments.</field>
+    </record>
+</odoo>

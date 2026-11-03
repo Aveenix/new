@@ -13,4 +13,6 @@
               sequence="90" groups="group_freight_manager"/>
     <menuitem id="menu_freight_ports" name="Ports &amp; Airports" parent="menu_freight_config"
               action="action_freight_port" sequence="10"/>
+    <menuitem id="menu_freight_road_services" name="Road Services" parent="menu_freight_config"
+              action="action_freight_road_service" sequence="20"/>
 </odoo>

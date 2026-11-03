@@ -10,6 +10,7 @@
                 <field name="tracking_number"/>
                 <field name="partner_id"/>
                 <field name="mode"/>
+                <field name="road_service_id" optional="show"/>
                 <field name="origin_port_id" string="From"/>
                 <field name="destination_port_id" string="To"/>
                 <field name="etd" optional="show"/>
@@ -116,6 +117,9 @@
                     <group>
                         <group string="Route">
                             <field name="mode"/>
+                            <field name="road_service_id" invisible="mode != 'road'" options="{'no_create': True}"/>
+                            <field name="is_container_load" invisible="1"/>
+                            <field name="road_cargo_type" invisible="1"/>
                             <field name="origin_address"/>
                             <field name="origin_port_id" options="{'no_create': True}"/>
                             <field name="destination_address"/>
@@ -148,9 +152,9 @@
                                     <field name="bl_awb_number"/>
                                 </group>
                                 <group>
-                                    <field name="container_type" invisible="mode != 'ocean_fcl'"/>
-                                    <field name="container_qty" invisible="mode != 'ocean_fcl'"/>
-                                    <field name="container_numbers" invisible="mode not in ('ocean_fcl', 'ocean_lcl')"/>
+                                    <field name="container_type" invisible="not is_container_load"/>
+                                    <field name="container_qty" invisible="not is_container_load"/>
+                                    <field name="container_numbers" invisible="not is_container_load and mode != 'ocean_lcl'"/>
                                 </group>
                             </group>
                         </page>
@@ -161,6 +165,8 @@
                                     <field name="packages"/>
                                     <field name="weight_kg"/>
                                     <field name="volume_cbm"/>
+                                    <field name="max_item_weight_kg" invisible="road_cargo_type != 'heavy_lift'"/>
+                                    <field name="site_access" invisible="road_cargo_type != 'heavy_lift'"/>
                                 </group>
                                 <group>
                                     <field name="is_hazardous"/>
@@ -187,6 +193,7 @@
                 <field name="partner_id"/>
                 <field name="origin_port_id"/>
                 <field name="destination_port_id"/>
+                <field name="road_service_id"/>
                 <filter name="my" string="My Shipments" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter name="active_shipments" string="Active"
@@ -196,6 +203,7 @@
                 <group>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                     <filter name="group_mode" string="Mode" context="{'group_by': 'mode'}"/>
+                    <filter name="group_road_service" string="Road Service" context="{'group_by': 'road_service_id'}"/>
                     <filter name="group_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>

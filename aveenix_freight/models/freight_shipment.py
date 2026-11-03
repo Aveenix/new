@@ -33,7 +33,7 @@ def _new_tracking_number():
 
 class FreightShipment(models.Model):
     _name = 'freight.shipment'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'freight.road.cargo.mixin']
     _description = 'Freight Shipment'
     _order = 'create_date desc, id desc'
 
@@ -212,7 +212,7 @@ class FreightShipment(models.Model):
             'invoice_line_ids': [(0, 0, {
                 'product_id': product.id,
                 'name': _('Freight charges %(ref)s (%(mode)s) %(route)s',
-                          ref=self.name, mode=dict(FREIGHT_MODES)[self.mode], route=route),
+                          ref=self.name, mode=self._mode_label(), route=route),
                 'quantity': 1,
                 'price_unit': self.amount,
             })],

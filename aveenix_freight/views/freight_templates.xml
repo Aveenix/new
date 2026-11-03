@@ -141,6 +141,10 @@
                             <span><i class="fa fa-laptop"/> Electronics</span>
                             <span><i class="fa fa-scissors"/> Textiles &amp; apparel</span>
                             <span><i class="fa fa-industry"/> Industrial machinery</span>
+                            <span><i class="fa fa-home"/> Home &amp; furniture</span>
+                            <span><i class="fa fa-building-o"/> Building materials</span>
+                            <span><i class="fa fa-recycle"/> Scrap metal</span>
+                            <span><i class="fa fa-briefcase"/> Project work</span>
                         </div>
                     </div>
                 </section>
@@ -151,27 +155,69 @@
                             <span class="avf-eyebrow">FAQ</span>
                             <h2>Common questions</h2>
                         </div>
-                        <details>
-                            <summary>What is the difference between FCL and LCL?</summary>
-                            <p>FCL (Full Container Load) books a whole container for your cargo. LCL (Less than Container Load)
-                               shares a container with other shippers, so you pay only for the volume you use. LCL usually
-                               suits shipments under about 15 CBM.</p>
-                        </details>
-                        <details>
-                            <summary>How is air freight charged?</summary>
-                            <p>By chargeable weight: the greater of the actual weight and the volumetric weight
-                               (1 CBM = 167 kg).</p>
-                        </details>
-                        <details>
-                            <summary>Where do I find my tracking number?</summary>
-                            <p>It is in your booking confirmation and starts with "AVF". Enter it in the tracker at the
-                               top of any Aveenix Freight page.</p>
-                        </details>
-                        <details>
-                            <summary>Can you clear customs for me?</summary>
-                            <p>Yes. Tick "Customs clearance" on the quote form and our licensed brokers will handle the
-                               filing at origin, destination or both.</p>
-                        </details>
+                        <!-- Two independent columns, so opening an answer only
+                             pushes down the questions below it in its own column. -->
+                        <div class="avf-faq-grid">
+                            <div class="avf-faq-col">
+                                <details>
+                                    <summary>What is the difference between FCL and LCL?</summary>
+                                    <p>FCL (Full Container Load) books a whole container for your cargo. LCL (Less than Container Load)
+                                       shares a container with other shippers, so you pay only for the volume you use. LCL usually
+                                       suits shipments under about 15 CBM.</p>
+                                </details>
+                                <details>
+                                    <summary>How is air freight charged?</summary>
+                                    <p>By chargeable weight: the greater of the actual weight and the volumetric weight
+                                       (1 CBM = 167 kg).</p>
+                                </details>
+                                <details>
+                                    <summary>What details do you need for a quote?</summary>
+                                    <p>Where the cargo is going from and to, when it is ready, what it is, and the number of
+                                       packages with their total weight and volume. For a full container, add the container
+                                       type. If you are unsure of anything, leave it blank and our team will ask.</p>
+                                </details>
+                                <details>
+                                    <summary>Do I need an account to request a quote?</summary>
+                                    <p>No. Anyone can request a quote, and we email the price with a link to accept it. With
+                                       an account you can also see all your quotes, shipments and invoices in My Account.</p>
+                                </details>
+                                <details>
+                                    <summary>How long is my quote valid?</summary>
+                                    <p>Freight rates change with carrier pricing, so your quote shows the date its price is
+                                       valid until. Accept it before then to lock in the price; after that, ask us for an
+                                       updated quote.</p>
+                                </details>
+                            </div>
+                            <div class="avf-faq-col">
+                                <details>
+                                    <summary>Where do I find my tracking number?</summary>
+                                    <p>It is in your booking confirmation and starts with "AVF". Enter it in the tracker at the
+                                       top of any Aveenix Freight page.</p>
+                                </details>
+                                <details>
+                                    <summary>Can you clear customs for me?</summary>
+                                    <p>Yes. Tick "Customs clearance" on the quote form and our licensed brokers will handle the
+                                       filing at origin, destination or both.</p>
+                                </details>
+                                <details>
+                                    <summary>Can you ship dangerous goods?</summary>
+                                    <p>Yes, including batteries and chemicals. Tick "Dangerous goods" on the quote form and have
+                                       the Safety Data Sheet (SDS) ready: our certified team checks how the cargo must be packed,
+                                       labelled and declared before it is booked.</p>
+                                </details>
+                                <details>
+                                    <summary>Do you offer cargo insurance?</summary>
+                                    <p>Yes. A carrier's liability for loss or damage is limited, so we recommend insuring
+                                       valuable cargo. Tick "Cargo insurance" on the quote form and we will quote the cover
+                                       with your freight.</p>
+                                </details>
+                                <details>
+                                    <summary>How do I pay for my shipment?</summary>
+                                    <p>Your freight invoices appear in My Account under your shipment, where you can pay them
+                                       online with "Pay now".</p>
+                                </details>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -196,7 +242,25 @@
                     </div>
                 </section>
 
-                <section class="avf-section">
+                <section t-if="road_services" class="avf-section">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">Road services</span>
+                            <h2>Pick the truck for the job</h2>
+                        </div>
+                        <div class="avf-cards">
+                            <a t-foreach="road_services" t-as="rs" class="avf-card"
+                               t-attf-href="/freight/quote?mode=road&amp;road_service_id=#{rs.id}">
+                                <span class="avf-card-icon"><i t-attf-class="fa #{rs.icon or 'fa-truck'}"/></span>
+                                <h3 t-out="rs.name"/>
+                                <p t-out="rs.description"/>
+                                <span class="avf-card-link">Get a quote <i class="fa fa-arrow-right"/></span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section t-attf-class="avf-section #{'avf-section-alt' if road_services else ''}">
                     <div class="avf-container">
                         <div class="avf-section-head">
                             <span class="avf-eyebrow">What we offer</span>
@@ -288,11 +352,22 @@
                                             <t t-foreach="freight_modes" t-as="m">
                                                 <label class="avf-mode">
                                                     <input type="radio" name="mode" t-att-value="m[0]"
-                                                           t-att-checked="(form.get('mode') or 'ocean_fcl') == m[0] or None"/>
+                                                           t-att-checked="(form.get('mode') or freight_modes[0][0]) == m[0] or None"/>
                                                     <span t-out="m[1]"/>
                                                 </label>
                                             </t>
                                         </div>
+                                    </div>
+                                    <!-- data-cargo drives which cargo fields show (freight.css). -->
+                                    <div t-if="road_services" class="avf-field avf-field-full avf-road-only">
+                                        <label for="avf_road_service">Road service</label>
+                                        <select id="avf_road_service" name="road_service_id" class="form-select">
+                                            <option value="" data-cargo="">Not sure / let us advise</option>
+                                            <option t-foreach="road_services" t-as="rs" t-att-value="rs.id"
+                                                    t-att-data-cargo="rs.cargo_type"
+                                                    t-att-selected="str(rs.id) == str(form.get('road_service_id')) or None"
+                                                    t-out="rs.name"/>
+                                        </select>
                                     </div>
                                     <div class="avf-field">
                                         <label for="avf_origin">Origin (city / address) *</label>
@@ -382,6 +457,19 @@
                                                t-attf-class="form-control #{'is-invalid' if errors.get('volume_cbm') else ''}"/>
                                         <div class="invalid-feedback" t-out="errors.get('volume_cbm')"/>
                                     </div>
+                                    <div class="avf-field avf-heavy-only">
+                                        <label for="avf_maxwt">Heaviest item (kg)</label>
+                                        <input id="avf_maxwt" type="number" min="0" step="any" name="max_item_weight_kg"
+                                               t-att-value="form.get('max_item_weight_kg')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('max_item_weight_kg') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('max_item_weight_kg')"/>
+                                    </div>
+                                    <div class="avf-field avf-field-full avf-heavy-only">
+                                        <label for="avf_site">Site access</label>
+                                        <textarea id="avf_site" name="site_access" rows="3" class="form-control" maxlength="4000"
+                                                  placeholder="Ground surface, overhead lines or trees, how close the truck can park"
+                                                  t-out="form.get('site_access') or ''"/>
+                                    </div>
                                     <div class="avf-field avf-field-full avf-checks">
                                         <label><input type="checkbox" name="needs_customs" value="1" t-att-checked="form.get('needs_customs') or None"/> Customs clearance</label>
                                         <label><input type="checkbox" name="needs_insurance" value="1" t-att-checked="form.get('needs_insurance') or None"/> Cargo insurance</label>
@@ -428,7 +516,7 @@
                                     <div class="avf-field avf-field-full">
                                         <label for="avf_notes">Anything else we should know?</label>
                                         <textarea id="avf_notes" name="notes" rows="4" class="form-control" maxlength="4000"
-                                                  t-out="form.get('notes')"/>
+                                                  t-out="form.get('notes') or ''"/>
                                     </div>
                                 </div>
                             </fieldset>
@@ -524,10 +612,10 @@
                                 </ol>
 
                                 <dl class="avf-specs avf-specs-compact">
-                                    <div><dt>Mode</dt><dd><span t-field="shipment.mode"/></dd></div>
+                                    <div><dt>Mode</dt><dd t-out="shipment._mode_label()"/></div>
                                     <div t-if="shipment.carrier"><dt>Carrier</dt><dd t-out="shipment.carrier"/></div>
                                     <div t-if="shipment.vessel_flight"><dt>Vessel / Flight</dt><dd t-out="shipment.vessel_flight"/></div>
-                                    <div t-if="shipment.mode == 'ocean_fcl' and shipment.container_qty"><dt>Containers</dt><dd t-out="shipment.container_qty"/></div>
+                                    <div t-if="shipment.is_container_load and shipment.container_qty"><dt>Containers</dt><dd t-out="shipment.container_qty"/></div>
                                     <div t-if="shipment.packages"><dt>Packages</dt><dd t-out="shipment.packages"/></div>
                                 </dl>
 

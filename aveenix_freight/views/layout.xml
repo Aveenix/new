@@ -7,22 +7,14 @@
         </xpath>
     </template>
 
-    <!-- Header on /freight pages (is_freight_page, set by the controller):
-         the logo reads "Freight" and links home to /freight, the search box
-         becomes the shipment tracker and the shop nav and actions give way
-         to the freight ones. Decided server-side, so nothing flashes. -->
+    <!-- Header on /freight pages (is_freight_page and av_site_home, set by the
+         controller): the logo reads "Freight" and links home to /freight, the
+         search box becomes the shipment tracker and the shop nav and actions
+         give way to the freight ones. aveenix_header hides the Express word,
+         shop search and shop nav itself whenever av_site_home is set. Decided
+         server-side, so nothing flashes. -->
     <template id="freight_header" inherit_id="aveenix_website.aveenix_header" name="Aveenix Freight: Header">
-        <xpath expr="//a[hasclass('av-logo')]" position="attributes">
-            <attribute name="t-attf-href">#{'/news' if is_news_page else '/freight' if is_freight_page else '/'}</attribute>
-        </xpath>
-
         <!-- The logo SVG lives in the SVG namespace, hence local-name(). -->
-        <xpath expr="//*[local-name()='g'][hasclass('av-logo-express')]" position="attributes">
-            <attribute name="t-att-style">'display: none' if is_freight_page else None</attribute>
-        </xpath>
-        <xpath expr="//*[local-name()='rect'][hasclass('av-default-logo-group')]" position="attributes">
-            <attribute name="t-att-style">'display: none' if is_freight_page else None</attribute>
-        </xpath>
         <xpath expr="//*[local-name()='g'][hasclass('av-logo-news')]" position="after">
             <!-- "Freight" drawn the way "News" is: Montserrat Medium outlines at
                  37.80px, baseline 126.72, right-aligned on the ink edge 765.24.
@@ -43,10 +35,7 @@
         </xpath>
 
         <!-- Search box → shipment tracker. -->
-        <xpath expr="//form[hasclass('av-search-form')]" position="attributes">
-            <attribute name="t-if">not is_freight_page</attribute>
-        </xpath>
-        <xpath expr="//form[hasclass('av-search-form')]" position="after">
+        <xpath expr="//form[hasclass('av-shop-search')]" position="after">
             <form t-if="is_freight_page" class="av-search-form" action="/freight/track" method="get">
                 <input type="text" name="number" class="av-search-input" t-att-value="number or None"
                        placeholder="Track a shipment — enter your tracking number…" aria-label="Tracking number"/>
@@ -58,19 +47,16 @@
 
         <xpath expr="//div[@id='top_menu']" position="inside">
             <div t-if="is_freight_page" class="av-freight-actions">
+                <a href="/freight/quote" class="av-freight-quote-btn">Get a Quote</a>
                 <a href="/freight/track" class="av-header-action">
                     <i class="fa fa-map-marker"/>
                     <span>Track</span>
                 </a>
-                <a href="/freight/quote" class="av-freight-quote-btn">Get a Quote</a>
             </div>
         </xpath>
 
         <!-- Shop category nav → freight services nav. -->
-        <xpath expr="//nav[hasclass('av-cat-nav')][not(hasclass('av-news-nav'))]" position="attributes">
-            <attribute name="t-if">not is_news_page and not is_freight_page</attribute>
-        </xpath>
-        <xpath expr="//nav[hasclass('av-cat-nav')][not(hasclass('av-news-nav'))]" position="before">
+        <xpath expr="//nav[hasclass('av-shop-nav')]" position="before">
             <nav class="av-cat-nav av-freight-nav" t-if="is_freight_page" aria-label="Freight">
                 <div class="av-cat-nav-inner">
                     <ul class="av-cat-menu">
@@ -86,13 +72,13 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/freight/track" t-att-class="'active' if active_nav == 'track' else None">
-                                <i class="fa fa-map-marker"/><span>Track Shipment</span>
+                            <a href="/freight/quote" t-att-class="'active' if active_nav == 'quote' else None">
+                                <i class="fa fa-calculator"/><span>Get a Quote</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/freight/quote" t-att-class="'active' if active_nav == 'quote' else None">
-                                <i class="fa fa-calculator"/><span>Get a Quote</span>
+                            <a href="/freight/track" t-att-class="'active' if active_nav == 'track' else None">
+                                <i class="fa fa-map-marker"/><span>Track Shipment</span>
                             </a>
                         </li>
                     </ul>
