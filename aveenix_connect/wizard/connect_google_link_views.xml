@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_connect_google_link_form" model="ir.ui.view">
+        <field name="name">connect.google.link.form</field>
+        <field name="model">connect.google.link</field>
+        <field name="arch" type="xml">
+            <form string="Link to Google">
+                <field name="is_configured" invisible="1"/>
+                <field name="searched" invisible="1"/>
+                <field name="business_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert" invisible="is_configured">
+                    Set the Google Places API key under Connect &gt; Configuration &gt; Settings first.
+                </div>
+                <group invisible="not is_configured">
+                    <field name="query" placeholder="Business name, city"/>
+                </group>
+                <field name="line_ids" invisible="not line_ids" readonly="1">
+                    <list>
+                        <field name="name"/>
+                        <field name="address"/>
+                        <button name="action_link" type="object" string="Link" class="btn-primary"/>
+                    </list>
+                </field>
+                <p class="text-muted" invisible="not searched or line_ids">
+                    No Google place matched. Try another spelling or add the city; if it keeps failing,
+                    check the API key and the server log.
+                </p>
+                <footer>
+                    <button name="action_search" type="object" string="Search Google" class="btn-primary"
+                            invisible="not is_configured"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

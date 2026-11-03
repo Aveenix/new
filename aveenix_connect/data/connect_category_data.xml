@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Starter categories; the team adds, renames and nests them freely. -->
+    <record id="category_restaurants" model="connect.category">
+        <field name="name">Restaurants &amp; Cafés</field>
+        <field name="icon">fa-cutlery</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="category_trades" model="connect.category">
+        <field name="name">Trades &amp; Services</field>
+        <field name="icon">fa-wrench</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="category_health" model="connect.category">
+        <field name="name">Health &amp; Medical</field>
+        <field name="icon">fa-heartbeat</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="category_beauty" model="connect.category">
+        <field name="name">Beauty &amp; Wellness</field>
+        <field name="icon">fa-scissors</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="category_automotive" model="connect.category">
+        <field name="name">Automotive</field>
+        <field name="icon">fa-car</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="category_shopping" model="connect.category">
+        <field name="name">Shopping &amp; Retail</field>
+        <field name="icon">fa-shopping-bag</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="category_professional" model="connect.category">
+        <field name="name">Professional Services</field>
+        <field name="icon">fa-briefcase</field>
+        <field name="sequence">70</field>
+    </record>
+    <record id="category_home_garden" model="connect.category">
+        <field name="name">Home &amp; Garden</field>
+        <field name="icon">fa-home</field>
+        <field name="sequence">80</field>
+    </record>
+    <record id="category_education" model="connect.category">
+        <field name="name">Education &amp; Training</field>
+        <field name="icon">fa-graduation-cap</field>
+        <field name="sequence">90</field>
+    </record>
+    <record id="category_travel" model="connect.category">
+        <field name="name">Accommodation &amp; Travel</field>
+        <field name="icon">fa-bed</field>
+        <field name="sequence">100</field>
+    </record>
+    <record id="category_entertainment" model="connect.category">
+        <field name="name">Entertainment &amp; Events</field>
+        <field name="icon">fa-music</field>
+        <field name="sequence">110</field>
+    </record>
+    <record id="category_real_estate" model="connect.category">
+        <field name="name">Real Estate</field>
+        <field name="icon">fa-building</field>
+        <field name="sequence">120</field>
+    </record>
+</odoo>

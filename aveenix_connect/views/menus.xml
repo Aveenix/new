@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_connect_root" name="Connect" sequence="57"
+              web_icon="aveenix_connect,static/description/icon.png"
+              groups="group_connect_user"/>
+
+    <menuitem id="menu_connect_businesses" name="Businesses" parent="menu_connect_root"
+              action="action_connect_business" sequence="10"/>
+    <menuitem id="menu_connect_pending" name="Pending Approval" parent="menu_connect_root"
+              action="action_connect_business_pending" sequence="20"/>
+    <menuitem id="menu_connect_claims" name="Ownership Claims" parent="menu_connect_root"
+              action="action_connect_business_claims" sequence="30"/>
+    <menuitem id="menu_connect_reviews" name="Reviews" parent="menu_connect_root"
+              action="action_connect_reviews" sequence="40"/>
+
+    <menuitem id="menu_connect_config" name="Configuration" parent="menu_connect_root"
+              sequence="90" groups="group_connect_manager"/>
+    <menuitem id="menu_connect_categories" name="Categories" parent="menu_connect_config"
+              action="action_connect_category" sequence="10"/>
+    <menuitem id="menu_connect_settings" name="Settings" parent="menu_connect_config"
+              action="website.action_website_configuration" sequence="20" groups="base.group_system"/>
+</odoo>

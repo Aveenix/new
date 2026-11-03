@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ── Building blocks ──────────────────────────────────────────── -->
+
+    <!-- Five stars for a 0-5 `value`, with halves. -->
+    <template id="connect_stars" name="Aveenix Connect: Stars">
+        <span class="avc-stars" role="img" t-attf-aria-label="#{'%.1f' % value} out of 5">
+            <t t-foreach="range(1, 6)" t-as="star">
+                <i t-attf-class="fa #{'fa-star' if value &gt;= star - 0.25 else 'fa-star-half-o' if value &gt;= star - 0.75 else 'fa-star-o'}"/>
+            </t>
+        </span>
+    </template>
+
+    <!-- What + where search, on the home hero and the results page. -->
+    <template id="connect_search_form" name="Aveenix Connect: Search Form">
+        <form class="avc-search" t-att-action="search_action or '/connect/search'" method="get" role="search">
+            <label class="avc-search-field">
+                <i class="fa fa-search"/>
+                <input type="text" name="what" t-att-value="what or None" maxlength="255"
+                       placeholder="What: plumber, café, dentist…" aria-label="What are you looking for"/>
+            </label>
+            <label class="avc-search-field">
+                <i class="fa fa-map-marker"/>
+                <input type="text" name="where" t-att-value="where or None" maxlength="255"
+                       placeholder="Where: city or postcode" aria-label="Where"/>
+            </label>
+            <button type="submit" class="avc-btn">Search</button>
+        </form>
+    </template>
+
+    <template id="connect_business_card" name="Aveenix Connect: Business Card">
+        <a t-att-href="business.website_url" class="avc-card">
+            <div class="avc-card-logo">
+                <img t-if="business.image_128" t-att-src="website.image_url(business, 'image_256')"
+                     t-att-alt="business.name" loading="lazy"/>
+                <i t-else="" t-attf-class="fa #{business.category_ids[:1].icon or 'fa-building-o'}"/>
+            </div>
+            <div class="avc-card-body">
+                <span t-if="business.is_featured" class="avc-badge"><i class="fa fa-bolt"/> Featured</span>
+                <h3 t-out="business.name"/>
+                <div t-if="business.rating_count" class="avc-card-rating">
+                    <t t-call="aveenix_connect.connect_stars"><t t-set="value" t-value="business.rating_avg"/></t>
+                    <span><t t-out="'%.1f' % business.rating_avg"/> (<t t-out="business.rating_count"/>)</span>
+                </div>
+                <div class="avc-card-meta" t-out="', '.join(business.category_ids.mapped('name'))"/>
+                <div t-if="business.city" class="avc-card-meta"><i class="fa fa-map-marker"/> <t t-out="business.city"/></div>
+            </div>
+        </a>
+    </template>
+
+    <template id="connect_cta" name="Aveenix Connect: Call to Action">
+        <section class="avc-cta">
+            <div class="avc-container">
+                <div>
+                    <h2>Own a business?</h2>
+                    <p>List it on Aveenix Connect for free and get found by customers near you.</p>
+                </div>
+                <a href="/connect/add" class="avc-btn avc-btn-light">List your business</a>
+            </div>
+        </section>
+    </template>
+
+    <!-- ── Home ─────────────────────────────────────────────────────── -->
+    <template id="connect_home" name="Aveenix Connect Home">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_home'"/>
+            <div id="wrap" class="av-connect-page">
+                <section class="avc-hero">
+                    <div class="avc-container">
+                        <span class="avc-eyebrow">Aveenix Connect</span>
+                        <h1>Find trusted local businesses</h1>
+                        <p>Search local businesses by what you need and where you are,
+                           read reviews and get in touch.</p>
+                        <t t-call="aveenix_connect.connect_search_form"/>
+                        <div t-if="categories" class="avc-hero-links">
+                            <span>Popular:</span>
+                            <a t-foreach="categories[:5]" t-as="category"
+                               t-attf-href="/connect/category/#{slug(category)}" t-out="category.name"/>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="oe_structure" id="aveenix_connect_home_top"/>
+
+                <section t-if="categories" class="avc-section">
+                    <div class="avc-container">
+                        <div class="avc-section-head">
+                            <h2>Browse by category</h2>
+                        </div>
+                        <div class="avc-categories">
+                            <a t-foreach="categories" t-as="category" class="avc-category"
+                               t-attf-href="/connect/category/#{slug(category)}">
+                                <span class="avc-category-icon"><i t-attf-class="fa #{category.icon or 'fa-briefcase'}"/></span>
+                                <strong t-out="category.name"/>
+                                <small><t t-out="category.business_count"/> listed</small>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section t-if="featured" class="avc-section avc-section-alt">
+                    <div class="avc-container">
+                        <div class="avc-section-head">
+                            <h2>Featured businesses</h2>
+                            <a href="/connect/search">See all <i class="fa fa-arrow-right"/></a>
+                        </div>
+                        <div class="avc-grid">
+                            <t t-foreach="featured" t-as="business">
+                                <t t-call="aveenix_connect.connect_business_card"/>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="avc-section">
+                    <div class="avc-container">
+                        <div class="avc-section-head">
+                            <h2>Recently added</h2>
+                            <a t-if="recent" href="/connect/search">See all <i class="fa fa-arrow-right"/></a>
+                        </div>
+                        <div t-if="recent" class="avc-grid">
+                            <t t-foreach="recent" t-as="business">
+                                <t t-call="aveenix_connect.connect_business_card"/>
+                            </t>
+                        </div>
+                        <div t-else="" class="avc-empty">
+                            <i class="fa fa-building-o"/>
+                            <h3>The directory is just getting started</h3>
+                            <p>Be one of the first businesses on Aveenix Connect.</p>
+                            <a href="/connect/add" class="avc-btn">List your business</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section t-if="cities" class="avc-section avc-section-alt">
+                    <div class="avc-container">
+                        <div class="avc-section-head">
+                            <h2>Browse by city</h2>
+                        </div>
+                        <div class="avc-chips">
+                            <a t-foreach="cities" t-as="city_count" t-attf-href="/connect/search?where=#{city_count[0]}">
+                                <i class="fa fa-map-marker"/> <t t-out="city_count[0]"/>
+                                <small t-out="city_count[1]"/>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="oe_structure" id="aveenix_connect_home_bottom"/>
+                <t t-call="aveenix_connect.connect_cta"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Search results / category ────────────────────────────────── -->
+    <template id="connect_results" name="Aveenix Connect Results">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_results'"/>
+            <div id="wrap" class="av-connect-page">
+                <section class="avc-page-head">
+                    <div class="avc-container">
+                        <nav class="avc-breadcrumb">
+                            <a href="/connect">Connect</a> /
+                            <span t-if="category" t-out="category.name"/>
+                            <span t-else="">Search</span>
+                        </nav>
+                        <h1>
+                            <t t-if="category" t-out="category.name"/>
+                            <t t-elif="what">Results for “<t t-out="what"/>”</t>
+                            <t t-else="">All businesses</t>
+                            <t t-if="where"> in <t t-out="where"/></t>
+                        </h1>
+                        <p><t t-out="total"/> <t t-if="total == 1">business</t><t t-else="">businesses</t> found</p>
+                    </div>
+                </section>
+                <section class="avc-section">
+                    <div class="avc-container avc-results">
+                        <aside class="avc-filters">
+                            <form t-att-action="results_url" method="get">
+                                <h2>Refine</h2>
+                                <label for="avc_f_what">What</label>
+                                <input id="avc_f_what" type="text" name="what" class="form-control" t-att-value="what or None" maxlength="255"/>
+                                <label for="avc_f_where">Where</label>
+                                <input id="avc_f_where" type="text" name="where" class="form-control" t-att-value="where or None" maxlength="255"/>
+                                <fieldset>
+                                    <legend>Rating</legend>
+                                    <label t-foreach="[(0, 'Any rating'), (3, '3 stars and up'), (4, '4 stars and up')]" t-as="opt" class="avc-radio">
+                                        <input type="radio" name="rating" t-att-value="opt[0] or ''" t-att-checked="rating == opt[0] or None"/>
+                                        <span t-out="opt[1]"/>
+                                    </label>
+                                </fieldset>
+                                <button type="submit" class="avc-btn w-100">Apply</button>
+                            </form>
+                            <div class="avc-filter-cats">
+                                <h2>Categories</h2>
+                                <a t-foreach="connect_nav_categories" t-as="cat"
+                                   t-attf-href="/connect/category/#{slug(cat)}"
+                                   t-att-class="'active' if category and category.id == cat.id else None">
+                                    <i t-attf-class="fa #{cat.icon or 'fa-briefcase'}"/> <t t-out="cat.name"/>
+                                </a>
+                            </div>
+                        </aside>
+                        <div class="avc-results-main">
+                            <div t-if="businesses" class="avc-list">
+                                <t t-foreach="businesses" t-as="business">
+                                    <t t-call="aveenix_connect.connect_business_card"/>
+                                </t>
+                            </div>
+                            <div t-else="" class="avc-empty">
+                                <i class="fa fa-search"/>
+                                <h3>No businesses match your search</h3>
+                                <p>Try other words, a nearby city, or browse the categories.</p>
+                            </div>
+                            <div class="avc-pager">
+                                <t t-call="website.pager"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="aveenix_connect.connect_cta"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Business page ────────────────────────────────────────────── -->
+    <template id="connect_business" name="Aveenix Connect Business">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_business'"/>
+            <div id="wrap" class="av-connect-page">
+                <section class="avc-biz-head">
+                    <div class="avc-container">
+                        <nav class="avc-breadcrumb">
+                            <a href="/connect">Connect</a> /
+                            <t t-if="business.category_ids">
+                                <a t-attf-href="/connect/category/#{slug(business.category_ids[0])}" t-out="business.category_ids[0].name"/> /
+                            </t>
+                            <span t-out="business.name"/>
+                        </nav>
+                        <div class="avc-biz-title">
+                            <div class="avc-biz-logo">
+                                <img t-if="business.image_128" t-att-src="website.image_url(business, 'image_256')" t-att-alt="business.name"/>
+                                <i t-else="" t-attf-class="fa #{business.category_ids[:1].icon or 'fa-building-o'}"/>
+                            </div>
+                            <div>
+                                <span t-if="not business.is_published" class="avc-badge avc-badge-muted">Waiting for approval</span>
+                                <span t-if="business.is_featured" class="avc-badge"><i class="fa fa-bolt"/> Featured</span>
+                                <h1 t-out="business.name"/>
+                                <div class="avc-biz-rating">
+                                    <t t-if="business.rating_count">
+                                        <t t-call="aveenix_connect.connect_stars"><t t-set="value" t-value="business.rating_avg"/></t>
+                                        <span><t t-out="'%.1f' % business.rating_avg"/> · <a href="#avc-reviews"><t t-out="business.rating_count"/> <t t-if="business.rating_count == 1">review</t><t t-else="">reviews</t></a></span>
+                                    </t>
+                                    <a t-else="" href="#avc-reviews">No reviews yet, be the first</a>
+                                </div>
+                                <div class="avc-biz-cats">
+                                    <a t-foreach="business.category_ids" t-as="cat" t-attf-href="/connect/category/#{slug(cat)}" t-out="cat.name"/>
+                                    <span t-if="business.city"><i class="fa fa-map-marker"/> <t t-out="business.city"/></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="avc-biz-actions">
+                            <a t-if="business.phone" t-attf-href="tel:#{business.phone}" class="avc-btn avc-btn-light"><i class="fa fa-phone"/> Call</a>
+                            <a t-if="business.business_url" t-att-href="business.business_url" target="_blank" rel="noopener nofollow" class="avc-btn avc-btn-outline"><i class="fa fa-globe"/> Website</a>
+                            <a t-att-href="business._google_maps_url()" target="_blank" rel="noopener" class="avc-btn avc-btn-outline"><i class="fa fa-location-arrow"/> Directions</a>
+                            <a t-if="is_owner" t-attf-href="/my/connect/#{business.id}" class="avc-btn avc-btn-outline"><i class="fa fa-pencil"/> Edit listing</a>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="avc-container">
+                    <div t-if="notice == 'claimed'" class="alert alert-success mt-4">Thanks! Our team will check your claim and email you once it is approved.</div>
+                    <div t-if="notice == 'sent'" class="alert alert-success mt-4">Your enquiry was sent to the business.</div>
+                    <div t-if="notice == 'captcha'" class="alert alert-danger mt-4">Please confirm you are not a robot and send your enquiry again.</div>
+                    <div t-if="notice == 'invalid'" class="alert alert-danger mt-4">Please enter your name, a valid email address and a message.</div>
+                </div>
+
+                <section class="avc-section">
+                    <div class="avc-container avc-biz-grid">
+                        <div class="avc-biz-main">
+                            <section t-if="business.description" class="avc-panel">
+                                <h2>About</h2>
+                                <div class="avc-biz-about" t-field="business.description"/>
+                            </section>
+
+                            <section t-if="business.image_ids" class="avc-panel">
+                                <h2>Photos</h2>
+                                <div class="avc-gallery">
+                                    <a t-foreach="business.image_ids" t-as="photo" target="_blank"
+                                       t-att-href="website.image_url(photo, 'image_1024')">
+                                        <img t-att-src="website.image_url(photo, 'image_512')" t-att-alt="photo.name or business.name" loading="lazy"/>
+                                    </a>
+                                </div>
+                            </section>
+
+                            <!-- Filled in the browser from Google (static/src/js/connect_google.js);
+                                 Google's terms don't allow keeping this data, so it is never stored. -->
+                            <section t-if="business.google_place_id and maps_key" class="avc-panel avc-google"
+                                     t-att-data-place-id="business.google_place_id" t-att-data-maps-key="maps_key">
+                                <h2>On Google</h2>
+                                <div class="avc-google-body">
+                                    <p class="text-muted mb-0"><i class="fa fa-spinner fa-spin"/> Loading Google rating and opening hours…</p>
+                                </div>
+                            </section>
+
+                            <section class="avc-panel" id="avc-reviews">
+                                <h2>Reviews</h2>
+                                <div t-if="reviews" class="avc-reviews">
+                                    <div t-foreach="reviews" t-as="review" class="avc-review">
+                                        <t t-call="aveenix_connect.connect_stars"><t t-set="value" t-value="review.rating"/></t>
+                                        <div class="avc-review-author">
+                                            <strong t-out="review.partner_id.name or 'Anonymous'"/>
+                                            <span t-out="review.write_date.strftime('%d %b %Y')"/>
+                                        </div>
+                                        <p t-out="review.feedback or ''"/>
+                                    </div>
+                                </div>
+                                <p t-else="" class="text-muted">There are no reviews yet.</p>
+
+                                <t t-if="request.env.user._is_public()">
+                                    <p class="avc-note">
+                                        <a t-attf-href="/web/login?redirect=#{business.website_url}">Log in</a> to write a review.
+                                    </p>
+                                </t>
+                                <t t-elif="not is_owner and not has_reviewed">
+                                    <form class="avc-review-form" method="post" t-attf-action="/connect/business/#{business.id}/review">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <h3>Write a review</h3>
+                                        <label>Your rating *</label>
+                                        <div class="av-star-input">
+                                            <t t-foreach="range(1, 6)" t-as="star">
+                                                <i class="fa fa-star-o av-star" t-att-data-val="star" role="button" t-attf-aria-label="#{star} stars"/>
+                                            </t>
+                                            <input type="hidden" name="rating" value="" required="required"/>
+                                        </div>
+                                        <label for="avc_review_comment">Your review *</label>
+                                        <textarea id="avc_review_comment" name="comment" rows="4" maxlength="4000" class="form-control" required="required"
+                                                  placeholder="What was your experience like?"/>
+                                        <button type="submit" class="avc-btn mt-3">Post review</button>
+                                    </form>
+                                </t>
+                            </section>
+                        </div>
+
+                        <aside class="avc-biz-side">
+                            <section class="avc-panel">
+                                <h2>Contact</h2>
+                                <ul class="avc-contact">
+                                    <li t-if="business._address_line()"><i class="fa fa-map-marker"/> <span t-out="business._address_line()"/></li>
+                                    <li t-if="business.phone"><i class="fa fa-phone"/> <a t-attf-href="tel:#{business.phone}" t-out="business.phone"/></li>
+                                    <li t-if="business.email"><i class="fa fa-envelope-o"/> <a t-attf-href="mailto:#{business.email}" t-out="business.email"/></li>
+                                    <li t-if="business.business_url"><i class="fa fa-globe"/> <a t-att-href="business.business_url" target="_blank" rel="noopener nofollow" t-out="business.business_url"/></li>
+                                </ul>
+                                <iframe t-if="embed_url" t-att-src="embed_url" class="avc-map" loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade" allowfullscreen="allowfullscreen"
+                                        t-attf-title="Map of #{business.name}"/>
+                                <a t-att-href="business._google_maps_url()" target="_blank" rel="noopener" class="avc-link">
+                                    <i class="fa fa-external-link"/> Open in Google Maps
+                                </a>
+                            </section>
+
+                            <section t-if="hours" class="avc-panel">
+                                <h2>Opening hours</h2>
+                                <table class="avc-hours">
+                                    <tr t-foreach="weekdays" t-as="day" t-att-class="'avc-today' if day[0] == today else None">
+                                        <t t-set="day_hours" t-value="hours.filtered(lambda h: h.dayofweek == day[0])"/>
+                                        <th t-out="day[1]"/>
+                                        <td t-if="day_hours" t-out="day_hours._display_range()"/>
+                                        <td t-else="" class="text-muted">Closed</td>
+                                    </tr>
+                                </table>
+                            </section>
+
+                            <section t-if="business.owner_id and not is_owner" class="avc-panel" id="avc-enquiry">
+                                <h2>Send an enquiry</h2>
+                                <form method="post" t-attf-action="/connect/business/#{business.id}/enquiry" class="avc-enquiry">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <!-- Honeypot, see the controller. -->
+                                    <input type="text" name="website_url" class="avc-hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+                                    <input type="text" name="name" class="form-control" required="required" maxlength="255" placeholder="Your name *" aria-label="Your name"
+                                           t-att-value="None if request.env.user._is_public() else request.env.user.name"/>
+                                    <input type="email" name="email" class="form-control" required="required" maxlength="255" placeholder="Email *" aria-label="Email"
+                                           t-att-value="None if request.env.user._is_public() else request.env.user.email"/>
+                                    <input type="tel" name="phone" class="form-control" maxlength="64" placeholder="Phone" aria-label="Phone"/>
+                                    <textarea name="message" rows="4" class="form-control" required="required" maxlength="4000" placeholder="How can they help? *" aria-label="Message"/>
+                                    <t t-if="recaptcha_key">
+                                        <div class="g-recaptcha" t-att-data-sitekey="recaptcha_key"/>
+                                        <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+                                    </t>
+                                    <button type="submit" class="avc-btn w-100">Send enquiry</button>
+                                </form>
+                            </section>
+
+                            <section t-if="not business.owner_id" class="avc-panel avc-claim">
+                                <h2>Is this your business?</h2>
+                                <t t-if="business.claim_user_id">
+                                    <p class="mb-0">A claim for this listing is being reviewed.</p>
+                                </t>
+                                <t t-elif="request.env.user._is_public()">
+                                    <p>Claim it to update the details, add photos and receive enquiries.</p>
+                                    <a t-attf-href="/web/login?redirect=#{business.website_url}" class="avc-btn avc-btn-outline-dark w-100">Log in to claim</a>
+                                </t>
+                                <form t-else="" method="post" t-attf-action="/connect/business/#{business.id}/claim">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <p>Claim it to update the details, add photos and receive enquiries.</p>
+                                    <button type="submit" class="avc-btn avc-btn-outline-dark w-100">Claim this business</button>
+                                </form>
+                            </section>
+                        </aside>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── List your business ───────────────────────────────────────── -->
+    <template id="connect_add" name="Aveenix Connect: List Your Business">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_add'"/>
+            <div id="wrap" class="av-connect-page">
+                <section class="avc-page-head">
+                    <div class="avc-container">
+                        <nav class="avc-breadcrumb"><a href="/connect">Connect</a> / <span>List your business</span></nav>
+                        <h1>List your business</h1>
+                        <p>Free to list. Our team checks every listing before it goes live, usually within one business day.</p>
+                    </div>
+                </section>
+                <section class="avc-section">
+                    <div class="avc-container">
+                        <form action="/connect/add" method="post" enctype="multipart/form-data" class="avc-form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <!-- Honeypot, see the controller. -->
+                            <input type="text" name="website_url" class="avc-hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+
+                            <div t-if="errors" class="alert alert-danger">
+                                Please correct the highlighted fields.
+                                <div t-if="errors.get('captcha')" t-out="errors['captcha']"/>
+                            </div>
+
+                            <fieldset>
+                                <legend><span>1</span> Business</legend>
+                                <div class="avc-form-grid">
+                                    <div class="avc-field avc-field-full">
+                                        <label for="avc_name">Business name *</label>
+                                        <input id="avc_name" type="text" name="name" required="required" maxlength="255"
+                                               t-att-value="form.get('name')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('name') else ''}"/>
+                                        <div t-if="errors.get('name')" class="invalid-feedback" t-out="errors['name']"/>
+                                    </div>
+                                    <div class="avc-field avc-field-full">
+                                        <label>Categories * <small class="text-muted">(up to 3)</small></label>
+                                        <div t-attf-class="avc-pick #{'is-invalid' if errors.get('category_ids') else ''}">
+                                            <label t-foreach="all_categories" t-as="cat" class="avc-pick-item">
+                                                <input type="checkbox" name="category_ids" t-att-value="cat.id"
+                                                       t-att-checked="cat.id in (form.get('category_ids') or []) or None"/>
+                                                <span><i t-attf-class="fa #{cat.icon or 'fa-briefcase'}"/> <t t-out="cat.name"/></span>
+                                            </label>
+                                        </div>
+                                        <div t-if="errors.get('category_ids')" class="text-danger small" t-out="errors['category_ids']"/>
+                                    </div>
+                                    <div class="avc-field avc-field-full">
+                                        <label for="avc_description">About the business</label>
+                                        <textarea id="avc_description" name="description" rows="5" maxlength="4000" class="form-control"
+                                                  placeholder="What you do, your services and specialities…" t-out="form.get('description') or ''"/>
+                                    </div>
+                                    <div class="avc-field avc-field-full">
+                                        <label for="avc_logo">Logo</label>
+                                        <input id="avc_logo" type="file" name="logo" accept="image/*"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('logo') else ''}"/>
+                                        <div t-if="errors.get('logo')" class="invalid-feedback" t-out="errors['logo']"/>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend><span>2</span> Location</legend>
+                                <t t-call="aveenix_connect.connect_location_fields"/>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend><span>3</span> Contact</legend>
+                                <t t-call="aveenix_connect.connect_contact_fields"/>
+                            </fieldset>
+
+                            <t t-if="recaptcha_key">
+                                <div class="g-recaptcha mb-3" t-att-data-sitekey="recaptcha_key"/>
+                                <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+                            </t>
+                            <button type="submit" class="avc-btn avc-btn-lg">Submit for approval</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Address and contact inputs, shared with the owner's portal form:
+         `form` holds posted values, `business` (optional) the current ones. -->
+    <template id="connect_location_fields" name="Aveenix Connect: Location Fields">
+        <div class="avc-form-grid">
+            <div class="avc-field avc-field-full">
+                <label for="avc_street">Street address</label>
+                <input id="avc_street" type="text" name="street" maxlength="255" class="form-control"
+                       t-att-value="form.get('street', business and business.street)"/>
+            </div>
+            <div class="avc-field">
+                <label for="avc_city">City *</label>
+                <input id="avc_city" type="text" name="city" required="required" maxlength="255"
+                       t-att-value="form.get('city', business and business.city)"
+                       t-attf-class="form-control #{'is-invalid' if errors.get('city') else ''}"/>
+                <div t-if="errors.get('city')" class="invalid-feedback" t-out="errors['city']"/>
+            </div>
+            <div class="avc-field">
+                <label for="avc_zip">Postcode</label>
+                <input id="avc_zip" type="text" name="zip" maxlength="32" class="form-control"
+                       t-att-value="form.get('zip', business and business.zip)"/>
+            </div>
+            <div class="avc-field">
+                <label for="avc_country">Country</label>
+                <t t-set="country_value" t-value="form.get('country_id', business and str(business.country_id.id or ''))"/>
+                <select id="avc_country" name="country_id" class="form-select">
+                    <option value="">Choose…</option>
+                    <option t-foreach="countries" t-as="country" t-att-value="country.id"
+                            t-att-selected="str(country.id) == country_value or None" t-out="country.name"/>
+                </select>
+            </div>
+        </div>
+    </template>
+
+    <template id="connect_contact_fields" name="Aveenix Connect: Contact Fields">
+        <div class="avc-form-grid">
+            <div class="avc-field">
+                <label for="avc_phone">Phone</label>
+                <input id="avc_phone" type="tel" name="phone" maxlength="64" class="form-control"
+                       t-att-value="form.get('phone', business and business.phone)"/>
+            </div>
+            <div class="avc-field">
+                <label for="avc_email">Email</label>
+                <input id="avc_email" type="email" name="email" maxlength="255"
+                       t-att-value="form.get('email', business and business.email)"
+                       t-attf-class="form-control #{'is-invalid' if errors.get('email') else ''}"/>
+                <div t-if="errors.get('email')" class="invalid-feedback" t-out="errors['email']"/>
+            </div>
+            <div class="avc-field avc-field-full">
+                <label for="avc_url">Website</label>
+                <input id="avc_url" type="text" name="business_url" maxlength="255" class="form-control"
+                       placeholder="www.example.com" t-att-value="form.get('business_url', business and business.business_url)"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="connect_add_thanks" name="Aveenix Connect: Listing Submitted">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_add_thanks'"/>
+            <div id="wrap" class="av-connect-page">
+                <section class="avc-section">
+                    <div class="avc-container avc-thanks">
+                        <i class="fa fa-check-circle"/>
+                        <h1>Thanks, your listing is in!</h1>
+                        <p>
+                            <t t-if="listing_name"><strong t-out="listing_name"/> is </t><t t-else="">Your business is </t>
+                            waiting for a quick check by our team. You can follow it, and update it
+                            any time, from My Listings.
+                        </p>
+                        <div class="avc-thanks-actions">
+                            <a href="/my/connect" class="avc-btn">My listings</a>
+                            <a href="/connect" class="avc-btn avc-btn-outline-dark">Back to Connect</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_connect_business_list" model="ir.ui.view">
+        <field name="name">connect.business.list</field>
+        <field name="model">connect.business</field>
+        <field name="arch" type="xml">
+            <list string="Businesses" decoration-muted="not is_published">
+                <field name="name"/>
+                <field name="category_ids" widget="many2many_tags"/>
+                <field name="city"/>
+                <field name="phone" optional="show"/>
+                <field name="owner_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="claim_user_id" optional="hide"/>
+                <field name="google_place_id" optional="hide"/>
+                <field name="is_featured" widget="boolean_toggle"/>
+                <field name="is_published" string="Published" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_connect_business_kanban" model="ir.ui.view">
+        <field name="name">connect.business.kanban</field>
+        <field name="model">connect.business</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="is_published"/>
+                <field name="is_featured"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full">
+                            <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}" alt="Logo"/>
+                        </aside>
+                        <main class="ms-2">
+                            <div class="d-flex justify-content-between">
+                                <field name="name" class="fw-bold"/>
+                                <span t-if="record.is_featured.raw_value" class="badge text-bg-warning">Featured</span>
+                            </div>
+                            <field name="category_ids" widget="many2many_tags"/>
+                            <field name="city" class="text-muted small"/>
+                            <span t-if="!record.is_published.raw_value" class="text-muted small">Not published</span>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_connect_business_form" model="ir.ui.view">
+        <field name="name">connect.business.form</field>
+        <field name="model">connect.business</field>
+        <field name="arch" type="xml">
+            <form string="Business">
+                <header>
+                    <!-- Publishing is how the team approves a listing. -->
+                    <button name="website_publish_button" type="object" string="Publish"
+                            class="btn-primary" invisible="is_published"/>
+                    <button name="website_publish_button" type="object" string="Unpublish"
+                            invisible="not is_published"/>
+                    <button name="action_approve_claim" type="object" string="Approve Claim"
+                            class="btn-primary" invisible="not claim_user_id"/>
+                    <button name="action_reject_claim" type="object" string="Reject Claim"
+                            invisible="not claim_user_id"/>
+                    <button name="action_open_google_link" type="object" string="Link to Google"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="is_published" widget="website_redirect_button"/>
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="not claim_user_id">
+                        <field name="claim_user_id" readonly="1" class="fw-bold"/> asked to claim this listing.
+                    </div>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Business name"/></h1>
+                        <field name="category_ids" widget="many2many_tags" placeholder="Categories"
+                               options="{'no_create': True}"/>
+                    </div>
+                    <group>
+                        <group string="Address">
+                            <field name="street" placeholder="Street"/>
+                            <field name="street2" placeholder="Street 2"/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                            <field name="country_id" options="{'no_create': True}"/>
+                            <field name="state_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Contact">
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="business_url" widget="url"/>
+                            <field name="owner_id"/>
+                            <field name="is_featured"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="About" name="about">
+                            <field name="description" placeholder="What the business does, its services and specialities…"/>
+                        </page>
+                        <page string="Opening Hours" name="hours">
+                            <field name="hours_ids">
+                                <list editable="bottom">
+                                    <field name="dayofweek"/>
+                                    <field name="hour_from" widget="float_time"/>
+                                    <field name="hour_to" widget="float_time"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Photos" name="photos">
+                            <field name="image_ids" mode="kanban">
+                                <kanban>
+                                    <templates>
+                                        <t t-name="card">
+                                            <field name="image_1920" widget="image" options="{'preview_image': 'image_256'}" class="text-center"/>
+                                            <field name="name" class="small text-muted"/>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form>
+                                    <group>
+                                        <field name="image_1920" widget="image" options="{'preview_image': 'image_512'}"/>
+                                        <field name="name"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Google" name="google">
+                            <group>
+                                <field name="google_place_id" placeholder="Use Link to Google, or paste a place ID"/>
+                            </group>
+                            <p class="text-muted">
+                                When linked, the website shows Google's rating, opening hours and photos live on
+                                the business page. Google's terms only allow storing the place ID, so nothing else
+                                from Google is saved here.
+                            </p>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_connect_business_search" model="ir.ui.view">
+        <field name="name">connect.business.search</field>
+        <field name="model">connect.business</field>
+        <field name="arch" type="xml">
+            <search string="Businesses">
+                <field name="name"/>
+                <field name="category_ids"/>
+                <field name="city"/>
+                <field name="owner_id"/>
+                <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
+                <filter name="pending" string="Pending Approval" domain="[('is_published', '=', False)]"/>
+                <filter name="claims" string="Ownership Claims" domain="[('claim_user_id', '!=', False)]"/>
+                <separator/>
+                <filter name="featured" string="Featured" domain="[('is_featured', '=', True)]"/>
+                <filter name="google" string="Linked to Google" domain="[('google_place_id', '!=', False)]"/>
+                <filter name="owned" string="Has Owner" domain="[('owner_id', '!=', False)]"/>
+                <group>
+                    <filter name="group_city" string="City" context="{'group_by': 'city'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_connect_business" model="ir.actions.act_window">
+        <field name="name">Businesses</field>
+        <field name="res_model">connect.business</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add the first business to the directory</p>
+            <p>Listings submitted from the website also land here, waiting for approval.</p>
+        </field>
+    </record>
+
+    <record id="action_connect_business_pending" model="ir.actions.act_window">
+        <field name="name">Pending Approval</field>
+        <field name="res_model">connect.business</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing waiting for approval</p>
+            <p>Businesses submitted from "List your business" appear here until you publish them.</p>
+        </field>
+    </record>
+
+    <record id="action_connect_business_claims" model="ir.actions.act_window">
+        <field name="name">Ownership Claims</field>
+        <field name="res_model">connect.business</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_claims': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No ownership claims</p>
+            <p>Visitors who claim a listing on the website appear here; approve to make them its owner.</p>
+        </field>
+    </record>
+
+    <record id="action_connect_reviews" model="ir.actions.act_window">
+        <field name="name">Reviews</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('res_model', '=', 'connect.business'), ('consumed', '=', True)]</field>
+    </record>
+</odoo>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- My Account home: Connect listings card. -->
+    <template id="portal_my_home_connect" inherit_id="portal.portal_my_home" name="Connect Portal Entries">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/aveenix_connect/static/description/icon.png'"/>
+                <t t-set="title">Connect Listings</t>
+                <t t-set="text">Update your business details, hours and photos</t>
+                <t t-set="url" t-value="'/my/connect'"/>
+                <t t-set="placeholder_count" t-value="'connect_listing_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_breadcrumbs_connect" inherit_id="portal.portal_breadcrumbs" name="Connect Portal Breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'connect_listings'" class="breadcrumb-item">Connect Listings</li>
+            <li t-if="page_name == 'connect_listing'" class="breadcrumb-item"><a href="/my/connect">Connect Listings</a></li>
+            <li t-if="page_name == 'connect_listing'" class="breadcrumb-item" t-out="business.name"/>
+        </xpath>
+    </template>
+
+    <template id="portal_my_connect" name="My Connect Listings">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Connect Listings</t>
+            </t>
+            <div t-if="not listings" class="alert alert-info">
+                You have no listings yet. <a href="/connect/add">List your business</a>, or claim an existing
+                listing from its page on <a href="/connect">Aveenix Connect</a>.
+            </div>
+            <t t-else="" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Business</th>
+                        <th>City</th>
+                        <th>Status</th>
+                        <th class="text-end">Reviews</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="listings" t-as="listing">
+                        <td><a t-attf-href="/my/connect/#{listing.id}" t-out="listing.name"/></td>
+                        <td t-out="listing.city"/>
+                        <td>
+                            <span t-if="listing.is_published" class="badge text-bg-success">Live</span>
+                            <span t-else="" class="badge text-bg-warning">Waiting for approval</span>
+                        </td>
+                        <td class="text-end" t-out="listing.rating_count"/>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_connect_listing" name="Edit My Connect Listing">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" t-value="True"/>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 mb-3">
+                <h3 class="mb-0" t-out="business.name"/>
+                <a t-att-href="business.website_url" class="btn btn-secondary btn-sm">
+                    <i class="fa fa-external-link"/> View on Aveenix Connect
+                </a>
+            </div>
+            <div t-if="saved" class="alert alert-success">Your listing was updated.</div>
+            <div t-if="not business.is_published" class="alert alert-info">
+                This listing is waiting for approval and isn't visible on the website yet.
+            </div>
+            <div t-if="errors" class="alert alert-danger">
+                Please correct the highlighted fields.
+                <div t-foreach="[errors.get(k) for k in ('hours', 'photos', 'logo', 'save') if errors.get(k)]" t-as="message" t-out="message"/>
+            </div>
+
+            <form t-attf-action="/my/connect/#{business.id}" method="post" enctype="multipart/form-data" class="avc-form avc-form-portal">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <fieldset>
+                    <legend>About</legend>
+                    <p class="text-muted small">
+                        To change the business name or categories, contact the Aveenix team.
+                    </p>
+                    <textarea name="description" rows="6" maxlength="4000" class="form-control" aria-label="About the business"
+                              t-out="form.get('description', description_text) or ''"/>
+                    <div class="row mt-3 align-items-center">
+                        <div class="col-auto">
+                            <img t-if="business.image_128" t-att-src="website.image_url(business, 'image_128')" alt="Logo" class="avc-portal-logo"/>
+                        </div>
+                        <div class="col">
+                            <label for="avc_logo" class="form-label">Replace logo</label>
+                            <input id="avc_logo" type="file" name="logo" accept="image/*" class="form-control"/>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Location</legend>
+                    <t t-call="aveenix_connect.connect_location_fields"/>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Contact</legend>
+                    <t t-call="aveenix_connect.connect_contact_fields"/>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Opening hours</legend>
+                    <table class="table table-sm align-middle avc-hours-edit">
+                        <tr t-foreach="weekdays" t-as="day">
+                            <t t-set="current" t-value="hours.get(day[0])"/>
+                            <th t-out="day[1]"/>
+                            <td>
+                                <input type="time" t-attf-name="from_#{day[0]}" class="form-control form-control-sm" t-attf-aria-label="#{day[1]} opens"
+                                       t-att-value="form.get('from_%s' % day[0], current and format_hour(current[0]))"/>
+                            </td>
+                            <td>
+                                <input type="time" t-attf-name="to_#{day[0]}" class="form-control form-control-sm" t-attf-aria-label="#{day[1]} closes"
+                                       t-att-value="form.get('to_%s' % day[0], current and format_hour(current[1]))"/>
+                            </td>
+                            <td>
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" t-attf-name="closed_#{day[0]}"
+                                           t-att-checked="(form.get('closed_%s' % day[0]) if form else not current) or None"/>
+                                    Closed
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Photos</legend>
+                    <div t-if="business.image_ids" class="avc-portal-photos">
+                        <label t-foreach="business.image_ids" t-as="photo" class="avc-portal-photo">
+                            <img t-att-src="website.image_url(photo, 'image_256')" t-att-alt="photo.name or business.name"/>
+                            <span><input type="checkbox" name="remove_photo_ids" t-att-value="photo.id"/> Remove</span>
+                        </label>
+                    </div>
+                    <label for="avc_photos" class="form-label mt-2">Add photos</label>
+                    <input id="avc_photos" type="file" name="photos" accept="image/*" multiple="multiple" class="form-control"/>
+                </fieldset>
+
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+        </t>
+    </template>
+</odoo>
