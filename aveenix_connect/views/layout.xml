@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Footer: "Aveenix Connect" closes the "Explore Aveenix" list, after News
+         and Freight. Appended to the end of the list (rather than after News)
+         so it lands last whichever sister module's view is applied first. -->
+    <template id="connect_footer_link" inherit_id="aveenix_website.aveenix_footer" name="Aveenix Connect: Footer Link">
+        <xpath expr="//a[@href='/news']/../.." position="inside">
+            <li><a href="/connect">Aveenix Connect</a></li>
+        </xpath>
+    </template>
+
+    <!-- Header on /connect pages (is_connect_page and av_site_home, set by the
+         controller): aveenix_header hides the Express word, shop search and
+         shop nav; this adds the "Connect" word, the what + where search, the
+         "List your business" action and the category nav. Server-side, so
+         nothing flashes. -->
+    <template id="connect_header" inherit_id="aveenix_website.aveenix_header" name="Aveenix Connect: Header">
+        <!-- The logo SVG lives in the SVG namespace, hence local-name(). -->
+        <xpath expr="//*[local-name()='g'][hasclass('av-logo-news')]" position="after">
+            <!-- "Connect" drawn the way "News" is: Montserrat Medium outlines at
+                 37.80px, baseline 126.72, right-aligned on the ink edge 765.24.
+                 The word starts at 604.82, so the rule keeps the same 14.27 gap
+                 and ends at 590.55. -->
+            <t t-if="is_connect_page">
+                <rect xmlns="http://www.w3.org/2000/svg" fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="424.84" height="6" class="av-logo-connect"/>
+                <g xmlns="http://www.w3.org/2000/svg" class="av-logo-connect" fill="var(--av-logo-text, #58595b)">
+                    <path d="M604.82 113.49Q604.82 109.63 606.63 106.55Q608.45 103.47 611.66 101.72Q614.87 99.96 618.84 99.96Q621.94 99.96 624.51 101Q627.08 102.04 628.9 104.08L626.44 106.46Q623.45 103.32 618.99 103.32Q616.04 103.32 613.66 104.64Q611.28 105.97 609.94 108.29Q608.6 110.62 608.6 113.49Q608.6 116.36 609.94 118.69Q611.28 121.01 613.66 122.34Q616.04 123.66 618.99 123.66Q623.41 123.66 626.44 120.48L628.9 122.86Q627.08 124.91 624.49 125.96Q621.9 127.02 618.8 127.02Q614.83 127.02 611.64 125.26Q608.45 123.51 606.63 120.43Q604.82 117.35 604.82 113.49Z"/>
+                    <path d="M631.92 116.7Q631.92 113.75 633.26 111.43Q634.6 109.11 636.98 107.8Q639.37 106.5 642.35 106.5Q645.34 106.5 647.7 107.8Q650.06 109.11 651.41 111.43Q652.75 113.75 652.75 116.7Q652.75 119.65 651.41 121.98Q650.06 124.3 647.7 125.62Q645.34 126.95 642.35 126.95Q639.37 126.95 636.98 125.62Q634.6 124.3 633.26 121.98Q631.92 119.65 631.92 116.7ZM649.08 116.7Q649.08 114.62 648.21 113.02Q647.34 111.41 645.81 110.54Q644.28 109.67 642.35 109.67Q640.42 109.67 638.89 110.54Q637.36 111.41 636.47 113.02Q635.59 114.62 635.59 116.7Q635.59 118.78 636.47 120.39Q637.36 122 638.89 122.88Q640.42 123.77 642.35 123.77Q644.28 123.77 645.81 122.88Q647.34 122 648.21 120.39Q649.08 118.78 649.08 116.7Z"/>
+                    <path d="M676.79 115.19V126.72H673.16V115.61Q673.16 112.7 671.76 111.22Q670.36 109.75 667.75 109.75Q664.81 109.75 663.1 111.47Q661.4 113.19 661.4 116.4V126.72H657.77V106.69H661.25V109.71Q662.35 108.16 664.22 107.33Q666.09 106.5 668.47 106.5Q672.29 106.5 674.54 108.71Q676.79 110.92 676.79 115.19Z"/>
+                    <path d="M702.53 115.19V126.72H698.9V115.61Q698.9 112.7 697.5 111.22Q696.1 109.75 693.5 109.75Q690.55 109.75 688.85 111.47Q687.15 113.19 687.15 116.4V126.72H683.52V106.69H686.99V109.71Q688.09 108.16 689.96 107.33Q691.83 106.5 694.21 106.5Q698.03 106.5 700.28 108.71Q702.53 110.92 702.53 115.19Z"/>
+                    <path d="M727.29 117.91H711.03Q711.38 120.56 713.36 122.17Q715.34 123.77 718.29 123.77Q721.88 123.77 724.08 121.35L726.08 123.7Q724.72 125.28 722.7 126.12Q720.67 126.95 718.18 126.95Q715 126.95 712.55 125.64Q710.09 124.34 708.75 122Q707.41 119.65 707.41 116.7Q707.41 113.79 708.71 111.45Q710.01 109.11 712.3 107.8Q714.59 106.5 717.46 106.5Q720.33 106.5 722.58 107.8Q724.83 109.11 726.1 111.45Q727.36 113.79 727.36 116.82Q727.36 117.23 727.29 117.91ZM711.03 115.3H723.89Q723.58 112.77 721.83 111.17Q720.07 109.56 717.46 109.56Q714.85 109.56 713.09 111.15Q711.34 112.73 711.03 115.3Z"/>
+                    <path d="M730.54 116.7Q730.54 113.75 731.9 111.43Q733.26 109.11 735.66 107.8Q738.06 106.5 741.12 106.5Q743.85 106.5 745.98 107.59Q748.12 108.69 749.29 110.77L746.53 112.55Q745.58 111.11 744.19 110.39Q742.79 109.67 741.09 109.67Q739.12 109.67 737.55 110.54Q735.98 111.41 735.09 113.02Q734.21 114.62 734.21 116.7Q734.21 118.82 735.09 120.43Q735.98 122.03 737.55 122.9Q739.12 123.77 741.09 123.77Q742.79 123.77 744.19 123.05Q745.58 122.34 746.53 120.9L749.29 122.64Q748.12 124.72 745.98 125.83Q743.85 126.95 741.12 126.95Q738.06 126.95 735.66 125.62Q733.26 124.3 731.9 121.98Q730.54 119.65 730.54 116.7Z"/>
+                    <path d="M765.24 125.55Q764.45 126.23 763.27 126.59Q762.1 126.95 760.86 126.95Q757.83 126.95 756.17 125.32Q754.5 123.7 754.5 120.67V109.67H751.1V106.69H754.5V102.3H758.13V106.69H763.88V109.67H758.13V120.52Q758.13 122.15 758.95 123.02Q759.76 123.89 761.27 123.89Q762.93 123.89 764.11 122.94Z"/>
+                </g>
+            </t>
+        </xpath>
+
+        <!-- Shop search → what + where directory search. -->
+        <xpath expr="//form[hasclass('av-shop-search')]" position="after">
+            <form t-if="is_connect_page" class="av-search-form avc-header-search" action="/connect/search" method="get">
+                <input type="text" name="what" class="av-search-input" t-att-value="what or None"
+                       placeholder="Search businesses, e.g. plumber, café…" aria-label="What are you looking for"/>
+                <input type="text" name="where" class="av-search-input avc-header-where" t-att-value="where or None"
+                       placeholder="City or postcode" aria-label="Where"/>
+                <button type="submit" class="av-search-btn" aria-label="Search">
+                    <i class="fa fa-search"/>
+                </button>
+            </form>
+        </xpath>
+
+        <xpath expr="//div[@id='top_menu']" position="inside">
+            <div t-if="is_connect_page" class="av-connect-actions">
+                <a t-if="not request.env.user._is_public()" href="/my/connect" class="av-header-action">
+                    <i class="fa fa-building-o"/>
+                    <span>My Listings</span>
+                </a>
+                <a href="/connect/add" class="av-connect-add-btn">List your business</a>
+            </div>
+        </xpath>
+
+        <!-- Shop category nav → directory category nav. -->
+        <xpath expr="//nav[hasclass('av-shop-nav')]" position="before">
+            <nav class="av-cat-nav av-connect-nav" t-if="is_connect_page" aria-label="Connect">
+                <div class="av-cat-nav-inner">
+                    <ul class="av-cat-menu">
+                        <li>
+                            <a href="/connect" t-att-class="'active' if active_nav == 'home' else None">
+                                <i class="fa fa-home"/><span>Home</span>
+                            </a>
+                        </li>
+                        <li t-foreach="connect_nav_categories" t-as="nav_category">
+                            <a t-attf-href="/connect/category/#{slug(nav_category)}"
+                               t-att-class="'active' if active_nav == nav_category.id else None">
+                                <i t-attf-class="fa #{nav_category.icon or 'fa-briefcase'}"/><span t-out="nav_category.name"/>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/connect/add" t-att-class="'active' if active_nav == 'add' else None">
+                                <i class="fa fa-plus-circle"/><span>List your business</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </xpath>
+    </template>
+</odoo>

@@ -1,6 +1,6 @@
 {
     'name': 'Aveenix Website',
-    'version': '19.0.1.0.42',
+    'version': '19.0.1.0.43',
     'category': 'Website',
     'summary': 'Modern eCommerce website - red & gold design',
     'description': 'Modern eCommerce website - red & gold design',

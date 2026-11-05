@@ -18,6 +18,7 @@ SYNC_ACTIONS = [
     ("pull_affiliate_products", "Pull Affiliate Products"),
     ("pull_variable_products", "Pull Variable Products"),
     ("pull_orders", "Pull Orders"),
+    ("pull_single_order", "Fetch Single Order (by ID)"),
     ("push_stock", "Push Stock Quantities to WooCommerce"),
     ("push_paid_orders", "Push Paid Orders to WooCommerce"),
     ("push_order_statuses", "Push Order Fulfillment Statuses"),
@@ -55,9 +56,9 @@ class WooSyncWizard(models.TransientModel):
              "overloading the server.",
     )
     single_product_id = fields.Char(
-        string="WooCommerce Product ID",
-        help="The numeric WooCommerce product ID to fetch "
-             "(used with 'Fetch Single Product').",
+        string="WooCommerce Product/Order ID",
+        help="The numeric WooCommerce product or order ID to fetch "
+             "(used with 'Fetch Single Product' or 'Fetch Single Order').",
     )
     start_page = fields.Integer(
         string="Start Page", default=1,
@@ -111,6 +112,7 @@ class WooSyncWizard(models.TransientModel):
             "pull_affiliate_products": lambda: backend._do_pull_affiliate_products(force),
             "pull_variable_products": lambda: backend._do_pull_variable_products(force),
             "pull_orders": lambda: backend._do_pull_orders(force),
+            "pull_single_order": lambda: backend._do_pull_single_order(self.single_product_id, force),
             "push_stock": backend.action_push_stock,
             "push_paid_orders": backend.action_push_paid_orders,
             "push_order_statuses": backend.action_push_order_statuses,

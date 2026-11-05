@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Footer: "Aveenix Freight" sits beside "News", the other Aveenix sister site. -->
+    <template id="freight_footer_link" inherit_id="aveenix_website.aveenix_footer" name="Aveenix Freight: Footer Link">
+        <xpath expr="//a[@href='/news']/.." position="after">
+            <li><a href="/freight">Aveenix Freight</a></li>
+        </xpath>
+    </template>
+
+    <!-- Header on /freight pages (is_freight_page and av_site_home, set by the
+         controller): the logo reads "Freight" and links home to /freight, the
+         search box becomes the shipment tracker and the shop nav and actions
+         give way to the freight ones. aveenix_header hides the Express word,
+         shop search and shop nav itself whenever av_site_home is set. Decided
+         server-side, so nothing flashes. -->
+    <template id="freight_header" inherit_id="aveenix_website.aveenix_header" name="Aveenix Freight: Header">
+        <!-- The logo SVG lives in the SVG namespace, hence local-name(). -->
+        <xpath expr="//*[local-name()='g'][hasclass('av-logo-news')]" position="after">
+            <!-- "Freight" drawn the way "News" is: Montserrat Medium outlines at
+                 37.80px, baseline 126.72, right-aligned on the ink edge 765.24.
+                 The word starts at 629.50, so the rule keeps the same 14.27 gap
+                 and ends at 615.23. -->
+            <t t-if="is_freight_page">
+                <rect xmlns="http://www.w3.org/2000/svg" fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="449.52" height="6" class="av-logo-freight"/>
+                <g xmlns="http://www.w3.org/2000/svg" class="av-logo-freight" fill="var(--av-logo-text, #58595b)">
+                    <path d="M633.28 103.55V112.77H646.55V116.02H633.28V126.72H629.5V100.26H648.17V103.55Z"/>
+                    <path d="M663.75 106.5V110.01Q663.44 109.97 662.92 109.97Q659.97 109.97 658.28 111.73Q656.6 113.49 656.6 116.74V126.72H652.97V106.69H656.45V110.05Q657.4 108.31 659.25 107.4Q661.1 106.5 663.75 106.5Z"/>
+                    <path d="M686.5 117.91H670.25Q670.59 120.56 672.57 122.17Q674.56 123.77 677.51 123.77Q681.1 123.77 683.29 121.35L685.29 123.7Q683.93 125.28 681.91 126.12Q679.89 126.95 677.39 126.95Q674.22 126.95 671.76 125.64Q669.3 124.34 667.96 122Q666.62 119.65 666.62 116.7Q666.62 113.79 667.92 111.45Q669.23 109.11 671.51 107.8Q673.8 106.5 676.67 106.5Q679.55 106.5 681.8 107.8Q684.05 109.11 685.31 111.45Q686.58 113.79 686.58 116.82Q686.58 117.23 686.5 117.91ZM670.25 115.3H683.1Q682.8 112.77 681.04 111.17Q679.28 109.56 676.67 109.56Q674.07 109.56 672.31 111.15Q670.55 112.73 670.25 115.3Z"/>
+                    <path d="M691.61 106.69H695.23V126.72H691.61ZM690.96 100.49Q690.96 99.5 691.66 98.8Q692.36 98.11 693.42 98.11Q694.48 98.11 695.18 98.77Q695.88 99.43 695.88 100.41Q695.88 101.43 695.18 102.13Q694.48 102.83 693.42 102.83Q692.36 102.83 691.66 102.15Q690.96 101.47 690.96 100.49Z"/>
+                    <path d="M721.32 106.69V124Q721.32 129.25 718.71 131.77Q716.1 134.28 710.92 134.28Q708.09 134.28 705.52 133.51Q702.95 132.73 701.36 131.29L703.1 128.5Q704.5 129.71 706.56 130.41Q708.62 131.1 710.81 131.1Q714.32 131.1 716.01 129.44Q717.69 127.78 717.69 124.38V122.79Q716.4 124.34 714.53 125.11Q712.66 125.89 710.47 125.89Q707.6 125.89 705.27 124.66Q702.95 123.43 701.62 121.22Q700.3 119.01 700.3 116.17Q700.3 113.34 701.62 111.13Q702.95 108.92 705.27 107.71Q707.6 106.5 710.47 106.5Q712.74 106.5 714.68 107.33Q716.63 108.16 717.88 109.79V106.69ZM717.76 116.17Q717.76 113.26 715.84 111.47Q713.91 109.67 710.88 109.67Q707.82 109.67 705.89 111.47Q703.97 113.26 703.97 116.17Q703.97 118.06 704.85 119.56Q705.74 121.05 707.31 121.88Q708.88 122.71 710.88 122.71Q712.85 122.71 714.42 121.88Q715.99 121.05 716.87 119.56Q717.76 118.06 717.76 116.17Z"/>
+                    <path d="M747.25 115.19V126.72H743.62V115.61Q743.62 112.7 742.22 111.22Q740.82 109.75 738.21 109.75Q735.26 109.75 733.56 111.47Q731.86 113.19 731.86 116.4V126.72H728.23V98.67H731.86V109.52Q733 108.08 734.83 107.29Q736.66 106.5 738.93 106.5Q742.75 106.5 745 108.71Q747.25 110.92 747.25 115.19Z"/>
+                    <path d="M765.24 125.55Q764.45 126.23 763.27 126.59Q762.1 126.95 760.86 126.95Q757.83 126.95 756.17 125.32Q754.5 123.7 754.5 120.67V109.67H751.1V106.69H754.5V102.3H758.13V106.69H763.88V109.67H758.13V120.52Q758.13 122.15 758.95 123.02Q759.76 123.89 761.27 123.89Q762.93 123.89 764.11 122.94Z"/>
+                </g>
+            </t>
+        </xpath>
+
+        <!-- Search box → shipment tracker. -->
+        <xpath expr="//form[hasclass('av-shop-search')]" position="after">
+            <form t-if="is_freight_page" class="av-search-form" action="/freight/track" method="get">
+                <input type="text" name="number" class="av-search-input" t-att-value="number or None"
+                       placeholder="Track a shipment — enter your tracking number…" aria-label="Tracking number"/>
+                <button type="submit" class="av-search-btn" aria-label="Track">
+                    <i class="fa fa-map-marker"/>
+                </button>
+            </form>
+        </xpath>
+
+        <xpath expr="//div[@id='top_menu']" position="inside">
+            <div t-if="is_freight_page" class="av-freight-actions">
+                <a href="/freight/quote" class="av-freight-quote-btn">Get a Quote</a>
+                <a href="/freight/track" class="av-header-action">
+                    <i class="fa fa-map-marker"/>
+                    <span>Track</span>
+                </a>
+            </div>
+        </xpath>
+
+        <!-- Shop category nav → freight services nav. -->
+        <xpath expr="//nav[hasclass('av-shop-nav')]" position="before">
+            <nav class="av-cat-nav av-freight-nav" t-if="is_freight_page" aria-label="Freight">
+                <div class="av-cat-nav-inner">
+                    <ul class="av-cat-menu">
+                        <li>
+                            <a href="/freight" t-att-class="'active' if active_nav == 'home' else None">
+                                <i class="fa fa-home"/><span>Home</span>
+                            </a>
+                        </li>
+                        <li t-foreach="freight_services" t-as="svc">
+                            <a t-attf-href="/freight/services/#{svc['slug']}"
+                               t-att-class="'active' if active_nav == svc['slug'] else None">
+                                <i t-attf-class="fa #{svc['icon']}"/><span t-out="svc['nav']"/>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/freight/quote" t-att-class="'active' if active_nav == 'quote' else None">
+                                <i class="fa fa-calculator"/><span>Get a Quote</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/freight/track" t-att-class="'active' if active_nav == 'track' else None">
+                                <i class="fa fa-map-marker"/><span>Track Shipment</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </xpath>
+    </template>
+</odoo>

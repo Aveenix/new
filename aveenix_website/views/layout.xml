@@ -42,7 +42,7 @@
                     <t t-set="tb_cur_currency" t-value="request.website.sudo().currency_id"/>
                     <div class="av-topbar-left">
                         <!-- Country -->
-                        <div class="av-tb-dropdown" data-storage-key="av_country">
+                        <div class="av-tb-dropdown" data-av-select="country">
                             <span class="av-topbar-flag av-tb-trigger">
                                 <t t-esc="tb_user_country.code or 'US'"/>
                                 <i class="fa fa-chevron-down" style="font-size:9px; margin-left:3px;"/>
@@ -198,7 +198,11 @@
             <div class="av-topbar">
                 <div class="av-topbar-inner">
 
-                    <a t-attf-href="#{'/news' if is_news_page else '/'}" class="av-logo">
+                    <!-- Sister sites (Freight, Connect, ...) pass av_site_home, their
+                         home URL: the logo links there and the Express word, shop
+                         search and shop nav give way to the ones the sister
+                         module adds next to them. -->
+                    <a t-attf-href="#{av_site_home or ('/news' if is_news_page else '/')}" class="av-logo">
                         <div class="av-logo-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 769.99 143.18" class="av-logo-svg">
                               <defs>
@@ -208,7 +212,7 @@
                                 </linearGradient>
                               </defs>
                               <rect fill="url(#av-logo-gradient)" x="3.67" y="3.02" width="137.14" height="137.14" rx="16.77" ry="16.77"/>
-                              <g fill="var(--av-logo-text, #58595b)" class="av-logo-express av-default-logo-group">
+                              <g fill="var(--av-logo-text, #58595b)" class="av-logo-express av-default-logo-group" t-att-style="'display: none' if av_site_home else None">
                                 <path d="M626.48,123.43h15.42v3.29h-19.21v-26.46h18.68v3.29h-14.9v19.89ZM626.14,111.67h13.61v3.21h-13.61v-3.21Z"/>
                                 <path d="M644.14,126.72l8.62-11.19-.04,1.85-8.2-10.7h4.04l6.28,8.24h-1.55l6.28-8.24h3.97l-8.32,10.77.04-1.93,8.7,11.19h-4.12l-6.62-8.77,1.47.23-6.5,8.54h-4.04Z"/>
                                 <path d="M667.92,134.05v-27.37h3.48v5.41l-.23,4.65.38,4.65v12.67h-3.63ZM678.54,126.95c-1.66,0-3.18-.38-4.56-1.15s-2.47-1.91-3.29-3.42-1.23-3.4-1.23-5.67.4-4.16,1.19-5.67,1.88-2.65,3.25-3.4c1.37-.76,2.92-1.13,4.63-1.13,1.97,0,3.71.43,5.22,1.29,1.51.86,2.71,2.05,3.59,3.57.88,1.53,1.32,3.31,1.32,5.35s-.44,3.83-1.32,5.37c-.88,1.54-2.08,2.74-3.59,3.59-1.51.86-3.25,1.29-5.22,1.29ZM678.24,123.77c1.29,0,2.44-.29,3.46-.87,1.02-.58,1.83-1.4,2.42-2.48.59-1.07.89-2.31.89-3.72s-.3-2.68-.89-3.72c-.59-1.05-1.4-1.86-2.42-2.44s-2.17-.87-3.46-.87-2.4.29-3.42.87-1.83,1.39-2.42,2.44c-.59,1.05-.89,2.29-.89,3.72s.3,2.65.89,3.72c.59,1.07,1.4,1.9,2.42,2.48,1.02.58,2.16.87,3.42.87Z"/>
@@ -217,7 +221,7 @@
                                 <path d="M737.63,126.95c-1.66,0-3.25-.23-4.74-.68-1.5-.45-2.68-1.01-3.54-1.66l1.51-2.87c.86.58,1.92,1.07,3.18,1.47,1.26.4,2.54.6,3.86.6,1.69,0,2.91-.24,3.65-.72s1.12-1.15,1.12-2c0-.63-.23-1.12-.68-1.47-.45-.35-1.05-.62-1.8-.79-.74-.18-1.57-.33-2.48-.47s-1.81-.31-2.72-.53c-.91-.21-1.74-.52-2.5-.91-.76-.39-1.36-.93-1.81-1.63-.45-.69-.68-1.62-.68-2.78s.34-2.27,1.02-3.18c.68-.91,1.64-1.61,2.89-2.1,1.25-.49,2.73-.74,4.44-.74,1.31,0,2.64.16,3.99.47,1.35.32,2.45.76,3.31,1.34l-1.55,2.87c-.91-.61-1.85-1.02-2.83-1.25-.98-.23-1.97-.34-2.95-.34-1.59,0-2.77.26-3.55.78s-1.17,1.18-1.17,1.98c0,.68.23,1.2.7,1.57.47.37,1.07.65,1.81.85.74.2,1.57.37,2.48.51.91.14,1.81.32,2.72.53.91.21,1.73.51,2.48.89s1.35.91,1.81,1.59c.47.68.7,1.59.7,2.72,0,1.21-.35,2.26-1.06,3.14-.71.88-1.7,1.57-2.99,2.06-1.29.49-2.82.74-4.61.74Z"/>
                                 <path d="M756.57,126.95c-1.66,0-3.25-.23-4.74-.68-1.5-.45-2.68-1.01-3.54-1.66l1.51-2.87c.86.58,1.92,1.07,3.18,1.47,1.26.4,2.54.6,3.86.6,1.69,0,2.91-.24,3.65-.72s1.12-1.15,1.12-2c0-.63-.23-1.12-.68-1.47-.45-.35-1.05-.62-1.8-.79-.74-.18-1.57-.33-2.48-.47s-1.81-.31-2.72-.53c-.91-.21-1.74-.52-2.5-.91-.76-.39-1.36-.93-1.81-1.63-.45-.69-.68-1.62-.68-2.78s.34-2.27,1.02-3.18c.68-.91,1.64-1.61,2.89-2.1,1.25-.49,2.73-.74,4.44-.74,1.31,0,2.64.16,3.99.47,1.35.32,2.45.76,3.31,1.34l-1.55,2.87c-.91-.61-1.85-1.02-2.83-1.25-.98-.23-1.97-.34-2.95-.34-1.59,0-2.77.26-3.55.78s-1.17,1.18-1.17,1.98c0,.68.23,1.2.7,1.57.47.37,1.07.65,1.81.85.74.2,1.57.37,2.48.51.91.14,1.81.32,2.72.53.91.21,1.73.51,2.48.89s1.35.91,1.81,1.59c.47.68.7,1.59.7,2.72,0,1.21-.35,2.26-1.06,3.14-.71.88-1.7,1.57-2.99,2.06-1.29.49-2.82.74-4.61.74Z"/>
                               </g>
-                              <rect fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="442.71" height="6" class="av-default-logo-group" />
+                              <rect fill="var(--av-red, #d6292e)" x="165.71" y="113.0" width="442.71" height="6" class="av-default-logo-group" t-att-style="'display: none' if av_site_home else None"/>
                               <!-- Same 14.27 gap to the word as the Express rule leaves
                                    (608.42 -> 622.69). "News" is 101.03 wide and is
                                    right-aligned on 765.24, so it starts at 664.21 and
@@ -268,7 +272,7 @@
                         </div>
                     </a>
 
-                    <form class="av-search-form" action="/shop" method="get">
+                    <form class="av-search-form av-shop-search" action="/shop" method="get" t-if="not av_site_home">
                         <input type="text" name="search" class="av-search-input"
                                placeholder="Search items on Aveenix…"/>
                         <button type="submit" class="av-search-btn">
@@ -302,14 +306,16 @@
                             </span>
                             <span>Compare</span>
                         </a>
+                        <!-- av-account-action: sister sites (Freight) keep this
+                             one action when they swap out the shop's actions. -->
                         <t t-if="request.env.user._is_public()">
-                            <a href="/web/login" class="av-header-action">
+                            <a href="/web/login" class="av-header-action av-account-action">
                                 <i class="fa fa-user"/>
                                 <span>Login</span>
                             </a>
                         </t>
                         <t t-else="">
-                            <div class="av-header-action av-user-menu dropdown">
+                            <div class="av-header-action av-user-menu av-account-action dropdown">
                                 <span class="av-user-menu-toggle dropdown-toggle" data-bs-toggle="dropdown" style="cursor:pointer;">
                                     <i class="fa fa-user-circle"/>
                                     <span class="av-user-name-row">
@@ -387,7 +393,7 @@
                 </div>
             </nav>
 
-            <nav class="av-cat-nav" t-if="not is_news_page">
+            <nav class="av-cat-nav av-shop-nav" t-if="not is_news_page and not av_site_home">
                 <div class="av-cat-nav-inner">
                     <div class="av-all-categories" t-att-id="'av-all-categories-btn'">
                         <i class="fa fa-bars"/>
@@ -493,27 +499,27 @@
                 <div class="av-container">
                     <div class="av-footer-grid">
                         <div class="av-footer-col">
-                            <h4 class="av-footer-heading av-footer-toggle">Customer Service<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <h4 class="av-footer-heading av-footer-toggle">Explore Aveenix<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <!-- Sister-site modules (Freight, Connect) add their links after News. -->
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
                                 <li><a href="/">Home</a></li>
-                                <li><a href="http://aveenixdigital.com/">Digital</a></li>
-                                <li><a href="https://aveenixdomains.com/">Domains</a></li>
-                                <li><a href="/news">News</a></li>
-                                <li><a href="/privacy#acp-program">Cashback Program</a></li>
-                                <li><a href="/my/orders">Order Tracking</a></li>
+                                <li><a href="http://aveenixdigital.com/">Aveenix Digital</a></li>
+                                <li><a href="https://aveenixdomains.com/">Aveenix Domains</a></li>
+                                <li><a href="/news">Aveenix News</a></li>
                             </ul>
                         </div>
                         <div class="av-footer-col">
-                            <h4 class="av-footer-heading av-footer-toggle">Account<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <h4 class="av-footer-heading av-footer-toggle">Shopping &amp; Benefits<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
                                 <li><a href="/shop/cart">Cart</a></li>
                                 <li><a href="/favourites">Favourites</a></li>
-                                <li><a href="/wishlist">Whishlist</a></li>
-                                <li><a href="/notifications">Notification</a></li>
+                                <li><a href="/wishlist">Wishlist</a></li>
+                                <li><a href="/notifications">Notifications</a></li>
+                                <li><a href="/privacy#acp-program">Aveenix Cashback</a></li>
                             </ul>
                         </div>
                         <div class="av-footer-col">
-                            <h4 class="av-footer-heading av-footer-toggle">Account<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <h4 class="av-footer-heading av-footer-toggle">My Account<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
                                 <li><a href="/my/account">My Account</a></li>
                                 <li><a href="/my/addresses">My Addresses</a></li>
@@ -522,16 +528,9 @@
                             </ul>
                         </div>
                         <div class="av-footer-col">
-                            <h4 class="av-footer-heading av-footer-toggle">Support<i class="fa fa-chevron-right av-footer-chevron"/></h4>
+                            <h4 class="av-footer-heading av-footer-toggle">Customer Support<i class="fa fa-chevron-right av-footer-chevron"/></h4>
                             <ul class="av-footer-links av-footer-bullets av-footer-collapse">
-                                <li>
-                                    <!-- <a href="#">Email Us</a> -->
-                                    <a t-att-href="'mailto:%s' % res_company.email" t-if="res_company.email">Email Us</a>
-                                </li>
-
-                                <li>
-                                    <a t-att-href="'tel:%s' % res_company.phone" t-if="res_company.phone">Phone Support</a>
-                                </li>
+                                <li><a href="/my/orders">Track My Order</a></li>
                                 <li><a href="#" class="av-open-livechat">Live Chat</a></li>
                                 <li><a href="/contactus">Free Consultancy</a></li>
                             </ul>
@@ -819,22 +818,18 @@
             <script>
             (function(){
                 // Topbar dropdowns — country, language, currency
-                // Restore saved values on load using data-storage-key on wrapper div
-                document.querySelectorAll('.av-tb-dropdown[data-storage-key]').forEach(function(dd){
-                    var key = dd.getAttribute('data-storage-key');
-                    var saved = localStorage.getItem(key);
-                    if(!saved) return;
-                    var trigger = dd.querySelector('.av-tb-trigger');
-                    if(!trigger) return;
-                    // update trigger text (first text node)
-                    var textNode = trigger.firstChild;
-                    if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = saved + ' ';
-                    // mark selected item
-                    dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(item){
-                        item.classList.remove('av-tb-selected');
-                        if(item.getAttribute('data-val') === saved) item.classList.add('av-tb-selected');
-                    });
-                });
+                //
+                // The selected country is NOT cached client-side. It lives in
+                // the session (av_user_country_id), which is what scopes the
+                // news, the pricelist and the prices, and the server renders it
+                // into the trigger and the selected item above. A localStorage
+                // copy used to be restored over that on every load, so the two
+                // could disagree: the header read "IN India" from the cache
+                // while the server, whose session had no country, scoped the
+                // page to the company's US fallback and the Local news block
+                // filled with Seattle and Dallas stories. One source of truth,
+                // and a pick that fails to reach the server now self-corrects
+                // on the next load instead of being remembered as if it had.
 
                 // Wire up all tb-dropdowns
                 document.querySelectorAll('.av-tb-dropdown').forEach(function(dd){
@@ -850,8 +845,8 @@
                             if(sel) setTimeout(function(){ sel.scrollIntoView({block:'nearest'}); }, 50);
                         }
                     });
-                    // item selection — save to localStorage and sync mobile
-                    var storageKey = dd.getAttribute('data-storage-key');
+                    // item selection — apply server-side and sync mobile
+                    var selectKind = dd.getAttribute('data-av-select');
                     dd.querySelectorAll('.av-tb-dropdown-item').forEach(function(item){
                         item.addEventListener('click', function(e){
                             if(item.tagName === 'A') {
@@ -872,10 +867,8 @@
                             // update trigger label
                             var textNode = trigger.firstChild;
                             if(textNode &amp;&amp; textNode.nodeType === 3) textNode.textContent = val + ' ';
-                            // persist (country only — currency uses pricelist links)
-                            if(storageKey) localStorage.setItem(storageKey, val);
                             // sync mobile country val display
-                            if(storageKey === 'av_country') {
+                            if(selectKind === 'country') {
                                 var mobileValEl = document.getElementById('av-country-val');
                                 if(mobileValEl) mobileValEl.textContent = val;
                                 var mobileDd = document.getElementById('av-country-dropdown');
@@ -1197,30 +1190,18 @@
                 // Settings dropdowns: country, language, currency
                 (function(){
                     var pairs = [
-                        ['av-country-row', 'av-country-dropdown', 'av_country'],
+                        ['av-country-row', 'av-country-dropdown', 'country'],
                         ['av-lang-row',    'av-lang-dropdown',    null],
                         ['av-currency-row','av-currency-dropdown', null]
                     ];
 
-                    // Restore saved country value into mobile display
-                    pairs.forEach(function(pair){
-                        if(!pair[2]) return;
-                        var saved = localStorage.getItem(pair[2]);
-                        if(!saved) return;
-                        var row = document.getElementById(pair[0]);
-                        var dd  = document.getElementById(pair[1]);
-                        if(!row || !dd) return;
-                        var valEl = row.querySelector('.av-settings-val');
-                        if(valEl) valEl.textContent = saved;
-                        dd.querySelectorAll('.av-settings-dropdown-item').forEach(function(item){
-                            item.classList.remove('selected');
-                            if(item.getAttribute('data-val') === saved) item.classList.add('selected');
-                        });
-                    });
+                    // No restore step: the server renders the session's country
+                    // into this row and marks its item selected. See the topbar
+                    // block above for why it is not cached client-side.
                     pairs.forEach(function(pair){
                         var row = document.getElementById(pair[0]);
                         var dd  = document.getElementById(pair[1]);
-                        var storageKey = pair[2];
+                        var selectKind = pair[2];
                         if(!row || !dd) return;
                         var valEl = row.querySelector('.av-settings-val');
 
@@ -1250,26 +1231,29 @@
                                 item.classList.add('selected');
                                 var val = item.getAttribute('data-val') || item.querySelector('.av-dd-name').textContent;
                                 if(valEl) valEl.textContent = val;
-                                if(storageKey) localStorage.setItem(storageKey, val);
-                                // sync desktop topbar trigger label + selected state
-                                if(storageKey) {
-                                    var tbDd = document.querySelector('.av-tb-dropdown[data-storage-key="' + storageKey + '"]');
+                                // sync desktop topbar trigger label + selected
+                                // state. The topbar is keyed on the ISO code
+                                // ("IN"); this row's own value is "IN India",
+                                // so match on data-code or nothing lines up.
+                                var tbVal = item.getAttribute('data-code') || val;
+                                if(selectKind) {
+                                    var tbDd = document.querySelector('.av-tb-dropdown[data-av-select="' + selectKind + '"]');
                                     if(tbDd) {
                                         var tbTrigger = tbDd.querySelector('.av-tb-trigger');
                                         if(tbTrigger) {
                                             var tn = tbTrigger.firstChild;
-                                            if(tn &amp;&amp; tn.nodeType === 3) tn.textContent = val + ' ';
+                                            if(tn &amp;&amp; tn.nodeType === 3) tn.textContent = tbVal + ' ';
                                         }
                                         tbDd.querySelectorAll('.av-tb-dropdown-item').forEach(function(i){
                                             i.classList.remove('av-tb-selected');
-                                            if(i.getAttribute('data-val') === val) i.classList.add('av-tb-selected');
+                                            if(i.getAttribute('data-val') === tbVal) i.classList.add('av-tb-selected');
                                         });
                                     }
                                 }
                                 // Country pick → apply its currency + pricelist
                                 // site-wide (data-code carries the ISO code that
                                 // location/set expects). Reloads once applied.
-                                if(storageKey === 'av_country') {
+                                if(selectKind === 'country') {
                                     var code = item.getAttribute('data-code');
                                     if(code &amp;&amp; window.avSetLocationSession) {
                                         window.avSetLocationSession(code, true);

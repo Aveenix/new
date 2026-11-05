@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Quote > Send by Email. The layout adds the "View" button with the
+         quote's access token, where the customer accepts or declines. -->
+    <data noupdate="1">
+        <record id="mail_template_freight_quote" model="mail.template">
+            <field name="name">Freight: Send Quote</field>
+            <field name="model_id" ref="model_freight_quote"/>
+            <field name="subject">{{ object.company_id.name }} Freight Quote (Ref {{ object.name }})</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">Sent by the freight team with the price for a quote request</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello <t t-out="object.contact_name or ''">John Smith</t>,
+        <br/><br/>
+        Thank you for your request. Our price for quote
+        <span style="font-weight: bold;" t-out="object.name or ''">AVQ/2026/0001</span>
+        is ready:
+    </p>
+    <ul style="font-size: 13px;">
+        <li>Route: <t t-out="object.origin_port_id.display_name or object.origin_address or ''">Mundra (INMUN)</t>
+            → <t t-out="object.destination_port_id.display_name or object.destination_address or ''">Rotterdam (NLRTM)</t></li>
+        <li>Price: <span style="font-weight: bold;" t-out="format_amount(object.quoted_amount, object.currency_id) or ''">$ 1,850.00</span></li>
+        <li t-if="object.transit_days">Estimated transit: <t t-out="object.transit_days">25</t> days</li>
+        <li t-if="object.valid_until">Valid until: <t t-out="format_date(object.valid_until) or ''">11/30/2026</t></li>
+    </ul>
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Open the quote with the button below to accept it, which books your shipment, or to decline it.
+        <br/><br/>
+        Do not hesitate to contact us if you have any questions.
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_affiliate_engine" model="ir.ui.view">
+        <field name="name">res.config.settings.aveenix.affiliate</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='aveenix_newsdata_block']" position="after">
+
+                <block title="Affiliate Engine (Aveenix)" name="aveenix_affiliate_block">
+                    <setting string="Enable Affiliate Engine" type="boolean"
+                             help="Master switch. When off, nothing is matched and no existing placement is shown on the site.">
+                        <field name="aveenix_affiliate_enabled"/>
+                    </setting>
+                    <setting string="Minimum Relevance Score"
+                             invisible="not aveenix_affiliate_enabled"
+                             help="0-100. An offer is only placed when it scores at least this against the article. A section match alone scores 40, so a value above 40 also requires a keyword match.">
+                        <field name="aveenix_affiliate_min_relevance"/>
+                    </setting>
+                    <setting string="Max Offers per Article"
+                             invisible="not aveenix_affiliate_enabled"
+                             help="1-4. The best offer goes inside the article body; any others go in the sidebar.">
+                        <field name="aveenix_affiliate_max_offers"/>
+                    </setting>
+                    <setting string="Affiliate Disclosure"
+                             invisible="not aveenix_affiliate_enabled"
+                             help="Shown with every affiliate recommendation. Advertising rules in most markets require it, so it is rendered unconditionally.">
+                        <field name="aveenix_affiliate_disclosure"
+                               placeholder="Disclosure: this article contains affiliate links..."/>
+                    </setting>
+                </block>
+
+                <block title="CJ Affiliate / Commission Junction (Aveenix)"
+                       name="aveenix_affiliate_cj_block">
+                    <setting string="CJ Personal Access Token"
+                             help="From developers.cj.com. Stored server-side and never sent to a browser. CJ shows a new token only once.">
+                        <field name="aveenix_affiliate_cj_token" password="True"
+                               placeholder="Paste your CJ PAT"/>
+                    </setting>
+                    <setting string="CJ Publisher ID (CID)"
+                             help="Your CJ publisher company id. Every CJ call needs it alongside the token.">
+                        <field name="aveenix_affiliate_cj_company_id" placeholder="e.g. 1234567"/>
+                    </setting>
+                    <setting string="Automatic CJ Product Discovery" type="boolean"
+                             help="Search CJ for products when no stored offer is relevant enough for an article, and keep what comes back. Turn off to work only from offers already in the database.">
+                        <field name="aveenix_affiliate_cj_discovery"/>
+                    </setting>
+                    <setting string="CJ Promotional Property ID"
+                             help="The property id CJ issued for aveenix.com. Needed by Link Search, which finds text links for advertisers that publish no product feed.">
+                        <div class="content-group">
+                            <field name="aveenix_affiliate_cj_website_id"
+                                   placeholder="e.g. 9876543"/>
+                            <div class="mt8">
+                                <button name="action_av_load_cj_properties" type="object"
+                                        string="List My CJ Properties"
+                                        class="btn-link" icon="fa-list"/>
+                                <button name="action_av_sync_cj_advertisers" type="object"
+                                        string="Sync Joined Advertisers"
+                                        class="btn-link" icon="fa-refresh"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="API Endpoints"
+                             help="Leave both empty unless CJ moves its GraphQL endpoints.">
+                        <div class="content-group">
+                            <field name="aveenix_affiliate_cj_ads_endpoint"
+                                   placeholder="https://ads.api.cj.com/query"/>
+                            <field name="aveenix_affiliate_cj_commission_endpoint"
+                                   placeholder="https://commissions.api.cj.com/query"/>
+                        </div>
+                    </setting>
+                </block>
+
+                <block title="ClickBank (Aveenix)" name="aveenix_affiliate_clickbank_block">
+                    <setting string="ClickBank Affiliate Nickname"
+                             help="Your ClickBank account nickname. Used to build HopLinks for approved vendors, so nobody has to assemble one by hand — a typo in a hand-made HopLink still loads a working page, so the mistake only shows up as a missing commission.">
+                        <field name="aveenix_affiliate_clickbank_nickname"
+                               placeholder="e.g. aveenix"/>
+                    </setting>
+                    <setting string="Approving ClickBank Offers" type="boolean">
+                        <div class="text-muted">
+                            ClickBank offers are added by hand under
+                            <b>Affiliate &#8594; Offers</b> and stay pending until a
+                            human approves them. The matcher never uses a pending offer.
+                        </div>
+                    </setting>
+                </block>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

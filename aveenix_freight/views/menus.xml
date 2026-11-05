@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_freight_root" name="Freight" sequence="56"
+              web_icon="aveenix_freight,static/description/icon.png"
+              groups="group_freight_user"/>
+
+    <menuitem id="menu_freight_quotes" name="Quote Requests" parent="menu_freight_root"
+              action="action_freight_quote" sequence="10"/>
+    <menuitem id="menu_freight_shipments" name="Shipments" parent="menu_freight_root"
+              action="action_freight_shipment" sequence="20"/>
+
+    <menuitem id="menu_freight_config" name="Configuration" parent="menu_freight_root"
+              sequence="90" groups="group_freight_manager"/>
+    <menuitem id="menu_freight_ports" name="Ports &amp; Airports" parent="menu_freight_config"
+              action="action_freight_port" sequence="10"/>
+    <menuitem id="menu_freight_road_services" name="Road Services" parent="menu_freight_config"
+              action="action_freight_road_service" sequence="20"/>
+</odoo>

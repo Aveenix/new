@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_freight_quote_list" model="ir.ui.view">
+        <field name="name">freight.quote.list</field>
+        <field name="model">freight.quote</field>
+        <field name="arch" type="xml">
+            <list string="Quote Requests" decoration-info="state == 'new'"
+                  decoration-muted="state == 'lost'">
+                <field name="name"/>
+                <field name="create_date" string="Received" widget="date"/>
+                <field name="contact_name"/>
+                <field name="company_name" optional="show"/>
+                <field name="mode"/>
+                <field name="road_service_id" optional="show"/>
+                <field name="origin_address" string="From"/>
+                <field name="destination_address" string="To"/>
+                <field name="ready_date" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="quoted_amount" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="source" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-warning="state in ('in_progress', 'quoted')"
+                       decoration-success="state == 'won'"
+                       decoration-danger="state == 'lost'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_freight_quote_kanban" model="ir.ui.view">
+        <field name="name">freight.quote.kanban</field>
+        <field name="model">freight.quote</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <field name="name" class="fw-bold"/>
+                            <field name="mode" class="text-muted small"/>
+                        </div>
+                        <field name="contact_name"/>
+                        <div class="text-muted small">
+                            <field name="origin_address"/> → <field name="destination_address"/>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <field name="quoted_amount" widget="monetary"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_freight_quote_form" model="ir.ui.view">
+        <field name="name">freight.quote.form</field>
+        <field name="model">freight.quote</field>
+        <field name="arch" type="xml">
+            <form string="Quote Request">
+                <header>
+                    <button name="action_start" type="object" string="Start" class="btn-primary"
+                            invisible="state != 'new'"/>
+                    <button name="action_mark_quoted" type="object" string="Mark as Quoted"
+                            class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_quote_send" type="object" string="Send by Email"
+                            class="btn-primary" invisible="state != 'quoted'"/>
+                    <button name="action_create_shipment" type="object" string="Book Shipment"
+                            class="btn-primary" invisible="state not in ('in_progress', 'quoted')"/>
+                    <button name="action_mark_lost" type="object" string="Mark Lost"
+                            invisible="state in ('won', 'lost')"/>
+                    <button name="action_reset" type="object" string="Reopen"
+                            invisible="state != 'lost'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,in_progress,quoted,won"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_shipments" type="object" class="oe_stat_button"
+                                icon="fa-ship" invisible="not shipment_count">
+                            <field name="shipment_count" widget="statinfo" string="Shipments"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Customer">
+                            <field name="contact_name"/>
+                            <field name="company_name"/>
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="country_id" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group string="Handling">
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="source"/>
+                            <field name="create_date" string="Received"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Route">
+                            <field name="mode"/>
+                            <field name="road_service_id" invisible="mode != 'road'" options="{'no_create': True}"/>
+                            <field name="origin_address"/>
+                            <field name="origin_port_id" options="{'no_create': True}"/>
+                            <field name="destination_address"/>
+                            <field name="destination_port_id" options="{'no_create': True}"/>
+                            <field name="incoterm_id" options="{'no_create': True}"/>
+                            <field name="ready_date"/>
+                        </group>
+                        <group string="Cargo">
+                            <field name="is_container_load" invisible="1"/>
+                            <field name="road_cargo_type" invisible="1"/>
+                            <field name="commodity"/>
+                            <field name="container_type" invisible="not is_container_load"/>
+                            <field name="container_qty" invisible="not is_container_load"/>
+                            <field name="packages" invisible="is_container_load"/>
+                            <field name="weight_kg"/>
+                            <field name="volume_cbm"/>
+                            <field name="max_item_weight_kg" invisible="road_cargo_type != 'heavy_lift'"/>
+                            <field name="site_access" invisible="road_cargo_type != 'heavy_lift'"/>
+                            <field name="is_hazardous"/>
+                            <field name="needs_customs"/>
+                            <field name="needs_insurance"/>
+                        </group>
+                    </group>
+                    <group string="Offer">
+                        <group>
+                            <label for="quoted_amount"/>
+                            <div class="o_row">
+                                <field name="quoted_amount"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
+                            </div>
+                            <field name="transit_days"/>
+                            <field name="valid_until"/>
+                        </group>
+                        <group>
+                            <field name="lost_reason" invisible="state != 'lost'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Customer Notes" name="notes">
+                            <field name="notes" placeholder="Anything the customer told us about the cargo."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_freight_quote_search" model="ir.ui.view">
+        <field name="name">freight.quote.search</field>
+        <field name="model">freight.quote</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contact_name" filter_domain="['|', '|', ('contact_name', 'ilike', self), ('company_name', 'ilike', self), ('email', 'ilike', self)]"/>
+                <field name="origin_address"/>
+                <field name="destination_address"/>
+                <field name="road_service_id"/>
+                <filter name="my" string="My Quotes" domain="[('user_id', '=', uid)]"/>
+                <filter name="unassigned" string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <filter name="open" string="Open" domain="[('state', 'in', ('new', 'in_progress', 'quoted'))]"/>
+                <filter name="website" string="From Website" domain="[('source', '=', 'website')]"/>
+                <group>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_mode" string="Mode" context="{'group_by': 'mode'}"/>
+                    <filter name="group_road_service" string="Road Service" context="{'group_by': 'road_service_id'}"/>
+                    <filter name="group_user" string="Agent" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_freight_quote" model="ir.actions.act_window">
+        <field name="name">Quote Requests</field>
+        <field name="res_model">freight.quote</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No quote requests yet</p>
+            <p>Requests sent from the <b>Get a Quote</b> form on /freight land here.</p>
+        </field>
+    </record>
+</odoo>

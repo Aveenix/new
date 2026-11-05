@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Quote + tracking widget, shared by the home hero and the service pages. -->
+    <template id="freight_widget" name="Aveenix Freight: Quote / Track Widget">
+        <div class="avf-widget">
+            <div class="avf-widget-tabs" role="tablist">
+                <input type="radio" name="avf-tab" id="avf-tab-quote" checked="checked"/>
+                <label for="avf-tab-quote"><i class="fa fa-calculator"/> Get a Quote</label>
+                <input type="radio" name="avf-tab" id="avf-tab-track"/>
+                <label for="avf-tab-track"><i class="fa fa-map-marker"/> Track Shipment</label>
+
+                <form class="avf-widget-pane avf-pane-quote" action="/freight/quote" method="get">
+                    <select name="mode" class="form-select" aria-label="Shipping mode">
+                        <t t-foreach="freight_modes" t-as="m">
+                            <option t-att-value="m[0]" t-att-selected="service and service['mode'] == m[0] or None" t-out="m[1]"/>
+                        </t>
+                    </select>
+                    <input type="text" name="origin_address" class="form-control" placeholder="From (city or port)"/>
+                    <input type="text" name="destination_address" class="form-control" placeholder="To (city or port)"/>
+                    <button type="submit" class="avf-btn">Get Quote <i class="fa fa-arrow-right"/></button>
+                </form>
+                <form class="avf-widget-pane avf-pane-track" action="/freight/track" method="get">
+                    <input type="text" name="number" class="form-control" required="required"
+                           placeholder="Tracking number, e.g. AVF7K2M9QX4PR"/>
+                    <button type="submit" class="avf-btn">Track <i class="fa fa-arrow-right"/></button>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="freight_cta" name="Aveenix Freight: Call to Action">
+        <section class="avf-cta">
+            <div class="avf-container">
+                <div>
+                    <h2>Ready to ship?</h2>
+                    <p>Tell us what you are moving and our freight team will send a price within one business day.</p>
+                </div>
+                <div class="avf-cta-actions">
+                    <a href="/freight/quote" class="avf-btn avf-btn-light">Request a Quote</a>
+                    <a href="/contactus" class="avf-btn avf-btn-outline">Talk to an Expert</a>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- ── Home ─────────────────────────────────────────────────────── -->
+    <template id="freight_home" name="Aveenix Freight Home">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'freight_home'"/>
+            <t t-set="service" t-value="None"/>
+            <div id="wrap" class="av-freight-page">
+                <section class="avf-hero">
+                    <div class="avf-container avf-hero-grid">
+                        <div class="avf-hero-copy">
+                            <span class="avf-eyebrow">Aveenix Freight</span>
+                            <h1>Global freight forwarding, made simple.</h1>
+                            <p>Ocean, air, road and rail freight with customs clearance and warehousing,
+                               booked and tracked in one place.</p>
+                            <ul class="avf-hero-points">
+                                <li><i class="fa fa-check-circle"/> Quotes within one business day</li>
+                                <li><i class="fa fa-check-circle"/> Live milestone tracking</li>
+                                <li><i class="fa fa-check-circle"/> One team from pickup to delivery</li>
+                            </ul>
+                        </div>
+                        <t t-call="aveenix_freight.freight_widget"/>
+                    </div>
+                </section>
+
+                <section class="avf-stats">
+                    <div class="avf-container avf-stats-grid">
+                        <div><strong>150+</strong><span>Countries served</span></div>
+                        <div><strong>500+</strong><span>Ports &amp; airports</span></div>
+                        <div><strong>24/7</strong><span>Shipment visibility</span></div>
+                        <div><strong>1 day</strong><span>Quote turnaround</span></div>
+                    </div>
+                </section>
+
+                <section class="avf-section">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">Our services</span>
+                            <h2>Every way to move your cargo</h2>
+                        </div>
+                        <div class="avf-cards">
+                            <a t-foreach="freight_services" t-as="svc" class="avf-card"
+                               t-attf-href="/freight/services/#{svc['slug']}">
+                                <span class="avf-card-icon"><i t-attf-class="fa #{svc['icon']}"/></span>
+                                <h3 t-out="svc['title']"/>
+                                <p t-out="svc['tagline']"/>
+                                <span class="avf-card-link">Learn more <i class="fa fa-arrow-right"/></span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="avf-section avf-section-alt">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">How it works</span>
+                            <h2>From quote to delivery in four steps</h2>
+                        </div>
+                        <ol class="avf-steps">
+                            <li><span>1</span><h3>Request a quote</h3><p>Share the route, cargo and ready date.</p></li>
+                            <li><span>2</span><h3>Book</h3><p>Accept the offer and we reserve space with the carrier.</p></li>
+                            <li><span>3</span><h3>We move it</h3><p>Pickup, export customs, main carriage and import clearance.</p></li>
+                            <li><span>4</span><h3>Track &amp; receive</h3><p>Follow every milestone until it is delivered.</p></li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="avf-section">
+                    <div class="avf-container avf-why">
+                        <div>
+                            <span class="avf-eyebrow">Why Aveenix Freight</span>
+                            <h2>A forwarder that answers the phone</h2>
+                            <p>We combine carrier contracts on the world's major trade lanes with a single
+                               dedicated agent for every shipment, so you always know who is looking after your cargo.</p>
+                            <a href="/freight/quote" class="avf-btn">Get a Quote</a>
+                        </div>
+                        <ul class="avf-why-list">
+                            <li><i class="fa fa-globe"/><div><h3>Global network</h3><p>Partners at origin and destination on every continent.</p></div></li>
+                            <li><i class="fa fa-money"/><div><h3>Transparent pricing</h3><p>All-in quotes with no surprise surcharges.</p></div></li>
+                            <li><i class="fa fa-shield"/><div><h3>Cargo insurance</h3><p>Cover your goods against loss and damage in transit.</p></div></li>
+                            <li><i class="fa fa-headphones"/><div><h3>Dedicated agent</h3><p>One point of contact from booking to delivery.</p></div></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="avf-section avf-section-alt">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">Industries</span>
+                            <h2>Logistics for the goods you trade</h2>
+                        </div>
+                        <div class="avf-industries">
+                            <span><i class="fa fa-shopping-bag"/> Retail &amp; e-commerce</span>
+                            <span><i class="fa fa-cogs"/> Automotive &amp; engineering</span>
+                            <span><i class="fa fa-medkit"/> Pharma &amp; healthcare</span>
+                            <span><i class="fa fa-leaf"/> Agriculture &amp; food</span>
+                            <span><i class="fa fa-flask"/> Chemicals</span>
+                            <span><i class="fa fa-laptop"/> Electronics</span>
+                            <span><i class="fa fa-scissors"/> Textiles &amp; apparel</span>
+                            <span><i class="fa fa-industry"/> Industrial machinery</span>
+                            <span><i class="fa fa-home"/> Home &amp; furniture</span>
+                            <span><i class="fa fa-building-o"/> Building materials</span>
+                            <span><i class="fa fa-recycle"/> Scrap metal</span>
+                            <span><i class="fa fa-briefcase"/> Project work</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="avf-section">
+                    <div class="avf-container avf-faq">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">FAQ</span>
+                            <h2>Common questions</h2>
+                        </div>
+                        <!-- Two independent columns, so opening an answer only
+                             pushes down the questions below it in its own column. -->
+                        <div class="avf-faq-grid">
+                            <div class="avf-faq-col">
+                                <details>
+                                    <summary>What is the difference between FCL and LCL?</summary>
+                                    <p>FCL (Full Container Load) books a whole container for your cargo. LCL (Less than Container Load)
+                                       shares a container with other shippers, so you pay only for the volume you use. LCL usually
+                                       suits shipments under about 15 CBM.</p>
+                                </details>
+                                <details>
+                                    <summary>How is air freight charged?</summary>
+                                    <p>By chargeable weight: the greater of the actual weight and the volumetric weight
+                                       (1 CBM = 167 kg).</p>
+                                </details>
+                                <details>
+                                    <summary>What details do you need for a quote?</summary>
+                                    <p>Where the cargo is going from and to, when it is ready, what it is, and the number of
+                                       packages with their total weight and volume. For a full container, add the container
+                                       type. If you are unsure of anything, leave it blank and our team will ask.</p>
+                                </details>
+                                <details>
+                                    <summary>Do I need an account to request a quote?</summary>
+                                    <p>No. Anyone can request a quote, and we email the price with a link to accept it. With
+                                       an account you can also see all your quotes, shipments and invoices in My Account.</p>
+                                </details>
+                                <details>
+                                    <summary>How long is my quote valid?</summary>
+                                    <p>Freight rates change with carrier pricing, so your quote shows the date its price is
+                                       valid until. Accept it before then to lock in the price; after that, ask us for an
+                                       updated quote.</p>
+                                </details>
+                            </div>
+                            <div class="avf-faq-col">
+                                <details>
+                                    <summary>Where do I find my tracking number?</summary>
+                                    <p>It is in your booking confirmation and starts with "AVF". Enter it in the tracker at the
+                                       top of any Aveenix Freight page.</p>
+                                </details>
+                                <details>
+                                    <summary>Can you clear customs for me?</summary>
+                                    <p>Yes. Tick "Customs clearance" on the quote form and our licensed brokers will handle the
+                                       filing at origin, destination or both.</p>
+                                </details>
+                                <details>
+                                    <summary>Can you ship dangerous goods?</summary>
+                                    <p>Yes, including batteries and chemicals. Tick "Dangerous goods" on the quote form and have
+                                       the Safety Data Sheet (SDS) ready: our certified team checks how the cargo must be packed,
+                                       labelled and declared before it is booked.</p>
+                                </details>
+                                <details>
+                                    <summary>Do you offer cargo insurance?</summary>
+                                    <p>Yes. A carrier's liability for loss or damage is limited, so we recommend insuring
+                                       valuable cargo. Tick "Cargo insurance" on the quote form and we will quote the cover
+                                       with your freight.</p>
+                                </details>
+                                <details>
+                                    <summary>How do I pay for my shipment?</summary>
+                                    <p>Your freight invoices appear in My Account under your shipment, where you can pay them
+                                       online with "Pay now".</p>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <t t-call="aveenix_freight.freight_cta"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Service page ─────────────────────────────────────────────── -->
+    <template id="freight_service" name="Aveenix Freight Service">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'freight_service'"/>
+            <div id="wrap" class="av-freight-page">
+                <section class="avf-hero avf-hero-sm">
+                    <div class="avf-container avf-hero-grid">
+                        <div class="avf-hero-copy">
+                            <nav class="avf-breadcrumb"><a href="/freight">Freight</a> / <span t-out="service['title']"/></nav>
+                            <h1><i t-attf-class="fa #{service['icon']} me-2"/><t t-out="service['title']"/></h1>
+                            <p t-out="service['intro']"/>
+                        </div>
+                        <t t-call="aveenix_freight.freight_widget"/>
+                    </div>
+                </section>
+
+                <section t-if="road_services" class="avf-section">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">Road services</span>
+                            <h2>Pick the truck for the job</h2>
+                        </div>
+                        <div class="avf-cards">
+                            <a t-foreach="road_services" t-as="rs" class="avf-card"
+                               t-attf-href="/freight/quote?mode=road&amp;road_service_id=#{rs.id}">
+                                <span class="avf-card-icon"><i t-attf-class="fa #{rs.icon or 'fa-truck'}"/></span>
+                                <h3 t-out="rs.name"/>
+                                <p t-out="rs.description"/>
+                                <span class="avf-card-link">Get a quote <i class="fa fa-arrow-right"/></span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section t-attf-class="avf-section #{'avf-section-alt' if road_services else ''}">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">What we offer</span>
+                            <h2 t-out="service['tagline']"/>
+                        </div>
+                        <div class="avf-cards avf-cards-4">
+                            <div t-foreach="service['features']" t-as="feat" class="avf-card avf-card-static">
+                                <span class="avf-card-icon"><i t-attf-class="fa #{feat[0]}"/></span>
+                                <h3 t-out="feat[1]"/>
+                                <p t-out="feat[2]"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="avf-section avf-section-alt">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">At a glance</span>
+                            <h2>Key details</h2>
+                        </div>
+                        <dl class="avf-specs">
+                            <t t-foreach="service['specs']" t-as="spec">
+                                <div><dt t-out="spec[0]"/><dd t-out="spec[1]"/></div>
+                            </t>
+                        </dl>
+                    </div>
+                </section>
+
+                <section class="avf-section">
+                    <div class="avf-container">
+                        <div class="avf-section-head">
+                            <span class="avf-eyebrow">More services</span>
+                            <h2>Combine with</h2>
+                        </div>
+                        <div class="avf-cards">
+                            <t t-foreach="freight_services" t-as="svc">
+                                <a t-if="svc['slug'] != service['slug']" class="avf-card"
+                                   t-attf-href="/freight/services/#{svc['slug']}">
+                                    <span class="avf-card-icon"><i t-attf-class="fa #{svc['icon']}"/></span>
+                                    <h3 t-out="svc['title']"/>
+                                    <p t-out="svc['tagline']"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <t t-call="aveenix_freight.freight_cta"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Quote request ────────────────────────────────────────────── -->
+    <template id="freight_quote" name="Aveenix Freight Quote">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'freight_quote'"/>
+            <t t-set="_recaptcha_key" t-value="request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_site_key') if request.env['ir.config_parameter'].sudo().get_param('aveenix_website.recaptcha_v2_enabled') == 'True' else False"/>
+            <div id="wrap" class="av-freight-page">
+                <section class="avf-page-head">
+                    <div class="avf-container">
+                        <nav class="avf-breadcrumb"><a href="/freight">Freight</a> / <span>Get a Quote</span></nav>
+                        <h1>Request a freight quote</h1>
+                        <p>Fill in what you know; our team will follow up on the rest and reply within one business day.</p>
+                        <p t-if="request.env.user._is_public()" class="mt-2">
+                            <a t-attf-href="/web/login?redirect=/freight/quote" class="text-white fw-bold text-decoration-underline">Log in</a>
+                            to follow your quotes, accept prices and pay invoices from My Account.
+                        </p>
+                    </div>
+                </section>
+                <section class="avf-section">
+                    <div class="avf-container">
+                        <form action="/freight/quote" method="post" class="avf-form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <!-- Honeypot, see the controller. -->
+                            <input type="text" name="website_url" class="avf-hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+
+                            <div t-if="errors" class="alert alert-danger">
+                                Please correct the highlighted fields.
+                                <div t-if="errors.get('captcha')" t-out="errors['captcha']"/>
+                            </div>
+
+                            <fieldset>
+                                <legend><span>1</span> Route</legend>
+                                <div class="avf-form-grid">
+                                    <div class="avf-field avf-field-full">
+                                        <label>Shipping mode *</label>
+                                        <div class="avf-modes">
+                                            <t t-foreach="freight_modes" t-as="m">
+                                                <label class="avf-mode">
+                                                    <input type="radio" name="mode" t-att-value="m[0]"
+                                                           t-att-checked="(form.get('mode') or freight_modes[0][0]) == m[0] or None"/>
+                                                    <span t-out="m[1]"/>
+                                                </label>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <!-- data-cargo drives which cargo fields show (freight.css). -->
+                                    <div t-if="road_services" class="avf-field avf-field-full avf-road-only">
+                                        <label for="avf_road_service">Road service</label>
+                                        <select id="avf_road_service" name="road_service_id" class="form-select">
+                                            <option value="" data-cargo="">Not sure / let us advise</option>
+                                            <option t-foreach="road_services" t-as="rs" t-att-value="rs.id"
+                                                    t-att-data-cargo="rs.cargo_type"
+                                                    t-att-selected="str(rs.id) == str(form.get('road_service_id')) or None"
+                                                    t-out="rs.name"/>
+                                        </select>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_origin">Origin (city / address) *</label>
+                                        <input id="avf_origin" type="text" name="origin_address" required="required" maxlength="255"
+                                               t-att-value="form.get('origin_address')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('origin_address') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('origin_address')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_dest">Destination (city / address) *</label>
+                                        <input id="avf_dest" type="text" name="destination_address" required="required" maxlength="255"
+                                               t-att-value="form.get('destination_address')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('destination_address') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('destination_address')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_oport">Origin port / airport</label>
+                                        <select id="avf_oport" name="origin_port_id" class="form-select">
+                                            <option value="">Not sure / let us advise</option>
+                                            <option t-foreach="ports" t-as="p" t-att-value="p.id"
+                                                    t-att-selected="str(p.id) == form.get('origin_port_id') or None" t-out="p.display_name"/>
+                                        </select>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_dport">Destination port / airport</label>
+                                        <select id="avf_dport" name="destination_port_id" class="form-select">
+                                            <option value="">Not sure / let us advise</option>
+                                            <option t-foreach="ports" t-as="p" t-att-value="p.id"
+                                                    t-att-selected="str(p.id) == form.get('destination_port_id') or None" t-out="p.display_name"/>
+                                        </select>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_ready">Cargo ready date</label>
+                                        <input id="avf_ready" type="date" name="ready_date" t-att-value="form.get('ready_date')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('ready_date') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('ready_date')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_inco">Incoterm</label>
+                                        <select id="avf_inco" name="incoterm_id" class="form-select">
+                                            <option value="">Not sure</option>
+                                            <option t-foreach="incoterms" t-as="i" t-att-value="i.id"
+                                                    t-att-selected="str(i.id) == form.get('incoterm_id') or None"
+                                                    t-out="'%s – %s' % (i.code, i.name)"/>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend><span>2</span> Cargo</legend>
+                                <div class="avf-form-grid">
+                                    <div class="avf-field avf-field-full">
+                                        <label for="avf_commodity">Commodity</label>
+                                        <input id="avf_commodity" type="text" name="commodity" class="form-control" maxlength="255"
+                                               placeholder="e.g. Cotton garments, auto parts" t-att-value="form.get('commodity')"/>
+                                    </div>
+                                    <div class="avf-field avf-fcl-only">
+                                        <label for="avf_ctype">Container type</label>
+                                        <select id="avf_ctype" name="container_type" class="form-select">
+                                            <option t-foreach="container_types" t-as="c" t-att-value="c[0]"
+                                                    t-att-selected="c[0] == form.get('container_type') or None" t-out="c[1]"/>
+                                        </select>
+                                    </div>
+                                    <div class="avf-field avf-fcl-only">
+                                        <label for="avf_cqty">Number of containers</label>
+                                        <input id="avf_cqty" type="number" min="1" step="1" name="container_qty"
+                                               t-att-value="form.get('container_qty') or 1"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('container_qty') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('container_qty')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_pkg">Packages</label>
+                                        <input id="avf_pkg" type="number" min="0" step="1" name="packages" t-att-value="form.get('packages')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('packages') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('packages')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_wt">Gross weight (kg)</label>
+                                        <input id="avf_wt" type="number" min="0" step="any" name="weight_kg" t-att-value="form.get('weight_kg')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('weight_kg') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('weight_kg')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_vol">Volume (CBM)</label>
+                                        <input id="avf_vol" type="number" min="0" step="any" name="volume_cbm" t-att-value="form.get('volume_cbm')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('volume_cbm') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('volume_cbm')"/>
+                                    </div>
+                                    <div class="avf-field avf-heavy-only">
+                                        <label for="avf_maxwt">Heaviest item (kg)</label>
+                                        <input id="avf_maxwt" type="number" min="0" step="any" name="max_item_weight_kg"
+                                               t-att-value="form.get('max_item_weight_kg')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('max_item_weight_kg') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('max_item_weight_kg')"/>
+                                    </div>
+                                    <div class="avf-field avf-field-full avf-heavy-only">
+                                        <label for="avf_site">Site access</label>
+                                        <textarea id="avf_site" name="site_access" rows="3" class="form-control" maxlength="4000"
+                                                  placeholder="Ground surface, overhead lines or trees, how close the truck can park"
+                                                  t-out="form.get('site_access') or ''"/>
+                                    </div>
+                                    <div class="avf-field avf-field-full avf-checks">
+                                        <label><input type="checkbox" name="needs_customs" value="1" t-att-checked="form.get('needs_customs') or None"/> Customs clearance</label>
+                                        <label><input type="checkbox" name="needs_insurance" value="1" t-att-checked="form.get('needs_insurance') or None"/> Cargo insurance</label>
+                                        <label><input type="checkbox" name="is_hazardous" value="1" t-att-checked="form.get('is_hazardous') or None"/> Dangerous goods</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend><span>3</span> Your details</legend>
+                                <div class="avf-form-grid">
+                                    <div class="avf-field">
+                                        <label for="avf_name">Full name *</label>
+                                        <input id="avf_name" type="text" name="contact_name" required="required" maxlength="255"
+                                               t-att-value="form.get('contact_name')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('contact_name') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('contact_name')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_company">Company</label>
+                                        <input id="avf_company" type="text" name="company_name" class="form-control" maxlength="255"
+                                               t-att-value="form.get('company_name')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_email">Email *</label>
+                                        <input id="avf_email" type="email" name="email" required="required"
+                                               t-att-value="form.get('email')"
+                                               t-attf-class="form-control #{'is-invalid' if errors.get('email') else ''}"/>
+                                        <div class="invalid-feedback" t-out="errors.get('email')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_phone">Phone</label>
+                                        <input id="avf_phone" type="tel" name="phone" class="form-control" maxlength="64"
+                                               t-att-value="form.get('phone')"/>
+                                    </div>
+                                    <div class="avf-field">
+                                        <label for="avf_country">Country</label>
+                                        <select id="avf_country" name="country_id" class="form-select">
+                                            <option value="">Select…</option>
+                                            <option t-foreach="countries" t-as="c" t-att-value="c.id"
+                                                    t-att-selected="str(c.id) == form.get('country_id') or None" t-out="c.name"/>
+                                        </select>
+                                    </div>
+                                    <div class="avf-field avf-field-full">
+                                        <label for="avf_notes">Anything else we should know?</label>
+                                        <textarea id="avf_notes" name="notes" rows="4" class="form-control" maxlength="4000"
+                                                  t-out="form.get('notes') or ''"/>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <t t-if="_recaptcha_key">
+                                <div class="g-recaptcha mb-3" t-att-data-sitekey="_recaptcha_key"/>
+                                <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+                            </t>
+                            <button type="submit" class="avf-btn avf-btn-lg">Request Quote <i class="fa fa-arrow-right"/></button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="freight_quote_thanks" name="Aveenix Freight Quote Received">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'freight_quote_thanks'"/>
+            <div id="wrap" class="av-freight-page">
+                <section class="avf-section">
+                    <div class="avf-container avf-thanks">
+                        <i class="fa fa-check-circle"/>
+                        <h1>Thank you, your request is in.</h1>
+                        <p t-if="quote_ref">Your reference is <strong t-out="quote_ref"/>.</p>
+                        <p>A freight specialist will email you a quote within one business day.</p>
+                        <div class="avf-cta-actions">
+                            <a href="/freight" class="avf-btn">Back to Freight</a>
+                            <a href="/freight/quote" class="avf-btn avf-btn-outline-dark">Request another quote</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Tracking ─────────────────────────────────────────────────── -->
+    <template id="freight_track" name="Aveenix Freight Tracking">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'freight_track'"/>
+            <div id="wrap" class="av-freight-page">
+                <section class="avf-page-head">
+                    <div class="avf-container">
+                        <nav class="avf-breadcrumb"><a href="/freight">Freight</a> / <span>Track Shipment</span></nav>
+                        <h1>Track your shipment</h1>
+                        <form action="/freight/track" method="get" class="avf-track-form">
+                            <input type="text" name="number" class="form-control" required="required"
+                                   placeholder="Enter tracking number" t-att-value="number or None"/>
+                            <button type="submit" class="avf-btn">Track</button>
+                        </form>
+                    </div>
+                </section>
+                <section class="avf-section">
+                    <div class="avf-container">
+                        <t t-if="number and not shipment">
+                            <div class="avf-empty">
+                                <i class="fa fa-search"/>
+                                <h2>No shipment found</h2>
+                                <p>We could not find <strong t-out="number"/>. Check the number in your booking
+                                   confirmation; it starts with "AVF".</p>
+                            </div>
+                        </t>
+                        <t t-elif="shipment">
+                            <div class="avf-track">
+                                <div class="avf-track-head">
+                                    <div>
+                                        <span class="avf-eyebrow">Tracking number</span>
+                                        <h2 t-out="shipment.tracking_number"/>
+                                    </div>
+                                    <span t-attf-class="avf-status avf-status-#{shipment.state}" t-out="state_labels[shipment.state]"/>
+                                </div>
+
+                                <div class="avf-route">
+                                    <div>
+                                        <span>From</span>
+                                        <strong t-out="shipment.origin_port_id.display_name or shipment.origin_address or '—'"/>
+                                        <small t-if="shipment.etd">ETD <t t-out="shipment.etd" t-options="{'widget': 'date'}"/></small>
+                                    </div>
+                                    <i t-attf-class="fa #{'fa-plane' if shipment.mode == 'air' else 'fa-truck' if shipment.mode in ('road', 'rail') else 'fa-ship'}"/>
+                                    <div>
+                                        <span>To</span>
+                                        <strong t-out="shipment.destination_port_id.display_name or shipment.destination_address or '—'"/>
+                                        <small t-if="shipment.eta">ETA <t t-out="shipment.eta" t-options="{'widget': 'date'}"/></small>
+                                    </div>
+                                </div>
+
+                                <ol t-if="shipment.state != 'cancelled'" class="avf-progress">
+                                    <t t-set="_reached" t-value="progress_states.index(shipment.state) if shipment.state in progress_states else -1"/>
+                                    <li t-foreach="progress_states" t-as="st"
+                                        t-attf-class="#{'done' if st_index &lt;= _reached else ''} #{'current' if st_index == _reached else ''}">
+                                        <span/><small t-out="state_labels[st]"/>
+                                    </li>
+                                </ol>
+
+                                <dl class="avf-specs avf-specs-compact">
+                                    <div><dt>Mode</dt><dd t-out="shipment._mode_label()"/></div>
+                                    <div t-if="shipment.carrier"><dt>Carrier</dt><dd t-out="shipment.carrier"/></div>
+                                    <div t-if="shipment.vessel_flight"><dt>Vessel / Flight</dt><dd t-out="shipment.vessel_flight"/></div>
+                                    <div t-if="shipment.is_container_load and shipment.container_qty"><dt>Containers</dt><dd t-out="shipment.container_qty"/></div>
+                                    <div t-if="shipment.packages"><dt>Packages</dt><dd t-out="shipment.packages"/></div>
+                                </dl>
+
+                                <h3 class="avf-timeline-title">Shipment history</h3>
+                                <ul t-if="events" class="avf-timeline">
+                                    <li t-foreach="events" t-as="ev">
+                                        <div class="avf-timeline-date"><t t-out="ev.date" t-options="{'widget': 'datetime'}"/></div>
+                                        <div>
+                                            <strong t-out="state_labels[ev.status]"/>
+                                            <span t-if="ev.location" class="avf-timeline-loc"><i class="fa fa-map-marker"/> <t t-out="ev.location"/></span>
+                                            <p t-if="ev.description" t-out="ev.description"/>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <p t-else="" class="text-muted">Your booking is being prepared. Updates will appear here.</p>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="avf-empty">
+                                <i class="fa fa-map-marker"/>
+                                <h2>Where is my cargo?</h2>
+                                <p>Enter the tracking number from your booking confirmation to see its latest status.</p>
+                            </div>
+                        </t>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_freight_port_user,freight.port.user,model_freight_port,group_freight_user,1,0,0,0
+access_freight_port_manager,freight.port.manager,model_freight_port,group_freight_manager,1,1,1,1
+access_freight_quote_user,freight.quote.user,model_freight_quote,group_freight_user,1,1,1,0
+access_freight_quote_manager,freight.quote.manager,model_freight_quote,group_freight_manager,1,1,1,1
+access_freight_shipment_user,freight.shipment.user,model_freight_shipment,group_freight_user,1,1,1,0
+access_freight_shipment_manager,freight.shipment.manager,model_freight_shipment,group_freight_manager,1,1,1,1
+access_freight_event_user,freight.shipment.event.user,model_freight_shipment_event,group_freight_user,1,1,1,1
+access_freight_port_portal,freight.port.portal,model_freight_port,base.group_portal,1,0,0,0
+access_freight_quote_portal,freight.quote.portal,model_freight_quote,base.group_portal,1,0,0,0
+access_freight_shipment_portal,freight.shipment.portal,model_freight_shipment,base.group_portal,1,0,0,0
+access_freight_event_portal,freight.shipment.event.portal,model_freight_shipment_event,base.group_portal,1,0,0,0
+access_freight_road_service_user,freight.road.service.user,model_freight_road_service,group_freight_user,1,0,0,0
+access_freight_road_service_manager,freight.road.service.manager,model_freight_road_service,group_freight_manager,1,1,1,1
+access_freight_road_service_portal,freight.road.service.portal,model_freight_road_service,base.group_portal,1,0,0,0

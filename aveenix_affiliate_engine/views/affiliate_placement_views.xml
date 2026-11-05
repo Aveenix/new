@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_affiliate_placement_list" model="ir.ui.view">
+        <field name="name">affiliate.offer.placement.list</field>
+        <field name="model">affiliate.offer.placement</field>
+        <field name="arch" type="xml">
+            <list string="Placements" create="false">
+                <field name="news_id"/>
+                <field name="category"/>
+                <field name="offer_id"/>
+                <field name="network" optional="show"/>
+                <field name="position"/>
+                <field name="score"/>
+                <field name="matched_keywords" optional="show"/>
+                <field name="click_count" string="Clicks"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_affiliate_placement_form" model="ir.ui.view">
+        <field name="name">affiliate.offer.placement.form</field>
+        <field name="model">affiliate.offer.placement</field>
+        <field name="arch" type="xml">
+            <form string="Placement" create="false">
+                <header>
+                    <button name="action_open_offer" type="object" string="Open Offer"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="news_id"/>
+                            <field name="category"/>
+                            <field name="offer_id"/>
+                            <field name="network"/>
+                        </group>
+                        <group>
+                            <field name="position"/>
+                            <field name="score"/>
+                            <field name="matched_keywords"/>
+                            <field name="click_count"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        The score and matched keywords are the matcher's reasoning,
+                        kept so an editor can see why this offer was chosen for this
+                        article. Unticking Active removes the recommendation from the
+                        page without deleting the record or the click history.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_affiliate_placement_search" model="ir.ui.view">
+        <field name="name">affiliate.offer.placement.search</field>
+        <field name="model">affiliate.offer.placement</field>
+        <field name="arch" type="xml">
+            <search string="Placements">
+                <field name="news_id"/>
+                <field name="offer_id"/>
+                <filter name="in_content" string="Inside Article"
+                        domain="[('position','=','in_content')]"/>
+                <filter name="sidebar" string="Sidebar"
+                        domain="[('position','=','sidebar')]"/>
+                <separator/>
+                <filter name="inactive" string="Switched Off" domain="[('active','=',False)]"/>
+                <group>
+                    <filter name="group_category" string="Article Category"
+                            context="{'group_by':'category'}"/>
+                    <filter name="group_offer" string="Offer" context="{'group_by':'offer_id'}"/>
+                    <filter name="group_network" string="Network" context="{'group_by':'network'}"/>
+                    <filter name="group_position" string="Position"
+                            context="{'group_by':'position'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_affiliate_placement" model="ir.actions.act_window">
+        <field name="name">Placements</field>
+        <field name="res_model">affiliate.offer.placement</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_affiliate_placement_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No placements yet.</p>
+            <p>
+                The matcher cron fills this in hourly. Each row is one offer shown in
+                one article, with the score that earned it the slot.
+            </p>
+        </field>
+    </record>
+
+</odoo>

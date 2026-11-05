@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_freight_quote" model="ir.sequence">
+            <field name="name">Freight Quote</field>
+            <field name="code">freight.quote</field>
+            <field name="prefix">AVQ/%(year)s/</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="seq_freight_shipment" model="ir.sequence">
+            <field name="name">Freight Shipment</field>
+            <field name="code">freight.shipment</field>
+            <field name="prefix">AVS/%(year)s/</field>
+            <field name="padding">4</field>
+        </record>
+    </data>
+</odoo>

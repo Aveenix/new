@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- My Account home: Freight quotes and shipments cards. -->
+    <template id="portal_my_home_freight" inherit_id="portal.portal_my_home" name="Freight Portal Entries">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/aveenix_freight/static/description/icon.png'"/>
+                <t t-set="title">Freight Quotes</t>
+                <t t-set="text">Your quote requests, prices and answers</t>
+                <t t-set="url" t-value="'/my/freight/quotes'"/>
+                <t t-set="placeholder_count" t-value="'freight_quote_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/aveenix_freight/static/description/icon.png'"/>
+                <t t-set="title">Freight Shipments</t>
+                <t t-set="text">Track shipments and pay freight invoices</t>
+                <t t-set="url" t-value="'/my/freight/shipments'"/>
+                <t t-set="placeholder_count" t-value="'freight_shipment_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_breadcrumbs_freight" inherit_id="portal.portal_breadcrumbs" name="Freight Portal Breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'freight_quotes'" class="breadcrumb-item">Freight Quotes</li>
+            <li t-if="page_name == 'freight_quote'" class="breadcrumb-item"><a href="/my/freight/quotes">Freight Quotes</a></li>
+            <li t-if="page_name == 'freight_quote'" class="breadcrumb-item" t-out="quote.name"/>
+            <li t-if="page_name == 'freight_shipments'" class="breadcrumb-item">Freight Shipments</li>
+            <li t-if="page_name == 'freight_shipment'" class="breadcrumb-item"><a href="/my/freight/shipments">Freight Shipments</a></li>
+            <li t-if="page_name == 'freight_shipment'" class="breadcrumb-item" t-out="shipment.name"/>
+        </xpath>
+    </template>
+
+    <template id="portal_freight_quotes" name="My Freight Quotes">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Freight Quotes</t>
+            </t>
+            <div class="mb-3"><a href="/freight/quote" class="btn btn-primary"><i class="fa fa-plus"/> New quote request</a></div>
+            <div t-if="not quotes" class="alert alert-info">You have no freight quote requests yet.</div>
+            <t t-if="quotes" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Requested</th>
+                        <th>Route</th>
+                        <th>Mode</th>
+                        <th class="text-end">Price</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tr t-foreach="quotes" t-as="q">
+                    <td><a t-att-href="q.get_portal_url()" t-out="q.name"/></td>
+                    <td><span t-field="q.create_date" t-options="{'widget': 'date'}"/></td>
+                    <td><t t-out="q.origin_address"/> → <t t-out="q.destination_address"/></td>
+                    <td><span t-field="q.mode"/></td>
+                    <td class="text-end"><span t-if="q.state in ('quoted', 'won')" t-field="q.quoted_amount"/></td>
+                    <td class="text-center"><span class="badge rounded-pill text-bg-light" t-field="q.state"/></td>
+                </tr>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_freight_shipments" name="My Freight Shipments">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Freight Shipments</t>
+            </t>
+            <div t-if="not shipments" class="alert alert-info">You have no shipments yet.</div>
+            <t t-if="shipments" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Tracking No.</th>
+                        <th>Route</th>
+                        <th>ETA</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tr t-foreach="shipments" t-as="s">
+                    <td><a t-att-href="s.get_portal_url()" t-out="s.name"/></td>
+                    <td t-out="s.tracking_number"/>
+                    <td><t t-out="s.origin_port_id.display_name or s.origin_address"/> → <t t-out="s.destination_port_id.display_name or s.destination_address"/></td>
+                    <td><span t-field="s.eta"/></td>
+                    <td class="text-center"><span class="badge rounded-pill text-bg-light" t-out="state_labels[s.state]"/></td>
+                </tr>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_freight_quote" name="Freight Quote">
+        <t t-call="portal.portal_layout">
+            <div class="card mt-3">
+                <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <h4 class="mb-0">Quote <t t-out="quote.name"/></h4>
+                    <span class="badge rounded-pill text-bg-primary fs-6" t-field="quote.state"/>
+                </div>
+                <div class="card-body">
+                    <div t-if="message == 'declined'" class="alert alert-info">You declined this quote. Thank you for letting us know.</div>
+                    <div t-if="message == 'closed'" class="alert alert-warning">This quote can no longer be changed.</div>
+
+                    <div t-if="quote.state == 'quoted'" class="alert alert-success">
+                        <h5>Our offer: <span t-field="quote.quoted_amount"/></h5>
+                        <div t-if="quote.transit_days">Estimated transit: <t t-out="quote.transit_days"/> days</div>
+                        <div t-if="quote.valid_until">Valid until <span t-field="quote.valid_until"/></div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <form t-attf-action="/my/freight/quotes/#{quote.id}/accept" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="access_token" t-att-value="quote.access_token"/>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-check"/> Accept and book</button>
+                            </form>
+                            <form t-attf-action="/my/freight/quotes/#{quote.id}/decline" method="post" class="d-flex gap-2">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="access_token" t-att-value="quote.access_token"/>
+                                <input type="text" name="reason" class="form-control" maxlength="255" placeholder="Reason (optional)"/>
+                                <button type="submit" class="btn btn-outline-secondary text-nowrap">Decline</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div t-elif="quote.state in ('new', 'in_progress')" class="alert alert-info">
+                        Our freight team is preparing your price. You will see it here, and we will email you.
+                    </div>
+                    <div t-elif="quote.state == 'won' and quote.shipment_ids" class="alert alert-success">
+                        Booked as shipment
+                        <a t-att-href="quote.shipment_ids[:1].get_portal_url()" t-out="quote.shipment_ids[:1].name"/>.
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5>Route</h5>
+                            <dl class="row mb-0">
+                                <dt class="col-5">Mode</dt><dd class="col-7" t-out="quote._mode_label()"/>
+                                <dt class="col-5">From</dt><dd class="col-7"><t t-out="quote.origin_address"/><div t-if="quote.origin_port_id" class="text-muted" t-out="quote.origin_port_id.display_name"/></dd>
+                                <dt class="col-5">To</dt><dd class="col-7"><t t-out="quote.destination_address"/><div t-if="quote.destination_port_id" class="text-muted" t-out="quote.destination_port_id.display_name"/></dd>
+                                <t t-if="quote.ready_date"><dt class="col-5">Ready date</dt><dd class="col-7"><span t-field="quote.ready_date"/></dd></t>
+                                <t t-if="quote.incoterm_id"><dt class="col-5">Incoterm</dt><dd class="col-7" t-out="quote.incoterm_id.code"/></t>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Cargo</h5>
+                            <dl class="row mb-0">
+                                <t t-if="quote.commodity"><dt class="col-5">Commodity</dt><dd class="col-7" t-out="quote.commodity"/></t>
+                                <t t-if="quote.is_container_load"><dt class="col-5">Containers</dt><dd class="col-7"><t t-out="quote.container_qty"/> × <span t-field="quote.container_type"/></dd></t>
+                                <t t-if="quote.weight_kg"><dt class="col-5">Weight</dt><dd class="col-7"><t t-out="quote.weight_kg"/> kg</dd></t>
+                                <t t-if="quote.volume_cbm"><dt class="col-5">Volume</dt><dd class="col-7"><t t-out="quote.volume_cbm"/> CBM</dd></t>
+                                <dt class="col-5">Services</dt>
+                                <dd class="col-7">
+                                    <t t-if="quote.needs_customs">Customs clearance. </t>
+                                    <t t-if="quote.needs_insurance">Cargo insurance. </t>
+                                    <t t-if="quote.is_hazardous">Dangerous goods. </t>
+                                    <t t-if="not (quote.needs_customs or quote.needs_insurance or quote.is_hazardous)">—</t>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h4>Messages</h4>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="quote"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_freight_shipment" name="Freight Shipment">
+        <t t-call="portal.portal_layout">
+            <div class="card mt-3">
+                <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <h4 class="mb-0">Shipment <t t-out="shipment.name"/></h4>
+                        <small class="text-muted">Tracking number <strong t-out="shipment.tracking_number"/></small>
+                    </div>
+                    <span class="badge rounded-pill text-bg-primary fs-6" t-out="state_labels[shipment.state]"/>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5>Route</h5>
+                            <dl class="row mb-0">
+                                <dt class="col-5">Mode</dt><dd class="col-7" t-out="shipment._mode_label()"/>
+                                <dt class="col-5">From</dt><dd class="col-7" t-out="shipment.origin_port_id.display_name or shipment.origin_address or '—'"/>
+                                <dt class="col-5">To</dt><dd class="col-7" t-out="shipment.destination_port_id.display_name or shipment.destination_address or '—'"/>
+                                <t t-if="shipment.etd"><dt class="col-5">ETD</dt><dd class="col-7"><span t-field="shipment.etd"/></dd></t>
+                                <t t-if="shipment.eta"><dt class="col-5">ETA</dt><dd class="col-7"><span t-field="shipment.eta"/></dd></t>
+                                <t t-if="shipment.carrier"><dt class="col-5">Carrier</dt><dd class="col-7" t-out="shipment.carrier"/></t>
+                                <t t-if="shipment.bl_awb_number"><dt class="col-5">B/L / AWB</dt><dd class="col-7" t-out="shipment.bl_awb_number"/></t>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Freight charges</h5>
+                            <p t-if="shipment.amount"><span class="fs-5" t-field="shipment.amount"/></p>
+                            <t t-if="invoices">
+                                <table class="table table-sm align-middle">
+                                    <tr t-foreach="invoices" t-as="inv">
+                                        <td><a t-att-href="inv.get_portal_url()" t-out="inv.name"/></td>
+                                        <td class="text-end"><span t-field="inv.amount_residual"/></td>
+                                        <td class="text-end">
+                                            <span t-if="inv.payment_state in ('paid', 'in_payment')" class="badge text-bg-success">Paid</span>
+                                            <a t-else="" t-att-href="inv.get_portal_url()" class="btn btn-sm btn-primary">Pay now</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <small class="text-muted">Pay by card, PayPal or bank transfer from the invoice page.</small>
+                            </t>
+                            <p t-else="" class="text-muted">Your invoice will appear here once it is issued.</p>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4">Shipment history</h5>
+                    <ul t-if="events" class="list-unstyled border-start ps-3">
+                        <li t-foreach="events" t-as="ev" class="mb-2">
+                            <strong t-out="state_labels[ev.status]"/>
+                            <span class="text-muted ms-2"><span t-field="ev.date"/></span>
+                            <div t-if="ev.location" class="small text-muted"><i class="fa fa-map-marker"/> <t t-out="ev.location"/></div>
+                            <div t-if="ev.description" class="small" t-out="ev.description"/>
+                        </li>
+                    </ul>
+                    <p t-else="" class="text-muted">Your booking is being prepared. Updates will appear here.</p>
+                    <a t-attf-href="/freight/track?number=#{shipment.tracking_number}" class="btn btn-outline-primary btn-sm">Open public tracker</a>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h4>Messages</h4>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="shipment"/>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
