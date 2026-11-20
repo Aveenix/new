@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Footer: "Aveenix Freight" sits beside "News", the other Aveenix sister site. -->
+    <!-- Footer: "Aveenix Freight" in "Our Services", after Automotive. -->
     <template id="freight_footer_link" inherit_id="aveenix_website.aveenix_footer" name="Aveenix Freight: Footer Link">
-        <xpath expr="//a[@href='/news']/.." position="after">
+        <xpath expr="//li[hasclass('av-footer-svc-automotive')]" position="after">
             <li><a href="/freight">Aveenix Freight</a></li>
         </xpath>
     </template>

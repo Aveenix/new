@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_connect_nzbn_search_form" model="ir.ui.view">
+        <field name="name">connect.nzbn.search.form</field>
+        <field name="model">connect.nzbn.search</field>
+        <field name="arch" type="xml">
+            <form string="Import from NZBN">
+                <field name="is_configured" invisible="1"/>
+                <field name="searched" invisible="1"/>
+                <div class="alert alert-warning" role="alert" invisible="is_configured">
+                    Set the NZBN API subscription key under Connect &gt; Configuration &gt; Settings first.
+                </div>
+                <group invisible="not is_configured">
+                    <field name="query" placeholder="Business name, or its 13-digit NZBN"/>
+                    <field name="category_id" options="{'no_create': True}"/>
+                </group>
+                <field name="line_ids" invisible="not line_ids" readonly="1">
+                    <list>
+                        <field name="nzbn"/>
+                        <field name="name"/>
+                        <field name="status"/>
+                        <field name="business_id" string="Listed as"/>
+                        <button name="action_import" type="object" string="Import" class="btn-primary"
+                                invisible="business_id"/>
+                        <button name="action_import" type="object" string="Open"
+                                invisible="not business_id"/>
+                    </list>
+                </field>
+                <p class="text-muted" invisible="not searched or line_ids">
+                    Nothing on the NZBN register matched. Try another spelling; if it keeps failing,
+                    check the API key and the server log.
+                </p>
+                <footer>
+                    <button name="action_search" type="object" string="Search the Register" class="btn-primary"
+                            invisible="not is_configured"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

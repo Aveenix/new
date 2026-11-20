@@ -104,4 +104,24 @@
         <field name="domain_force">[('business_id.owner_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+
+    <!-- Open job ads (closed ones are archived, see connect.job) of
+         published listings are public. Owners manage their ads through the
+         portal controller, which checks ownership. -->
+    <record id="rule_connect_job_open" model="ir.rule">
+        <field name="name">Connect job ads: open ones are public</field>
+        <field name="model_id" ref="model_connect_job"/>
+        <field name="domain_force">[('business_id.is_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="rule_connect_job_team" model="ir.rule">
+        <field name="name">Connect job ads: the Connect team sees all</field>
+        <field name="model_id" ref="model_connect_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_connect_user'))]"/>
+    </record>
 </odoo>

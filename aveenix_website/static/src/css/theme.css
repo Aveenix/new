@@ -1772,9 +1772,35 @@ body:has(.nm-news-page) .av-search-form,
 
 .av-footer-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 30px;
 }
+
+/* "Our Services" entries without a site yet: styled like a link, not clickable. */
+.av-footer-soon {
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.av-footer-bullets .av-footer-soon::before {
+    content: "»";
+    margin-right: 2px;
+    color: #aaa;
+}
+.av-footer-soon small {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #999;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0 6px;
+    line-height: 16px;
+}
+[data-theme="dark"] .av-footer-soon { color: #ccc; }
 
 .av-footer-heading {
     font-size: 16px;

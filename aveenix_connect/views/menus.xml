@@ -13,10 +13,29 @@
     <menuitem id="menu_connect_reviews" name="Reviews" parent="menu_connect_root"
               action="action_connect_reviews" sequence="40"/>
 
+    <menuitem id="menu_connect_activity" name="Customers" parent="menu_connect_root" sequence="50"/>
+    <menuitem id="menu_connect_leads" name="Enquiries &amp; Quotes" parent="menu_connect_activity"
+              action="action_connect_lead" sequence="10"/>
+    <menuitem id="menu_connect_reports" name="Reports" parent="menu_connect_activity"
+              action="action_connect_report" sequence="20"/>
+    <menuitem id="menu_connect_licences" name="Licence Checks" parent="menu_connect_activity"
+              action="action_connect_licence" sequence="30"/>
+    <menuitem id="menu_connect_jobs" name="Job Ads" parent="menu_connect_activity"
+              action="action_connect_job" sequence="40"/>
+
+    <menuitem id="menu_connect_nzbn" name="NZBN" parent="menu_connect_root" sequence="60"
+              groups="group_connect_manager"/>
+    <menuitem id="menu_connect_nzbn_search" name="Import from NZBN" parent="menu_connect_nzbn"
+              action="action_connect_nzbn_search" sequence="10"/>
+    <menuitem id="menu_connect_nzbn_imports" name="Bulk Imports" parent="menu_connect_nzbn"
+              action="action_connect_nzbn_import" sequence="20"/>
+
     <menuitem id="menu_connect_config" name="Configuration" parent="menu_connect_root"
               sequence="90" groups="group_connect_manager"/>
     <menuitem id="menu_connect_categories" name="Categories" parent="menu_connect_config"
               action="action_connect_category" sequence="10"/>
+    <menuitem id="menu_connect_licence_types" name="Licence Types" parent="menu_connect_config"
+              action="action_connect_licence_type" sequence="15"/>
     <menuitem id="menu_connect_settings" name="Settings" parent="menu_connect_config"
               action="website.action_website_configuration" sequence="20" groups="base.group_system"/>
 </odoo>

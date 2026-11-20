@@ -1,6 +1,7 @@
 from odoo import fields, models
 
 from .connect_google_client import PARAM_API_KEY
+from .connect_nzbn_client import PARAM_API_KEY as PARAM_NZBN_API_KEY
 
 
 class ResConfigSettings(models.TransientModel):
@@ -16,4 +17,8 @@ class ResConfigSettings(models.TransientModel):
         string='Google Maps API Key (browser)',
         related='website_id.google_maps_api_key',
         readonly=False,
+    )
+    connect_nzbn_api_key = fields.Char(
+        string='NZBN API Subscription Key',
+        config_parameter=PARAM_NZBN_API_KEY,
     )

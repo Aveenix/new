@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Footer: "Aveenix Connect" closes the "Explore Aveenix" list, after News
-         and Freight. Appended to the end of the list (rather than after News)
-         so it lands last whichever sister module's view is applied first. -->
+    <!-- Footer: "Aveenix Connect" after Home in "Explore Aveenix", and
+         "Aveenix Jobs" before Marketplace in "Our Services" (so it follows
+         Freight whichever module's view is applied first). -->
     <template id="connect_footer_link" inherit_id="aveenix_website.aveenix_footer" name="Aveenix Connect: Footer Link">
-        <xpath expr="//a[@href='/news']/../.." position="inside">
+        <xpath expr="//a[@href='/']/.." position="after">
             <li><a href="/connect">Aveenix Connect</a></li>
+        </xpath>
+        <xpath expr="//li[hasclass('av-footer-svc-marketplace')]" position="before">
+            <li><a href="/connect/jobs">Aveenix Jobs</a></li>
         </xpath>
     </template>
 
@@ -48,12 +51,40 @@
             </form>
         </xpath>
 
-        <xpath expr="//div[@id='top_menu']" position="inside">
-            <div t-if="is_connect_page" class="av-connect-actions">
-                <a t-if="not request.env.user._is_public()" href="/my/connect" class="av-header-action">
+        <!-- Favourites, Compare and My Listings, then the shop's own Login /
+             account menu (av-account-action), then "List your business".
+             connect.css hides the shop's other actions on these pages. -->
+        <xpath expr="//div[@id='top_menu']/a[@href='/favourites']" position="before">
+            <t t-if="is_connect_page">
+                <a href="/connect/favourites" class="av-header-action avc-header-action">
+                    <span class="avc-header-icon">
+                        <i class="fa fa-heart"/>
+                        <span class="av-compare-badge" data-connect-count="fav"
+                              t-att-style="None if connect_fav_ids else 'display:none;'" t-out="len(connect_fav_ids)"/>
+                    </span>
+                    <span>Favourites</span>
+                </a>
+                <a href="/connect/compare" class="av-header-action avc-header-action">
+                    <span class="avc-header-icon">
+                        <i class="fa fa-plus-square-o"/>
+                        <span class="av-compare-badge" data-connect-count="compare"
+                              t-att-style="None if connect_compare_ids else 'display:none;'" t-out="len(connect_compare_ids)"/>
+                    </span>
+                    <span>Compare</span>
+                </a>
+                <a t-if="not request.env.user._is_public()" href="/my/connect" class="av-header-action avc-header-action">
                     <i class="fa fa-building-o"/>
                     <span>My Listings</span>
                 </a>
+            </t>
+        </xpath>
+        <!-- Login brings the visitor back to the Connect page they were on. -->
+        <xpath expr="//div[@id='top_menu']//a[hasclass('av-account-action')]" position="attributes">
+            <attribute name="t-att-href">connect_login_url if is_connect_page else '/web/login'</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='top_menu']" position="inside">
+            <div t-if="is_connect_page" class="av-connect-actions">
                 <a href="/connect/add" class="av-connect-add-btn">List your business</a>
             </div>
         </xpath>
@@ -66,6 +97,16 @@
                         <li>
                             <a href="/connect" t-att-class="'active' if active_nav == 'home' else None">
                                 <i class="fa fa-home"/><span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/connect/quote" t-att-class="'active' if active_nav == 'quote' else None">
+                                <i class="fa fa-paper-plane"/><span>Get quotes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/connect/jobs" t-att-class="'active' if active_nav == 'jobs' else None">
+                                <i class="fa fa-briefcase"/><span>Jobs</span>
                             </a>
                         </li>
                         <li t-foreach="connect_nav_categories" t-as="nav_category">

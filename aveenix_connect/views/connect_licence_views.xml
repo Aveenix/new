@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_connect_licence_type_list" model="ir.ui.view">
+        <field name="name">connect.licence.type.list</field>
+        <field name="model">connect.licence.type</field>
+        <field name="arch" type="xml">
+            <list string="Licence Types" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="register_name"/>
+                <field name="register_url" widget="url"/>
+                <field name="icon"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_connect_licence_type" model="ir.actions.act_window">
+        <field name="name">Licence Types</field>
+        <field name="res_model">connect.licence.type</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a licence owners can show</p>
+            <p>The name is the badge a listing earns once the team has checked its licence number.</p>
+        </field>
+    </record>
+
+    <record id="view_connect_licence_list" model="ir.ui.view">
+        <field name="name">connect.licence.list</field>
+        <field name="model">connect.licence</field>
+        <field name="arch" type="xml">
+            <list string="Licence Checks" create="false">
+                <field name="business_id"/>
+                <field name="type_id"/>
+                <field name="number"/>
+                <field name="register_url" widget="url" string="Check on"/>
+                <field name="state" widget="badge" decoration-success="state == 'verified'"
+                       decoration-warning="state == 'pending'" decoration-danger="state == 'rejected'"/>
+                <field name="checked_on" optional="show"/>
+                <button name="action_verify" type="object" string="Checked" icon="fa-check" invisible="state == 'verified'"/>
+                <button name="action_reject" type="object" string="Reject" icon="fa-times" invisible="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_connect_licence_search" model="ir.ui.view">
+        <field name="name">connect.licence.search</field>
+        <field name="model">connect.licence</field>
+        <field name="arch" type="xml">
+            <search string="Licence Checks">
+                <field name="business_id"/>
+                <field name="number"/>
+                <field name="type_id"/>
+                <filter name="pending" string="To Check" domain="[('state', '=', 'pending')]"/>
+                <group>
+                    <filter name="group_type" string="Licence" context="{'group_by': 'type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_connect_licence" model="ir.actions.act_window">
+        <field name="name">Licence Checks</field>
+        <field name="res_model">connect.licence</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No licences to check</p>
+            <p>Licences owners add from My Account wait here. Look the number up on the register,
+               then mark it Checked to show its badge on the listing.</p>
+        </field>
+    </record>
+</odoo>

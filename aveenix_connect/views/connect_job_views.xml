@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_connect_job_list" model="ir.ui.view">
+        <field name="name">connect.job.list</field>
+        <field name="model">connect.job</field>
+        <field name="arch" type="xml">
+            <list string="Job Ads">
+                <field name="create_date" string="Posted"/>
+                <field name="name"/>
+                <field name="business_id"/>
+                <field name="employment_type"/>
+                <field name="city"/>
+                <field name="date_closing"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_connect_job_form" model="ir.ui.view">
+        <field name="name">connect.job.form</field>
+        <field name="model">connect.job</field>
+        <field name="arch" type="xml">
+            <form string="Job Ad">
+                <sheet>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-secondary" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Job title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="business_id"/>
+                            <field name="employment_type"/>
+                            <field name="city"/>
+                        </group>
+                        <group>
+                            <field name="pay"/>
+                            <field name="date_closing"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="The role, hours, skills and licences needed…"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_connect_job_search" model="ir.ui.view">
+        <field name="name">connect.job.search</field>
+        <field name="model">connect.job</field>
+        <field name="arch" type="xml">
+            <search string="Job Ads">
+                <field name="name"/>
+                <field name="business_id"/>
+                <field name="city"/>
+                <filter name="closed" string="Closed" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_connect_job" model="ir.actions.act_window">
+        <field name="name">Job Ads</field>
+        <field name="res_model">connect.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No job ads yet</p>
+            <p>Owners post job ads from My Account; they appear on Aveenix Jobs (/connect/jobs).
+               Applications are in each ad's chatter and emailed to the owner.</p>
+        </field>
+    </record>
+</odoo>

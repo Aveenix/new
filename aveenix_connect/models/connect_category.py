@@ -4,10 +4,12 @@ from odoo.exceptions import ValidationError
 
 class ConnectCategory(models.Model):
     """A directory category (Restaurants, Plumbers, ...). Top-level categories
-    make up the Connect nav; searching a category includes its subcategories."""
+    make up the Connect nav; searching a category includes its subcategories.
+    Their photos take turns as the background of the Connect home page."""
 
     _name = 'connect.category'
     _description = 'Connect Category'
+    _inherit = ['image.mixin']
     _parent_store = True
     _order = 'sequence, name'
 

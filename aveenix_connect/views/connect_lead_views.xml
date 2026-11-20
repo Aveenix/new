@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ── Enquiries and quote requests ─────────────────────────────── -->
+    <record id="view_connect_lead_list" model="ir.ui.view">
+        <field name="name">connect.lead.list</field>
+        <field name="model">connect.lead</field>
+        <field name="arch" type="xml">
+            <list string="Enquiries &amp; Quotes" create="false" decoration-warning="not business_ids">
+                <field name="create_date" string="Received"/>
+                <field name="kind"/>
+                <field name="contact_name"/>
+                <field name="email"/>
+                <field name="category_id" optional="show"/>
+                <field name="location" optional="show"/>
+                <field name="business_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_connect_lead_form" model="ir.ui.view">
+        <field name="name">connect.lead.form</field>
+        <field name="model">connect.lead</field>
+        <field name="arch" type="xml">
+            <form string="Enquiry or Quote Request" create="false">
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="business_ids or kind != 'quote'">
+                        No listing matched this quote request: contact the customer or find businesses for them.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="kind"/>
+                            <field name="contact_name"/>
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="Received"/>
+                            <field name="category_id" invisible="kind != 'quote'"/>
+                            <field name="location" invisible="kind != 'quote'"/>
+                            <field name="business_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <field name="message"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_connect_lead_search" model="ir.ui.view">
+        <field name="name">connect.lead.search</field>
+        <field name="model">connect.lead</field>
+        <field name="arch" type="xml">
+            <search string="Enquiries &amp; Quotes">
+                <field name="contact_name"/>
+                <field name="email"/>
+                <field name="business_ids"/>
+                <field name="location"/>
+                <filter name="quotes" string="Quote Requests" domain="[('kind', '=', 'quote')]"/>
+                <filter name="enquiries" string="Enquiries" domain="[('kind', '=', 'enquiry')]"/>
+                <separator/>
+                <filter name="unmatched" string="Unmatched" domain="[('business_ids', '=', False)]"/>
+                <group>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_connect_lead" model="ir.actions.act_window">
+        <field name="name">Enquiries &amp; Quotes</field>
+        <field name="res_model">connect.lead</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No enquiries or quote requests yet</p>
+            <p>Enquiries sent from business pages and "Get quotes" requests land here. Quote requests
+               no listing matched are highlighted, for the team to follow up.</p>
+        </field>
+    </record>
+
+    <!-- ── Reports of incorrect information ─────────────────────────── -->
+    <record id="view_connect_report_list" model="ir.ui.view">
+        <field name="name">connect.report.list</field>
+        <field name="model">connect.report</field>
+        <field name="arch" type="xml">
+            <list string="Reports" create="false" decoration-muted="state == 'done'">
+                <field name="create_date" string="Received"/>
+                <field name="business_id"/>
+                <field name="reason"/>
+                <field name="details" optional="show"/>
+                <field name="email" optional="show"/>
+                <field name="state" widget="badge" decoration-warning="state == 'new'" decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_connect_report_form" model="ir.ui.view">
+        <field name="name">connect.report.form</field>
+        <field name="model">connect.report</field>
+        <field name="arch" type="xml">
+            <form string="Report" create="false">
+                <header>
+                    <button name="action_done" type="object" string="Mark as Checked" class="btn-primary" invisible="state == 'done'"/>
+                    <button name="action_reopen" type="object" string="Reopen" invisible="state == 'new'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="business_id"/>
+                            <field name="reason"/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="Received"/>
+                            <field name="contact_name"/>
+                            <field name="email" widget="email"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                    <field name="details"/>
+                    <field name="note" placeholder="What the team checked or changed…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_connect_report_search" model="ir.ui.view">
+        <field name="name">connect.report.search</field>
+        <field name="model">connect.report</field>
+        <field name="arch" type="xml">
+            <search string="Reports">
+                <field name="business_id"/>
+                <filter name="to_check" string="To Check" domain="[('state', '=', 'new')]"/>
+                <group>
+                    <filter name="group_reason" string="Reason" context="{'group_by': 'reason'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_connect_report" model="ir.actions.act_window">
+        <field name="name">Reports</field>
+        <field name="res_model">connect.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_to_check': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No reports to check</p>
+            <p>Visitors who use "Report incorrect information" on a business page appear here,
+               including owners asking for their listing to be removed or their details hidden.</p>
+        </field>
+    </record>
+</odoo>

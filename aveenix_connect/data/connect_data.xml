@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Licences owners can add; the team adds more under Configuration. -->
+    <record id="licence_type_lbp" model="connect.licence.type">
+        <field name="name">Licensed Builder</field>
+        <field name="register_name">Licensed Building Practitioner (LBP)</field>
+        <field name="register_url">https://www.lbp.govt.nz/</field>
+        <field name="icon">fa-home</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="licence_type_electrician" model="connect.licence.type">
+        <field name="name">Registered Electrician</field>
+        <field name="register_name">Electrical Workers Registration Board (EWRB)</field>
+        <field name="register_url">https://www.ewrb.govt.nz/</field>
+        <field name="icon">fa-bolt</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="licence_type_plumber" model="connect.licence.type">
+        <field name="name">Licensed Plumber, Gasfitter or Drainlayer</field>
+        <field name="register_name">Plumbers, Gasfitters and Drainlayers Board (PGDB)</field>
+        <field name="register_url">https://www.pgdb.co.nz/</field>
+        <field name="icon">fa-tint</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="licence_type_real_estate" model="connect.licence.type">
+        <field name="name">Licensed Real Estate Professional</field>
+        <field name="register_name">Real Estate Authority (REA)</field>
+        <field name="register_url">https://www.rea.govt.nz/</field>
+        <field name="icon">fa-key</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- The code that proves a visitor manages a listing; sent to the
+         listing's own address, and deleted once sent. -->
+    <record id="mail_template_claim_code" model="mail.template">
+        <field name="name">Connect: Claim Code</field>
+        <field name="model_id" ref="model_connect_business"/>
+        <field name="subject">Your code to claim {{ object.name }} on Aveenix Connect</field>
+        <!-- From the company, never the visitor asking for the code. -->
+        <field name="email_from">{{ object.env.company.email_formatted }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; font-size: 14px;">
+    <p>Hello,</p>
+    <p><t t-out="ctx.get('claim_user_name') or 'Someone'"/> asked to manage
+        <strong t-out="object.name"/> on Aveenix Connect. To confirm, enter this code on the claim page:</p>
+    <p style="font-size: 28px; font-weight: bold; letter-spacing: 6px;" t-out="ctx.get('claim_code') or ''"/>
+    <p>The code works for 30 minutes. If you did not ask for it, you can ignore this email:
+        nobody can claim the listing without the code.</p>
+</div>
+        </field>
+    </record>
+
+    <record id="ir_cron_connect_nzbn_import" model="ir.cron">
+        <field name="name">Connect: NZBN import</field>
+        <field name="model_id" ref="model_connect_nzbn_import"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_import()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_connect_job_close" model="ir.cron">
+        <field name="name">Connect: close expired job ads</field>
+        <field name="model_id" ref="model_connect_job"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_close_expired()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

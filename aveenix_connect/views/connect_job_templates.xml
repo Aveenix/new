@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ── Aveenix Jobs: list ───────────────────────────────────────── -->
+    <template id="connect_jobs" name="Aveenix Jobs">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_jobs'"/>
+            <div id="wrap" class="av-connect-page">
+                <section class="avc-page-head">
+                    <div class="avc-container">
+                        <nav class="avc-breadcrumb"><a href="/connect">Connect</a> / <span>Jobs</span></nav>
+                        <h1>Aveenix Jobs</h1>
+                        <p>Jobs at local businesses on Aveenix Connect. <t t-out="total"/> open
+                            <t t-if="total == 1">job</t><t t-else="">jobs</t>.</p>
+                        <t t-call="aveenix_connect.connect_search_form">
+                            <t t-set="search_action" t-value="'/connect/jobs'"/>
+                        </t>
+                    </div>
+                </section>
+                <section class="avc-section">
+                    <div class="avc-container">
+                        <div t-if="jobs" class="avc-list">
+                            <a t-foreach="jobs" t-as="job" t-att-href="job._website_url()" class="avc-card avc-job-card">
+                                <div class="avc-card-logo">
+                                    <img t-if="job.business_id.image_128" t-att-src="website.image_url(job.business_id, 'image_256')"
+                                         t-att-alt="job.business_id.name" loading="lazy"/>
+                                    <i t-else="" class="fa fa-briefcase"/>
+                                </div>
+                                <div class="avc-card-body">
+                                    <h3 t-out="job.name"/>
+                                    <div class="avc-card-meta"><t t-out="job.business_id.name"/></div>
+                                    <div class="avc-card-meta">
+                                        <i class="fa fa-map-marker"/> <t t-out="job.city or job.business_id.city or 'New Zealand'"/>
+                                        · <t t-out="employment_types.get(job.employment_type)"/>
+                                        <t t-if="job.pay"> · <t t-out="job.pay"/></t>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div t-else="" class="avc-empty">
+                            <i class="fa fa-briefcase"/>
+                            <h3>No jobs match your search</h3>
+                            <p>Try other words or a nearby city.</p>
+                        </div>
+                        <div class="avc-pager">
+                            <t t-call="website.pager"/>
+                        </div>
+                        <p class="avc-note text-center mt-4">
+                            Hiring? <a href="/my/connect/jobs">Post a job ad</a> from your claimed listing, free.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Aveenix Jobs: job ad and application form ────────────────── -->
+    <template id="connect_job" name="Aveenix Jobs: Job Ad">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'connect_job'"/>
+            <div id="wrap" class="av-connect-page">
+                <script type="application/ld+json" t-out="job._structured_data()"/>
+                <section class="avc-page-head">
+                    <div class="avc-container">
+                        <nav class="avc-breadcrumb">
+                            <a href="/connect">Connect</a> / <a href="/connect/jobs">Jobs</a> / <span t-out="job.name"/>
+                        </nav>
+                        <h1 t-out="job.name"/>
+                        <p>
+                            <a t-att-href="business.website_url" class="text-white text-decoration-underline" t-out="business.name"/>
+                            · <i class="fa fa-map-marker"/> <t t-out="job.city or business.city or 'New Zealand'"/>
+                            · <t t-out="employment_types.get(job.employment_type)"/>
+                            <t t-if="job.pay"> · <t t-out="job.pay"/></t>
+                        </p>
+                    </div>
+                </section>
+                <div class="avc-container">
+                    <div t-if="notice == 'applied'" class="alert alert-success mt-4">Your application was sent to the business.</div>
+                    <div t-if="notice == 'captcha'" class="alert alert-danger mt-4">Please confirm you are not a robot and send your application again.</div>
+                    <div t-if="notice == 'invalid'" class="alert alert-danger mt-4">Please enter your name, a valid email address and a message.</div>
+                    <div t-if="notice == 'cv_invalid'" class="alert alert-danger mt-4">Attach your CV as a PDF, Word or text file of 5 MB or less.</div>
+                </div>
+                <section class="avc-section">
+                    <div class="avc-container avc-biz-grid">
+                        <div class="avc-biz-main">
+                            <section class="avc-panel">
+                                <h2>About the job</h2>
+                                <div class="avc-job-description" t-out="job.description"/>
+                                <p t-if="job.date_closing" class="avc-note mt-3">
+                                    Applications close on <t t-out="job.date_closing.strftime('%d %b %Y')"/>.
+                                </p>
+                            </section>
+                        </div>
+                        <aside class="avc-biz-side">
+                            <section t-if="not is_owner" class="avc-panel" id="avc-apply">
+                                <h2>Apply</h2>
+                                <form method="post" t-attf-action="/connect/jobs/#{job.id}/apply" enctype="multipart/form-data" class="avc-enquiry">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <!-- Honeypot, see the controller. -->
+                                    <input type="text" name="website_url" class="avc-hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+                                    <input type="text" name="name" class="form-control" required="required" maxlength="255" placeholder="Your name *" aria-label="Your name"
+                                           t-att-value="None if request.env.user._is_public() else request.env.user.name"/>
+                                    <input type="email" name="email" class="form-control" required="required" maxlength="255" placeholder="Email *" aria-label="Email"
+                                           t-att-value="None if request.env.user._is_public() else request.env.user.email"/>
+                                    <input type="tel" name="phone" class="form-control" maxlength="64" placeholder="Phone" aria-label="Phone"/>
+                                    <textarea name="message" rows="5" class="form-control" required="required" maxlength="4000"
+                                              placeholder="Why you are a good fit *" aria-label="Message"/>
+                                    <label for="avc_cv" class="form-label mb-0">CV <small class="text-muted">(PDF or Word, 5 MB max)</small></label>
+                                    <input id="avc_cv" type="file" name="cv" class="form-control"
+                                           accept=".pdf,.doc,.docx,.odt,.rtf,.txt"/>
+                                    <t t-if="recaptcha_key">
+                                        <div class="g-recaptcha" t-att-data-sitekey="recaptcha_key"/>
+                                        <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+                                    </t>
+                                    <button type="submit" class="avc-btn w-100">Send application</button>
+                                </form>
+                            </section>
+                            <section class="avc-panel">
+                                <h2>The business</h2>
+                                <p class="mb-2"><strong t-out="business.name"/></p>
+                                <t t-call="aveenix_connect.connect_badges">
+                                    <t t-set="badge_class" t-value="'avc-badge-on-light'"/>
+                                </t>
+                                <p class="mt-2 mb-0"><a t-att-href="business.website_url" class="avc-link">See the listing <i class="fa fa-arrow-right"/></a></p>
+                            </section>
+                        </aside>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

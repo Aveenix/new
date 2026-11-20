@@ -21,6 +21,10 @@
             <li t-if="page_name == 'connect_listings'" class="breadcrumb-item">Connect Listings</li>
             <li t-if="page_name == 'connect_listing'" class="breadcrumb-item"><a href="/my/connect">Connect Listings</a></li>
             <li t-if="page_name == 'connect_listing'" class="breadcrumb-item" t-out="business.name"/>
+            <li t-if="page_name in ('connect_jobs', 'connect_job')" class="breadcrumb-item"><a href="/my/connect">Connect Listings</a></li>
+            <li t-if="page_name == 'connect_jobs'" class="breadcrumb-item">Job Ads</li>
+            <li t-if="page_name == 'connect_job'" class="breadcrumb-item"><a href="/my/connect/jobs">Job Ads</a></li>
+            <li t-if="page_name == 'connect_job'" class="breadcrumb-item" t-out="job.name or 'New job ad'"/>
         </xpath>
     </template>
 
@@ -30,6 +34,9 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Connect Listings</t>
             </t>
+            <div t-if="listings" class="d-flex justify-content-end mb-3">
+                <a href="/my/connect/jobs" class="btn btn-secondary btn-sm"><i class="fa fa-briefcase"/> Job ads</a>
+            </div>
             <div t-if="not listings" class="alert alert-info">
                 You have no listings yet. <a href="/connect/add">List your business</a>, or claim an existing
                 listing from its page on <a href="/connect">Aveenix Connect</a>.
@@ -60,21 +67,25 @@
 
     <template id="portal_my_connect_listing" name="Edit My Connect Listing">
         <t t-call="portal.portal_layout">
-            <t t-set="o_portal_fullwidth_alert" t-value="True"/>
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 mb-3">
                 <h3 class="mb-0" t-out="business.name"/>
                 <a t-att-href="business.website_url" class="btn btn-secondary btn-sm">
                     <i class="fa fa-external-link"/> View on Aveenix Connect
                 </a>
             </div>
+            <div t-if="claimed" class="alert alert-success">You're verified: this listing is now yours to update.</div>
             <div t-if="saved" class="alert alert-success">Your listing was updated.</div>
             <div t-if="not business.is_published" class="alert alert-info">
                 This listing is waiting for approval and isn't visible on the website yet.
             </div>
             <div t-if="errors" class="alert alert-danger">
                 Please correct the highlighted fields.
-                <div t-foreach="[errors.get(k) for k in ('hours', 'photos', 'logo', 'save') if errors.get(k)]" t-as="message" t-out="message"/>
+                <div t-foreach="[errors.get(k) for k in ('hours', 'photos', 'logo', 'licence', 'save') if errors.get(k)]" t-as="message" t-out="message"/>
             </div>
+            <p class="text-muted small">
+                <t t-if="business.is_verified"><i class="fa fa-check-circle text-success"/> Verified Business</t>
+                <t t-if="business.nzbn"> · NZBN <t t-out="business.nzbn"/></t>
+            </p>
 
             <form t-attf-action="/my/connect/#{business.id}" method="post" enctype="multipart/form-data" class="avc-form avc-form-portal">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -94,6 +105,13 @@
                             <label for="avc_logo" class="form-label">Replace logo</label>
                             <input id="avc_logo" type="file" name="logo" accept="image/*" class="form-control"/>
                         </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Services</legend>
+                    <div class="avc-form-grid">
+                        <t t-call="aveenix_connect.connect_service_fields"/>
                     </div>
                 </fieldset>
 
@@ -144,7 +162,167 @@
                     <input id="avc_photos" type="file" name="photos" accept="image/*" multiple="multiple" class="form-control"/>
                 </fieldset>
 
+                <fieldset>
+                    <legend>Licences</legend>
+                    <p class="text-muted small">
+                        Add a trade or professional licence. Our team checks the number on the public register,
+                        then your listing shows its badge (e.g. Licensed Builder).
+                    </p>
+                    <table t-if="licences" class="table table-sm align-middle">
+                        <tr t-foreach="licences" t-as="licence">
+                            <td t-out="licence.type_id.name"/>
+                            <td t-out="licence.number"/>
+                            <td>
+                                <span t-if="licence.state == 'verified'" class="badge text-bg-success">Checked</span>
+                                <span t-elif="licence.state == 'rejected'" class="badge text-bg-danger">Not confirmed</span>
+                                <span t-else="" class="badge text-bg-warning">Waiting for check</span>
+                            </td>
+                            <td class="text-end">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" name="remove_licence_ids" t-att-value="licence.id"/> Remove
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    <div t-if="licence_types" class="row g-2">
+                        <div class="col-sm-6">
+                            <select name="licence_type_id" class="form-select" aria-label="Licence">
+                                <option value="">Add a licence…</option>
+                                <option t-foreach="licence_types" t-as="licence_type" t-att-value="licence_type.id"
+                                        t-att-selected="str(licence_type.id) == form.get('licence_type_id') or None"
+                                        t-out="licence_type.register_name or licence_type.name"/>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" name="licence_number" maxlength="64" class="form-control" placeholder="Licence number"
+                                   aria-label="Licence number" t-att-value="form.get('licence_number')"/>
+                        </div>
+                    </div>
+                </fieldset>
+
                 <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+        </t>
+    </template>
+
+    <!-- ── Job ads ──────────────────────────────────────────────────── -->
+    <template id="portal_my_connect_jobs" name="My Connect Job Ads">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Job Ads</t>
+            </t>
+            <div t-if="not has_listings" class="alert alert-info">
+                Job ads are posted from a business listing you manage.
+                <a href="/connect">Find and claim your business</a> or <a href="/connect/add">list it</a> first.
+            </div>
+            <t t-else="">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="text-muted mb-0">Your ads appear on <a href="/connect/jobs">Aveenix Jobs</a> and your listing.
+                        Applications are emailed to you.</p>
+                    <a href="/my/connect/jobs/new" class="btn btn-primary btn-sm"><i class="fa fa-plus"/> Post a job</a>
+                </div>
+                <div t-if="not jobs" class="alert alert-light">No job ads yet.</div>
+                <t t-else="" t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Business</th>
+                            <th>Status</th>
+                            <th class="text-end"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="jobs" t-as="job">
+                            <td><a t-attf-href="/my/connect/jobs/#{job.id}" t-out="job.name"/></td>
+                            <td t-out="job.business_id.name"/>
+                            <td>
+                                <span t-if="not job.active" class="badge text-bg-secondary">Closed</span>
+                                <span t-elif="job.date_closing and job.date_closing &lt; today" class="badge text-bg-secondary">Applications closed</span>
+                                <span t-elif="not job.business_id.is_published" class="badge text-bg-warning">Listing waiting for approval</span>
+                                <span t-else="" class="badge text-bg-success">Open</span>
+                            </td>
+                            <td class="text-end">
+                                <form method="post" t-attf-action="/my/connect/jobs/#{job.id}/toggle" class="d-inline">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn btn-link btn-sm p-0">
+                                        <t t-if="job.active">Close ad</t><t t-else="">Reopen</t>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_connect_job" name="Edit My Connect Job Ad">
+        <t t-call="portal.portal_layout">
+            <h3 class="mt-3 mb-3"><t t-if="job" t-out="job.name"/><t t-else="">Post a job</t></h3>
+            <div t-if="errors" class="alert alert-danger">Please correct the highlighted fields.</div>
+            <form t-att-action="'/my/connect/jobs/%s' % job.id if job else '/my/connect/jobs/new'" method="post" class="avc-form avc-form-portal">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <fieldset>
+                    <div class="avc-form-grid">
+                        <div class="avc-field">
+                            <label for="avc_job_business">Business *</label>
+                            <t t-set="business_value" t-value="form.get('business_id', str(job.business_id.id) if job else (str(businesses[:1].id) if len(businesses) == 1 else ''))"/>
+                            <select id="avc_job_business" name="business_id" required="required"
+                                    t-attf-class="form-select #{'is-invalid' if errors.get('business_id') else ''}">
+                                <option value="">Choose…</option>
+                                <option t-foreach="businesses" t-as="biz" t-att-value="biz.id"
+                                        t-att-selected="str(biz.id) == business_value or None" t-out="biz.name"/>
+                            </select>
+                            <div t-if="errors.get('business_id')" class="invalid-feedback" t-out="errors['business_id']"/>
+                        </div>
+                        <div class="avc-field">
+                            <label for="avc_job_name">Job title *</label>
+                            <input id="avc_job_name" type="text" name="name" required="required" maxlength="255"
+                                   t-att-value="form.get('name', job.name)"
+                                   t-attf-class="form-control #{'is-invalid' if errors.get('name') else ''}"/>
+                            <div t-if="errors.get('name')" class="invalid-feedback" t-out="errors['name']"/>
+                        </div>
+                        <div class="avc-field">
+                            <label for="avc_job_type">Type of work *</label>
+                            <t t-set="type_value" t-value="form.get('employment_type', job.employment_type or 'full_time')"/>
+                            <select id="avc_job_type" name="employment_type"
+                                    t-attf-class="form-select #{'is-invalid' if errors.get('employment_type') else ''}">
+                                <option t-foreach="employment_types" t-as="etype" t-att-value="etype[0]"
+                                        t-att-selected="etype[0] == type_value or None" t-out="etype[1]"/>
+                            </select>
+                        </div>
+                        <div class="avc-field">
+                            <label for="avc_job_city">Location</label>
+                            <input id="avc_job_city" type="text" name="city" maxlength="255" class="form-control"
+                                   placeholder="Defaults to the business's city" t-att-value="form.get('city', job.city)"/>
+                        </div>
+                        <div class="avc-field">
+                            <label for="avc_job_pay">Pay</label>
+                            <input id="avc_job_pay" type="text" name="pay" maxlength="255" class="form-control"
+                                   placeholder="e.g. $30–$34 per hour" t-att-value="form.get('pay', job.pay)"/>
+                        </div>
+                        <div class="avc-field">
+                            <label for="avc_job_closing">Applications close</label>
+                            <input id="avc_job_closing" type="date" name="date_closing"
+                                   t-att-value="form.get('date_closing', job.date_closing and str(job.date_closing))"
+                                   t-attf-class="form-control #{'is-invalid' if errors.get('date_closing') else ''}"/>
+                            <div t-if="errors.get('date_closing')" class="invalid-feedback" t-out="errors['date_closing']"/>
+                        </div>
+                        <div class="avc-field avc-field-full">
+                            <label for="avc_job_description">Description *</label>
+                            <textarea id="avc_job_description" name="description" rows="8" maxlength="8000" required="required"
+                                      placeholder="The role, hours, skills and licences needed…"
+                                      t-attf-class="form-control #{'is-invalid' if errors.get('description') else ''}"
+                                      t-out="form.get('description', job.description) or ''"/>
+                            <div t-if="errors.get('description')" class="invalid-feedback" t-out="errors['description']"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary">
+                    <t t-if="job">Save changes</t><t t-else="">Post job ad</t>
+                </button>
+                <a t-if="job and job.active" t-att-href="job._website_url()" class="btn btn-link">View on Aveenix Jobs</a>
             </form>
         </t>
     </template>

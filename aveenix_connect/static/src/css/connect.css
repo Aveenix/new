@@ -4,9 +4,12 @@
    the shop. */
 
 /* ── Header on connect pages ───────────────────────────────────────── */
-.av-header-actions:has(> .av-connect-actions) > *:not(.av-connect-actions) {
+/* Keep Connect's own actions and the shop's Login / account menu; hide
+   the shop's favourites, wishlist, compare and cart. */
+.av-header-actions:has(> .av-connect-actions) > *:not(.av-connect-actions):not(.avc-header-action):not(.av-account-action) {
     display: none !important;
 }
+.avc-header-icon { position: relative; display: inline-block; }
 .av-connect-actions {
     display: flex;
     align-items: center;
@@ -165,6 +168,53 @@
     font-size: 15px;
     padding: 12px 0;
 }
+/* Category photos behind the hero, crossfading (connect_hero.js) under a
+   brand-colour veil that keeps the white text readable. */
+.avc-hero { position: relative; overflow: hidden; isolation: isolate; }
+.avc-hero > .avc-container { position: relative; z-index: 2; }
+.avc-hero-slides { position: absolute; inset: 0; z-index: 0; }
+.avc-hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 1.2s ease, transform 7s ease-out;
+}
+.avc-hero-slide.is-active { opacity: 1; transform: scale(1); }
+.avc-hero-photos::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--av-red-dark) 80%, transparent) 0%,
+        color-mix(in srgb, var(--av-red) 58%, transparent) 55%,
+        color-mix(in srgb, #000 50%, transparent) 100%);
+}
+.avc-hero-caption {
+    position: absolute;
+    right: 20px;
+    bottom: 16px;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .35);
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.avc-hero-caption.is-active { display: inline-flex; }
+.avc-hero-caption:hover { background: rgba(0, 0, 0, .55); }
+@media (prefers-reduced-motion: reduce) {
+    .avc-hero-slide { transition: none; transform: none; }
+}
+
 .avc-hero-links { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; font-size: 14px; }
 .avc-hero-links span { opacity: .8; }
 .avc-hero-links a { color: #fff; text-decoration: underline; }
@@ -212,6 +262,7 @@
 }
 .avc-list { display: grid; gap: 14px; }
 .avc-card {
+    position: relative;  /* for the name's stretched link */
     display: flex;
     gap: 16px;
     background: var(--av-white);
@@ -238,6 +289,29 @@
 .avc-card-logo img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
 .avc-card-body { min-width: 0; }
 .avc-card-body h3 { font-size: 17px; font-weight: 700; margin: 4px 0; color: var(--av-dark); }
+.avc-card-body h3 a { color: inherit; text-decoration: none; }
+
+/* Favourite / compare toggles: on cards, icon buttons above the stretched
+   link; on the business page, labelled buttons (tool_class). */
+.avc-card-tools { position: relative; z-index: 2; margin-left: auto; display: flex; flex-direction: column; gap: 6px; }
+.avc-tool { cursor: pointer; }
+.avc-card-tools .avc-tool {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--av-border);
+    border-radius: 50%;
+    background: var(--av-white);
+    color: var(--av-gray);
+    font-size: 15px;
+    transition: color .2s, border-color .2s;
+}
+.avc-card-tools .avc-tool:hover,
+.avc-card-tools .avc-tool.is-active { color: var(--av-red); border-color: var(--av-red); }
+.avc-tool .avc-when-on, .avc-tool.is-active .avc-when-off { display: none; }
+.avc-tool.is-active .avc-when-on { display: inline; }
+.avc-biz-actions .avc-tool.is-active { background: #fff; color: var(--av-red) !important; }
 .avc-card-rating { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--av-gray); }
 .avc-card-meta { font-size: 13px; color: var(--av-gray); margin-top: 2px; }
 .avc-card-meta i { color: var(--av-red); }
@@ -383,12 +457,91 @@
 .avc-portal-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
 .avc-hours-edit th { font-weight: 500; width: 120px; }
 
+/* ── Trust badges, services, jobs, report ──────────────────────────── */
+.avc-badge-trust { background: #fff; color: var(--av-green, #1e8e3e); margin-right: 4px; }
+.avc-badge-on-light { background: color-mix(in srgb, var(--av-green, #1e8e3e) 12%, transparent); }
+.avc-verified-tick { color: var(--av-green, #1e8e3e); font-size: 15px; margin-left: 4px; }
+.avc-services { list-style: none; padding: 0; margin: 0 0 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 16px; }
+.avc-services i { color: var(--av-red); margin-right: 6px; }
+.avc-areas { margin: 0; color: var(--av-gray); }
+.avc-biz-jobs { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.avc-biz-jobs a { color: var(--av-red); font-weight: 600; text-decoration: none; }
+.avc-biz-jobs small { display: block; color: var(--av-gray); }
+.avc-job-description { white-space: pre-line; }
+.avc-report summary { cursor: pointer; font-weight: 600; color: var(--av-gray); }
+.avc-report summary i { color: var(--av-red); margin-right: 6px; }
+.avc-hero-quote { margin-top: 18px; }
+
+/* Claim code, NZBN lookup */
+.avc-claim-verify { max-width: 620px; }
+.avc-code-form { display: flex; gap: 10px; max-width: 360px; }
+.avc-code-form input { font-size: 22px; letter-spacing: 6px; text-align: center; }
+.avc-claim-review { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--av-border); }
+.avc-claim-review p { color: var(--av-gray); }
+.avc-nzbn-row { display: flex; gap: 10px; max-width: 480px; }
+
+/* FAQ */
+.avc-faq { max-width: 1100px; }
+.avc-faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 48px; align-items: start; }
+.avc-faq h3 { font-size: 18px; font-weight: 700; color: var(--av-red); margin: 0 0 4px; }
+.avc-faq details { border-bottom: 1px solid var(--av-border); padding: 16px 0; }
+.avc-faq summary { font-weight: 600; cursor: pointer; color: var(--av-dark); }
+.avc-faq details p, .avc-faq details ul { color: var(--av-gray); margin: 10px 0 0; }
+.avc-faq details a { color: var(--av-red); }
+
+/* Latest reviews on the home page */
+.avc-review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+.avc-review-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--av-white);
+    border: 1px solid var(--av-border);
+    border-radius: 10px;
+    padding: 20px;
+}
+.avc-review-card-text {
+    margin: 0;
+    flex: 1;
+    white-space: pre-line;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.avc-review-card-foot { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; font-size: 14px; color: var(--av-gray); }
+.avc-review-card-foot strong { color: var(--av-dark); }
+.avc-review-card-foot a { color: var(--av-red); font-weight: 600; text-decoration: none; }
+.avc-review-card-foot small { width: 100%; }
+
+/* Compare: businesses as columns, scrolls sideways on small screens. */
+.avc-compare-wrap { overflow-x: auto; border: 1px solid var(--av-border); border-radius: 10px; background: var(--av-white); }
+.avc-compare { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 14px; }
+.avc-compare > thead > tr > th,
+.avc-compare > tbody > tr > th,
+.avc-compare > tbody > tr > td { padding: 14px 16px; border-bottom: 1px solid var(--av-border); vertical-align: top; text-align: left; }
+.avc-compare > tbody > tr > th { width: 150px; color: var(--av-gray); font-weight: 600; background: var(--av-light); }
+.avc-compare > thead > tr > th { min-width: 200px; }
+.avc-compare > tbody > tr:last-child > * { border-bottom: 0; }
+.avc-compare-logo {
+    width: 64px; height: 64px; border-radius: 10px; overflow: hidden; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--av-red) 8%, transparent); color: var(--av-red); font-size: 26px; margin-bottom: 8px;
+}
+.avc-compare-logo img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.avc-compare-name { display: block; font-size: 16px; font-weight: 700; color: var(--av-dark); text-decoration: none; }
+.avc-compare-remove { border: 0; background: none; padding: 0; margin-top: 6px; color: var(--av-gray); font-size: 13px; cursor: pointer; }
+.avc-compare-remove:hover { color: var(--av-red); }
+.avc-compare-list { margin: 0; padding-left: 18px; }
+.avc-compare-hours th, .avc-compare-hours td { padding: 1px 0; }
+.avc-compare-hours td { padding-left: 10px; }
+
 /* ── Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 991px) {
     .avc-results, .avc-biz-grid { grid-template-columns: 1fr; }
     .avc-filters { position: static; }
 }
 @media (max-width: 767px) {
+    .avc-faq-grid { grid-template-columns: 1fr; }
     .avc-section { padding: 36px 0; }
     .avc-hero { padding: 44px 0; }
     .avc-search { flex-direction: column; }

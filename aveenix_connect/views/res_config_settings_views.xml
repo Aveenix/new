@@ -16,6 +16,12 @@
                         <field name="connect_google_maps_api_key"/>
                     </setting>
                 </block>
+                <block title="Aveenix Connect: NZBN register" name="aveenix_connect_nzbn_block">
+                    <setting string="NZBN API Subscription Key"
+                             help="Imports and refreshes listings from the New Zealand Business Number register, and fills in 'List your business' from an NZBN. Register on the MBIE API portal (portal.api.business.govt.nz), subscribe to the NZBN API and paste the subscription key here.">
+                        <field name="connect_nzbn_api_key" password="True"/>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
